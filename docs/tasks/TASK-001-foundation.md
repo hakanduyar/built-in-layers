@@ -1,6 +1,6 @@
 # TASK-001 — Foundation
 
-Status: NOT STARTED — Phase 0 nearly complete (git initialized and decisions resolved 2026-07-17; initial docs commit and explicit start approval pending)
+Status: TECHNICALLY COMPLETE (2026-07-27) — full verification suite passes including Chromium + WebKit; D-001 remains PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004 (see `docs/DECISIONS.md`). Awaiting Hakan's review approval before TASK-002 begins.
 
 ## Objective
 
@@ -80,15 +80,15 @@ No other files.
 
 ## Acceptance criteria
 
-- [ ] All verification commands below pass with zero errors/warnings (Playwright on Chromium + WebKit).
-- [ ] `package.json` dependencies match ARCHITECTURE §14 TASK-001 rows exactly — nothing extra; `next-mdx-remote` pinned (exact version recorded) with JavaScript-blocking security options enabled, or removed if the fallback was adopted.
-- [ ] **D-001 spike executed with all eight checks; outcome (pass, or fallback adopted) recorded in the report and in DECISIONS D-001; spike artifacts removed and gates re-run.**
-- [ ] Tokens in `globals.css` match DESIGN_SYSTEM values verbatim (including `--signal-ui`); no other colors defined.
-- [ ] Three fonts load via `next/font` with `latin-ext`; compile + variant/subset availability verified (D-003); licensing confirmation recorded.
-- [ ] `tsconfig` strict flags set as listed.
-- [ ] Token-proof page renders paper background, ink text, all three families visibly distinct.
-- [ ] Directory skeleton matches ARCHITECTURE §2.
-- [ ] No commit made (unless explicitly requested).
+- [x] All verification commands below pass with zero errors/warnings (Playwright on Chromium + WebKit). **Re-confirmed 2026-07-27 with a fresh run of every command; both Chromium and WebKit genuinely pass (see report).**
+- [x] `package.json` dependencies match ARCHITECTURE §14 TASK-001 rows exactly — nothing extra; `next-mdx-remote` pinned (exact version recorded) with JavaScript-blocking security options enabled, or removed if the fallback was adopted. **`next-mdx-remote@6.0.0` pinned; `blockJS`/`blockDangerousJS` enabled explicitly in the spike; fallback not needed.**
+- [x] **D-001 spike executed with all eight checks; outcome (pass, or fallback adopted) recorded in the report and in DECISIONS D-001; spike artifacts removed and gates re-run.** **Spike passed all 8 checks. Status recorded as `PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004` (2026-07-27) — a passing spike alone does not close D-001 given the archived-upstream finding; a comparison against `@next/mdx` is now a mandatory precondition before TASK-004.**
+- [x] Tokens in `globals.css` match DESIGN_SYSTEM values verbatim (including `--signal-ui`); no other colors defined.
+- [x] Three fonts load via `next/font` with `latin-ext`; compile + variant/subset availability verified (D-003); licensing confirmation recorded.
+- [x] `tsconfig` strict flags set as listed.
+- [x] Token-proof page renders paper background, ink text, all three families visibly distinct.
+- [x] Directory skeleton matches ARCHITECTURE §2.
+- [x] No commit made (unless explicitly requested). **No commit made in this remediation pass either.**
 
 ## Required verification commands
 

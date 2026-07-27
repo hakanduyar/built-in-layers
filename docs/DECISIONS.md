@@ -11,17 +11,30 @@ Revision log: 2026-07-17 — planning phase conditionally approved by Hakan; sta
 
 ## D-001 — MDX pipeline: `next-mdx-remote/rsc` + `gray-matter`
 
-- **Status:** PROVISIONAL (2026-07-17) — preferred candidate, pending the TASK-001 compatibility spike
-- **Decision:** `next-mdx-remote/rsc` remains the preferred candidate for compiling case-study MDX inside Server Components; frontmatter parsed with `gray-matter`; validated with Zod. **TASK-001 must run a mandatory compatibility spike** covering: one local MDX file, frontmatter parsing, Zod validation, rendering in a Server Component, custom MDX components, `generateStaticParams`, a production build, and Vercel-compatible pre-rendering.
-- **Fallback (documented):** if the spike fails, the pipeline switches to the official `@next/mdx` pipeline; this entry is updated with the spike evidence either way.
-- **Security constraints (binding regardless of outcome):**
-  - Only repository-owned, trusted local MDX may be compiled.
-  - User-submitted or remotely supplied MDX is not supported and must never be compiled.
-  - If `next-mdx-remote` is used: pin a compatible version and explicitly enable its JavaScript-blocking security options.
-- **Reason:** Keeps content in `/content` (decoupled from routes), works natively with App Router Server Components, small dependency surface, no build-tool coupling — but RSC-entry compatibility must be proven against the actual Next.js version before the architecture depends on it.
-- **Rejected:** Contentlayer (effectively unmaintained), Velite (extra abstraction layer for 3–6 content files), hand-rolled `@mdx-js/mdx` (more code to own for no gain). `@next/mdx` is not rejected — it is the documented fallback.
-- **Trade-off:** Two small extra runtime deps; MDX not type-checked at authoring time (mitigated by Zod gates + restricted component map); spike adds a bounded step to TASK-001.
-- **Approval:** Granted provisionally 2026-07-17 — final confirmation follows the TASK-001 spike result.
+- **Status:** PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004 (2026-07-27)
+- **Decision:** `next-mdx-remote@6.0.0` (`/rsc` entry) compiles case-study MDX inside Server Components; frontmatter parsed with `gray-matter@4.0.3`; validated with Zod. This is the pipeline TASK-001 verified and TASK-004 will build on **unless** the mandatory comparison below produces evidence and approval to migrate first.
+- **Why this is provisional, not accepted, despite a passing spike:** the spike proves `next-mdx-remote@6.0.0` is technically compatible with our stack — it does not by itself justify committing to an archived-upstream dependency as the permanent MVP pipeline. That is a judgment call requiring an explicit, evidence-based comparison against the actively maintained alternative, made once (before TASK-004 starts building real content on top of whichever pipeline is chosen), not silently assumed from a passing technical check.
+- **Mandatory before TASK-004 starts:** a focused, written comparison of `next-mdx-remote@6.0.0` against the official `@next/mdx` local-content pipeline, covering at minimum: maintenance status, RSC/Server Component compatibility, frontmatter handling, restricted-component-map feasibility, and migration cost if deferred further. The comparison is evidence, not a foregone conclusion in either direction.
+- **Binding process rule:** the current pipeline (`next-mdx-remote`) **must not be replaced automatically** on the basis of the archived-repo finding alone. Any migration to `@next/mdx` or another pipeline requires (a) the comparison evidence above and (b) Hakan's explicit approval. Until both exist, `next-mdx-remote@6.0.0` remains the implemented pipeline and TASK-004 may proceed on it if the comparison concludes in its favor or is explicitly deferred by Hakan.
+- **Not changed in this task:** this remediation pass only updates documentation/status; the MDX implementation, dependency versions, and code were not touched.
+- **Spike evidence (TASK-001, 2026-07-27):** a temporary route (`app/spike-mdx/[slug]/page.tsx`, `content/spike/sample.mdx`, `lib/spike/*`) proved all eight required checks against the real installed toolchain (Next.js 16.2.12, React 19.2.4, Turbopack):
+  1. one local, repository-owned MDX file compiled;
+  2. frontmatter parsed via `gray-matter`;
+  3. frontmatter validated via a Zod schema (`spikeFrontmatterSchema.parse`, which throws on invalid input — did not throw);
+  4. rendered inside an async Server Component (`compileMDX` called directly in the route, no client boundary);
+  5. a custom component (`<SpikeNote>`) rendered correctly through a restricted component map — confirmed in the prerendered HTML as `<aside data-testid="spike-note">...</aside>`;
+  6. `generateStaticParams` produced a real param set, confirmed in `pnpm build` output: `● /spike-mdx/[slug] └ /spike-mdx/sample`;
+  7. `pnpm build` completed with zero errors;
+  8. the route appeared under the build's `(SSG) prerendered as static HTML` legend, confirming Vercel-compatible build-time pre-rendering.
+  Markdown/MDX formatting (`**bold**`, inline code) compiled correctly with `blockJS: true, blockDangerousJS: true` explicitly set — our content model needs no `{jsExpression}` interpolation, so this is the ideal, most restrictive posture. Spike artifacts were removed after evidence was recorded, and the full gate suite (typecheck/lint/format/test/build) was re-run clean on the resulting tree.
+- **Flagged risk (new information, not a spike failure):** the upstream GitHub repository `hashicorp/next-mdx-remote` is **archived** (`archived: true` via GitHub API; last push 2026-03-26) — no further commits, issue triage, or security patches will come from the maintainer. It is not marked deprecated on npm and 6.0.0 (published 2026-02-12) is recent, but this is a real maintenance-risk fact that did not exist when this entry was first drafted as PROVISIONAL. It does not block TASK-001 (the spike's job was to prove technical compatibility, which it did), but it should factor into whether this pipeline is still the right long-term choice — flagging for Hakan's awareness rather than silently proceeding as if D-001's original "preferred candidate" framing still fully holds.
+- **Security constraints (binding, in effect):**
+  - Only repository-owned, trusted local MDX is compiled (enforced by the loader design — no remote or user-submitted content path exists).
+  - `compileMDX`'s underlying `serialize()` step is called with `{ blockJS: true, blockDangerousJS: true }` explicitly, even though `blockJS: true` is already the 6.0.0 default — made explicit in code so the security posture is self-documenting rather than relying on an unstated default.
+  - `next.config.ts` adds `transpilePackages: ["next-mdx-remote"]`, per the library's own README guidance for Turbopack compatibility (confirmed relevant: `next build` uses Turbopack by default in this Next.js version).
+- **Rejected:** Contentlayer (effectively unmaintained), Velite (extra abstraction layer for 3–6 content files), hand-rolled `@mdx-js/mdx` (more code to own for no gain). `@next/mdx` remains the documented fallback, not needed since the spike passed.
+- **Trade-off:** Two small extra runtime deps; MDX not type-checked at authoring time (mitigated by Zod gates + restricted component map); the archived-upstream risk above is now a standing trade-off to monitor, not a one-time cost.
+- **Approval:** The 2026-07-17 provisional grant is **not** upgraded to full acceptance by the passing spike alone. Status remains **PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004**: the spike cleared the technical-compatibility gate; the archived-upstream comparison (see above) is the remaining gate before this pipeline is used to build real TASK-004 content.
 
 ## D-002 — Tailwind CSS v4 with CSS-first `@theme` tokens
 
@@ -34,12 +47,18 @@ Revision log: 2026-07-17 — planning phase conditionally approved by Hakan; sta
 
 ## D-003 — Fonts via `next/font/google`: Archivo, Newsreader, IBM Plex Mono
 
-- **Status:** ACCEPTED PROVISIONALLY (2026-07-17) — pending TASK-001 verification
-- **Decision:** Load the three spec-named families with `next/font/google` (self-hosted at build, zero runtime requests to Google), subsets `latin` + `latin-ext` (covers future Turkish glyphs), `display: swap`, variable axes where available. **TASK-001 must verify that the actual `next/font` imports compile successfully and that the selected variants and subsets are actually available** (including Newsreader italic). No additional font family may be added without approval.
-- **Reason:** All three are published under the SIL Open Font License (re-verify during TASK-001 as spec requires); `next/font` gives preloading, no CLS from FOUT sizing, and no external requests.
+- **Status:** ACCEPTED (2026-07-27) — TASK-001 compile/variant verification and licensing check both passed
+- **Decision:** Load the three spec-named families with `next/font/google` (self-hosted at build, zero runtime requests to Google), subsets `latin` + `latin-ext`, `display: swap`. No additional font family may be added without approval.
+- **Licensing verification (2026-07-27):** confirmed SIL Open Font License 1.1 for all three, fetched directly from the canonical `google/fonts` GitHub repository (the authoritative source `next/font/google` itself bundles from): `ofl/archivo/OFL.txt`, `ofl/newsreader/OFL.txt`, and IBM's own `IBM/plex` `LICENSE.txt`.
+- **Compile/variant verification (2026-07-27):** a real `pnpm build` (not just typecheck) compiled all three without error on the first attempt:
+  - `Archivo({ subsets: ["latin","latin-ext"], variable: "--font-display", display: "swap" })` — no `weight` needed (variable font).
+  - `Newsreader({ subsets: ["latin","latin-ext"], style: ["italic"], variable: "--font-serif", display: "swap" })` — the italic style/axis compiled successfully.
+  - `IBM_Plex_Mono({ subsets: ["latin","latin-ext"], weight: ["400","500"], variable: "--font-mono", display: "swap" })` — required an explicit `weight` array (IBM Plex Mono is a static, non-variable family in `next/font/google`; the build would have errored without it).
+  The prerendered HTML was inspected directly and confirmed: 8 self-hosted `.woff2` files preloaded, `<html>` carrying all three `*__variable` classes, and the generated CSS correctly wiring `--font-display`/`--font-serif`/`--font-mono` through `@theme inline` into `font-display`/`font-serif`/`font-mono` utility classes.
+- **Reason:** `next/font` gives preloading, no CLS from FOUT sizing, and no external requests.
 - **Rejected:** Google Fonts CDN `<link>` (runtime third-party request, GDPR noise, layout shift risk), manual self-hosting (maintenance without benefit), any fourth family (forbidden without approval).
 - **Trade-off:** Font subsetting is limited to `next/font` options; fine for three families.
-- **Approval:** Granted provisionally 2026-07-17 — confirmed once TASK-001 records the compile/variant verification.
+- **Approval:** Provisional grant from 2026-07-17 is now confirmed by the passing TASK-001 verification (2026-07-27).
 
 ## D-004 — Accessible color tokens: keep `--signal`; add `--signal-ui` and `--signal-text` (+ `--ink-muted`)
 
@@ -53,6 +72,7 @@ Revision log: 2026-07-17 — planning phase conditionally approved by Hakan; sta
 - **Rejected:** Using raw `--signal` for links/labels or control indicators (fails contrast), lightening the paper (changes approved character), opacity tricks (unpredictable contrast).
 - **Trade-off:** The accent renders slightly darker in text and controls than in decoration; continuity is kept because all three hues share the orange family.
 - **Approval:** Granted with changes 2026-07-17. `DESIGN_SYSTEM.md` and `QA_CHECKLIST.md` updated accordingly.
+- **Precise verification (TASK-001, 2026-07-27):** computed exactly (WCAG relative-luminance formula) rather than approximated — `ink-muted` on `paper` 7.23:1, `signal-text` on `paper` 5.06:1, `signal-ui` on `paper` 3.65:1, `signal` on `paper` 2.86:1 (confirms it fails both the 4.5:1 and 3:1 thresholds, as intended), `ink` on `signal` 5.51:1. All approved candidate hex values hold their required ratios exactly as specified — no tuning needed. Tokens implemented verbatim in `styles/globals.css`.
 
 ## D-005 — Navigation: desktop inline nav; mobile MENU trigger with accessible panel
 

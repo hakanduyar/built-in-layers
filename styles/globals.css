@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — Built in Layers.
+ * Source of truth: docs/DESIGN_SYSTEM.md. Do not add tokens, colors, or
+ * type roles here without a corresponding entry in that document.
+ *
+ * Verified WCAG contrast ratios (docs/DESIGN_SYSTEM.md §2), computed against
+ * the standard relative-luminance formula:
+ *   ink          on paper       15.73:1
+ *   ink-muted    on paper        7.23:1  (secondary text, >= 4.5:1)
+ *   signal-text  on paper        5.06:1  (accent text,    >= 4.5:1)
+ *   signal-ui    on paper        3.65:1  (control/indicator boundaries, >= 3:1)
+ *   signal       on paper        2.86:1  (FAILS 4.5:1 and 3:1 -- decorative
+ *                                          use only; never text, never a
+ *                                          meaningful indicator, never the
+ *                                          sole signal of state)
+ *   ink          on signal       5.51:1  (text on signal-filled elements)
+ *   line         on paper        1.78:1  (decorative rules only)
+ */
+
+@theme {
+  /* Colors */
+  --color-paper: #f1efe8;
+  --color-ink: #161616;
+  --color-soft-paper: #e5e2d8;
+  --color-line: #b8b5ac;
+  --color-signal: #ff4f1f;
+  --color-signal-text: #b8380e;
+  --color-signal-ui: #e04413;
+  --color-ink-muted: #504e48;
+
+  /* Typography roles (DESIGN_SYSTEM §3) -- size + paired line-height via
+     Tailwind v4's `--text-*` / `--text-*--line-height` convention. */
+  --text-display-xl: clamp(3rem, 8vw, 6.5rem);
+  --text-display-xl--line-height: 0.95;
+  --text-display-l: clamp(2.25rem, 5vw, 4rem);
+  --text-display-l--line-height: 1;
+  --text-heading-l: clamp(1.75rem, 3vw, 2.5rem);
+  --text-heading-l--line-height: 1.1;
+  --text-heading-m: 1.375rem;
+  --text-heading-m--line-height: 1.25;
+  --text-statement: clamp(1.5rem, 2.5vw, 2.25rem);
+  --text-statement--line-height: 1.35;
+  --text-body-l: 1.125rem;
+  --text-body-l--line-height: 1.65;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-mono-label: 0.8125rem;
+  --text-mono-label--line-height: 1.4;
+  --text-mono-meta: 0.75rem;
+  --text-mono-meta--line-height: 1.5;
+
+  /* Tracking (letter-spacing) per role */
+  --tracking-display-xl: -0.02em;
+  --tracking-display-l: -0.015em;
+  --tracking-heading-l: -0.01em;
+  --tracking-mono-label: 0.08em;
+  --tracking-mono-meta: 0.04em;
+
+  /* Radius (DESIGN_SYSTEM §7) -- nothing larger than --radius-2 is approved */
+  --radius-0: 0px;
+  --radius-1: 2px;
+  --radius-2: 4px;
+
+  /* Motion (DESIGN_SYSTEM §13) -- not used until TASK-007 */
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+  --duration-slow: 400ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Font family tokens reference the CSS custom properties that next/font
+   attaches to <html> via its `variable` option (see app/layout.tsx).
+   `@theme inline` is required (not `@theme`) because the value is itself a
+   var() reference resolved at runtime, not a literal authored here. */
+@theme inline {
+  --font-display: var(--font-display);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+
+:root {
+  /* Container (DESIGN_SYSTEM §6) -- not a Tailwind utility namespace;
+     consumed directly by the future Container primitive (TASK-002). */
+  --container-max: 1320px;
+}
+
+/*
+ * Spacing scale (DESIGN_SYSTEM §5): 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 160.
+ * Tailwind's default `--spacing: 0.25rem` base already produces exactly this
+ * closed scale at steps 1,2,3,4,6,8,12,16,24,32,40 (e.g. p-6 = 24px). Do not
+ * override `--spacing`; use only these step numbers in components.
+ */
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    background-color: var(--color-paper);
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
