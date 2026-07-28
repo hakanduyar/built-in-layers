@@ -9,8 +9,8 @@ Execution order revised 2026-07-17 (D-011 rejected): content system (TASK-004) n
 | Phase | Task | Status | Review verdict |
 |---|---|---|---|
 | 0 | Preconditions | **Complete** — git initialized; decisions resolved; initial docs commit made 2026-07-17 (`91aaf9c`) | — |
-| 1 | TASK-001 Foundation (+ D-001 MDX spike, D-003 font verification) | **Technically complete 2026-07-27** — full gate suite passes incl. Chromium + WebKit; D-001 remains provisional pending the mandatory pre-TASK-004 comparison | — |
-| 2 | TASK-002 Static shell (desktop inline nav + mobile MENU panel) | Not started | — |
+| 1 | TASK-001 Foundation (+ D-001 MDX spike, D-003 font verification) | **Approved and committed** (`e01c242`) | Approved |
+| 2 | TASK-002 Static shell (desktop inline nav + mobile MENU panel) | **Approved 2026-07-28** — implemented, hydration flash/CLS remediation reviewed and approved | Approved |
 | 3 | TASK-004 Content system | Not started | — |
 | 4 | TASK-003 Homepage static (loader-fed; static-layout approval gate) | Not started | — |
 | 5 | TASK-005 Kıvılcım case study | Not started (content inputs pending) | — |
@@ -22,8 +22,8 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 
 ## Open items blocked on Hakan
 
-- Review and approval of TASK-001 before TASK-002 begins.
 - **D-001 (MDX pipeline) is provisional, not accepted**: `next-mdx-remote@6.0.0` passed the full TASK-001 spike, but its upstream GitHub repo is archived. Before TASK-004 starts, a focused written comparison against the official `@next/mdx` pipeline is mandatory (see `docs/DECISIONS.md` D-001). The current pipeline is not replaced automatically — any migration needs that comparison plus Hakan's explicit approval.
+- `/work` and `/about` body copy is provisional shell text (approved 2026-07-28 as a non-blocking placeholder only); real content is TASK-004+ work.
 - Public email, current CV, current location: remain unpublished until explicitly confirmed (never taken from old CV files).
 - Notes: selection of three Medium articles (title + URL).
 - Assets: real screenshots for Kıvılcım/DropSpot; OG default image direction (needed by TASK-008).
@@ -87,3 +87,33 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 - Full verification suite re-run after the correction: typecheck, lint, format:check, unit tests, build, and Playwright (Chromium + WebKit) — all pass.
 - Commit `chore: establish portfolio foundation` created and pushed to `origin/main`.
 - Status: **TASK-001 approved and committed. TASK-002 not started.**
+
+### 2026-07-28 — TASK-002 Static shell implemented
+
+- Built the complete site chrome: `SkipLink`, `SiteHeader` (desktop inline nav), `MobileNav` (the one Client Component), `SiteFooter`, five `components/ui` primitives (`Container`, `SectionHeading`, `MonoLabel`, `TextLink`, `ButtonLink`), `lib/seo/metadata.ts`, and route stubs for `/`, `/work`, `/notes`, `/lab`, `/about` plus a custom `app/not-found.tsx`. No new dependencies.
+- `MobileNav` design: native `<dialog>` + `showModal()` for the panel (focus containment, Escape-to-close, and background-inert behavior come from the browser itself in both Chromium and WebKit, rather than hand-rolled ARIA/focus-trap code) plus a `useSyncExternalStore`-based mount check so the component's pre-hydration server output — which is exactly what a no-JS browser sees — is a plain, always-reachable link list, not a non-functional trigger. Verified directly in the built SSR HTML: the plain fallback nav is present pre-hydration with no `<dialog>`/button in the markup at all.
+- One lint fix along the way: the initial `useEffect(() => setState(true), [])` mount-detection pattern trips `react-hooks/set-state-in-effect`; replaced with `useSyncExternalStore`, which is React's own recommended pattern for this and avoids the cascading-render warning entirely.
+- Added `--grid-columns` (4 → 8 → 12) to `styles/globals.css` as the DESIGN_SYSTEM §4 column-count foundation — flagged as required since TASK-001 hadn't encoded it; no page yet renders a literal multi-column grid since none of TASK-002's stub content needs one.
+- Assumption flagged for review: the footer contact CTA links to the verified LinkedIn profile (email/CV are excluded per the task's own constraint, and CLAUDE.md §10 still requires some functional CTA).
+- Full gate suite passes: typecheck, lint, format:check, unit tests, production build (all 6 routes + 404 prerendered as static content), and the full Playwright suite — 20/20 passing on both Chromium and WebKit, including keyboard open/close/Escape/focus-restoration and a dedicated JS-disabled context test proving the no-JS nav fallback.
+- Manual checks: no horizontal overflow at 375/768/1024/1440px across all 5 routes (verified programmatically, not assumed); full keyboard Tab-order trace across the home page confirmed a logical order (skip link → wordmark → nav → footer CTA → footer social links) with a visible 2px ink focus outline on every stop, confirmed via computed styles after CSS-transition settle.
+- No commit made. No files outside TASK-002's scope touched.
+- Status: **STOPPED — TASK-002 implemented and verified. Awaiting review before TASK-004.**
+
+### 2026-07-28 — TASK-002 remediation: mobile-nav hydration flash/CLS fixed
+
+- Hakan's review correctly identified a risk in the `useSyncExternalStore`-based mount check described in the entry above (the earlier claim that this was safe was wrong). **Measured, confirmed bug**: pre-hydration, `MobileNav` rendered a full stacked link list (~317px tall); post-hydration it collapsed to a small MENU button (~77px) — a **240px layout shift** on every JS-enabled page load, reproduced identically on Chromium and WebKit via a delayed-JS test with screenshots (317px → 77px, pixel-visible, header briefly filling most of the viewport).
+- **Fix**: removed the `mounted`/`useSyncExternalStore` gate entirely. The MENU trigger and its (closed, `display:none`-by-default) `<dialog>` are now unconditionally rendered from first paint — structurally identical before and after hydration, so there is nothing to collapse. The no-JS fallback moved into a `<noscript>` block containing the plain link list plus a scoped `<style>` that hides the now-inert trigger; browsers only parse/apply `<noscript>` content, including nested `<style>`, when scripting is disabled, so the correct variant is selected natively at parse time with zero JavaScript and zero dependency on hydration timing.
+- **Re-verified after the fix**: same delayed-JS methodology (1.2s artificial JS-chunk delay), both browsers — header height identical pre/post-hydration (0px delta, pixel-identical screenshots), zero console errors/warnings from the `<noscript>`+`<style>` pattern. No-JS behavior re-confirmed: nav links remain fully reachable (existing test still passes) and the trigger is now correctly hidden rather than left as a dead control (new test).
+- Two permanent regression tests added to `tests/e2e/shell.spec.ts`: the trigger is present in the raw server HTML before any script runs, and header height is stable pre/post-hydration under a simulated slow-JS load. One new no-JS test confirms the trigger is hidden without JS.
+- No dependency added. Native `<dialog>`, Escape-to-close, focus containment/restoration, route-selection close, `aria-expanded`/`aria-controls`, and background-inert behavior are all unchanged from the original TASK-002 implementation.
+- Full gate suite re-run clean: typecheck, lint, format:check, unit tests, build, and Playwright — 26/26 passing on both Chromium and WebKit.
+- No commit made.
+- Status: **STOPPED — hydration flash/CLS bug fixed and verified. Awaiting review.**
+
+### 2026-07-28 — TASK-002 approved
+
+- Hakan approved the hydration remediation and the current shell copy (footer CTA, `/work`, `/about`, `/notes`, `/lab`, home placeholder), noting `/work` and `/about` body copy is explicitly provisional and may be replaced during dedicated content work without blocking the shell.
+- Reporting convention adopted per Hakan's note: "exact files changed" in a remediation report means files touched by that specific remediation; the full uncommitted working tree is reported separately via `git status --short`.
+- Final pre-commit verification: `git diff --check` clean; full suite re-run (typecheck, lint, format:check, unit tests, build, Playwright) — all pass, 26/26 e2e on both Chromium and WebKit.
+- Status: **TASK-002 approved. Proceeding to commit and push.**
