@@ -1,6 +1,6 @@
 # TASK-002 — Static shell
 
-Status: NOT STARTED — requires Phase 1 approved
+Status: IMPLEMENTED 2026-07-29 — fresh implementation from the approved TASK-001 baseline; full gate suite green (Chromium + WebKit); awaiting review for Phase 2
 
 ## Objective
 
@@ -58,13 +58,13 @@ Changed: app/layout.tsx, app/page.tsx, styles/globals.css (only if a token
 
 ## Acceptance criteria
 
-- [ ] All verification commands pass (Playwright on Chromium + WebKit).
-- [ ] Every MVP route (`/`, `/work`, `/notes`, `/lab`, `/about`) renders with a unique title and single `h1`; unknown routes show the custom 404.
-- [ ] Exactly one `"use client"` component in the diff: `components/layout/MobileNav.tsx`.
-- [ ] Header/footer match DESIGN_SYSTEM §15: inline nav on desktop; visible MENU trigger on mobile opening the accessible panel (keyboard, Escape-to-close, managed focus, visible focus states); all links reachable without JavaScript.
-- [ ] Social links are exactly the three verified URLs; no email/CV appears anywhere.
-- [ ] All strings come from `data/copy.ts` / `data/site.ts` — none hard-coded in components.
-- [ ] No new dependencies.
+- [x] All verification commands pass (Playwright on Chromium + WebKit).
+- [x] Every MVP route (`/`, `/work`, `/notes`, `/lab`, `/about`) renders with a unique title and single `h1`; unknown routes show the custom 404.
+- [x] Exactly one `"use client"` component in the diff: `components/layout/MobileNav.tsx`.
+- [x] Header/footer match DESIGN_SYSTEM §15: inline nav on desktop; visible MENU trigger on mobile opening the accessible panel (keyboard, Escape-to-close, managed focus, visible focus states); all links reachable without JavaScript.
+- [x] Social links are exactly the three verified URLs; no email/CV appears anywhere.
+- [x] All strings come from `data/copy.ts` / `data/site.ts` — none hard-coded in components.
+- [x] No new dependencies.
 
 ## Required verification commands
 

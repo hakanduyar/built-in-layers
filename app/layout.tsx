@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SkipLink } from "@/components/layout/SkipLink";
 import "@/styles/globals.css";
 
 const archivo = Archivo({
@@ -23,7 +26,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Built in Layers",
+  title: {
+    default: "Hakan Duyar — Frontend & Product Engineer",
+    template: "%s — Hakan Duyar",
+  },
   description: "Hakan Duyar — Frontend & Product Engineer",
 };
 
@@ -33,7 +39,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       className={`${archivo.variable} ${newsreader.variable} ${ibmPlexMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        <SiteHeader />
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
+        <SiteFooter />
+      </body>
     </html>
   );
 }
