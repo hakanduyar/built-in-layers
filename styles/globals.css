@@ -83,25 +83,8 @@
 
 :root {
   /* Container (DESIGN_SYSTEM §6) -- not a Tailwind utility namespace;
-     consumed directly by the Container primitive (components/ui/Container.tsx). */
+     consumed directly by the future Container primitive (TASK-002). */
   --container-max: 1320px;
-
-  /* Responsive column foundation (DESIGN_SYSTEM §4): 4 / 8 / 12 columns.
-     Foundation only -- no TASK-002 page yet renders a literal multi-column
-     grid, since no content requires one before the homepage (TASK-003). */
-  --grid-columns: 4;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --grid-columns: 8;
-  }
-}
-
-@media (min-width: 1024px) {
-  :root {
-    --grid-columns: 12;
-  }
 }
 
 /*

@@ -1,6 +1,6 @@
 # TASK-002 — Static shell
 
-Status: APPROVED (2026-07-28) — implemented, hydration flash/CLS remediation reviewed and approved, full verification suite passes including Chromium + WebKit. TASK-004 may begin.
+Status: NOT STARTED — requires Phase 1 approved
 
 ## Objective
 
@@ -58,13 +58,13 @@ Changed: app/layout.tsx, app/page.tsx, styles/globals.css (only if a token
 
 ## Acceptance criteria
 
-- [x] All verification commands pass (Playwright on Chromium + WebKit). **26/26 tests pass on both browsers, confirmed by an actual run (see report). (Was 20/20 before the 2026-07-28 remediation added 6 more tests.)**
-- [x] Every MVP route (`/`, `/work`, `/notes`, `/lab`, `/about`) renders with a unique title and single `h1`; unknown routes show the custom 404. **Verified directly in the built SSR HTML for every route.**
-- [x] Exactly one `"use client"` component in the diff: `components/layout/MobileNav.tsx`. **Confirmed — grep for `"use client"` across the diff returns exactly this one file.**
-- [x] Header/footer match DESIGN_SYSTEM §15: inline nav on desktop; visible MENU trigger on mobile opening the accessible panel (keyboard, Escape-to-close, managed focus, visible focus states); all links reachable without JavaScript. **Native `<dialog>`/`showModal()` panel; verified via Playwright (keyboard, Escape, focus restore) and a dedicated JS-disabled test. Revised 2026-07-28: the original `useSyncExternalStore` mount-check caused a measured 240px hydration layout shift (317px → 77px, confirmed on both browsers); fixed by always rendering the trigger/dialog and moving the no-JS fallback into a `<noscript>` block with a scoped CSS override. Re-verified: 0px shift both browsers, no-JS nav still fully reachable, trigger correctly hidden (not left dead) without JS. Remediation reviewed and approved 2026-07-28.**
-- [x] Social links are exactly the three verified URLs; no email/CV appears anywhere. **`data/site.ts` contains only the three CONTENT_INVENTORY-verified URLs.**
-- [x] All strings come from `data/copy.ts` / `data/site.ts` — none hard-coded in components. **Shell copy approved 2026-07-28. `/work` and `/about` body copy is explicitly provisional — approved only as a non-blocking shell placeholder, to be replaced during dedicated content work (TASK-004+).**
-- [x] No new dependencies. **`package.json` diff is empty — confirmed via `git diff package.json`.**
+- [ ] All verification commands pass (Playwright on Chromium + WebKit).
+- [ ] Every MVP route (`/`, `/work`, `/notes`, `/lab`, `/about`) renders with a unique title and single `h1`; unknown routes show the custom 404.
+- [ ] Exactly one `"use client"` component in the diff: `components/layout/MobileNav.tsx`.
+- [ ] Header/footer match DESIGN_SYSTEM §15: inline nav on desktop; visible MENU trigger on mobile opening the accessible panel (keyboard, Escape-to-close, managed focus, visible focus states); all links reachable without JavaScript.
+- [ ] Social links are exactly the three verified URLs; no email/CV appears anywhere.
+- [ ] All strings come from `data/copy.ts` / `data/site.ts` — none hard-coded in components.
+- [ ] No new dependencies.
 
 ## Required verification commands
 
