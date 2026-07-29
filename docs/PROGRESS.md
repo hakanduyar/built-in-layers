@@ -11,8 +11,8 @@ Execution order revised 2026-07-17 (D-011 rejected): content system (TASK-004) n
 | 0 | Preconditions | **Complete** — git initialized; decisions resolved; initial docs commit made 2026-07-17 (`91aaf9c`) | — |
 | 1 | TASK-001 Foundation (+ D-001 MDX spike, D-003 font verification) | **Approved and committed** (`e01c242`) | Approved |
 | 2 | TASK-002 Static shell (desktop inline nav + mobile MENU panel) | **Approved 2026-07-28** — implemented, hydration flash/CLS remediation reviewed and approved | Approved |
-| 3 | TASK-004 Content system | **Blocked** — the mandatory D-001 `@next/mdx` comparison must be performed, documented, and its decision approved before TASK-004 may begin | — |
-| 4 | TASK-003 Homepage static (loader-fed; static-layout approval gate) | **Pending** — stays blocked until TASK-004 is complete (ROADMAP execution order 001 → 002 → 004 → 003) | — |
+| 3 | TASK-004 Content system | Not started | — |
+| 4 | TASK-003 Homepage static (loader-fed; static-layout approval gate) | Not started | — |
 | 5 | TASK-005 Kıvılcım case study | Not started (content inputs pending) | — |
 | 6 | TASK-006 DropSpot case study | Not started (repo audit pending) | — |
 | 7 | TASK-007 Motion layer + explorer | Not started (gated on Phase 4 approval) | — |
@@ -22,12 +22,7 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 
 ## Open items blocked on Hakan
 
-- **D-001 (MDX pipeline) is provisional, not accepted**: `next-mdx-remote@6.0.0` passed the full TASK-001 spike, but its upstream GitHub repo is archived. Required next-step order, in sequence:
-  1. Perform the mandatory D-001 comparison of `next-mdx-remote@6.0.0` against the official `@next/mdx` pipeline (see `docs/DECISIONS.md` D-001).
-  2. Document the comparison and its final decision in `docs/DECISIONS.md`.
-  3. Proceed to TASK-004 only after that decision is approved by Hakan.
-  4. TASK-003 stays pending until TASK-004 is complete (ROADMAP execution order 001 → 002 → 004 → 003).
-  The current pipeline is not replaced automatically on the archived-repo finding alone — any migration needs the comparison evidence plus Hakan's explicit approval.
+- **D-001 (MDX pipeline) is provisional, not accepted**: `next-mdx-remote@6.0.0` passed the full TASK-001 spike, but its upstream GitHub repo is archived. Before TASK-004 starts, a focused written comparison against the official `@next/mdx` pipeline is mandatory (see `docs/DECISIONS.md` D-001). The current pipeline is not replaced automatically — any migration needs that comparison plus Hakan's explicit approval.
 - `/work` and `/about` body copy is provisional shell text (approved 2026-07-28 as a non-blocking placeholder only); real content is TASK-004+ work.
 - Public email, current CV, current location: remain unpublished until explicitly confirmed (never taken from old CV files).
 - Notes: selection of three Medium articles (title + URL).
@@ -122,9 +117,3 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 - Reporting convention adopted per Hakan's note: "exact files changed" in a remediation report means files touched by that specific remediation; the full uncommitted working tree is reported separately via `git status --short`.
 - Final pre-commit verification: `git diff --check` clean; full suite re-run (typecheck, lint, format:check, unit tests, build, Playwright) — all pass, 26/26 e2e on both Chromium and WebKit.
 - Status: **TASK-002 approved. Proceeding to commit and push.**
-
-### 2026-07-28 — Documentation correction: TASK-004 sequencing
-
-- Corrected an inaccuracy: this file's status table did not clearly show TASK-004 as blocked, which could read as "may begin immediately." It is not — D-001's mandatory `@next/mdx` comparison must happen first. Status table and "Open items" now state the required order explicitly: (1) perform the D-001 comparison, (2) document the comparison and final decision in `docs/DECISIONS.md`, (3) proceed to TASK-004 only after that decision is approved, (4) TASK-003 stays pending until TASK-004 is complete.
-- Documentation-only change. The D-001 comparison itself was not started.
-- Status: **STOPPED — documentation corrected. Awaiting approval.**
