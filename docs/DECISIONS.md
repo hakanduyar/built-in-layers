@@ -11,7 +11,7 @@ Revision log: 2026-07-17 — planning phase conditionally approved by Hakan; sta
 
 ## D-001 — MDX pipeline: `next-mdx-remote/rsc` + `gray-matter`
 
-- **Status:** PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004 (2026-07-27)
+- **Status:** ACCEPTED FOR MVP — next-mdx-remote/rsc 6.0.0 (2026-07-29, see approval addendum below)
 - **Decision:** `next-mdx-remote@6.0.0` (`/rsc` entry) compiles case-study MDX inside Server Components; frontmatter parsed with `gray-matter@4.0.3`; validated with Zod. This is the pipeline TASK-001 verified and TASK-004 will build on **unless** the mandatory comparison below produces evidence and approval to migrate first.
 - **Why this is provisional, not accepted, despite a passing spike:** the spike proves `next-mdx-remote@6.0.0` is technically compatible with our stack — it does not by itself justify committing to an archived-upstream dependency as the permanent MVP pipeline. That is a judgment call requiring an explicit, evidence-based comparison against the actively maintained alternative, made once (before TASK-004 starts building real content on top of whichever pipeline is chosen), not silently assumed from a passing technical check.
 - **Mandatory before TASK-004 starts:** a focused, written comparison of `next-mdx-remote@6.0.0` against the official `@next/mdx` local-content pipeline, covering at minimum: maintenance status, RSC/Server Component compatibility, frontmatter handling, restricted-component-map feasibility, and migration cost if deferred further. The comparison is evidence, not a foregone conclusion in either direction.
@@ -34,7 +34,76 @@ Revision log: 2026-07-17 — planning phase conditionally approved by Hakan; sta
   - `next.config.ts` adds `transpilePackages: ["next-mdx-remote"]`, per the library's own README guidance for Turbopack compatibility (confirmed relevant: `next build` uses Turbopack by default in this Next.js version).
 - **Rejected:** Contentlayer (effectively unmaintained), Velite (extra abstraction layer for 3–6 content files), hand-rolled `@mdx-js/mdx` (more code to own for no gain). `@next/mdx` remains the documented fallback, not needed since the spike passed.
 - **Trade-off:** Two small extra runtime deps; MDX not type-checked at authoring time (mitigated by Zod gates + restricted component map); the archived-upstream risk above is now a standing trade-off to monitor, not a one-time cost.
-- **Approval:** The 2026-07-17 provisional grant is **not** upgraded to full acceptance by the passing spike alone. Status remains **PROVISIONAL FOR MVP FOUNDATION — REVIEW REQUIRED BEFORE TASK-004**: the spike cleared the technical-compatibility gate; the archived-upstream comparison (see above) is the remaining gate before this pipeline is used to build real TASK-004 content.
+- **Approval:** The 2026-07-17 provisional grant was **not** upgraded to full acceptance by the passing spike alone — the spike cleared the technical-compatibility gate only; the archived-upstream comparison (addendum below) was the remaining gate. That comparison is now complete and **explicitly approved by Hakan (2026-07-29)**: see the final approval addendum below for the binding conditions attached to this acceptance.
+
+### D-001 addendum — mandatory `next-mdx-remote` vs `@next/mdx` comparison (2026-07-29)
+
+**Status of this addendum: comparison complete, recommendation approved.** Per D-001's binding process rule, this record was evidence for Hakan's decision, not a self-approved migration — see the final approval block at the end of this addendum for the explicit approval and its binding conditions.
+
+**Method:** two isolated, fully-removed spikes were built against the real installed toolchain (Next.js 16.2.12, React 19.2.4, Turbopack) — `app/spike-d001-a/[slug]` for Candidate A (no new dependency; already installed) and `app/spike-d001-b/[slug]` for Candidate B (`@next/mdx@16.2.12`, `@mdx-js/loader@3.1.1`, `@mdx-js/react@3.1.1`, `remark-frontmatter@5.0.0`, `remark-mdx-frontmatter@5.2.0`, `@types/mdx@2.0.14` — all installed temporarily and fully removed afterward via `git restore` of `package.json`/`pnpm-lock.yaml`/`next.config.ts` plus `pnpm install --frozen-lockfile`). Each spike used identical fixture content: a published full-depth project (`index/surface/flow/system.mdx`, a custom `<SpikeNote>` component, bold/inline-code markdown), a draft project carrying a `[CONTENT REQUIRED: ...]` marker, and a published-preview project deliberately containing the same marker (to test publication-gate feasibility). Both were verified with a real `pnpm build` (not typecheck-only), raw prerendered-HTML inspection, and standalone filesystem/gate probes. Both spikes were completely removed after evidence was recorded; the production tree was verified byte-identical to `f4f7a69` afterward (`git status --short` empty, `git diff --stat` empty).
+
+**Verified facts / implementation evidence:**
+
+| # | Criterion | Candidate A — `next-mdx-remote/rsc` | Candidate B — `@next/mdx` |
+|---|---|---|---|
+| 1 | Next.js 16 App Router compatibility | Confirmed — real build, zero errors | Confirmed — real build, zero errors |
+| 2 | Server Component rendering | Confirmed — `compileMDX()` called directly in an async Server Component | Confirmed — compiled `.mdx` imported as a module in an async Server Component |
+| 3 | Build-time prerendering | Confirmed — route listed under `(SSG) prerendered as static HTML` | Confirmed — same build-output legend |
+| 4 | `generateStaticParams` support | Confirmed — produced exactly the 2 published fixture slugs, draft excluded | Confirmed — same result, same exclusion |
+| 5 | Typed frontmatter/metadata support | `gray-matter` parses frontmatter from raw file text, fully decoupled from MDX compilation (matches ARCHITECTURE §5: listing pages read frontmatter without compiling the body) | Two viable paths found: (a) `gray-matter` on raw text, identical to A; (b) the "native" path — `remark-frontmatter` + `remark-mdx-frontmatter` re-export a `frontmatter` object from the compiled module, but only obtainable by dynamically `import()`-ing (i.e. compiling) each file, coupling frontmatter reads to full compilation |
+| 6 | Zod validation | Confirmed — schema throws on invalid enum value | Identical — Zod validates the plain object regardless of source; pipeline-independent |
+| 7 | Custom MDX components | Confirmed — `<SpikeNote>` rendered via `compileMDX({components})`, verified in raw HTML | Confirmed — `<SpikeNote>` rendered via root `mdx-components.tsx`'s `useMDXComponents()`, verified in raw HTML |
+| 8 | Separate `index/surface/flow/system.mdx` files | Confirmed — all four compile independently; layer files correctly skipped for `depth: "preview"` | Confirmed — identical result |
+| 9 | Filesystem enumeration | `node:fs.readdirSync` — compiler-independent | Identical code, identical result — also compiler-independent |
+| 10 | Draft/preview/published states | Trivial — `gray-matter` reads `status` without compiling | Requires dynamically importing (compiling) each candidate file to read `status` via path (b) above, unless falling back to path (a) |
+| 11 | `verificationStatus` handling | Confirmed — arbitrary Zod-validated field, no pipeline dependency | Identical |
+| 12 | Build-gate compatibility (marker scan, layer-meaning) | Confirmed — a raw-text `[CONTENT REQUIRED` scan correctly allowed draft+marker, allowed published+no-marker, and flagged published+marker | Identical result — gates read raw file text via `node:fs`, entirely independent of which library compiles the MDX body. **This criterion is a wash between candidates.** |
+| 13 | Trusted-local-content security model | Executes compiled MDX via `@mdx-js/mdx`'s `run()` — confirmed by reading the installed package source: `new AsyncFunction(String(code))(options)`, doc-commented `"☢️ Danger: this evals JavaScript"` — mitigated by explicit `blockJS`/`blockDangerousJS` | Confirmed by reading `@mdx-js/loader`'s installed source: the loader compiles to static module source text (`outputFormat: "program"`) fed straight into the bundler, like any `.tsx` file — **no runtime `eval`/`Function` step exists**, so there is no comparable flag to set |
+| 14 | JavaScript-expression control | Explicit, documented, actively used (`blockJS: true, blockDangerousJS: true`) | No equivalent mechanism — `.mdx` files compile with the same trust level as hand-written source, relying entirely on code review rather than a library guardrail |
+| 15 | Maintenance status | Upstream `hashicorp/next-mdx-remote` repository is archived (confirmed via GitHub API, TASK-001); not deprecated on npm; 6.0.0 recent | `@next/mdx` ships from the `vercel/next.js` monorepo, version-locked to each Next.js release — confirmed via npm registry: `@next/mdx@16.2.12` published 2026-07-25 (4 days before this comparison), package `modified` timestamp 2026-07-28 |
+| 16 | Dependency and migration cost | Zero — already installed, already proven in TASK-001 | +5 runtime/dev packages; `next.config.ts` rewrite (`pageExtensions`, `createMDX` wrapper); new root `mdx-components.tsx`; a genuine Turbopack-specific bug hit live in this spike (see below); an ambient `*.mdx` module type declaration or `@types/mdx` |
+| 17 | Testing complexity | `compileMDX()` is a plain async function, callable against a string in any test environment with no extra tooling | Dynamic per-slug `import()` of `.mdx` modules is harder to unit-test in isolation; Vitest has no `.mdx` transform in the current dependency budget |
+| 18 | Long-term maintainability | Small, self-contained, functionally proven; standing archived-upstream risk (no future patches from the maintainer) to keep monitoring | Actively maintained in lockstep with Next.js; more moving parts for an equivalent result in this project's actual use case |
+| 19 | Vercel-compatible prerendering | Confirmed — `(SSG) prerendered as static HTML` | Confirmed — identical |
+| 20 | Compatibility with CONTENT_MODEL/ARCHITECTURE | No changes needed to CONTENT_MODEL.md or the `content/work/<slug>/*.mdx` layout; `compileMDX(string)` is a direct, zero-rework fit for ARCHITECTURE §5's `getProjectBySlug(slug)` loader design (reads files at call time, wrapped in `cache()`) | No CONTENT_MODEL/layout changes needed either, but the static-import-shaped tool must be bent (dynamic `import()` with a template-literal path) to fit the dynamic, filesystem-driven loader ARCHITECTURE §5 specifies |
+
+**A real, previously-undocumented finding from this spike:** passing `remarkPlugins` as live function references (`[remarkFrontmatter, remarkMdxFrontmatter]`) to `@next/mdx`'s `createMDX()` fails under Turbopack with `"...does not have serializable options"` — Turbopack requires plugin configuration to cross its Rust/JS boundary as serializable data. The fix is package-name strings (`["remark-frontmatter", "remark-mdx-frontmatter"]`) instead of imported function references. This is a real, current constraint of `@next/mdx` on Turbopack (this project's default bundler, confirmed already in the TASK-001 D-001 spike notes), not a hypothetical.
+
+**Strengths (A):** already installed and proven; zero migration cost; simplest, most decoupled frontmatter-only reads; a direct architectural fit for the dynamic filesystem-driven loader design; explicit, self-documenting security posture.
+**Weaknesses (A):** standing archived-upstream maintenance risk; runtime `eval`/`Function`-based execution model (mitigated, not eliminated, by `blockJS`/`blockDangerousJS`).
+**Strengths (B):** actively maintained by the Next.js team itself, version-locked to each release; no runtime code-generation step by construction; official, long-term-supported path.
+**Weaknesses (B):** 5+ new packages for an equivalent result; non-trivial Turbopack-specific configuration cost (discovered live); a worse fit for the dynamic loader architecture (native frontmatter access couples to full compilation; static-import-shaped tool bent to a dynamic use case); harder to unit-test in isolation with the current tooling.
+
+**Rejected alternatives (reaffirmed from the original D-001 entry):** Contentlayer (unmaintained), Velite (unnecessary abstraction for 3–6 content files), hand-rolled `@mdx-js/mdx` (more code to own for no gain — and, per this spike, would still need the same runtime-`run()`-vs-bundler-loader trade-off `next-mdx-remote`/`@next/mdx` already make on our behalf).
+
+**Final recommendation: 1. KEEP `next-mdx-remote/rsc` for MVP.**
+
+**Reasons:** every functional capability required by CONTENT_MODEL and ARCHITECTURE (prerendering, `generateStaticParams`, typed frontmatter, Zod validation, custom components, multi-file layers, filesystem enumeration, draft exclusion, publication-gate compatibility) is proven working identically on both candidates. The only substantiated risk on Candidate A is maintenance continuity (archived upstream), not a functional or security defect — the library works correctly today with an explicit, audited, defense-in-depth security posture. Migrating now, before any real TASK-004 content exists, would trade that unrealized risk for measured, immediate integration costs found in this very spike: 5+ new dependencies, a genuine Turbopack-compatibility bug, a less direct fit for this project's loader architecture, and weaker unit-testability — without removing any capability gap, because there isn't one. The archived-upstream risk remains real and should keep being monitored (unchanged from the original D-001 entry); it does not, on the evidence gathered, justify migrating pre-emptively.
+
+**Approval requirement:** per D-001's binding process rule, this recommendation did **not** self-approve. `next-mdx-remote@6.0.0` remained the implemented pipeline pending Hakan's explicit approval.
+
+### D-001 final approval (2026-07-29)
+
+**Hakan explicitly approved the KEEP recommendation.** Final decision: **KEEP `next-mdx-remote/rsc` FOR MVP.**
+
+Binding conditions attached to this approval — all already true of the current implementation and to be preserved without exception through the MVP:
+
+- Pin `next-mdx-remote` at exactly `6.0.0`.
+- Compile only trusted, repository-owned local MDX — no user-submitted or remotely fetched MDX is ever compiled.
+- Keep `blockJS: true` explicit in `compileMDX`'s options (not left to the unstated default).
+- Keep `blockDangerousJS: true` explicit in `compileMDX`'s options.
+- Preserve `gray-matter` frontmatter parsing and Zod validation as the schema gate (CONTENT_MODEL §1–2, ARCHITECTURE §5–6).
+- Preserve the published-content build gates (marker scan, layer-meaning gate — ARCHITECTURE §7, CONTENT_MODEL §6–7) when TASK-004 implements them.
+
+**The archived-upstream maintenance risk is not dismissed by this approval.** It is recorded as an **accepted and monitored MVP trade-off**: the `hashicorp/next-mdx-remote` repository will receive no further commits, issue triage, or security patches from its maintainer for as long as this pipeline is in use. This is a standing, ongoing risk, not a one-time cost cleared by this decision.
+
+**D-001 must be re-evaluated (not silently carried forward) before any of the following:**
+- a major Next.js or MDX pipeline upgrade;
+- a relevant security advisory affecting `next-mdx-remote`, `@mdx-js/mdx`, or their transitive dependencies;
+- a production architecture change affecting content rendering;
+- a demonstrated compatibility failure with the pinned version.
+
+**Scope of this approval:** documentation only. No application code, dependencies, or the MDX implementation were touched by this decision — `next-mdx-remote@6.0.0` was already the installed, working pipeline throughout the comparison and remains unchanged. TASK-004 may now proceed on this pipeline once its own task approval is granted.
 
 ## D-002 — Tailwind CSS v4 with CSS-first `@theme` tokens
 

@@ -9,9 +9,9 @@ Execution order revised 2026-07-17 (D-011 rejected): content system (TASK-004) n
 | Phase | Task | Status | Review verdict |
 |---|---|---|---|
 | 0 | Preconditions | **Complete** — git initialized; decisions resolved; initial docs commit made 2026-07-17 (`91aaf9c`) | — |
-| 1 | TASK-001 Foundation (+ D-001 MDX spike, D-003 font verification) | **Technically complete 2026-07-27** — full gate suite passes incl. Chromium + WebKit; D-001 remains provisional pending the mandatory pre-TASK-004 comparison | — |
-| 2 | TASK-002 Static shell (desktop inline nav + mobile MENU panel) | Implemented 2026-07-29, full gate suite green — awaiting review | — |
-| 3 | TASK-004 Content system | Not started | — |
+| 1 | TASK-001 Foundation (+ D-001 MDX spike, D-003 font verification) | **Technically complete 2026-07-27** — full gate suite passes incl. Chromium + WebKit; **D-001 ACCEPTED FOR MVP 2026-07-29** (KEEP `next-mdx-remote/rsc`, approved with binding conditions) | Approved |
+| 2 | TASK-002 Static shell (desktop inline nav + mobile MENU panel) | **Approved and committed 2026-07-29** (`f4f7a69`, "feat: implement static shell") | Approved |
+| 3 | TASK-004 Content system | Not started — may now begin once its own task approval is granted | — |
 | 4 | TASK-003 Homepage static (loader-fed; static-layout approval gate) | Not started | — |
 | 5 | TASK-005 Kıvılcım case study | Not started (content inputs pending) | — |
 | 6 | TASK-006 DropSpot case study | Not started (repo audit pending) | — |
@@ -22,8 +22,6 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 
 ## Open items blocked on Hakan
 
-- Review and approval of TASK-001 before TASK-002 begins.
-- **D-001 (MDX pipeline) is provisional, not accepted**: `next-mdx-remote@6.0.0` passed the full TASK-001 spike, but its upstream GitHub repo is archived. Before TASK-004 starts, a focused written comparison against the official `@next/mdx` pipeline is mandatory (see `docs/DECISIONS.md` D-001). The current pipeline is not replaced automatically — any migration needs that comparison plus Hakan's explicit approval.
 - Public email, current CV, current location: remain unpublished until explicitly confirmed (never taken from old CV files).
 - Notes: selection of three Medium articles (title + URL).
 - Assets: real screenshots for Kıvılcım/DropSpot; OG default image direction (needed by TASK-008).
@@ -98,3 +96,25 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 - Full verification suite re-run after the correction: typecheck, lint, format:check, unit tests, build, and Playwright (Chromium + WebKit) — all pass.
 - Commit `chore: establish portfolio foundation` created and pushed to `origin/main`.
 - Status: **TASK-001 approved and committed. TASK-002 not started.**
+
+### 2026-07-29 — D-001 mandatory MDX pipeline comparison (research only, no implementation)
+
+- Performed the mandatory pre-TASK-004 comparison of `next-mdx-remote/rsc` (Candidate A) against `@next/mdx` (Candidate B), required by D-001's binding process rule before TASK-004 may build real content on either pipeline.
+- Built two isolated, fully-removed spikes (`app/spike-d001-a/[slug]`, `app/spike-d001-b/[slug]`, matching fixture content under `content/spike-d001-a|b/`) and verified both with real `pnpm build` runs, raw prerendered-HTML inspection, and standalone filesystem/gate probes. Candidate B required temporarily installing `@next/mdx@16.2.12`, `@mdx-js/loader@3.1.1`, `@mdx-js/react@3.1.1`, `remark-frontmatter@5.0.0`, `remark-mdx-frontmatter@5.2.0`, `@types/mdx@2.0.14` and temporarily editing `next.config.ts` plus adding a root `mdx-components.tsx`.
+- Both candidates proved fully capable: App Router/Server Component rendering, build-time prerendering, `generateStaticParams` (draft correctly excluded from both), typed frontmatter, Zod validation, custom-component whitelisting, independent multi-file layer compilation (`index/surface/flow/system.mdx`), filesystem enumeration, and publication-gate feasibility (a raw-text `[CONTENT REQUIRED` scan, proven independent of which library compiles the MDX body — a wash between candidates).
+- Found and worked around a real, previously undocumented Turbopack incompatibility in `@next/mdx`: passing `remarkPlugins` as function references fails with a non-serializable-options error; package-name strings are required instead.
+- Found and cited definitive security-model evidence by reading the installed package source directly: `next-mdx-remote` (via `@mdx-js/mdx`'s `run()`) executes compiled MDX through `new AsyncFunction(String(code))(options)` — the library's own code comment reads "☢️ Danger: this evals JavaScript" — mitigated by the already-enabled `blockJS`/`blockDangerousJS` flags. `@next/mdx` (via `@mdx-js/loader`) compiles straight to static module source fed to the bundler, with no runtime `eval`/`Function` step at all.
+- **Recommendation: KEEP `next-mdx-remote/rsc` for the MVP** — full evidence, side-by-side comparison table, and reasoning recorded as a D-001 addendum in `docs/DECISIONS.md`. This does **not** self-approve; the pipeline is unchanged pending Hakan's explicit approval.
+- All spike files, the temporary dependencies, and the temporary `next.config.ts` edit were fully removed; the production tree was verified byte-identical to `f4f7a69` (`git status --short` and `git diff --stat` both empty) before the full verification suite was re-run clean.
+- No implementation code touched. No TASK-003/TASK-004 work started. No commit made.
+- Status: **STOPPED — D-001 comparison complete and documented. Awaiting Hakan's approval before TASK-004 may begin.**
+
+### 2026-07-29 — D-001 final decision approved (documentation only, no implementation)
+
+- Hakan explicitly approved the D-001 comparison's recommendation. **Final decision: KEEP `next-mdx-remote/rsc` for MVP.** D-001 status changed to `ACCEPTED FOR MVP — next-mdx-remote/rsc 6.0.0`.
+- Binding conditions recorded in `docs/DECISIONS.md`: pin `next-mdx-remote` at exactly `6.0.0`; compile only trusted, repository-owned local MDX; keep `blockJS: true` and `blockDangerousJS: true` explicit; preserve `gray-matter` frontmatter parsing and Zod validation; preserve the published-content build gates; re-evaluate D-001 before a major Next.js/MDX pipeline upgrade, a relevant security advisory, a production architecture change, or a demonstrated compatibility failure.
+- The archived-upstream maintenance risk on `hashicorp/next-mdx-remote` is **not dismissed** by this approval — recorded explicitly as an accepted and monitored MVP trade-off, standing and ongoing for as long as this pipeline is used.
+- Confirmed before editing: only `docs/DECISIONS.md` and `docs/PROGRESS.md` were modified since the last commit (`f4f7a69`); no application code, dependencies, or the MDX implementation were touched by this decision.
+- Full verification suite re-run clean: typecheck, lint, format:check, unit tests, production build, and Playwright (Chromium + WebKit).
+- Commit `docs: finalize MVP MDX pipeline decision` created and pushed to `origin/main`.
+- Status: **D-001 approved and committed. TASK-003 and TASK-004 not started.**
