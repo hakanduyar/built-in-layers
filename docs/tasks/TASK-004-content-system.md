@@ -1,6 +1,6 @@
 # TASK-004 — Content system
 
-Status: NOT STARTED — requires Phase 2 (TASK-002 static shell) approved. **Execution order revised 2026-07-17: this task now precedes the homepage (TASK-003), which depends on it (D-011 rejected).**
+Status: REMEDIATED 2026-07-29 — strict-review findings addressed; full gate suite green (Chromium + WebKit); 5 of 7 acceptance criteria genuinely met, 2 honestly left unchecked (see below and `docs/PROGRESS.md`). Awaiting review. **Execution order revised 2026-07-17: this task now precedes the homepage (TASK-003), which depends on it (D-011 rejected).**
 
 ## Objective
 
@@ -66,13 +66,13 @@ Changed: app/work/page.tsx, app/notes/page.tsx, app/lab/page.tsx
 
 ## Acceptance criteria
 
-- [ ] All verification commands pass; unit tests cover every publication-gate rule with at least one negative case each, including that draft content never blocks the build.
-- [ ] `pnpm build` fails demonstrably when a published-fixture violation is introduced (shown in report, then reverted).
-- [ ] `/work` renders tiers correctly in D-016 order (Kıvılcım, DropSpot, JointLedger, Professional preview); drafts excluded; JointLedger preview shows upstream disclosure text.
-- [ ] Published preview entries (kivilcim, dropspot, professional-systems) contain zero unverified claims — only approved seed/pending copy; professional pending copy is the exact D-009 wording.
-- [ ] Case-study template renders all 11 IA sections from a draft entry in dev.
-- [ ] No new runtime dependencies beyond those installed in TASK-001 (unless the D-001 fallback was adopted — then the swap is documented); lockfile diff reviewed.
-- [ ] No Client Components added.
+- [x] All verification commands pass; unit tests cover every publication-gate rule with at least one negative case each, including that draft content never blocks the build.
+- [x] `pnpm build` fails demonstrably when a published-fixture violation is introduced (shown in report, then reverted).
+- [ ] `/work` renders tiers correctly in D-016 order (Kıvılcım, DropSpot, JointLedger, Professional preview); drafts excluded; JointLedger preview shows upstream disclosure text. **Unmet, honestly**: only Professional Systems is currently a published entry — see `docs/PROGRESS.md` for why Kıvılcım, DropSpot, and JointLedger are `status: "draft"` pending Hakan's confirmation of specific facts. Left unchecked until all four can honestly satisfy it; not weakened or reworded.
+- [ ] Published preview entries (kivilcim, dropspot, professional-systems) contain zero unverified claims — only approved seed/pending copy; professional pending copy is the exact D-009 wording. **Unmet as literally written**: kivilcim and dropspot are no longer published entries at all (moved to draft — see above), so the three-entry premise no longer holds. Professional Systems alone satisfies its half of this criterion (zero claims, exact D-009 wording), but the criterion as written covers three entries.
+- [x] Case-study template renders all 11 IA sections from a draft entry in dev — verified via an automated fixture-based test (`tests/unit/work-loader.test.tsx`), not a live `pnpm dev` browser visit: `dynamicParams = false` makes draft/fixture content genuinely unreachable via any running server, dev or prod (by design — see security notes in `docs/PROGRESS.md`), so the only way to prove the template without exposing draft content live is exactly what this task's own remediation instruction specified: a fixture rendered through the real components (`CaseStudyHero`, compiled `index.mdx` body, `LayerSection` ×3, `DecisionList`, `NextProject`) via `renderToStaticMarkup`.
+- [x] No new runtime dependencies beyond those installed in TASK-001 (unless the D-001 fallback was adopted — then the swap is documented); lockfile diff reviewed.
+- [x] No Client Components added.
 
 ## Required verification commands
 

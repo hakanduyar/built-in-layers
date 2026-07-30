@@ -278,3 +278,12 @@ Binding conditions attached to this approval — all already true of the current
 - **Rejected:** “Kıvılcım / Spark” everywhere (permanent dual lockup), “Spark” alone (loses the distinctive name; collides with common product names).
 - **Trade-off:** English readers meet an unfamiliar word first — mitigated by the approved first-introduction gloss.
 - **Approval:** Granted 2026-07-17.
+
+## D-018 — `phase` and `aiAssisted` are schema-optional, not unconditionally required
+
+- **Status:** RECORDED (2026-07-29, TASK-004 remediation)
+- **Decision:** In `lib/content/schemas.ts`, `ProjectFrontmatter.phase` and `.aiAssisted` are `.optional()`. CONTENT_MODEL §2's inline type shows both as unconditionally required (no `?`), but no approved document (PROJECT_SPEC, CONTENT_INVENTORY, DECISIONS) states a verified `phase` or `aiAssisted` value for Kıvılcım, DropSpot, or Professional Systems. `aiDisclosure` remains conditionally required whenever `aiAssisted === true`.
+- **Reason:** A strict-review pass on TASK-004 found `aiAssisted: false` and `phase: "active-development"` asserted on published content with no evidentiary source — an unverified positive claim, not a neutral default (CLAUDE.md §2: never invent facts; §11: AI-assisted work must be disclosed, which requires the field to mean something when set). The only alternatives were (a) invent a value to satisfy an unconditionally-required field, (b) add an "unknown" enum member with no prior approval, or (c) make the field genuinely optional and omit it where unsupported. (a) and (b) were rejected outright by the remediation instruction; (c) is the smallest change that keeps the schema honest.
+- **Rejected:** Inventing a value (violates CLAUDE.md §2); adding an `"unknown"` / `"unspecified"` enum member (an unapproved schema addition in its own right, not less speculative than the fields it would paper over).
+- **Trade-off:** `ProjectFrontmatter.phase`/`.aiAssisted` are no longer guaranteed present at the type level; any future UI surfacing them must handle `undefined`. JointLedger's verified `phase: "active-development"` (PROJECT_SPEC §12, direct quote) is unaffected — the field stays optional in the schema but is still populated wherever a real source exists.
+- **Approval:** Directed by the TASK-004 remediation instruction (2026-07-29); not independently proposed.
