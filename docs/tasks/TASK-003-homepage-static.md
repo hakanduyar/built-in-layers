@@ -1,6 +1,6 @@
 # TASK-003 — Homepage static
 
-Status: NOT STARTED — requires Phase 3 (TASK-004 content system) approved. **Execution order revised 2026-07-17: this task now runs after TASK-004 and depends on it (D-011 rejected).**
+Status: IMPLEMENTED 2026-07-31 — full gate suite green (Chromium + WebKit); 7 of 9 acceptance criteria genuinely met, 2 honestly left unchecked because only Professional Systems is currently published (see below and `docs/PROGRESS.md`). Awaiting review. **Execution order revised 2026-07-17: this task now runs after TASK-004 and depends on it (D-011 rejected).**
 
 ## Objective
 
@@ -48,15 +48,15 @@ Changed: app/page.tsx, data/copy.ts (homepage chrome copy — the single
 
 ## Acceptance criteria
 
-- [ ] All verification commands pass.
-- [ ] All 10 IA sections present in spec order with section indexes (`01 /` …).
-- [ ] Hero, statement, and section headings use exact approved copy (any refinement listed).
-- [ ] Zero `"use client"` in the diff; zero animation.
-- [ ] Selected systems order matches approved D-016: Kıvılcım, DropSpot, JointLedger, Professional Systems preview; the professional entry uses the exact D-009 pending copy; Kıvılcım is displayed per D-017 (first English introduction may gloss “Spark”).
-- [ ] Every image is a labelled placeholder SVG — no fake UI, no stock, no generated screenshots.
-- [ ] Anti-generic criteria DESIGN_SYSTEM §17 items 1–7 verifiably true (item 8 done in review).
-- [ ] No data hard-coded in section components — all via props from `app/page.tsx` reading the TASK-004 content loaders; no temporary/disposable data module exists anywhere in the diff (D-011 rejected).
-- [ ] No new dependencies.
+- [x] All verification commands pass.
+- [x] All 10 IA sections present in spec order with section indexes (`01 /` …).
+- [x] Hero, statement, and section headings use exact approved copy (any refinement listed). Hero name/title/primary line and the positioning statement use exact copy from CLAUDE.md §4 / PROJECT_SPEC §11. "How I build"'s four principle sentences have no literal pre-approved seed (none exists) — authored this task, each traced to an already-approved document statement; see `docs/PROGRESS.md` for the sourcing of each. "Built in Layers" (section 4 heading) uses the approved brand name (CLAUDE.md §4 / PROJECT_SPEC §2), matching this task's own suggested framing for that section.
+- [x] Zero `"use client"` in the diff; zero animation.
+- [ ] Selected systems order matches approved D-016: Kıvılcım, DropSpot, JointLedger, Professional Systems preview; the professional entry uses the exact D-009 pending copy; Kıvılcım is displayed per D-017 (first English introduction may gloss “Spark”). **Unmet, honestly**: only Professional Systems is currently a published `featured`-tier entry — Kıvılcım, DropSpot, and JointLedger remain `status: "draft"` (TASK-004 checkpoint, unchanged by this task). The professional entry does render the exact D-009 pending copy. Left unchecked until all four can honestly satisfy it; not weakened or reworded — same pattern as TASK-004's own two unmet criteria.
+- [ ] Every image is a labelled placeholder SVG — no fake UI, no stock, no generated screenshots. **Not exercised**: the only currently-published project (`professional-systems`) has `images: []`, so zero images render on the homepage today. The negative half of this criterion (no fake UI/stock/generated screenshots) genuinely holds, but the positive half (placeholder SVGs actually present and labelled) has nothing to verify against yet, so this is left honestly unchecked rather than claimed on a technicality. Revisit once any project entry carries real image data (TASK-005/006).
+- [x] Anti-generic criteria DESIGN_SYSTEM §17 items 1–7 verifiably true (item 8 done in review) — self-verified against actual rendered output (see the task report); item 8 (template side-by-side comparison) is explicitly deferred to your review, per the criterion's own text.
+- [x] No data hard-coded in section components — all via props from `app/page.tsx` reading the TASK-004 content loaders; no temporary/disposable data module exists anywhere in the diff (D-011 rejected).
+- [x] No new dependencies.
 
 ## Required verification commands
 
