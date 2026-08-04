@@ -1,1 +1,14 @@
-[CONTENT REQUIRED: Surface layer — interface decisions, hierarchy, responsiveness, design-system usage, accessibility work, and component structure. Pending repository audit and Hakan's input for TASK-005.]
+The interface is a single mobile-first shell: a five-item bottom navigation bar (Today, Plan, Mind, Focus, Progress) beneath a full-height content area, with a small settings trigger tucked in the top-right corner rather than taking up nav space. Each tab is a distinct, single-purpose screen — the app deliberately avoids a single dense dashboard trying to surface everything at once. Navigation is tab-state driven, not URL-routed, which fits an installable single-view PWA that never needs deep-linkable sub-pages.
+
+Progressive disclosure shows up concretely in the Focus screen. At rest, it shows only what's needed to start: the active task, four duration presets (5/15/25/45 minutes) plus a custom option. Once a session starts, the preset picker disappears entirely and is replaced by a live countdown and a progress bar — the interface only asks for a decision when a decision is actually needed, and gets out of the way once one has been made. Completion swaps the whole screen again, this time to a short confirmation with the XP earned, rather than layering a modal on top of the timer.
+
+Task and focus states are always communicated through more than color alone: a "Rutin" (routine) label distinguishes recurring tasks from one-off ones directly in the task card text, not just a tint; the timer's phase (idle, running, paused, done, completed) changes both its button label and its layout, not only a color; and every list — task cards, plan items, routine previews — breaks long titles and URLs onto new lines instead of letting them overflow their card.
+
+<Figure
+  src="/images/projects/kivilcim/placeholder-asset-pending.svg"
+  alt="Placeholder — Kıvılcım interface screenshot pending"
+  caption="Real interface screenshots are pending; this placeholder marks where they will go."
+  index={1}
+/>
+
+Life areas (Career, Health, Mind, Family, Order, in the current defaults) get a consistent visual treatment across every screen they touch — the same emoji and color badge on a task card, a plan item, a focus session, and a Progress stat row — so a single area stays recognizable at a glance without needing its name spelled out every time.

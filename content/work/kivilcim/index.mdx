@@ -2,25 +2,107 @@
 slug: "kivilcim"
 title: "Kıvılcım"
 categoryLabel: "PERSONAL OPERATING SYSTEM"
-description: "A local-first system for planning, focus, habits and personal growth."
+description: "A local-first system for planning, focus, and personal growth."
 tier: "featured"
-depth: "preview"
+depth: "full"
 order: 1
 provenance: "personal"
 aiAssisted: true
-aiDisclosure: "[CONTENT REQUIRED: AI-assistance disclosure details — pending confirmation]"
-contribution: "I conceived, designed, and am developing Kıvılcım as a local-first personal planning, focus, and growth system."
+aiDisclosure: "AI tools assisted parts of the planning, implementation, and review. Product direction, scope, constraints, and final decisions remained mine."
+contribution: "I defined Kıvılcım's product idea, scope, product rules, information architecture, and technical constraints, and directed its implementation and review."
 verificationStatus: "partial"
 status: "draft"
 phase: "active-development"
-factsCheckedAgainstRepo: false
-tech: ["React", "TypeScript", "Tailwind CSS", "Dexie", "IndexedDB"]
+factsCheckedAgainstRepo: true
+tech: ["React", "TypeScript", "Vite", "Tailwind CSS", "Dexie", "IndexedDB"]
 links:
   - label: "Repository"
     url: "https://github.com/hakanduyar/spark"
     kind: "repo"
     visibility: "public"
 images: []
+layers:
+  surface:
+    summary: "A five-area mobile-first dashboard — Today, Plan, Mind, Focus, Progress — designed so no single screen tries to do everything."
+  flow:
+    summary: "A daily loop: capture in Mind, commit in Plan, work in Focus, close out in a short evening review."
+  system:
+    summary: "A local-first React/Vite PWA storing everything in IndexedDB via Dexie, with an optional, user-keyed AI layer and no mandatory backend."
+decisions:
+  - id: "kivilcim-d1"
+    title: "Local-first storage instead of a mandatory backend"
+    context: "Kıvılcım holds personal, sometimes sensitive daily data — tasks, mood/energy, focus habits, private notes. It's a single-user, personal-use tool, not a multi-tenant product."
+    choice: "All data lives on-device in IndexedDB. There is no server, no accounts, and no mandatory network dependency — the repository contains zero backend or API code."
+    alternatives:
+      ["A cloud backend with accounts (e.g. Firebase/Supabase) for automatic multi-device sync"]
+    tradeoff: "There's no automatic multi-device sync — moving data between devices is a manual JSON export/import step. In exchange, the data never leaves the device unless the user explicitly exports it, and the app works fully offline from the first install."
+  - id: "kivilcim-d2"
+    title: "Dexie/IndexedDB for primary data, not localStorage"
+    context: "The data model needed typed, indexed, queryable records — tasks linked to life areas, routines generating dated task instances without duplicates, XP events traceable to their source — not just flat key-value pairs."
+    choice: "Dexie wraps IndexedDB with 14 typed tables and compound indexes (for example `[routineId+routineDate]`, used to stop a routine generating the same day's task twice). The schema has evolved through eight versioned schema migrations designed to preserve existing records as tables and indexes changed."
+    alternatives:
+      [
+        "localStorage for everything (simple, but string-only, unindexed, and impractical to query at this data shape)",
+      ]
+    tradeoff: "Dexie is a real dependency with real migration discipline required on every schema change. `localStorage` is still used, deliberately, for a few small UI-only settings (like the active focus-task pointer) — the split itself is the point: primary data earns a real database, incidental UI state doesn't."
+  - id: "kivilcim-d3"
+    title: "Five focused areas instead of one dashboard"
+    context: "Planning, capture, focused work, and review are different mental modes. Mixing them into one dense dashboard tends to make all of them worse at once."
+    choice: "A fixed five-tab bottom navigation — Today, Plan, Mind, Focus, Progress — each a single-purpose screen, with no client-side router (a plain tab-state switch is enough for a five-screen PWA shell)."
+    alternatives: ["One unified dashboard view surfacing tasks, notes, timer, and stats together"]
+    tradeoff: "Some actions require an extra tap to switch screens (for example, starting focus on a task planned elsewhere). In exchange, each screen stays legible and single-purpose instead of becoming a control panel."
+  - id: "kivilcim-d4"
+    title: "AI made strictly optional, never required, never bundled"
+    context: "AI-assisted features (turning a captured note into a task draft, a short weekly comment on progress) are genuinely useful but shouldn't gate the core product or cost the user anything by default."
+    choice: "Every AI code path checks for a user-supplied Gemini API key before running; without one, the app is fully functional and simply doesn't show AI results. The key lives only in `localStorage`, is read only client-side, and is never committed to source or included in JSON backups."
+    alternatives:
+      [
+        "Bundling a shared/default API key",
+        "Making an AI step mandatory in a core flow (e.g. task creation)",
+      ]
+    tradeoff: "Users who want the AI features must find Settings and paste in their own key — real friction. In exchange, the core product has zero AI dependency, zero shared-cost surface, and no key ever leaves the user's device through the app's own code."
+  - id: "kivilcim-d5"
+    title: "An explicit, idempotent XP event model"
+    context: "A lightweight XP/level layer rewards completing real work, but a naive 'grant XP on every completion' rule is trivially gameable by toggling a task done/undone repeatedly."
+    choice: "Every XP grant is keyed by a unique `sourceKey` (e.g. `task-complete:{id}`, `routine-complete:{routineId}:{date}`, `evening-note:{date}`) and checked against prior XP events before being written, inside a single Dexie transaction. The same action can never grant XP twice."
+    alternatives: ["Granting XP directly on every completion event with no de-duplication check"]
+    tradeoff: "Every award site needs a stable, unique key and an extra existence check, instead of a one-line XP increment. In exchange, the progress numbers on the Progress screen are actually trustworthy — reopening and recompleting a task doesn't inflate them."
+  - id: "kivilcim-d6"
+    title: "Routines as their own table, not an extension of Habits"
+    context: "Recurring commitments (like a daily habit) needed a way to show up as real, actionable items — but the existing `habits`/`habitLogs` tables didn't fit how the rest of the app modeled work."
+    choice: "Routines are a separate table: each active routine generates a normal dated `Task` for the days it applies to (skipping days that already have one), so a routine's occurrences get all the same actions — complete, focus, move — as any other task, for free."
+    alternatives:
+      ["Extending the existing `habits`/`habitLogs` tables to also drive daily task generation"]
+    tradeoff: "The original `habits`/`habitLogs` tables are still in the schema (and still exported in JSON backups) but have no user-facing screen today — they're honestly unused. Routines cost a fourth Dexie migration and a small future-generation helper, but reuse every existing task action instead of duplicating them for a separate habit-completion UI."
 ---
 
-Kıvılcım is a local-first, mobile-first personal operating system for planning, focus, habits, and personal growth. [CONTENT REQUIRED: current feature status, role statement, design evolution, known limitations, what comes next — pending Hakan's input before publishing.]
+## One-minute summary
+
+Kıvılcım is a personal, local-first PWA for planning, focus, and growth, organized around five areas: Today, Plan, Mind, Focus, and Progress. Primary application data lives in IndexedDB, while a small amount of device-local configuration, including the optional Gemini key, is stored in localStorage. There is no backend or account system, and the core planning, focus, and review workflows continue to work offline after the app has been installed. The core loop is simple: capture what's on your mind, plan what matters, run a focus session against it, and close the day with a short review. An optional AI layer (a user-supplied Gemini key) can help draft tasks from notes and summarize a week, but the app is fully usable without it. It's under active, ongoing development — the interface is currently Turkish-language only, and a handful of areas planned in the schema (habit-specific tracking, weekly review) don't have a screen yet.
+
+## Why it exists
+
+Most task managers assume the hard part is remembering what to do. In practice, the harder part is deciding what to start and actually starting it — decision fatigue, not memory, is usually the real friction. Kıvılcım is built around that problem specifically: a small, opinionated set of screens (not an open-ended list app), a focus timer that turns "start something" into a concrete, timed commitment, and a lightweight XP/level layer that rewards the act of finishing a session or a task, not just planning one. It isn't a generic to-do app with extra features bolted on — the five-area structure and the focus-first loop are the actual product idea, not decoration around a task list.
+
+## Constraints
+
+- **Local-first, single-user**: everything lives in IndexedDB on one device; there's no account system and no server-side code to audit or maintain.
+- **Mobile-first PWA**: designed and used as an installable home-screen app; desktop is not the primary target.
+- **AI is optional, never required**: no core flow depends on an external API call or an API key being present.
+- **No automatic sync**: moving data between devices is a manual, user-initiated JSON export/import — an explicit trade-off of the local-first choice, not an oversight.
+- **Turkish-language UI today**: every visible string in the current build is in Turkish. This case study is written in English, but the product itself is not yet localized.
+- **Personal-use scope**: built for one person's own daily use, not designed or hardened for multi-tenant or public deployment.
+
+## Evolution
+
+The project started with the basics: a Vite/React/TypeScript scaffold, Tailwind, PWA setup, and a dark mobile shell, followed by the Dexie database and its first table set. From there it grew screen by screen — Today (with a rule-based coaching note and the day's tasks), Plan (task creation, editing, completion, filtering, promoting a task to the day's focus), Focus (the timer itself, with 5/15/25/45-minute presets and XP on completion), and a JSON backup/restore system early enough to make iteration safe.
+
+Mind (capture and a saved-links vault) and the optional AI layer (Gemini-backed task drafting and coaching notes, fully gated behind a user-supplied key) followed, then Progress (XP, levels, per-area stats). After that initial build-out, development continued well past the original plan: Routines (recurring tasks generated day-by-day, replacing an earlier idea of extending the unused Habits tables), a general Plans/Important Dates system for goals and deadlines with linked tasks and progress tracking, four calendar views (day/week/month/year) unifying tasks, routines, and plans on one timeline, a full pass hardening the XP model against double-awarding, and a final UX/mobile-stability polish pass.
+
+## Reflection
+
+What's held up well: the focus-timer state machine, the XP model's award-once guarding, and eight versioned schema migrations designed to preserve existing records as tables and indexes changed — the kind of thing that's easy to get wrong quietly and hard to fix retroactively. The local-first, optional-AI stance has also stayed intact throughout, rather than eroding as features were added.
+
+What's honestly incomplete: `habits`/`habitLogs` exist in the schema and in JSON backups but have no screen — recurring commitments are handled by Routines instead (see the decision above), which works, but leaves that original table as quiet debt. The same is true of `weeklyReviews` — reserved in the schema, never wired to a screen. Progress is currently plain stat cards and bars; a "Recharts graphs for better statistics" item is explicitly still on the project's own to-do list, not yet built. And the product has no English UI yet, which matters for anyone outside its current single user trying to actually run it.
+
+What's next, honestly stated rather than promised: real product screenshots for this case study, and — separately from this write-up — the schema cleanup or removal for the unused habit/weekly-review tables, whichever the actual usage pattern ends up justifying.

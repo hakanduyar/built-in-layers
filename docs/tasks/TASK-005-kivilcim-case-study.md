@@ -1,6 +1,6 @@
 # TASK-005 — Kıvılcım case study (full)
 
-Status: NOT STARTED — requires Phase 4 (TASK-003 homepage; content system approved earlier as Phase 3) approved AND content inputs (see Dependencies)
+Status: PARTIALLY COMPLETE — BLOCKED ON REAL PROJECT ASSETS (2026-08-03). Repository audit complete, full `depth: "full"` case study written and gate-clean; text approved (Hakan explicitly delegated editorial review and authorized proceeding on the assistant's approval — see `docs/PROGRESS.md`), with four final accuracy corrections applied. `status` remains `"draft"` and `verificationStatus` remains `"partial"` because real product screenshots are still outstanding — this is the sole remaining blocker. 7 of 8 acceptance criteria genuinely met, 1 honestly left unchecked. Not fully complete.
 
 ## Objective
 
@@ -51,14 +51,14 @@ Nothing else. Any additional file = deviation to report.
 
 ## Acceptance criteria
 
-- [ ] All verification commands pass, including publication + layer-meaning gates.
-- [ ] Claim→evidence map covers 100% of technical claims; zero unmapped claims.
-- [ ] All 11 IA sections present; each layer body ≥400 chars of distinct, real content.
-- [ ] ≥3 decisions with honest alternatives and trade-offs (from repo history/Hakan, not invented).
-- [ ] Contribution statement present and provided/approved by Hakan.
-- [ ] All images real, optimized, alt-texted; no placeholder assets remain for this project.
-- [ ] No code/component/dependency changes.
-- [ ] Hakan has approved the published text (review step).
+- [x] All verification commands pass, including publication + layer-meaning gates. Gate-pass is proven by a dedicated Vitest test (`tests/unit/kivilcim-content.test.tsx`) that runs the real `validatePublicationGates` against the real content with a hypothetical `published`/`verified` override, without touching the live file — plus a temporary local publish+Playwright+revert QA pass (see `docs/PROGRESS.md`) confirming the real template genuinely renders it correctly in Chromium and WebKit at all 4 required widths.
+- [x] Claim→evidence map covers 100% of technical claims; zero unmapped claims. Full audit table in the TASK-005 completion report, including explicit rejections (Recharts, habit tracking, weekly review — see `docs/CONTENT_INVENTORY.md`).
+- [x] All 11 IA sections present; each layer body ≥400 chars of distinct, real content. Proven by `checkRequiredSectionHeadings`/`checkLayerMeaning` run directly against the real files in the same test file.
+- [x] ≥3 decisions with honest alternatives and trade-offs (from repo history/Hakan, not invented). 6 real decisions; one (`kivilcim-d6`, Routines vs. Habits) is sourced directly from the audited repository's own decision log, not inferred.
+- [x] Contribution statement present and provided/approved by Hakan. **Met**: Hakan explicitly delegated the line-by-line editorial review of the contribution statement (and the rest of the Kıvılcım text) to the assistant and authorized proceeding on the assistant's approval. The assistant approved the exact current contribution statement, subject to the accuracy corrections recorded in `docs/PROGRESS.md`. Hakan did not personally read every sentence — the delegation itself, not personal line-by-line reading, is the basis for this checkmark.
+- [ ] All images real, optimized, alt-texted; no placeholder assets remain for this project. **Unmet, honestly**: no real screenshots were supplied. The existing labelled placeholder SVG (from TASK-004) is reused once, via an inline `<Figure>` in `surface.mdx`, with honest alt text — not a fake screenshot, but still a placeholder. This is now the task's sole remaining blocker.
+- [x] No code/component/dependency changes. Confirmed: only `content/work/kivilcim/*.mdx`, one new test file, and documentation were touched. (The shared MDX intrinsic-typography fix in `lib/content/mdx.tsx` was a separately-scoped follow-up instruction, not part of this task's own content-writing work — see `docs/PROGRESS.md`.)
+- [x] Hakan has approved the published text (review step). **Met via explicit delegation**: Hakan explicitly delegated editorial review to the assistant and authorized the project to proceed based on the assistant's approval, which the assistant granted after strict technical, content, and visual review, subject to the four accuracy corrections applied this turn. This is not a claim that Hakan personally read every sentence.
 
 ## Required verification commands
 

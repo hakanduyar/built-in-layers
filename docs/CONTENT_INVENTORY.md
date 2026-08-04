@@ -56,30 +56,30 @@ Repository:
 
 `https://github.com/hakanduyar/spark`
 
-Status: `VERIFIED FOR FIRST CASE STUDY`, subject to repository audit.
+Status: `PARTIAL` — repository audit complete (TASK-005, 2026-07-31), full case-study text written; `status: "draft"` pending Hakan's review/approval of the text and real screenshots.
 
-Known direction:
+Verified direction (repository-audited, TASK-005):
 
-- personal operating system
-- mobile-first
-- local-first
-- offline/PWA
-- React
-- TypeScript
-- Tailwind
-- Dexie/IndexedDB
-- tasks, focus, habits, progress
-- optional AI direction
+- personal operating system — Today/Plan/Mind/Focus/Progress, confirmed as the app's real 5-tab structure
+- mobile-first, local-first, offline PWA — confirmed (real `manifest.webmanifest`, Workbox service worker, zero backend/API code)
+- React, TypeScript, Vite, Tailwind CSS, Dexie, IndexedDB — confirmed in `package.json`/`vite.config.ts`
+- tasks, planning, routines, general plans/important dates, calendar views — confirmed, extensively implemented
+- focus sessions/timer, XP and level progression, daily review — confirmed, fully implemented
+- JSON export/import — confirmed, fully implemented
+- optional AI assistance (user-supplied Gemini key, `localStorage`-only, never bundled) — confirmed exactly as previously described
+- UI language: **Turkish-only**, currently — newly confirmed via audit, not previously recorded here
 
-Needed:
+Rejected/corrected claims (repository audit, TASK-005):
 
-- current screenshots
-- current live URL, if any
-- exact current feature status
-- Hakan's role statement
-- design evolution
-- known limitations
-- what comes next
+- **"Habits" tracking is not a working feature** — `habits`/`habitLogs` tables exist in the schema and JSON backup but have no screen anywhere in the app; recurring commitments are handled by a separate `Routines` feature instead (the repo's own decision log explains why)
+- **"Weekly review" is not a working feature** — `weeklyReviews` table exists but is never read or written outside the generic backup loop
+- **Recharts is not implemented** — absent from dependencies; the app's own task log lists chart-based statistics as a future, unchecked to-do item, not current fact
+
+Needed (unchanged by this audit):
+
+- current screenshots (real product imagery — none supplied; case study currently uses a labelled placeholder)
+- current live URL — none exists; this is a locally-installed PWA, not hosted publicly
+- Hakan's review and approval of the written case-study text (TASK-005 report, awaiting review)
 
 ### DropSpot
 
