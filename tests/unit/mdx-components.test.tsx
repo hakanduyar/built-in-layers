@@ -86,11 +86,11 @@ describe("MDX intrinsic-element mapping — links", () => {
 describe("MDX intrinsic-element mapping — custom whitelist unaffected", () => {
   it("Figure still renders with real alt text", async () => {
     const content = await compileProjectMDX(
-      '<Figure src="/images/projects/kivilcim/placeholder-asset-pending.svg" alt="Placeholder — pending" caption="pending" />',
+      '<Figure src="/images/projects/example/diagram.svg" alt="Example diagram" caption="Example caption" />',
     );
     const html = renderToStaticMarkup(content);
-    expect(html).toContain("placeholder-asset-pending.svg");
-    expect(html).toContain('alt="Placeholder — pending"');
+    expect(html).toContain("/images/projects/example/diagram.svg");
+    expect(html).toContain('alt="Example diagram"');
   });
 
   it("Note still renders as an aside", async () => {

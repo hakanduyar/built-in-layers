@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="cfd-title cfd-desc">
+  <title id="cfd-title">Kıvılcım core flow diagram: Capture, Plan, Focus, Review</title>
+  <desc id="cfd-desc">A diagram of Kıvılcım's core loop — Capture, Plan, Focus, Review — connected in sequence, with each stage's verified supporting concept named below it: Mind capture, task planning, a focus session, and a daily review. This is a verified flow diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED FLOW DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">The core loop</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Capture, plan, focus, review — the repeating cycle the app is built around</text>
+
+  <!-- Stage 1: Capture -->
+  <g>
+    <rect x="64" y="380" width="300" height="220" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="32" font-weight="600" fill="#161616">Capture</text>
+    <line x1="94" y1="462" x2="334" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+      <tspan x="94" dy="0">Mind capture —</tspan>
+      <tspan x="94" dy="28">quick notes and</tspan>
+      <tspan x="94" dy="28">saved links</tspan>
+    </text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M 364 490 L 424 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+
+  <!-- Stage 2: Plan -->
+  <g>
+    <rect x="428" y="380" width="300" height="220" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="458" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="32" font-weight="600" fill="#161616">Plan</text>
+    <line x1="458" y1="462" x2="698" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="458" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+      <tspan x="458" dy="0">Task planning —</tspan>
+      <tspan x="458" dy="28">tasks, routines,</tspan>
+      <tspan x="458" dy="28">and goals</tspan>
+    </text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M 728 490 L 788 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+
+  <!-- Stage 3: Focus (signal accent — the one meaningful indicator) -->
+  <g>
+    <rect x="792" y="380" width="300" height="220" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="822" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="32" font-weight="600" fill="#161616">Focus</text>
+    <line x1="822" y1="462" x2="1062" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="822" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+      <tspan x="822" dy="0">A focus session —</tspan>
+      <tspan x="822" dy="28">a single timed</tspan>
+      <tspan x="822" dy="28">block of work</tspan>
+    </text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <path d="M 1092 490 L 1152 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+
+  <!-- Stage 4: Review -->
+  <g>
+    <rect x="1156" y="380" width="300" height="220" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1186" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="32" font-weight="600" fill="#161616">Review</text>
+    <line x1="1186" y1="462" x2="1426" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1186" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+      <tspan x="1186" dy="0">Daily review —</tspan>
+      <tspan x="1186" dy="28">a check-in on the</tspan>
+      <tspan x="1186" dy="28">day's progress</tspan>
+    </text>
+  </g>
+
+  <!-- Return loop arrow: Review back to Capture, drawn beneath the row -->
+  <path d="M 1306 600 L 1306 700 L 214 700 L 214 600" stroke="#504e48" stroke-width="1.5" fill="none" stroke-dasharray="6 6" marker-end="url(#arrowhead-muted)" />
+  <text x="800" y="750" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">the loop repeats — review feeds the next day's capture and plan</text>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#161616" />
+    </marker>
+    <marker id="arrowhead-muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#504e48" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Sequence verified against the audited repository — not a captured screen.</text>
+</svg>

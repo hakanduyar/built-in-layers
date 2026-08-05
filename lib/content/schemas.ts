@@ -43,12 +43,23 @@ const ProjectLinkSchema = z.object({
   visibility: z.enum(["public", "private-noted"]),
 });
 
+// D-019: what kind of asset this is, and therefore which honesty rule
+// applies to it. Replaces the earlier `placeholder: boolean` field with a
+// single, non-duplicated distinction rather than layering a second flag
+// alongside it.
+export const ProjectImageAssetTypeSchema = z.enum([
+  "real-screenshot",
+  "verified-diagram",
+  "provisional-illustration",
+]);
+export type ProjectImageAssetType = z.infer<typeof ProjectImageAssetTypeSchema>;
+
 const ProjectImageSchema = z.object({
   src: z.string(),
   alt: z.string().min(1),
   caption: z.string().optional(),
   layer: z.enum(["surface", "flow", "system"]).optional(),
-  placeholder: z.boolean(),
+  assetType: ProjectImageAssetTypeSchema,
 });
 
 const ProjectLayersSchema = z.object({

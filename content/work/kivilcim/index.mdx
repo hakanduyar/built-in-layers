@@ -10,8 +10,8 @@ provenance: "personal"
 aiAssisted: true
 aiDisclosure: "AI tools assisted parts of the planning, implementation, and review. Product direction, scope, constraints, and final decisions remained mine."
 contribution: "I defined Kıvılcım's product idea, scope, product rules, information architecture, and technical constraints, and directed its implementation and review."
-verificationStatus: "partial"
-status: "draft"
+verificationStatus: "verified"
+status: "published"
 phase: "active-development"
 factsCheckedAgainstRepo: true
 tech: ["React", "TypeScript", "Vite", "Tailwind CSS", "Dexie", "IndexedDB"]
@@ -20,7 +20,27 @@ links:
     url: "https://github.com/hakanduyar/spark"
     kind: "repo"
     visibility: "public"
-images: []
+images:
+  - src: "/images/projects/kivilcim/product-areas-map.svg"
+    alt: "Diagram of Kıvılcım's five product areas — Today, Plan, Mind, Focus, and Progress — shown as five labelled panels. Illustrative, not a screenshot."
+    caption: "Illustrative product map based on the audited repository — not a product screenshot."
+    layer: "surface"
+    assetType: "provisional-illustration"
+  - src: "/images/projects/kivilcim/core-flow-diagram.svg"
+    alt: "Diagram of Kıvılcım's core loop: Capture, Plan, Focus, Review, connected in sequence, with each stage's verified supporting concept named below it."
+    caption: "Verified flow diagram, not a product screenshot."
+    layer: "flow"
+    assetType: "verified-diagram"
+  - src: "/images/projects/kivilcim/local-first-architecture.svg"
+    alt: "Diagram of Kıvılcım's local-first architecture: a React, Vite, and TypeScript interface over Dexie and IndexedDB, a PWA/Workbox offline layer, and JSON export/import, with a separately bounded optional path for user-authorized Gemini requests."
+    caption: "Verified architecture diagram."
+    layer: "system"
+    assetType: "verified-diagram"
+  - src: "/images/projects/kivilcim/focus-lifecycle.svg"
+    alt: "State diagram of a Kıvılcım focus session: Idle, Running, Paused, Done, and Completed, with a reset transition from Running or Paused back to Idle."
+    caption: "Verified state diagram."
+    layer: "flow"
+    assetType: "verified-diagram"
 layers:
   surface:
     summary: "A five-area mobile-first dashboard — Today, Plan, Mind, Focus, Progress — designed so no single screen tries to do everything."

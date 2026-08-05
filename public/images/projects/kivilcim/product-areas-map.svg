@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="pam-title pam-desc">
+  <title id="pam-title">Kıvılcım product areas map (illustrative, not a screenshot)</title>
+  <desc id="pam-desc">A diagram of Kıvılcım's five product areas — Today, Plan, Mind, Focus, and Progress — shown as five equal panels, each with a one-line description of its verified purpose. This is an editorial illustration based on the audited repository, not a captured screenshot of the application.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <!-- Provisional/illustrative label (visible, mandatory per D-019) -->
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">ILLUSTRATIVE PRODUCT MAP — NOT A SCREENSHOT</text>
+
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <!-- Heading -->
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">Five focused areas, one system</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Kıvılcım's bottom navigation, verified against the audited repository</text>
+
+  <!-- Five panels -->
+  <!-- Panel 1: Today -->
+  <g>
+    <rect x="64" y="300" width="278" height="600" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <line x1="64" y1="340" x2="342" y2="340" stroke="#b8b5ac" stroke-width="1" />
+    <text x="88" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">01</text>
+    <text x="88" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Today</text>
+    <text x="88" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">
+      <tspan x="88" dy="0">Daily tasks and an</tspan>
+      <tspan x="88" dy="30">energy check-in</tspan>
+    </text>
+  </g>
+
+  <!-- Panel 2: Plan -->
+  <g>
+    <rect x="342" y="300" width="278" height="600" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <line x1="342" y1="340" x2="620" y2="340" stroke="#b8b5ac" stroke-width="1" />
+    <text x="366" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">02</text>
+    <text x="366" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Plan</text>
+    <text x="366" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">
+      <tspan x="366" dy="0">Tasks, routines,</tspan>
+      <tspan x="366" dy="30">and goals</tspan>
+    </text>
+  </g>
+
+  <!-- Panel 3: Mind -->
+  <g>
+    <rect x="620" y="300" width="278" height="600" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <line x1="620" y1="340" x2="898" y2="340" stroke="#b8b5ac" stroke-width="1" />
+    <text x="644" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">03</text>
+    <text x="644" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Mind</text>
+    <text x="644" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">
+      <tspan x="644" dy="0">Quick capture and</tspan>
+      <tspan x="644" dy="30">saved links</tspan>
+    </text>
+  </g>
+
+  <!-- Panel 4: Focus (signal-ui accent — the one meaningful indicator on this diagram) -->
+  <g>
+    <rect x="898" y="300" width="278" height="600" fill="none" stroke="#e04413" stroke-width="2" />
+    <line x1="898" y1="340" x2="1176" y2="340" stroke="#b8b5ac" stroke-width="1" />
+    <text x="922" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">04</text>
+    <text x="922" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Focus</text>
+    <text x="922" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">
+      <tspan x="922" dy="0">Timed focus</tspan>
+      <tspan x="922" dy="30">sessions</tspan>
+    </text>
+  </g>
+
+  <!-- Panel 5: Progress -->
+  <g>
+    <rect x="1176" y="300" width="278" height="600" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <line x1="1176" y1="340" x2="1454" y2="340" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1200" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">05</text>
+    <text x="1200" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Progress</text>
+    <text x="1200" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">
+      <tspan x="1200" dy="0">XP, levels,</tspan>
+      <tspan x="1200" dy="30">and stats</tspan>
+    </text>
+  </g>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Five single-purpose screens, switched by plain tab state — not one dense dashboard.</text>
+</svg>

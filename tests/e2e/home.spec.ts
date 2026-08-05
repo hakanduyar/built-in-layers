@@ -53,18 +53,30 @@ test.describe("Home: Built in Layers", () => {
 });
 
 test.describe("Home: selected systems", () => {
-  test("lists only the published project", async ({ page }) => {
+  test("lists exactly the two published projects, Kıvılcım before Professional Systems", async ({
+    page,
+  }) => {
     await page.goto("/");
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(1);
-    await expect(links.first()).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links).toHaveCount(2);
+    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/professional-systems");
   });
 
-  test("draft projects (Kıvılcım, DropSpot, JointLedger) do not appear", async ({ page }) => {
+  test("draft projects (DropSpot, JointLedger) do not appear; no fake cards render for them", async ({
+    page,
+  }) => {
     await page.goto("/");
-    await expect(page.getByText("Kıvılcım")).toHaveCount(0);
     await expect(page.getByText("DropSpot")).toHaveCount(0);
     await expect(page.getByText("JointLedger")).toHaveCount(0);
+  });
+
+  test("Kıvılcım renders with its real title and description", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("Kıvılcım")).toBeVisible();
+    await expect(page.locator("body")).toContainText(
+      "A local-first system for planning, focus, and personal growth.",
+    );
   });
 
   test("Professional Systems renders with its exact approved description", async ({ page }) => {

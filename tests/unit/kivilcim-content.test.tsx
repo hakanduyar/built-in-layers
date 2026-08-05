@@ -17,8 +17,10 @@ import {
 import { getProjectBySlug, getProjectIndexBody, getProjectLayers } from "@/lib/content/work";
 
 // Real content, not a fixture — this is TASK-005's Kıvılcım entry itself.
-// These tests prove the real, currently-draft content is genuinely
-// gate-ready and template-ready, without ever flipping its live status.
+// Published under D-019 (docs/DECISIONS.md): text and repository claims are
+// verified, and the four project images are honestly labelled
+// verified-diagram/provisional-illustration assets rather than real
+// screenshots, which do not exist yet.
 const CONTENT_DIR = path.join(process.cwd(), "content/work/kivilcim");
 
 function readRaw(file: string): string {
@@ -33,10 +35,10 @@ describe("Kıvılcım real content — schema", () => {
     expect(parsed.success).toBe(true);
   });
 
-  it("stays status: draft and verificationStatus: partial (not self-certified verified)", () => {
+  it("is published and verified under D-019 (Hakan's explicit, dated decision)", () => {
     if (!parsed.success) return;
-    expect(parsed.data.status).toBe("draft");
-    expect(parsed.data.verificationStatus).toBe("partial");
+    expect(parsed.data.status).toBe("published");
+    expect(parsed.data.verificationStatus).toBe("verified");
     expect(parsed.data.factsCheckedAgainstRepo).toBe(true);
   });
 
@@ -104,22 +106,13 @@ describe("Kıvılcım real content — layer-meaning gate", () => {
   });
 });
 
-describe("Kıvılcım real content — hypothetical publication-gate pass", () => {
-  it("would pass every publication gate if published and verified (not live-flipped)", () => {
+describe("Kıvılcım real content — publication-gate pass (live, published)", () => {
+  it("passes every publication gate against the real, live published/verified content", () => {
     const { data, content } = matter(readRaw("index.mdx"));
     const parsed = ProjectFrontmatterSchema.parse(data);
 
-    // Hypothetical only: proves the text is gate-ready without touching the
-    // real file's status/verificationStatus, which stay draft/partial until
-    // Hakan reviews and approves the text (CONTENT_MODEL §9).
-    const hypothetical = {
-      ...parsed,
-      status: "published" as const,
-      verificationStatus: "verified" as const,
-    };
-
     const errors = validatePublicationGates({
-      project: hypothetical,
+      project: parsed,
       indexBody: content,
       layerBodies: {
         surface: readRaw("surface.mdx"),
@@ -152,14 +145,15 @@ describe("Kıvılcım real content — Surface/Flow/System load in order with di
     expect(systemHtml).not.toContain("bottom navigation");
   });
 
-  it("surface layer's placeholder Figure has honest, non-empty alt text", async () => {
+  it("surface layer's product-areas-map Figure has honest, non-empty alt text (D-019)", async () => {
     const layers = await getProjectLayers("kivilcim");
     expect(layers).not.toBeNull();
     if (!layers) return;
 
     const surfaceHtml = renderToStaticMarkup(layers.surface);
-    expect(surfaceHtml).toContain("placeholder-asset-pending.svg");
-    expect(surfaceHtml).toMatch(/alt="Placeholder[^"]*pending"/);
+    expect(surfaceHtml).toContain("product-areas-map.svg");
+    expect(surfaceHtml).toMatch(/alt="Diagram of Kıvılcım.{1,10}s five product areas[^"]*"/);
+    expect(surfaceHtml).not.toContain("placeholder-asset-pending.svg");
   });
 });
 

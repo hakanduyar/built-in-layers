@@ -1,5 +1,12 @@
 Kıvılcım is a Vite/React/TypeScript single-page app with no client-side router — five screens are switched by plain component state (`useState<Tab>`), which is enough for an installable app with no deep-linkable sub-routes and keeps the shell genuinely simple. All persistence runs through Dexie over IndexedDB: 14 typed tables (profile, life areas, tasks, notes, links, habits, habit logs, focus sessions, daily reviews, weekly reviews, XP events, settings, routines, plan items), evolved through eight versioned schema migrations designed to preserve existing records as tables and indexes changed. Compound indexes exist specifically to prevent duplicate writes — `[routineId+routineDate]` on tasks stops a routine generating the same day's task twice, and a `sourceKey` index on XP events backs the anti-double-award check described in the Decisions above.
 
+<Figure
+  src="/images/projects/kivilcim/local-first-architecture.svg"
+  alt="Diagram of Kıvılcım's local-first architecture: a React, Vite, and TypeScript interface over Dexie and IndexedDB, a PWA/Workbox offline layer, and JSON export/import, with a separately bounded optional path for user-authorized Gemini requests."
+  caption="Verified architecture diagram."
+  index={1}
+/>
+
 The XP system is event-sourced rather than a single mutable counter: every award is its own row with a `source`, an optional `sourceType`, and a unique `sourceKey`; level and totals are derived by summing those events on read, not maintained as separate stateful fields that could drift out of sync. Export and import mirror this table set directly — `exportBackup` reads all 14 tables into one versioned JSON document, and `importBackup` validates that shape before clearing and repopulating every table inside a single Dexie transaction, so a partially-applied restore isn't possible.
 
 The optional AI boundary is a hard client-side gate: every AI-calling function checks for a user-supplied key before doing anything, and the key is read from and written only to `localStorage` — it is never present in source, never logged, and explicitly excluded from the JSON backup format. AI calls go through a small model-fallback chain (a primary model, then two others) with error classification that distinguishes quota limits, service overload, invalid keys, and network failures, and stops immediately on a key or network problem rather than retrying pointlessly.

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="lfa-title lfa-desc">
+  <title id="lfa-title">Kıvılcım local-first architecture diagram</title>
+  <desc id="lfa-desc">A diagram of Kıvılcım's architecture: a React, Vite, and TypeScript interface reading and writing to Dexie over IndexedDB, a PWA/Workbox layer providing offline capability, and user-initiated JSON export and import — all on-device, with no mandatory backend and no account system. A separate, clearly bounded optional path shows user-authorized Gemini requests, only made when the person supplies their own API key. This is a verified architecture diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED ARCHITECTURE DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">Local-first, by default</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Everything the app needs to run lives on the device — nothing is required outside it</text>
+
+  <!-- On-device boundary box -->
+  <rect x="64" y="280" width="920" height="620" fill="none" stroke="#161616" stroke-width="2" />
+  <text x="88" y="316" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="2" fill="#161616">ON-DEVICE — NO MANDATORY BACKEND, NO ACCOUNT SYSTEM</text>
+
+  <!-- Interface layer -->
+  <rect x="104" y="350" width="840" height="120" fill="none" stroke="#b8b5ac" stroke-width="1" />
+  <text x="128" y="392" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Interface</text>
+  <text x="128" y="422" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">React + Vite + TypeScript</text>
+  <text x="128" y="450" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">Today, Plan, Mind, Focus, Progress</text>
+
+  <path d="M 524 470 L 524 500" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#arrowhead2)" />
+
+  <!-- Data layer -->
+  <rect x="104" y="504" width="410" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+  <text x="128" y="546" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Dexie</text>
+  <text x="128" y="576" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">Typed wrapper over</text>
+  <text x="128" y="602" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">IndexedDB</text>
+
+  <!-- PWA layer -->
+  <rect x="534" y="504" width="410" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+  <text x="558" y="546" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">PWA / Workbox</text>
+  <text x="558" y="576" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">Service worker,</text>
+  <text x="558" y="602" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">offline capability</text>
+
+  <path d="M 309 634 L 309 664" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#arrowhead2)" />
+
+  <!-- IndexedDB store -->
+  <rect x="104" y="668" width="410" height="110" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+  <text x="128" y="710" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="26" font-weight="600" fill="#161616">IndexedDB</text>
+  <text x="128" y="740" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">On-device storage</text>
+
+  <!-- Export/import -->
+  <rect x="534" y="668" width="410" height="110" fill="none" stroke="#b8b5ac" stroke-width="1" />
+  <text x="558" y="710" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="26" font-weight="600" fill="#161616">JSON export / import</text>
+  <text x="558" y="740" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">User-initiated data portability</text>
+
+  <text x="128" y="854" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+    <tspan x="128" dy="0">No automatic cloud sync. Data leaves the device only when</tspan>
+    <tspan x="128" dy="28">the person explicitly exports it.</tspan>
+  </text>
+
+  <!-- Optional Gemini box — clearly separated, dashed border, outside the core boundary -->
+  <rect x="1040" y="350" width="496" height="428" fill="none" stroke="#e04413" stroke-width="2" stroke-dasharray="8 6" />
+  <text x="1064" y="392" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" letter-spacing="2" fill="#b8380e">OPTIONAL — NOT PART OF THE CORE</text>
+  <text x="1064" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Gemini requests</text>
+  <text x="1064" y="480" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+    <tspan x="1064" dy="0">Made only if the person</tspan>
+    <tspan x="1064" dy="28">supplies their own API key.</tspan>
+    <tspan x="1064" dy="28">The app functions fully</tspan>
+    <tspan x="1064" dy="28">without it.</tspan>
+  </text>
+  <path d="M 944 500 L 1030 500" stroke="#b8380e" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#arrowhead-orange)" />
+
+  <defs>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="5" refY="8" orient="auto">
+      <path d="M 0 0 L 10 0 L 5 10 z" fill="#161616" />
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b8380e" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Boundaries verified against the audited repository — not a captured screen.</text>
+</svg>

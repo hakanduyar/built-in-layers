@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="fl-title fl-desc">
+  <title id="fl-title">Kıvılcım focus session lifecycle diagram</title>
+  <desc id="fl-desc">A state diagram of a Kıvılcım focus session: Idle moves to Running on start, Running and Paused move back and forth on pause and resume, Running moves to Done when the timer completes, and Done moves to Completed on confirmation. A separate reset transition from Running or Paused returns directly to Idle, without partial credit, matching the audited repository's reset behavior. This is a verified state diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED STATE DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">A focus session's lifecycle</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Five states, verified against the Focus screen's state logic</text>
+
+  <!-- Idle -->
+  <g>
+    <rect x="64" y="420" width="220" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="174" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Idle</text>
+    <text x="174" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">no session running</text>
+  </g>
+
+  <path d="M 284 485 L 344 485" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="314" y="470" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">start</text>
+
+  <!-- Running -->
+  <g>
+    <rect x="348" y="420" width="220" height="130" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="458" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Running</text>
+    <text x="458" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">timer counting down</text>
+  </g>
+
+  <!-- Running <-> Paused -->
+  <path d="M 568 460 L 628 460" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="598" y="445" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">pause</text>
+  <path d="M 628 510 L 568 510" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="598" y="536" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">resume</text>
+
+  <!-- Paused -->
+  <g>
+    <rect x="632" y="420" width="220" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="742" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Paused</text>
+    <text x="742" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">timer held</text>
+  </g>
+
+  <!-- Running -> Done -->
+  <path d="M 458 420 L 458 300 L 916 300 L 916 420" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="687" y="285" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">timer completes</text>
+
+  <!-- Done -->
+  <g>
+    <rect x="916" y="420" width="220" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1026" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Done</text>
+    <text x="1026" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">awaiting confirmation</text>
+  </g>
+
+  <path d="M 1136 485 L 1196 485" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="1166" y="470" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">confirm</text>
+
+  <!-- Completed -->
+  <g>
+    <rect x="1200" y="420" width="336" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1368" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Completed</text>
+    <text x="1368" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">session logged</text>
+  </g>
+
+  <!-- Reset: Running and Paused back to Idle, dashed, below the row -->
+  <path d="M 458 550 L 458 700 L 174 700 L 174 550" stroke="#504e48" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#ah-muted)" />
+  <path d="M 742 550 L 742 740 L 174 740 L 174 550" stroke="#504e48" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#ah-muted-2)" />
+
+  <text x="458" y="730" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">reset</text>
+  <text x="742" y="770" text-anchor="middle" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">reset</text>
+
+  <text x="64" y="840" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
+    <tspan x="64" dy="0">Resetting from Running or Paused returns directly to Idle — the</tspan>
+    <tspan x="64" dy="28">session ends without partial credit, matching the app's reset logic.</tspan>
+  </text>
+
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#161616" />
+    </marker>
+    <marker id="ah-muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#504e48" />
+    </marker>
+    <marker id="ah-muted-2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#504e48" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">States verified against the audited repository — not a captured screen.</text>
+</svg>

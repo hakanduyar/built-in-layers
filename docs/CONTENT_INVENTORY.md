@@ -56,7 +56,7 @@ Repository:
 
 `https://github.com/hakanduyar/spark`
 
-Status: `PARTIAL` — repository audit complete (TASK-005, 2026-07-31), full case-study text written; `status: "draft"` pending Hakan's review/approval of the text and real screenshots.
+Status: `VERIFIED` — repository audit complete (TASK-005, 2026-07-31), full case-study text approved (delegated editorial review, 2026-08-03), `status: "published"`, `verificationStatus: "verified"` (2026-08-05, under **D-019** — see `docs/DECISIONS.md`). Real screenshots remain outstanding; the case study currently illustrates itself with four repository-verified `verified-diagram`/`provisional-illustration` assets instead (D-019 explicitly permits this in the interim — see "Needed" below).
 
 Verified direction (repository-audited, TASK-005):
 
@@ -77,9 +77,10 @@ Rejected/corrected claims (repository audit, TASK-005):
 
 Needed (unchanged by this audit):
 
-- current screenshots (real product imagery — none supplied; case study currently uses a labelled placeholder)
+- current screenshots (real product imagery — still none supplied; the case study publishes under D-019 in the meantime with four honestly-labelled `verified-diagram`/`provisional-illustration` SVGs in `public/images/projects/kivilcim/`, which real screenshots will replace as a pure asset swap once supplied — the content model does not change when that happens)
 - current live URL — none exists; this is a locally-installed PWA, not hosted publicly
-- Hakan's review and approval of the written case-study text (TASK-005 report, awaiting review)
+
+Case-study text review: **complete** — Hakan explicitly delegated editorial review to the assistant (2026-08-03) and authorized publication; see `docs/PROGRESS.md`.
 
 ### DropSpot
 
@@ -215,14 +216,14 @@ Needed:
 
 Do not invent or auto-generate final project screenshots.
 
-Needed folders:
+Still needed (real screenshots/photographs/video):
 
 ```text
-public/images/projects/kivilcim/
+public/images/projects/kivilcim/     — real screenshots still wanted; see Kıvılcım section above
 public/images/projects/dropspot/
 public/images/projects/jointledger/
 public/images/projects/professional/
 public/images/projects/archive/
 ```
 
-Use labelled development placeholders until approved assets are provided.
+**D-019 (2026-08-05)**: until real screenshots exist, a project may publish with repository-verified, visibly labelled `verified-diagram`/`provisional-illustration` SVGs instead of a generic development placeholder — see `docs/DECISIONS.md`. Kıvılcım is the first project to use this (`product-areas-map.svg`, `core-flow-diagram.svg`, `local-first-architecture.svg`, `focus-lifecycle.svg`, all under `public/images/projects/kivilcim/`). DropSpot, JointLedger, and Professional Systems remain on generic labelled development placeholders (or `images: []`) until either real assets or D-019 diagrams are created for them.

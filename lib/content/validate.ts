@@ -243,8 +243,10 @@ export function validatePublicationGates({
     }
   }
 
-  // Images: non-empty alt already schema-enforced; placeholder images must
-  // be honestly labelled by surrounding copy — verified manually per task.
+  // Images: non-empty alt already schema-enforced. assetType (D-019) —
+  // "verified-diagram"/"provisional-illustration" honesty (visible label,
+  // repository-verified content only) is verified manually per task, same
+  // as the pre-existing pending-copy rules this doesn't duplicate.
 
   // Required-section heading gate (CONTENT_MODEL §3) — full/short depth only.
   errors.push(...checkRequiredSectionHeadings(slug, project.depth, indexBody));

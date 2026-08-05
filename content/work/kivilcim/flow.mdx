@@ -1,8 +1,22 @@
 The core loop runs Capture → Plan → Focus → Review. Mind exists purely for low-friction capture: a quick dump of a thought or a link, with no required fields, deliberately separated from Plan so capturing an idea never forces an immediate decision about what to do with it. From there, a note can be turned into a task explicitly (a dedicated "note to task" step), or a link can be marked for later — capture and commitment are two different actions, not one.
 
+<Figure
+  src="/images/projects/kivilcim/core-flow-diagram.svg"
+  alt="Diagram of Kıvılcım's core loop: Capture, Plan, Focus, Review, connected in sequence, with each stage's verified supporting concept named below it."
+  caption="Verified flow diagram, not a product screenshot."
+  index={1}
+/>
+
 Planning happens in Plan: creating a task sets its size (small/medium/large), energy level, and status (today/week/backlog), and any task can be promoted to "today's main focus" or handed directly to Focus as the active focus task. Routines short-circuit part of this: an active routine generates its own dated task automatically for the days it applies to, carrying a visible "Rutin" tag, and behaves exactly like a manually created task from that point on — completing it, reopening it, or moving it between today/week/backlog all work the same way.
 
 The focus-session lifecycle is a strict state machine: idle (choosing a duration) → running (counting down) → paused (stoppable, resumable) → done (time elapsed, awaiting confirmation) → completed (XP awarded, session logged). Completion is guarded so it can only fire once per session even if the completion action is triggered more than once. An idle state with no active focus task is a real, distinct empty state — the screen explicitly tells the user to go choose one from Plan, rather than showing a disabled or confusing timer.
+
+<Figure
+  src="/images/projects/kivilcim/focus-lifecycle.svg"
+  alt="State diagram of a Kıvılcım focus session: Idle, Running, Paused, Done, and Completed, with a reset transition from Running or Paused back to Idle."
+  caption="Verified state diagram."
+  index={2}
+/>
 
 Review closes the day: an evening note with an energy-level tag writes to a single record per day (later edits update that same record rather than creating duplicates), and grants a small, once-per-day XP bonus. The weekly picture — total XP, focus minutes, tasks completed, and a per-area breakdown — is assembled from the same underlying task/focus/XP records on the Progress screen, with an optional AI-generated comment summarizing the week's strengths and risks if the user has supplied an API key.
 

@@ -65,7 +65,9 @@ ProjectFrontmatter = {
     alt: string,                     // required, non-empty
     caption?: string,
     layer?: "surface" | "flow" | "system",  // optional layer association
-    placeholder: boolean             // true = labelled dev placeholder
+    assetType: "real-screenshot" | "verified-diagram" | "provisional-illustration"
+                                      // D-019: what kind of asset this is, and
+                                      // therefore what honesty rule applies to it
   }>,
 
   // Case-study structured data
@@ -118,9 +120,9 @@ The renderer maps these sections into the case-study template; a missing require
 
 Each file: no frontmatter (metadata lives in `index.mdx`), MDX body using only the whitelisted components (ARCHITECTURE §6). Expected content per layer, so tabs change meaning and not decoration:
 
-- **surface.mdx** — interface decisions, hierarchy, responsiveness, design-system usage, accessibility work, component structure. Figures: real screenshots.
-- **flow.mdx** — user journeys, state transitions, forms, error/empty states, data movement through the UI. Figures: flow diagrams, state screenshots.
-- **system.mdx** — architecture, data model, API boundaries, permissions, offline strategy, deployment, performance decisions. Figures: architecture diagrams.
+- **surface.mdx** — interface decisions, hierarchy, responsiveness, design-system usage, accessibility work, component structure. Figures: real screenshots, or a labelled `verified-diagram`/`provisional-illustration` (D-019) until real screenshots exist.
+- **flow.mdx** — user journeys, state transitions, forms, error/empty states, data movement through the UI. Figures: flow diagrams, state screenshots, or the D-019 provisional equivalent.
+- **system.mdx** — architecture, data model, API boundaries, permissions, offline strategy, deployment, performance decisions. Figures: architecture diagrams (naturally `verified-diagram` under D-019, since these were never screenshots to begin with).
 
 ## 5. Other content types
 
@@ -187,7 +189,7 @@ A content item with `status: "published"` must satisfy all of:
 3. If `depth === "full"`: `verificationStatus === "verified"` and `factsCheckedAgainstRepo === true`.
 4. If `depth === "short"`: `verificationStatus` is `verified` or `partial`; every `tech` item and technical claim traced to the repository audit (recorded in the task report).
 5. If `verificationStatus === "do-not-publish"`: publication is refused regardless of other fields.
-6. All images have non-empty `alt`; `placeholder: true` images are allowed only when accompanying copy honestly labels the pending state.
+6. All images have non-empty `alt`. `assetType: "real-screenshot"` requires the image to be a real, unedited-beyond-optimization capture of the actual project. `assetType: "verified-diagram"` and `"provisional-illustration"` (D-019) require the accompanying alt text or caption to visibly identify the asset as an illustration/diagram, not a screenshot, and the diagram's content to trace only to repository-verified facts — never an invented UI, metric, user, client, outcome, or feature.
 7. Layer-meaning gate (§7) for `full`/`short` depths.
 
 `status: "draft"` items: excluded from production lists, sitemap, and static params; may contain `[CONTENT REQUIRED: ...]` markers freely; never block a production build.
