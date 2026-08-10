@@ -105,6 +105,62 @@ test.describe("Home: selected systems", () => {
     expect(bodyText).not.toContain("active-development");
     expect(bodyText.toLowerCase()).not.toContain("ai-assisted");
   });
+
+  test("each of the four project cards shows exactly one representative image, capped to a secondary size", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
+    await expect(cards).toHaveCount(4);
+
+    for (let i = 0; i < 4; i += 1) {
+      const card = cards.nth(i);
+      const images = card.locator("img");
+      await expect(images).toHaveCount(1);
+      const box = await images.first().boundingBox();
+      expect(box, "expected a bounding box for the card image").not.toBeNull();
+      if (box) expect(box.width).toBeLessThanOrEqual(400);
+    }
+  });
+
+  test("DropSpot's homepage card image is its real screenshot; Kıvılcım/JointLedger/Professional Systems keep their honest diagram/illustration labelling", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const dropspotCard = page.locator("main li", {
+      has: page.locator("a[href='/work/dropspot']"),
+    });
+    await expect(dropspotCard.locator('img[src*="browse-drops.webp"]')).toBeVisible();
+    const dropspotCaption = await dropspotCard.locator("figcaption").innerText();
+    expect(dropspotCaption.toLowerCase()).not.toContain("not a");
+
+    for (const [slug, filename] of [
+      ["kivilcim", "product-areas-map.svg"],
+      ["jointledger", "upstream-extension-map.svg"],
+      ["professional-systems", "professional-systems-overview.svg"],
+    ] as const) {
+      const card = page.locator("main li", { has: page.locator(`a[href='/work/${slug}']`) });
+      await expect(card.locator(`img[src*="${filename}"]`)).toBeVisible();
+      const caption = await card.locator("figcaption").innerText();
+      expect(caption.toLowerCase()).toMatch(/not a (product )?screenshot/);
+    }
+  });
+
+  test("no card claims a fake screenshot; title and description stay the dominant visible text", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText.toLowerCase().match(/screenshot of/g) ?? []).toHaveLength(0);
+
+    // Title heading text must still visually precede the image within each
+    // card's DOM order -- the image stays secondary to the copy.
+    const jointledgerCard = page.locator("main li", {
+      has: page.locator("a[href='/work/jointledger']"),
+    });
+    const cardHtml = await jointledgerCard.innerHTML();
+    expect(cardHtml.indexOf("JointLedger")).toBeLessThan(cardHtml.indexOf("<img"));
+  });
 });
 
 test.describe("Home: built for real life", () => {

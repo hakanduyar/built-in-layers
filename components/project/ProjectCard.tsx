@@ -1,3 +1,4 @@
+import { Figure } from "@/components/ui/Figure";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { TextLink } from "@/components/ui/TextLink";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
@@ -34,6 +35,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <p className="mt-3 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
           {project.tech.join(" · ")}
         </p>
+      )}
+      {/* Representative image: the first registered images[] entry, never a
+          hard-coded per-project asset — kept secondary (capped width) so the
+          title/description stay dominant, per DESIGN_SYSTEM §9's existing
+          Figure frame (mat, corner ticks, honest caption). Shared with /work
+          via this same component, so there is one image-selection path, not
+          two. */}
+      {project.images[0] && (
+        <div className="mt-4 max-w-xs">
+          <Figure
+            src={project.images[0].src}
+            alt={project.images[0].alt}
+            caption={project.images[0].caption}
+          />
+        </div>
       )}
     </li>
   );

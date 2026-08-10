@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="pso-title pso-desc">
+  <title id="pso-title">Professional systems provisional editorial illustration</title>
+  <desc id="pso-desc">An abstract editorial illustration representing interface, technical-constraint, and organizational-constraint layers for selected professional work, built only from the project's own approved public description. It shows no real screen, dashboard, client, logo, metric, or confidential detail. Provisional visual, not a captured screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <!-- Provisional label (visible, mandatory) -->
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">PROVISIONAL EDITORIAL VISUAL — NOT A PRODUCT SCREENSHOT</text>
+
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <!-- Heading -->
+  <g>
+    <rect x="64" y="150" width="8" height="8" fill="#e04413" />
+    <text x="88" y="182" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="48" font-weight="600" fill="#161616">Selected professional systems work</text>
+  </g>
+  <text x="64" y="224" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Designing usable interfaces within complex technical and organizational constraints.</text>
+
+  <!-- Three abstract layer bands, derived only from the sentence above -->
+  <!-- Band 1: Interface -->
+  <g>
+    <rect x="64" y="300" width="1472" height="160" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="96" y="352" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">01</text>
+    <text x="96" y="396" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Interface</text>
+    <text x="420" y="396" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">Usable interfaces are the visible layer of the work.</text>
+  </g>
+
+  <!-- Connector -->
+  <line x1="100" y1="460" x2="100" y2="520" stroke="#b8b5ac" stroke-width="1" stroke-dasharray="4 6" />
+
+  <!-- Band 2: Technical constraints -->
+  <g>
+    <rect x="64" y="520" width="1472" height="160" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="96" y="572" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">02</text>
+    <text x="96" y="616" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Technical constraints</text>
+    <text x="620" y="616" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">The system underneath shapes what the interface can do.</text>
+  </g>
+
+  <!-- Connector -->
+  <line x1="100" y1="680" x2="100" y2="740" stroke="#b8b5ac" stroke-width="1" stroke-dasharray="4 6" />
+
+  <!-- Band 3: Organizational constraints -->
+  <g>
+    <rect x="64" y="740" width="1472" height="160" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="96" y="792" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">03</text>
+    <text x="96" y="836" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Organizational constraints</text>
+    <text x="620" y="836" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" fill="#504e48">Real teams and processes shape what actually ships.</text>
+  </g>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Provisional editorial illustration based only on approved public information; not a product screenshot.</text>
+</svg>

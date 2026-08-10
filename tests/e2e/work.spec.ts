@@ -36,6 +36,22 @@ test.describe("Work: listing", () => {
     expect(bodyText).not.toContain("CONTENT REQUIRED");
   });
 
+  test("each of the four listing cards shows exactly one representative image, matching the homepage's asset choice", async ({
+    page,
+  }) => {
+    await page.goto("/work");
+    for (const [slug, filename] of [
+      ["kivilcim", "product-areas-map.svg"],
+      ["dropspot", "browse-drops.webp"],
+      ["jointledger", "upstream-extension-map.svg"],
+      ["professional-systems", "professional-systems-overview.svg"],
+    ] as const) {
+      const card = page.locator("li", { has: page.locator(`a[href='/work/${slug}']`) });
+      await expect(card.locator("img")).toHaveCount(1);
+      await expect(card.locator(`img[src*="${filename}"]`)).toBeVisible();
+    }
+  });
+
   test("no unsupported metadata (phase, AI-assisted claim) leaks into public HTML", async ({
     page,
   }) => {
