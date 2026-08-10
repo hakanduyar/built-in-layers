@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="pbf-title pbf-desc">
+  <title id="pbf-title">Personal-book backfill flow diagram</title>
+  <desc id="pbf-desc">A diagram of the idempotent EnsurePersonalBook flow: check whether the user's personal book already exists and create it if not (using the user's own id as the book id), check whether the owner membership already exists and create it if not, then backfill the book id onto any of that user's accounts, transactions, categories, or tags still missing one, all inside one database transaction, so re-running the whole flow changes nothing for an already-migrated user. This is a verified flow diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED FLOW DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">EnsurePersonalBook, one transaction</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Runs at registration, and again for every existing user via backfill-books</text>
+
+  <!-- Stage 1: Ensure book -->
+  <g>
+    <rect x="64" y="380" width="330" height="220" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="436" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="26" font-weight="600" fill="#161616">Ensure book</text>
+    <line x1="94" y1="458" x2="364" y2="458" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="492" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">
+      <tspan x="94" dy="0">Exists? skip.</tspan>
+      <tspan x="94" dy="26">Else create with</tspan>
+      <tspan x="94" dy="26">bookId = the user's</tspan>
+      <tspan x="94" dy="26">own uid</tspan>
+    </text>
+  </g>
+
+  <path d="M 394 490 L 444 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 2: Ensure membership -->
+  <g>
+    <rect x="448" y="380" width="330" height="220" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="478" y="436" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Ensure membership</text>
+    <line x1="478" y1="458" x2="748" y2="458" stroke="#b8b5ac" stroke-width="1" />
+    <text x="478" y="492" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">
+      <tspan x="478" dy="0">Exists? skip.</tspan>
+      <tspan x="478" dy="26">Else create an</tspan>
+      <tspan x="478" dy="26">OWNER BookMember</tspan>
+      <tspan x="478" dy="26">for this book</tspan>
+    </text>
+  </g>
+
+  <path d="M 778 490 L 828 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 3: Backfill records (signal accent) -->
+  <g>
+    <rect x="832" y="380" width="330" height="220" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="862" y="436" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Backfill records</text>
+    <line x1="862" y1="458" x2="1132" y2="458" stroke="#b8b5ac" stroke-width="1" />
+    <text x="862" y="492" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">
+      <tspan x="862" dy="0">UPDATE accounts,</tspan>
+      <tspan x="862" dy="26">transactions, categories,</tspan>
+      <tspan x="862" dy="26">tags WHERE uid=? AND</tspan>
+      <tspan x="862" dy="26">bookId=0</tspan>
+    </text>
+  </g>
+
+  <path d="M 1162 490 L 1212 490" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 4: Idempotent result -->
+  <g>
+    <rect x="1216" y="380" width="320" height="220" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1246" y="436" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Commit</text>
+    <line x1="1246" y1="458" x2="1506" y2="458" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1246" y="492" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">
+      <tspan x="1246" dy="0">Re-running this whole</tspan>
+      <tspan x="1246" dy="26">flow for the same user</tspan>
+      <tspan x="1246" dy="26">changes nothing — tested</tspan>
+      <tspan x="1246" dy="26">directly</tspan>
+    </text>
+  </g>
+
+  <!-- CLI note below -->
+  <g>
+    <rect x="64" y="680" width="1472" height="114" fill="none" stroke="#b8b5ac" stroke-width="1" stroke-dasharray="6 6" />
+    <text x="94" y="722" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" font-weight="600" fill="#161616">backfill-books CLI command</text>
+    <text x="94" y="756" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">Runs this same flow for every existing user, in pages of 500, and reports a created/updated summary</text>
+  </g>
+
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#161616" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Read directly from pkg/services/books.go (EnsurePersonalBook) — not a captured screen.</text>
+</svg>

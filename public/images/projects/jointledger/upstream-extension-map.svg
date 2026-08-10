@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="uem-title uem-desc">
+  <title id="uem-title">JointLedger extension map: what is upstream ezBookkeeping and what Hakan added</title>
+  <desc id="uem-desc">A diagram distinguishing ezBookkeeping's own, unmodified accounts, transactions, categories, tags, reports, and full Vue interface from JointLedger's additions on top of it: a Book/BookMember/BookInvitation model and book-scoped permission checks for accounts, categories, and tags. This is a verified extension diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED EXTENSION DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">Upstream, and what was added</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">ezBookkeeping's own code, and JointLedger's own code, side by side</text>
+
+  <!-- Left: ezBookkeeping (upstream) -->
+  <g>
+    <rect x="64" y="280" width="860" height="560" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="336" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">ezBookkeeping</text>
+    <text x="94" y="366" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">Upstream, unmodified by this fork</text>
+    <line x1="94" y1="388" x2="894" y2="388" stroke="#b8b5ac" stroke-width="1" />
+
+    <text x="94" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">Accounts &amp; transactions engine</text>
+    <text x="94" y="486" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">Categories, tags &amp; budgets</text>
+    <text x="94" y="532" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">Reports, statistics &amp; multi-currency</text>
+    <text x="94" y="578" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">Import, search &amp; AI clipboard recognition</text>
+    <text x="94" y="624" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">Full Vue interface — mobile &amp; desktop, PWA</text>
+    <text x="94" y="670" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="21" fill="#161616">User accounts, auth, i18n</text>
+
+    <line x1="94" y1="712" x2="894" y2="712" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="748" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">
+      <tspan x="94" dy="0">By MaysWind, MIT licensed.</tspan>
+      <tspan x="94" dy="28">github.com/mayswind/ezbookkeeping</tspan>
+    </text>
+  </g>
+
+  <path d="M 924 560 L 976 560" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <text x="900" y="530" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="15" letter-spacing="1" fill="#504e48">extends</text>
+
+  <!-- Right: JointLedger additions (signal accent) -->
+  <g>
+    <rect x="980" y="280" width="556" height="440" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="1010" y="336" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">JointLedger</text>
+    <text x="1010" y="366" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">Hakan's additions, this branch</text>
+    <line x1="1010" y1="388" x2="1506" y2="388" stroke="#b8b5ac" stroke-width="1" />
+
+    <text x="1010" y="432" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#161616">
+      <tspan x="1010" dy="0">Book / BookMember /</tspan>
+      <tspan x="1010" dy="26">BookInvitation model</tspan>
+    </text>
+    <text x="1010" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#161616">
+      <tspan x="1010" dy="0">Book-scoped permission checks</tspan>
+      <tspan x="1010" dy="26">for accounts, categories, tags</tspan>
+    </text>
+    <text x="1010" y="568" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#161616">
+      <tspan x="1010" dy="0">Idempotent personal-book</tspan>
+      <tspan x="1010" dy="26">backfill migration</tspan>
+    </text>
+    <text x="1010" y="656" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#b8380e">
+      <tspan x="1010" dy="0">Not transactions (schema only) —</tspan>
+      <tspan x="1010" dy="24">not the frontend UI</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="980" y="740" width="556" height="100" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1010" y="778" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" font-weight="600" fill="#161616">Unmerged feature branch</text>
+    <text x="1010" y="808" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="16" fill="#504e48">Not yet on this fork's default branch</text>
+  </g>
+
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#161616" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Verified against the audited repository (both branches) — not a captured screen.</text>
+</svg>

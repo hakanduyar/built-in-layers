@@ -1,0 +1,19 @@
+Underneath ezBookkeeping's existing schema, JointLedger adds three new tables: Book (a personal or shared ledger, with `bookId` doubling as the owning user's own `uid` for personal books), BookMember (one row per book-and-user pair, holding an owner, editor, or viewer role, unique on `(bookId, uid)`), and BookInvitation — which exists as a synced database table and a full set of status values (pending, accepted, declined, revoked, expired) but has no service or API code anywhere that creates, sends, or resolves one. It is schema and error-code infrastructure for a feature that hasn't been built yet, not a working invitation system.
+
+<Figure
+  src="/images/projects/jointledger/book-data-model-diagram.svg"
+  alt="Diagram of the Book, BookMember, and BookInvitation data model: a book has many members with owner, editor, or viewer roles; BookInvitation exists as a database table and error codes but has no service or API implementation yet."
+  caption="Verified architecture diagram, not a product screenshot."
+  index={1}
+/>
+
+Every book-scoped request — for accounts, categories, and tags — resolves an effective book id (the caller's own personal book if none is specified) and then calls a single permission check, `CheckBookPermission`, which looks up the caller's actual membership row for that book and confirms their role covers the requested permission (view, edit, or manage) before any query runs; the book id always arrives from the client and is never trusted on its own. This is genuinely, not superficially, enforced: a dedicated test builds a shared book with an owner, an editor, and a viewer, and confirms each role's real access — and separately confirms that a non-member is rejected outright, and that one member's edit to shared data is visible to the others. Transactions carry the same `bookId` column, set to the creator's default book when one is created, and get backfilled the same way — but no transaction query anywhere filters by `bookId`; every read and write still keys off the original single-owner `uid`, so the permission boundary that's real for the other three entities doesn't yet reach transactions at all.
+
+<Figure
+  src="/images/projects/jointledger/book-scoped-authorization-diagram.svg"
+  alt="Diagram of the authorization path for book-scoped requests: a request resolves its target book, checks the caller's membership role against the required permission, and only then runs a book-scoped query — shown for accounts, categories, and tags, with transactions marked as still using the older account-owner-only path, not yet book-scoped."
+  caption="Verified architecture diagram, not a product screenshot."
+  index={2}
+/>
+
+The personal-book backfill is the other piece of real infrastructure here: `EnsurePersonalBook` runs inside a single database transaction, checks whether a book and an owner membership already exist before inserting either, and then reassigns any of that user's accounts, transactions, categories, and tags still carrying a zero book id — provably idempotent, re-running it changes nothing for an already-migrated user. A CLI command (`backfill-books`) runs this for every existing user in pages of 500, and the whole path is exercised by a dedicated test that runs the backfill twice and asserts the second run creates nothing new.

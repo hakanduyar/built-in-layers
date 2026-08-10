@@ -53,20 +53,26 @@ test.describe("Home: Built in Layers", () => {
 });
 
 test.describe("Home: selected systems", () => {
-  test("lists exactly the three published projects, in D-016 order", async ({ page }) => {
+  test("lists exactly the four published projects, in D-016 order", async ({ page }) => {
     await page.goto("/");
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(3);
+    await expect(links).toHaveCount(4);
     await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
-    await expect(links.nth(2)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
   });
 
-  test("the remaining draft project (JointLedger) does not appear; no fake card renders for it", async ({
+  test("JointLedger renders with its real title, description, and ezBookkeeping fork disclosure", async ({
     page,
   }) => {
     await page.goto("/");
-    await expect(page.getByText("JointLedger")).toHaveCount(0);
+    await expect(page.getByText("JointLedger")).toBeVisible();
+    await expect(page.locator("body")).toContainText(
+      "Personal accounts. Shared financial life. One coordinated system.",
+    );
+    const card = page.locator("main li", { has: page.locator("a[href='/work/jointledger']") });
+    await expect(card.getByText("ezBookkeeping")).toBeVisible();
   });
 
   test("Kıvılcım renders with its real title and description", async ({ page }) => {

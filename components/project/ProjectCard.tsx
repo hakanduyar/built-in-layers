@@ -23,6 +23,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <p className="mt-2 max-w-[42rem] font-display text-body text-ink-muted">
         {project.description}
       </p>
+      {/* CONTENT_MODEL §9: upstream disclosure is mandatory in any
+          rendering of a fork-provenance project, including preview cards. */}
+      {project.upstream && (
+        <p className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+          Fork of {project.upstream.name}
+        </p>
+      )}
       {project.tech.length > 0 && (
         <p className="mt-3 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
           {project.tech.join(" · ")}

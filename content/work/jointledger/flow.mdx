@@ -1,0 +1,12 @@
+Two real flows exist today, both reachable only through the API, not through any UI: a new or existing user's personal book, and an owner adding a member to a shared book.
+
+Every new user gets a personal book automatically, created inside the same registration transaction as their account itself; an existing user missing one gets caught by an idempotent backfill — a single command that checks a book and an owner membership already exist before creating either, then assigns any of that user's still-unscoped accounts, categories, and tags to their new personal book. Both paths converge on the same underlying function, so a freshly registered user and a long-standing account arrive at an identical state: a personal book, an owner membership, and every one of their own records correctly scoped to it.
+
+<Figure
+  src="/images/projects/jointledger/personal-book-backfill-flow.svg"
+  alt="Diagram of the idempotent personal-book backfill: check for an existing book, create it if missing using the user's own id as the book id, check for an existing owner membership, create it if missing, then backfill book id onto any account, transaction, category, or tag still missing one — all inside one database transaction."
+  caption="Verified flow diagram, not a product screenshot."
+  index={1}
+/>
+
+Turning a book from personal to genuinely shared is a second, separate flow: an owner calls the book-creation endpoint, then adds members directly by user id, username, or email with an owner, editor, or viewer role — there is no invitation to send or accept, membership takes effect immediately once the owner's request succeeds. A viewer can read a shared book's accounts, categories, and tags but any write attempt is rejected before it reaches the database; an editor can create and modify them; only an owner can add, remove, or re-role another member, and removing the last remaining owner is rejected outright so a shared book can never end up ownerless.

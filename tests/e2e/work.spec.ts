@@ -8,10 +8,11 @@ test.describe("Work: listing", () => {
     await expect(page.getByText("Featured systems")).toBeVisible();
 
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(3);
+    await expect(links).toHaveCount(4);
     await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
-    await expect(links.nth(2)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
   });
 
   test("omits empty tier headings", async ({ page }) => {
@@ -21,11 +22,12 @@ test.describe("Work: listing", () => {
     await expect(page.getByText("Origins / early experiments")).toHaveCount(0);
   });
 
-  test("draft project (JointLedger) does not appear; no fake card renders for it", async ({
+  test("JointLedger's listing card discloses its ezBookkeeping fork provenance", async ({
     page,
   }) => {
     await page.goto("/work");
-    await expect(page.getByText("JointLedger")).toHaveCount(0);
+    const card = page.locator("li", { has: page.locator("a[href='/work/jointledger']") });
+    await expect(card.getByText("ezBookkeeping")).toBeVisible();
   });
 
   test("renders no [CONTENT REQUIRED marker in production output", async ({ page }) => {
@@ -55,11 +57,6 @@ test.describe("Work: project routes", () => {
     expect(bodyText).toContain(
       "Selected professional work is being prepared for publication. Only approved, non-confidential details will be shown.",
     );
-  });
-
-  test("the remaining draft project is not publicly reachable", async ({ page }) => {
-    const response = await page.goto("/work/jointledger");
-    expect(response?.status()).toBe(404);
   });
 
   test("an unknown slug 404s", async ({ page }) => {
@@ -261,19 +258,131 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]?admin123|user123/);
   });
 
-  test("Next project link points at the published Professional Systems, never at draft JointLedger", async ({
+  test("Next project link points at the published JointLedger, never at a 404 route", async ({
     page,
   }) => {
     await page.goto("/work/dropspot");
     await expect(page.getByText("Next project")).toBeVisible();
-    await expect(page.locator("a[href='/work/professional-systems']")).toBeVisible();
-    await expect(page.locator("a[href='/work/jointledger']")).toHaveCount(0);
+    const nextLink = page.locator("a[href='/work/jointledger']");
+    await expect(nextLink).toBeVisible();
+    const response = await page.request.get("/work/jointledger");
+    expect(response.status()).toBe(200);
   });
 
   for (const width of [375, 768, 1024, 1440]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/work/dropspot");
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+});
+
+test.describe("Work: JointLedger case study (published, JointLedger publication pass)", () => {
+  test("/work/jointledger renders successfully with a visible h1", async ({ page }) => {
+    const response = await page.goto("/work/jointledger");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("JointLedger");
+  });
+
+  test("renders the depth:short required sections, all three layers, and decisions", async ({
+    page,
+  }) => {
+    await page.goto("/work/jointledger");
+    for (const heading of [
+      "One-minute summary",
+      "Why it exists",
+      "Constraints",
+      "Surface",
+      "Flow",
+      "System",
+      "Decisions",
+      "Reflection",
+    ]) {
+      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    }
+  });
+
+  test("visibly discloses the ezBookkeeping upstream — not buried in metadata", async ({
+    page,
+  }) => {
+    await page.goto("/work/jointledger");
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText).toContain("ezBookkeeping");
+    expect(bodyText.toLowerCase()).toContain("fork");
+    await expect(
+      page.locator("main a[href='https://github.com/mayswind/ezbookkeeping']"),
+    ).toBeVisible();
+  });
+
+  test("renders all 4 D-019 verified-diagram assets, each honestly labelled", async ({ page }) => {
+    await page.goto("/work/jointledger");
+    const images = page.locator("main img");
+    await expect(images).toHaveCount(4);
+
+    for (const filename of [
+      "upstream-extension-map.svg",
+      "personal-book-backfill-flow.svg",
+      "book-data-model-diagram.svg",
+      "book-scoped-authorization-diagram.svg",
+    ]) {
+      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
+    }
+
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText).toContain("Verified extension diagram, not a product screenshot");
+    expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
+    expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
+    expect(bodyText.toLowerCase()).not.toContain("screenshot of");
+  });
+
+  test("does not claim transactions are book-scoped, an invitation flow exists, or the shared-book work is merged", async ({
+    page,
+  }) => {
+    await page.goto("/work/jointledger");
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText.toLowerCase()).not.toMatch(/transactions are (book-scoped|shared)/);
+    expect(bodyText.toLowerCase()).not.toMatch(/invite (a|your) (family|partner|member)/);
+    expect(bodyText).toContain("aren't book-scoped");
+    expect(bodyText).toContain("Unmerged feature branch");
+  });
+
+  test("no generic placeholder asset or old provisional wording remains for JointLedger", async ({
+    page,
+  }) => {
+    await page.goto("/work/jointledger");
+    const html = await page.content();
+    expect(html).not.toContain("placeholder-asset-pending.svg");
+    expect(html.toUpperCase()).not.toContain("PLACEHOLDER — ASSET PENDING");
+  });
+
+  test("no [CONTENT REQUIRED marker, credential, or local path renders", async ({ page }) => {
+    await page.goto("/work/jointledger");
+    const bodyText = await page.locator("body").innerText();
+    expect(bodyText).not.toContain("CONTENT REQUIRED");
+    expect(bodyText).not.toMatch(/AIza[0-9A-Za-z_-]{20,}/);
+    expect(bodyText).not.toContain("/home/");
+    expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]/);
+  });
+
+  test("Next project link points at the published Professional Systems, never at a 404 route", async ({
+    page,
+  }) => {
+    await page.goto("/work/jointledger");
+    await expect(page.getByText("Next project")).toBeVisible();
+    const nextLink = page.locator("a[href='/work/professional-systems']");
+    await expect(nextLink).toBeVisible();
+    const response = await page.request.get("/work/professional-systems");
+    expect(response.status()).toBe(200);
+  });
+
+  for (const width of [375, 768, 1024, 1440]) {
+    test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/work/jointledger");
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
       );

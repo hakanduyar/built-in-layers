@@ -256,8 +256,9 @@ describe("DropSpot real content — genuine semantic rendering of the full templ
     );
     expect(decisionsHtml).toContain("A deployment-unique seed for priority-score coefficients");
 
-    // nextSlug points at the published Professional Systems preview — never
-    // at the still-draft JointLedger, and never at a route that would 404.
-    expect(project.nextSlug).toBe("professional-systems");
+    // nextSlug points at the now-published JointLedger (D-016 order:
+    // Kıvılcım -> DropSpot -> JointLedger -> Professional Systems) — never
+    // at a route that would 404.
+    expect(project.nextSlug).toBe("jointledger");
   });
 });

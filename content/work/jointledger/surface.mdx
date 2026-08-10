@@ -1,0 +1,10 @@
+JointLedger's interface today is, screen for screen, ezBookkeeping's own — the same mobile and desktop views, the same account, category, tag, and transaction screens, the same PWA install path. No book selector, shared-book creation dialog, membership list, or invitation screen exists anywhere in the frontend source; a direct search for any book-related identifier across the entire Vue codebase returns nothing. This isn't an oversight this write-up is glossing over — the backend work (see System) was deliberately built and tested as its own vertical slice before any UI was attempted.
+
+<Figure
+  src="/images/projects/jointledger/upstream-extension-map.svg"
+  alt="Diagram showing ezBookkeeping's existing accounts, transactions, categories, tags, and full interface as the unmodified upstream foundation, with JointLedger's additions — a Book/BookMember/BookInvitation model and book-scoped permission checks — layered on top."
+  caption="Verified extension diagram, not a product screenshot."
+  index={1}
+/>
+
+What's true today is narrower and more useful to state precisely: every account, category, and tag a user creates or edits still goes through the exact same forms and screens as before, because the book-scoping was added underneath those existing flows rather than by changing them — a user signed in today would not notice anything different, which is itself the honest current Surface story. The extension is complete enough to be invisible, not complete enough to be visible.

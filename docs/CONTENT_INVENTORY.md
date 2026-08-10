@@ -120,33 +120,34 @@ Needed:
 
 Repository:
 
-`https://github.com/hakanduyar/jointledger`
+`https://github.com/hakanduyar/jointledger` (public fork; the shared-book work lives on the unmerged `feature/shared-family-book` branch, not on the repository's default `main` branch)
 
-Status: `PARTIAL / ACTIVE DEVELOPMENT`
+Upstream: [`https://github.com/mayswind/ezbookkeeping`](https://github.com/mayswind/ezbookkeeping) — MaysWind, MIT licensed, a self-hosted personal finance app. JointLedger's `main` branch is effectively upstream history plus one setup commit; all of Hakan's own work is the four commits on `feature/shared-family-book` (2026-07-07, ~7.5 hours).
 
-Known direction:
+Status: `VERIFIED` — repository audit complete (this pass, 2026-08-10; read-only clone of both `hakanduyar/jointledger`, both branches, and `mayswind/ezbookkeeping`, deleted after audit), `status: "published"`, `verificationStatus: "verified"`, `depth: "short"`.
 
-- family/shared finance
-- based on or forked from ezBookkeeping
-- shared books
-- memberships and roles
-- invitation flow
-- data migration/backfill
-- Docker deployment
+Verified direction (repository-audited, code read directly, not the stale local-setup README):
 
-Disclosure requirement:
+- a `Book`/`BookMember`/`BookInvitation` data model — confirmed in `pkg/models/book.go`, with real, tested permission logic (`HasPermission`, owner/editor/viewer roles)
+- `Account`, `TransactionCategory`, and `TransactionTag` are genuinely book-scoped end-to-end — every read and write goes through `resolveBookContext` → `CheckBookPermission` → a `WHERE book_id=?` query; confirmed directly in `pkg/api/{accounts,transaction_categories,transaction_tags}.go` and exercised by `TestBookScopedData_SharedBookAndIsolation` (real cross-member editing, real isolation between a shared book and its creators' personal books)
+- an idempotent personal-book backfill (`EnsurePersonalBook`, `BackfillAllPersonalBooks`, CLI command `backfill-books`) — confirmed as a single DB transaction per user, checked-before-insert, tested twice-run-changes-nothing
+- last-owner protection (`RemoveBookMember`/`ChangeBookMemberRole` refuse to remove or demote a book's only remaining owner) — confirmed in `pkg/services/books.go`
 
-Clearly identify original upstream project and Hakan's own changes.
+Rejected/corrected claims (repository audit, this pass):
+
+- **Transactions are not book-scoped in reads** — `Transaction.BookId` exists and is set on creation (defaulting to the creator's own book) and backfilled, but every transaction query in `pkg/services/transactions.go` still filters by `uid`, never `book_id`; no `resolveBookContext` call exists anywhere in `pkg/api/transactions.go`. Two members of the same shared book cannot see each other's transactions through this system yet — the single most central promise of a "shared ledger" isn't live for the entity it's really about.
+- **Invitations are schema-only** — `BookInvitation`'s table and status enum are synced to the database and `ErrBookInvitationNotFound` is a defined error code, but no service or API function anywhere creates, sends, lists, accepts, or declines an invitation; membership today is direct add-by-owner (uid/username/email), not an invite/accept flow.
+- **No frontend integration exists** — a repository-wide search for any book-id identifier across the entire Vue source returns nothing; every screen a user sees is still ezBookkeeping's own, unmodified interface.
+- **The shared-book work is not on the repository's default branch** — it exists only on `feature/shared-family-book`; a visitor browsing `main` would see none of it. `README-JOINTLEDGER-LOCAL.md` (Hakan's own file, written 2026-07-03) still says "no custom features yet" — it simply predates the feature branch by four days and was never updated; the case study trusts the code over this stale file.
+- **A mild user-enumeration gap** — `BookMemberAddHandler` resolves a target user by email/username before the actor's own manage-permission on the target book is checked inside `AddBookMember`, which could let an authenticated caller probe whether an email belongs to a registered account independent of their access to that book. Disclosed as an architecture-level limitation, not as exploit instructions.
 
 Needed:
 
-- public/private repository decision
-- safe screenshots
-- architecture diagram
-- current phase
-- live demo policy
-- privacy-safe sample data
-- contribution boundary
+- frontend book selector / membership / invitation UI (none exists)
+- transactions extended to book scope (currently the only entity left on the old single-owner path)
+- an actual invitation service/API (currently schema only)
+- merging `feature/shared-family-book` into the default branch
+- real screenshots (moot until a UI exists; the case study uses four `verified-diagram` SVGs instead)
 
 ### Eat Fit Evolve
 
@@ -233,7 +234,9 @@ public/images/projects/dropspot/     — DONE: 4 real screenshots in use (browse
                                         drop-detail.webp, admin-panel.webp, waitlist-joined.webp),
                                         sourced directly from the audited repository; see DropSpot
                                         section above for the 4 not selected and why
-public/images/projects/jointledger/
+public/images/projects/jointledger/     — DONE (as diagrams): 4 verified-diagram SVGs (no real screenshots
+                                        exist — there is no frontend UI to capture yet; see JointLedger
+                                        section above)
 public/images/projects/professional/
 public/images/projects/archive/
 ```

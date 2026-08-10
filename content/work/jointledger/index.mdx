@@ -4,23 +4,107 @@ title: "JointLedger"
 categoryLabel: "SHARED FINANCE SYSTEM"
 description: "Personal accounts. Shared financial life. One coordinated system."
 tier: "featured"
-depth: "preview"
+depth: "short"
 order: 3
 provenance: "fork"
 upstream:
   name: "ezBookkeeping"
   url: "https://github.com/mayswind/ezbookkeeping"
-  relationship: "[CONTENT REQUIRED: confirm the exact contribution boundary between ezBookkeeping and JointLedger]"
-aiAssisted: true
-aiDisclosure: "[CONTENT REQUIRED: AI-assistance disclosure details — pending confirmation]"
-contribution: "I extended ezBookkeeping with shared books, membership roles, invitation foundations, and BookId migration and backfill support."
-verificationStatus: "partial"
-status: "draft"
+  relationship: "ezBookkeeping is the complete, un-forked personal finance application — accounts, transactions, categories, tags, budgets, reports, multi-currency support, a PWA, and its entire Vue frontend. On top of it, JointLedger adds a Book/BookMember/BookInvitation data model, book-scoped permission checks for accounts, categories, and tags, and an idempotent migration path — currently on an unmerged feature branch, not yet on the fork's default branch. ezBookkeeping's own transaction engine and interface are otherwise unmodified."
+contribution: "JointLedger is my fork of ezBookkeeping, an open-source personal finance app by MaysWind. I designed and implemented a Book/BookMember/BookInvitation data model, permission-checked API endpoints for owner/editor/viewer roles, and an idempotent migration path that extends ezBookkeeping's existing accounts, categories, and tags into book-scoped, shared-book-capable resources. I did not write ezBookkeeping's own transaction engine, accounting logic, or user interface, and transaction records are not yet scoped to a shared book."
+verificationStatus: "verified"
+status: "published"
 phase: "active-development"
-factsCheckedAgainstRepo: false
-tech: ["Docker"]
-links: []
-images: []
+factsCheckedAgainstRepo: true
+tech: ["Go", "Vue", "TypeScript", "PostgreSQL", "Docker"]
+links:
+  - label: "Repository"
+    url: "https://github.com/hakanduyar/jointledger"
+    kind: "repo"
+    visibility: "public"
+images:
+  - src: "/images/projects/jointledger/upstream-extension-map.svg"
+    alt: "Diagram showing ezBookkeeping's existing accounts, transactions, categories, tags, and full interface as the unmodified upstream foundation, with JointLedger's additions — a Book/BookMember/BookInvitation model and book-scoped permission checks — layered on top."
+    caption: "Verified extension diagram, not a product screenshot."
+    layer: "surface"
+    assetType: "verified-diagram"
+  - src: "/images/projects/jointledger/personal-book-backfill-flow.svg"
+    alt: "Diagram of the idempotent personal-book backfill: check for an existing book, create it if missing using the user's own id as the book id, check for an existing owner membership, create it if missing, then backfill book id onto any account, transaction, category, or tag still missing one — all inside one database transaction."
+    caption: "Verified flow diagram, not a product screenshot."
+    layer: "flow"
+    assetType: "verified-diagram"
+  - src: "/images/projects/jointledger/book-data-model-diagram.svg"
+    alt: "Diagram of the Book, BookMember, and BookInvitation data model: a book has many members with owner, editor, or viewer roles; BookInvitation exists as a database table and error codes but has no service or API implementation yet."
+    caption: "Verified architecture diagram, not a product screenshot."
+    layer: "system"
+    assetType: "verified-diagram"
+  - src: "/images/projects/jointledger/book-scoped-authorization-diagram.svg"
+    alt: "Diagram of the authorization path for book-scoped requests: a request resolves its target book, checks the caller's membership role against the required permission, and only then runs a book-scoped query — shown for accounts, categories, and tags, with transactions marked as still using the older account-owner-only path, not yet book-scoped."
+    caption: "Verified architecture diagram, not a product screenshot."
+    layer: "system"
+    assetType: "verified-diagram"
+layers:
+  surface:
+    summary: "JointLedger's visible interface is entirely inherited from ezBookkeeping today — no book selector, invitation UI, or shared-book screen exists yet; the new Book/BookMember model was built to extend Account, Category, and Tag without changing how any existing screen looks or behaves."
+  flow:
+    summary: "New members join a shared book by direct add (by user id, username, or email) rather than an invitation flow, and every existing user without a book gets one automatically — either at registration or through an idempotent backfill command."
+  system:
+    summary: "A Book/BookMember data model with owner/editor/viewer roles sits underneath ezBookkeeping's existing accounts, categories, and tags, enforced by a permission check on every request; transactions carry the same book id but aren't yet scoped by it in reads."
+decisions:
+  - id: "jointledger-d1"
+    title: "Personal books use the owner's own user id as the book id"
+    context: "Every existing ezBookkeeping user needed a personal book created automatically, both going forward (on registration) and retroactively (via a backfill command run against however many existing users a deployment has) — without ever risking two personal books for the same person, even if the backfill command were run more than once or two registration requests raced."
+    choice: "A personal book's primary key is set to the owning user's own uid, so a second attempt to create it collides with the database's own primary-key constraint and is naturally rejected — idempotency guaranteed by the schema itself, not by an application-level check a race condition could still slip past."
+    alternatives:
+      [
+        "A separately auto-generated book id looked up by an owner-uid query before every creation attempt, relying on a SELECT immediately followed by an INSERT inside a transaction to prevent duplicates",
+      ]
+    tradeoff: "Personal and shared books share one id space but only shared books ever need a freshly generated id, which slightly complicates the id-generation path — a small, contained cost for a correctness guarantee that doesn't depend on transaction isolation level or careful lock ordering."
+  - id: "jointledger-d2"
+    title: "A separate BookMember join table with a role enum, not fixed co-owner columns"
+    context: "A shared book needed to support an arbitrary number of members, each with their own permission level, plus a clean way to remove a member or change their role without touching the book row itself."
+    choice: "BookMember is its own table (bookId, uid, role, deleted) with a unique constraint on (bookId, uid) and three roles — owner, editor, viewer — each mapped to view/edit/manage permissions by a single HasPermission method that every book-scoped endpoint calls."
+    alternatives:
+      [
+        "Fixed secondary-user columns directly on the Book or User model (e.g. a single co-owner field), sized for a small, hardcoded number of collaborators",
+      ]
+    tradeoff: "Every book-scoped request now costs one extra membership lookup before its real query runs, in exchange for supporting any number of members per book and a single, testable place (CheckBookPermission) that decides every permission question, rather than one-off checks scattered per feature."
+  - id: "jointledger-d3"
+    title: "Accounts, categories, and tags were extended to book scope before transactions"
+    context: "Four existing entities — accounts, transactions, categories, and tags — all needed a book id to become shareable, but transactions have by far the largest and most complex query surface in the codebase (search, filtering, statistics, monthly views, duplicate detection, balance recalculation)."
+    choice: "Book-scoped reads, writes, and permission checks were built and tested end-to-end for accounts, categories, and tags first; transactions received a bookId column and get it set on creation, but every transaction query still filters by the classic single-owner uid, not yet by bookId."
+    alternatives:
+      ["Migrating all four entities to book scope in one pass before shipping any of it"]
+    tradeoff: "The single most central promise of a shared ledger — members of a shared book seeing each other's transactions — isn't live yet, but the permission-check pattern is now proven on three real entities with real tests, rather than attempted all at once on the highest-risk entity first."
+  - id: "jointledger-d4"
+    title: "The backfill migration runs per-user inside one transaction, checking before every write"
+    context: "The migration needed to safely run against a database that might already have real, if personal-scale, user data from this fork's own local deployment, and needed to be safe to re-run if it were ever interrupted or run again by mistake."
+    choice: "EnsurePersonalBook wraps the personal-book creation, the owner-membership creation, and the four-entity bookId backfill (accounts, transactions, categories, tags) for one user in a single database transaction, checking whether the book and membership already exist before inserting either, and only updating rows that still have bookId=0."
+    alternatives:
+      [
+        "A one-shot script assumed to run exactly once against a database with no existing book data",
+      ]
+    tradeoff: "More defensive code — an existence check before every insert — for a backfill that can be run any number of times, against any mix of already-migrated and not-yet-migrated users, without creating a duplicate book or double-processing already-scoped rows; directly exercised by a dedicated idempotency test."
+nextSlug: "professional-systems"
 ---
 
-JointLedger is a shared finance system for personal accounts and household financial life, built on ezBookkeeping. [CONTENT REQUIRED: confirm public/private repository decision, exact contribution boundary, and safe public wording before publishing.]
+## One-minute summary
+
+JointLedger is my fork of ezBookkeeping — an open-source, self-hosted personal finance app — extended with a Book/BookMember data model so a household's accounts, categories, and tags can eventually be shared and permission-checked, not just owned by one person. A personal book is created automatically for every user, existing users get backfilled onto one by an idempotent migration command, and a shared book supports owner/editor/viewer roles enforced on every request. This work lives on an unmerged feature branch on top of ezBookkeeping's own codebase, not yet on the fork's default branch: there is no book-selector or invitation interface yet, transactions themselves aren't book-scoped in reads yet, and invitations exist only as an unused database table. Every other claim in this write-up is a claim about this specific branch's code, not about a finished product.
+
+## Why it exists
+
+ezBookkeeping is genuinely well-built for one person's own finances, but a household's money doesn't stay that clean — some accounts are individually owned, some are genuinely shared, and "give my partner my login" is not a permission model. JointLedger's real subject is the underlying question of what has to change in a single-owner bookkeeping app's data model to let more than one person see and edit the same set of accounts safely, without touching the accounting logic ezBookkeeping already gets right.
+
+## Constraints
+
+- **Unmerged feature branch**: the entire Book/BookMember implementation exists on `feature/shared-family-book`, not on this fork's default `main` branch — a repository visitor browsing the default branch today would not see any of it.
+- **Solo-built in a single working session**: all four feature commits building the Book/BookMember system were made on 2026-07-07, within about 7.5 hours (16:08–23:48) — verified directly from commit timestamps; the initial fork setup itself was four days earlier.
+- **No frontend integration yet**: zero references to a book id exist anywhere in the Vue frontend — every screen a user actually sees is still ezBookkeeping's own, unmodified interface.
+- **Transactions aren't book-scoped in reads yet**: `bookId` is set when a transaction is created, but every transaction query still filters by the classic single-owner `uid` — the shared-visibility promise doesn't reach the ledger's own core entity yet.
+
+## Reflection
+
+What holds up under direct code reading: the permission model is real and tested — `CheckBookPermission` genuinely checks a caller's own membership row and role before any book-scoped query runs, a dedicated test creates a shared book with an owner, an editor, and a viewer and confirms each role's actual access (and a non-member's rejection), and the personal-book backfill is provably idempotent — re-running it doesn't create a second book or reprocess already-scoped data. Accounts, categories, and tags are genuinely, not superficially, book-scoped: every read and write for those three entities resolves a book, checks the caller's permission, and queries by `bookId`.
+
+What's honestly weaker than "shared finance system" implies: there's no book-selector or invitation interface anywhere in the frontend, so all of this is currently reachable only by calling the API directly. Membership today is direct add-by-owner (by user id, username, or email), not an accept/decline invitation — `BookInvitation` exists as a database table and a set of status values, but no code anywhere creates, sends, or accepts one. And transactions — the entity the whole idea of a "shared ledger" is really about — aren't book-scoped in any query yet, so two members of the same shared book still can't actually see each other's transactions through this system. One more honestly-disclosable finding from the audit: the member-add endpoint resolves a target user by email or username before confirming the caller has permission to manage the book in question, which could let an authenticated user probe whether an email address belongs to a registered account regardless of their own access to that book — a general hardening gap, not something this write-up demonstrates how to exploit.
