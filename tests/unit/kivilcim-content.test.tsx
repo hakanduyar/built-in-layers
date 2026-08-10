@@ -208,8 +208,8 @@ describe("Kıvılcım real content — genuine semantic rendering of the full te
     expect(decisionsHtml).toContain("Local-first storage instead of a mandatory backend");
     expect(decisionsHtml).toContain("Routines as their own table, not an extension of Habits");
 
-    // nextSlug is deliberately omitted (DropSpot is still draft) — proven
-    // absent rather than pointing at a route that would 404.
-    expect(project.nextSlug).toBeUndefined();
+    // nextSlug now points at DropSpot (TASK-006) — valid because DropSpot is
+    // itself published, so this never links to a route that would 404.
+    expect(project.nextSlug).toBe("dropspot");
   });
 });

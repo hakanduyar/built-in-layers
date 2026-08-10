@@ -1,4 +1,6 @@
-import type { ProjectFrontmatter } from "@/lib/content/schemas";
+import fs from "node:fs";
+import path from "node:path";
+import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/schemas";
 
 // Publication gates (docs/CONTENT_MODEL.md §6-7, docs/ARCHITECTURE.md §7).
 // These gates reduce the risk of publishing incomplete, duplicated, or
@@ -174,6 +176,106 @@ export function checkRequiredSectionHeadings(
   return errors;
 }
 
+// D-019 (docs/DECISIONS.md) — which file extensions are acceptable for each
+// assetType. A "real-screenshot" is an actual raster capture; a
+// "verified-diagram"/"provisional-illustration" is always hand-authored SVG
+// in this project (ARCHITECTURE §8, DESIGN_SYSTEM §9) — never a raster file
+// standing in for one, which would risk looking like an uncredited capture.
+export const ALLOWED_ASSET_EXTENSIONS: Record<ProjectImageAssetType, string[]> = {
+  "real-screenshot": [".png", ".jpg", ".jpeg", ".webp"],
+  "verified-diagram": [".svg"],
+  "provisional-illustration": [".svg"],
+};
+
+// A caption for a verified-diagram/provisional-illustration must contain
+// this to count as honestly framed. Deliberately loose (word-presence, not
+// exact phrasing) — CONTENT_MODEL §6 requires the *idea* "this is a diagram
+// or illustration, not a screenshot" to be present, not one fixed sentence.
+const HONEST_DIAGRAM_FRAMING = /diagram|illustrat/i;
+
+function defaultImageExists(relSrc: string): boolean {
+  const filePath = path.join(process.cwd(), "public", relSrc);
+  return fs.existsSync(filePath);
+}
+
+function getExtension(src: string): string {
+  const match = /\.[a-zA-Z0-9]+$/.exec(src);
+  return match ? match[0].toLowerCase() : "";
+}
+
+/** D-019 reusable asset gate — every `status: "published"` project's
+ *  `images[]` entries are checked the same way, so this logic is written
+ *  once instead of per-project. Checks path safety, allowed extension,
+ *  on-disk existence, and (for verified-diagram/provisional-illustration)
+ *  honest caption framing. It does **not** and cannot verify that a
+ *  diagram's *content* is factually correct — an enum value or a caption
+ *  containing the word "diagram" proves nothing about truth, only about
+ *  labelling. Factual correctness stays a repository-audit and human-review
+ *  responsibility (CONTENT_MODEL §6-7), same as every other gate here.
+ *  `fileExists` is injectable so this stays a pure, easily-testable
+ *  function; real callers get a real `fs.existsSync` check by default. */
+export function checkImageAssets(
+  slug: string,
+  images: ProjectFrontmatter["images"],
+  fileExists: (relSrc: string) => boolean = defaultImageExists,
+): GateError[] {
+  const errors: GateError[] = [];
+
+  for (const image of images) {
+    const { src, assetType, caption } = image;
+    const expectedPrefix = `/images/projects/${slug}/`;
+
+    // Path safety: project-relative, scoped to this project's own asset
+    // directory, no ".." traversal — checked before anything else, since a
+    // malformed path makes the extension/existence checks meaningless.
+    if (!src.startsWith(expectedPrefix) || src.includes("..")) {
+      errors.push({
+        slug,
+        file: "index.mdx",
+        rule: `image src "${src}" must be a project-relative path under "${expectedPrefix}" with no ".." traversal`,
+      });
+      continue;
+    }
+
+    const extension = getExtension(src);
+    const allowedExtensions = ALLOWED_ASSET_EXTENSIONS[assetType] ?? [];
+    if (!allowedExtensions.includes(extension)) {
+      errors.push({
+        slug,
+        file: "index.mdx",
+        rule: `image src "${src}" has extension "${extension || "(none)"}", not allowed for assetType "${assetType}" (allowed: ${allowedExtensions.join(", ")})`,
+      });
+    }
+
+    if (!fileExists(src)) {
+      errors.push({
+        slug,
+        file: "index.mdx",
+        rule: `image src "${src}" does not resolve to a real file under public/`,
+      });
+    }
+
+    if (assetType === "verified-diagram" || assetType === "provisional-illustration") {
+      const captionText = (caption ?? "").trim();
+      if (!captionText) {
+        errors.push({
+          slug,
+          file: "index.mdx",
+          rule: `image src "${src}" (assetType "${assetType}") requires a non-empty caption stating it is an illustration/diagram, not a screenshot`,
+        });
+      } else if (!HONEST_DIAGRAM_FRAMING.test(captionText)) {
+        errors.push({
+          slug,
+          file: "index.mdx",
+          rule: `image src "${src}" (assetType "${assetType}") caption must honestly identify it as a diagram or illustration (e.g. contain "diagram" or "illustrat...") — labelling only, this does not and cannot verify the diagram's factual content`,
+        });
+      }
+    }
+  }
+
+  return errors;
+}
+
 export type PublishedContentCheck = {
   project: ProjectFrontmatter;
   indexBody: string;
@@ -243,10 +345,10 @@ export function validatePublicationGates({
     }
   }
 
-  // Images: non-empty alt already schema-enforced. assetType (D-019) —
-  // "verified-diagram"/"provisional-illustration" honesty (visible label,
-  // repository-verified content only) is verified manually per task, same
-  // as the pre-existing pending-copy rules this doesn't duplicate.
+  // Image asset gate (D-019, CONTENT_MODEL §2/§6) — path safety, extension,
+  // on-disk existence, and honest diagram/illustration captioning for every
+  // registered image. Non-empty alt is already schema-enforced.
+  errors.push(...checkImageAssets(slug, project.images));
 
   // Required-section heading gate (CONTENT_MODEL §3) — full/short depth only.
   errors.push(...checkRequiredSectionHeadings(slug, project.depth, indexBody));

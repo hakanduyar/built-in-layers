@@ -1,1 +1,28 @@
-[CONTENT REQUIRED: Surface layer — interface decisions, hierarchy, responsiveness, design-system usage, accessibility work, and component structure. Pending repository audit and Hakan's input for TASK-006.]
+DropSpot's interface groups seven real routes into five areas, not a single dashboard trying to do everything: Home (browsing drops as cards), Drop Detail (one drop's waitlist/claim actions), Auth (separate sign-up and login forms), My Account (My Waitlist and My Claims), and an admin-only CRUD panel behind its own route guard. Every drop card and the detail page repeat the same status badge — upcoming, active, or ended — computed from the drop's claim window, so a visitor never has to guess whether a drop is currently claimable.
+
+<Figure
+  src="/images/projects/dropspot/browse-drops.webp"
+  alt="Screenshot of DropSpot's home page while signed in: three drop cards with status badges, one showing an 'In Waitlist' indicator, above status filter tabs (All, Upcoming, Active, Ended)."
+  caption="Home page, signed in — browsing drops with waitlist status visible."
+  index={1}
+/>
+
+The Drop Detail page's action area changes shape depending on where the visitor actually stands, not just what they're allowed to click: signed-out visitors see a prompt to log in; a signed-in visitor not yet in the waitlist sees "Join Waitlist"; someone already in the waitlist but outside the claim window sees a confirmation and a "Leave Waitlist" option instead of a disabled claim button; and once the window is open, the same slot becomes "Claim Now!" (or "Out of Stock" if the last unit is gone). Three stat tiles — available stock, waitlist count, claimed count — sit above the action area on both the card and the detail page, so the numbers a visitor is deciding against are always visible, not hidden behind a click.
+
+<Figure
+  src="/images/projects/dropspot/drop-detail.webp"
+  alt="Screenshot of a drop's detail page showing available stock, waitlist and claimed counts, the claim window dates, and a 'Join Waitlist' button."
+  caption="Drop detail page before joining the waitlist."
+  index={2}
+/>
+
+Authentication and authorization are both real gates, not visual-only ones: React Router wraps `/my-waitlist`, `/my-claims`, and `/admin` in a route guard that checks an auth token and, for `/admin`, a decoded `admin` role before rendering anything, redirecting to `/login` or `/` otherwise — matching the same role check the backend independently enforces on every admin API call. The admin panel itself is a separate table view, not a repurposed version of the public drop cards.
+
+<Figure
+  src="/images/projects/dropspot/admin-panel.webp"
+  alt="Screenshot of the admin panel: a table of drops with stock, waitlist, and claimed counts, claim windows, and Edit/Delete actions, plus a 'Create New Drop' button."
+  caption="Admin panel — drop management table, visible only to the admin role."
+  index={3}
+/>
+
+No dedicated accessibility work (landmark roles, `aria-*` attributes, focus management) exists anywhere in the frontend source; this is a verified gap, not an assumption.

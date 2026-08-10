@@ -4,23 +4,118 @@ title: "DropSpot"
 categoryLabel: "FAIR DISTRIBUTION SYSTEM"
 description: "A fair claim and waitlist system for limited-stock product drops."
 tier: "featured"
-depth: "preview"
+depth: "short"
 order: 2
 provenance: "personal"
-aiAssisted: true
-aiDisclosure: "[CONTENT REQUIRED: AI-assistance disclosure details — pending confirmation]"
-contribution: "I designed DropSpot’s core user flows and developed its frontend and backend foundation."
-verificationStatus: "partial"
-status: "draft"
+contribution: "I designed DropSpot's waitlist and claim flows, chose PostgreSQL row-level locking and transactions for claim safety, and implemented the Express/PostgreSQL backend and React frontend."
+verificationStatus: "verified"
+status: "published"
 phase: "paused"
-factsCheckedAgainstRepo: false
-tech: ["React", "Node.js", "Express", "PostgreSQL"]
+factsCheckedAgainstRepo: true
+tech: ["React", "Vite", "Tailwind CSS", "Node.js", "Express", "PostgreSQL"]
 links:
   - label: "Repository"
     url: "https://github.com/hakanduyar/dropspot-project"
     kind: "repo"
     visibility: "public"
-images: []
+images:
+  - src: "/images/projects/dropspot/browse-drops.webp"
+    alt: "Screenshot of DropSpot's home page while signed in: three drop cards with status badges, one showing an 'In Waitlist' indicator, above status filter tabs (All, Upcoming, Active, Ended)."
+    caption: "Home page, signed in — browsing drops with waitlist status visible."
+    layer: "surface"
+    assetType: "real-screenshot"
+  - src: "/images/projects/dropspot/drop-detail.webp"
+    alt: "Screenshot of a drop's detail page showing available stock, waitlist and claimed counts, the claim window dates, and a 'Join Waitlist' button."
+    caption: "Drop detail page before joining the waitlist."
+    layer: "surface"
+    assetType: "real-screenshot"
+  - src: "/images/projects/dropspot/admin-panel.webp"
+    alt: "Screenshot of the admin panel: a table of drops with stock, waitlist, and claimed counts, claim windows, and Edit/Delete actions, plus a 'Create New Drop' button."
+    caption: "Admin panel — drop management table, visible only to the admin role."
+    layer: "surface"
+    assetType: "real-screenshot"
+  - src: "/images/projects/dropspot/waitlist-joined.webp"
+    alt: "Screenshot of a drop's detail page after joining its waitlist, showing a 'You're in the waitlist!' confirmation and a 'Leave Waitlist' button."
+    caption: "Drop detail page after joining the waitlist."
+    layer: "flow"
+    assetType: "real-screenshot"
+  - src: "/images/projects/dropspot/core-flow-diagram.svg"
+    alt: "Diagram of DropSpot's core flow: browse drops, join a waitlist, wait for the claim window, then claim and receive a unique claim code."
+    caption: "Verified flow diagram, not a product screenshot."
+    layer: "flow"
+    assetType: "verified-diagram"
+  - src: "/images/projects/dropspot/claim-transaction-diagram.svg"
+    alt: "Diagram of the claim transaction: a database transaction that row-locks the claim and drop records, checks the claim window and available stock, then atomically inserts the claim, decrements stock, and clears the waitlist entry."
+    caption: "Verified architecture diagram, not a product screenshot."
+    layer: "system"
+    assetType: "verified-diagram"
+  - src: "/images/projects/dropspot/priority-score-diagram.svg"
+    alt: "Diagram of the priority-score formula: a deployment-unique seed produces three coefficients, which combine with signup latency, account age, and rapid-action count into a waitlist priority score."
+    caption: "Verified architecture diagram, not a product screenshot."
+    layer: "system"
+    assetType: "verified-diagram"
+layers:
+  surface:
+    summary: "A five-screen React app — browse drops, a drop detail page with waitlist/claim actions, auth screens, personal waitlist/claims pages, and an admin-only CRUD panel."
+  flow:
+    summary: "Browse without an account, join a waitlist after signing up, then claim once the drop's claim window opens and your waitlist position is inside the remaining stock."
+  system:
+    summary: "An Express/PostgreSQL backend where every waitlist join and claim runs inside a transaction with row-level locks, and priority order comes from a formula seeded uniquely per deployment."
+decisions:
+  - id: "dropspot-d1"
+    title: "Row-level database locking instead of an application-level queue"
+    context: "A claim has to check the claim window, check remaining stock, and check the caller's waitlist position, then write three tables — without letting two simultaneous claims both succeed against stock that only has room for one."
+    choice: "Every claim runs inside a single PostgreSQL transaction that takes a `SELECT ... FOR UPDATE` row lock on the caller's existing-claim row and on the drop's own row before reading stock or the claim window, then inserts the claim, decrements `available_stock`, and deletes the waitlist entry before committing — all four writes succeed together or none do."
+    alternatives:
+      [
+        "An in-application queue or job worker serializing claim requests one at a time",
+        "Optimistic concurrency: a version column on the drop row, retrying the whole request on a conflicting write",
+      ]
+    tradeoff: "Every claim request briefly holds a row lock on the drop being claimed, so claims against the same drop cannot be processed in true parallel by the database — an acceptable cost for a claim window's write volume, but not a design for extremely high-throughput contention on a single row."
+  - id: "dropspot-d2"
+    title: "A deployment-unique seed for priority-score coefficients"
+    context: "The waitlist needed an ordering rule that rewards genuine early/loyal signups without being a single fixed formula every deployment (and every user who reads the source) can predict and game identically."
+    choice: "A SHA-256 hash of the git remote URL, the repository's first commit timestamp, and a build-time value produces a 12-character seed; three coefficients (ranges 7–11, 13–19, 3–5) are derived from that seed and used in the score formula `1000 + (signup_latency_ms % A) + (account_age_days % B) − (rapid_actions % C)`, floored at zero."
+    alternatives:
+      [
+        "A single fixed formula with hardcoded constants, identical across every deployment of the codebase",
+      ]
+    tradeoff: "The coefficients differ per deployment instead of being a documented constant, which is a deliberate anti-gaming property, not a usability one — and the `signup_latency_ms` term specifically ends up contributing almost nothing in the current build, because the frontend measures the gap between two `Date.now()` calls issued back to back rather than any real elapsed time, so account age and the rapid-action penalty do the real work of ordering the waitlist."
+  - id: "dropspot-d3"
+    title: "A single recreate-schema script instead of a versioned migration history"
+    context: "The database needed a repeatable way to reach a known schema for development, testing, and CI — DropSpot has no production deployment or existing user data that a schema change would ever need to preserve."
+    choice: "One migration script drops and recreates all four tables (with their foreign keys, `CHECK` constraints, and indexes) in a single transaction; the same script runs before the backend's own test suite in CI."
+    alternatives:
+      [
+        "A versioned migration system with individually numbered, forward-only migration files preserving existing rows across schema changes",
+      ]
+    tradeoff: "This script cannot be run safely against a database with real data to keep — it is a reset, not an upgrade path — which is a reasonable trade for a project with no live deployment, but would need to become a real versioned migration system before one existed."
+  - id: "dropspot-d4"
+    title: "Claim eligibility is re-checked server-side, not trusted from the client"
+    context: "The frontend already computes and displays a drop's status (upcoming, active, ended) from the claim window timestamps to decide which buttons to show — that same window has to be enforced somewhere the client can't simply skip."
+    choice: "The claim transaction re-reads `claim_window_start`/`claim_window_end` from the drop's own database row and rejects the claim if the current time falls outside it, independently of whatever state the requesting client believes it's in."
+    alternatives:
+      ["Trusting the client's own claim-window check and only validating stock count server-side"]
+    tradeoff: "Every claim attempt costs one more row read purely for a check the UI has usually already made — a small, deliberate redundancy so a stale client can never claim outside the real window."
+nextSlug: "professional-systems"
 ---
 
-DropSpot is a fair claim and waitlist system for limited-stock product drops. [CONTENT REQUIRED: exact implementation status, screenshots, demo URL, Hakan's specific contribution, and repository-verified technical claims — pending confirmation before publishing.]
+## One-minute summary
+
+DropSpot is a fair-claim and waitlist system for limited-stock product drops, built as a self-directed technical case study rather than a deployed product. A visitor can browse drops without an account; joining a waitlist and claiming a drop require signing up. When a drop's claim window opens, eligibility is decided by a priority score — computed from account age, a (largely inert, see Reflection) signup-latency term, and a rapid-action penalty — and the claim itself runs inside a PostgreSQL transaction that row-locks the relevant records before checking the claim window and remaining stock, so two simultaneous claims against the last unit of stock cannot both succeed. An admin role can create, edit, and delete drops through a separate panel. There is no live deployment, no real users, and no usage data — every claim in this write-up is a claim about the code, not about production behavior.
+
+## Why it exists
+
+DropSpot was built to work through a specific, concrete distributed-systems problem in a small enough scope to actually finish: what does "fair" mean when more people want a limited-stock item than there is stock, and how do you stop a race between two simultaneous claims from ever giving the same unit to two different people? Rather than a generic CRUD app, the project's real subject is the claim path itself — the transaction boundaries, the row locks, and the ordering rule that decides who is even eligible to claim once a window opens.
+
+## Constraints
+
+- **No production deployment**: DropSpot has never run against real traffic or real users; every technical claim here is a claim about the code and its tests, not about observed production behavior.
+- **Solo-built, over two days**: the entire codebase — schema, backend, frontend, and both test suites — was written by one person, verified against the repository's own commit history (2025-11-06 to 2025-11-07, 31 commits), not iterated on since.
+- **PostgreSQL-specific concurrency strategy**: the claim path's safety guarantee depends on `SELECT ... FOR UPDATE` row locking, a PostgreSQL-specific mechanism, not a database-agnostic one.
+
+## Reflection
+
+What holds up under direct code reading: the claim transaction genuinely does what the README says it does — row locks taken before the stock and claim-window checks, four writes committed together, and idempotent responses (not errors) when a user joins or claims twice. The priority-score seed is real and unit-tested, deriving different coefficients per deployment rather than shipping one fixed, guessable formula.
+
+What's honestly weaker than the README's own framing suggests: the `signup_latency_ms` term in the priority formula is computed from two `Date.now()` calls made back to back on the same line in the frontend, so in practice it contributes close to nothing — account age and the rapid-action penalty do the real ordering work, not signup speed. The repository also contains a GitHub Actions workflow file for CI (a real Postgres service container, a backend test job, a frontend build job) — but it's committed at `github/workflows/ci.yml` instead of `.github/workflows/ci.yml`, so GitHub Actions never actually recognized or ran it; the pipeline was authored but never went live. No test in the repository exercises genuinely concurrent, simultaneous requests against the same drop — the locking mechanism is verified by reading the transaction code directly, not by a passing concurrency test. And no accessibility-specific work (landmark roles, `aria-*` attributes) exists anywhere in the frontend source. None of this changes what the claim transaction itself verifiably does — it's exactly the kind of gap a from-scratch, timeboxed build honestly has.

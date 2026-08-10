@@ -1,1 +1,19 @@
-[CONTENT REQUIRED: Flow layer — user journeys, state transitions, forms, error/empty states, and data movement through the UI. Pending repository audit and Hakan's input for TASK-006.]
+The core journey runs Browse → Join waitlist → Wait for the claim window → Claim. Browsing needs no account: `GET /api/drops` is public, and the Home page lists every drop with its live stock, waitlist, and claimed counts regardless of whether anyone is signed in. The moment a visitor tries to join a waitlist or claim, the frontend checks for an auth token and redirects to `/login` if there isn't one — the browsing experience and the commitment experience are deliberately split, not merged into one gated page.
+
+<Figure
+  src="/images/projects/dropspot/core-flow-diagram.svg"
+  alt="Diagram of DropSpot's core flow: browse drops, join a waitlist, wait for the claim window, then claim and receive a unique claim code."
+  caption="Verified flow diagram, not a product screenshot."
+  index={1}
+/>
+
+Joining and leaving a waitlist are both idempotent by design, not by accident: joining a waitlist a second time returns the existing entry with a "already in the waitlist" message instead of erroring or creating a duplicate row, and leaving a waitlist twice is equally harmless, both verified directly against the backend's own transaction logic and exercised by the repository's integration tests. Once a user is in the waitlist, the drop detail screen's own state — not a separate page — swaps between "you're in the waitlist, leave it" and "claim now" purely based on whether the current time falls inside the drop's claim window, the same boundary the backend re-checks independently when a claim actually arrives.
+
+<Figure
+  src="/images/projects/dropspot/waitlist-joined.webp"
+  alt="Screenshot of a drop's detail page after joining its waitlist, showing a 'You're in the waitlist!' confirmation and a 'Leave Waitlist' button."
+  caption="Drop detail page after joining the waitlist."
+  index={2}
+/>
+
+A claim attempt can fail in three distinct, honestly-surfaced ways, not one generic error: the claim window isn't open yet (or has already closed), the drop has no stock left, or the caller's own waitlist position — recomputed from priority score and join time, not just "first come first served" — falls outside the remaining stock. Each of these returns its own message to the caller rather than a single opaque failure. A successful claim returns a unique claim code immediately, shown in a toast and persisted on the My Claims page, and the same claim (checked by user and drop together) can never be created twice — attempting to claim an already-claimed drop returns the existing claim rather than a new one or an error.

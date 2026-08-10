@@ -1,16 +1,17 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Work: listing", () => {
-  test("lists exactly the published previews under their tier heading, Kıvılcım before Professional Systems", async ({
+  test("lists exactly the published previews under their tier heading, in D-016 order", async ({
     page,
   }) => {
     await page.goto("/work");
     await expect(page.getByText("Featured systems")).toBeVisible();
 
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(2);
+    await expect(links).toHaveCount(3);
     await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
-    await expect(links.nth(1)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links.nth(2)).toHaveAttribute("href", "/work/professional-systems");
   });
 
   test("omits empty tier headings", async ({ page }) => {
@@ -20,11 +21,10 @@ test.describe("Work: listing", () => {
     await expect(page.getByText("Origins / early experiments")).toHaveCount(0);
   });
 
-  test("draft projects (DropSpot, JointLedger) do not appear; no fake cards render for them", async ({
+  test("draft project (JointLedger) does not appear; no fake card renders for it", async ({
     page,
   }) => {
     await page.goto("/work");
-    await expect(page.getByText("DropSpot")).toHaveCount(0);
     await expect(page.getByText("JointLedger")).toHaveCount(0);
   });
 
@@ -57,11 +57,9 @@ test.describe("Work: project routes", () => {
     );
   });
 
-  test("draft projects are not publicly reachable", async ({ page }) => {
-    for (const slug of ["dropspot", "jointledger"]) {
-      const response = await page.goto(`/work/${slug}`);
-      expect(response?.status()).toBe(404);
-    }
+  test("the remaining draft project is not publicly reachable", async ({ page }) => {
+    const response = await page.goto("/work/jointledger");
+    expect(response?.status()).toBe(404);
   });
 
   test("an unknown slug 404s", async ({ page }) => {
@@ -142,16 +140,140 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
     expect(bodyText).not.toContain("/home/");
   });
 
-  test("no Next project link renders (DropSpot is still draft, never linked)", async ({ page }) => {
+  test("Next project link points at the now-published DropSpot, not at a draft or 404 route", async ({
+    page,
+  }) => {
     await page.goto("/work/kivilcim");
-    await expect(page.getByText("Next project")).toHaveCount(0);
-    await expect(page.locator("a[href='/work/dropspot']")).toHaveCount(0);
+    const nextLink = page.locator("a[href='/work/dropspot']");
+    await expect(nextLink).toBeVisible();
+    await expect(page.getByText("Next project")).toBeVisible();
+    const response = await page.goto("/work/dropspot");
+    expect(response?.status()).toBe(200);
   });
 
   for (const width of [375, 768, 1024, 1440]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/work/kivilcim");
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+});
+
+test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () => {
+  test("/work/dropspot renders successfully with a visible h1", async ({ page }) => {
+    const response = await page.goto("/work/dropspot");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("DropSpot");
+  });
+
+  test("renders the depth:short required sections, all three layers, and decisions", async ({
+    page,
+  }) => {
+    await page.goto("/work/dropspot");
+    for (const heading of [
+      "One-minute summary",
+      "Why it exists",
+      "Constraints",
+      "Surface",
+      "Flow",
+      "System",
+      "Decisions",
+      "Reflection",
+    ]) {
+      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    }
+  });
+
+  test("renders all 7 D-019 assets: 4 real screenshots + 3 diagrams, each honestly labelled", async ({
+    page,
+  }) => {
+    await page.goto("/work/dropspot");
+    const images = page.locator("main img");
+    await expect(images).toHaveCount(7);
+
+    for (const filename of [
+      "browse-drops.webp",
+      "drop-detail.webp",
+      "admin-panel.webp",
+      "waitlist-joined.webp",
+      "core-flow-diagram.svg",
+      "claim-transaction-diagram.svg",
+      "priority-score-diagram.svg",
+    ]) {
+      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
+    }
+
+    const bodyText = await page.locator("main").innerText();
+    // Real screenshots: plain, honest captions, no "not a screenshot" denial.
+    expect(bodyText).toContain("Home page, signed in — browsing drops with waitlist status");
+    expect(bodyText).toContain("Drop detail page before joining the waitlist.");
+    expect(bodyText).toContain("Admin panel — drop management table");
+    expect(bodyText).toContain("Drop detail page after joining the waitlist.");
+    // Diagrams: still carry their honest denial framing.
+    expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
+    expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
+    // The removed provisional screens-map must not linger anywhere.
+    expect(bodyText).not.toContain("Illustrative screens map");
+  });
+
+  test("real screenshots keep their true aspect ratio — no stretching to 16:10", async ({
+    page,
+  }) => {
+    await page.goto("/work/dropspot");
+    // Intrinsic ratios (from the source files): browse-drops 1806x822,
+    // drop-detail 1731x837, admin-panel 1878x808, waitlist-joined 1804x812 —
+    // none is 16:10 (1.6). Figure's plain <img> with no fixed height must
+    // render each at its own natural ratio, not a forced 1.6.
+    const expected: Record<string, number> = {
+      "browse-drops.webp": 1806 / 822,
+      "drop-detail.webp": 1731 / 837,
+      "admin-panel.webp": 1878 / 808,
+      "waitlist-joined.webp": 1804 / 812,
+    };
+    for (const [filename, intrinsicRatio] of Object.entries(expected)) {
+      const img = page.locator(`main img[src*="${filename}"]`);
+      const box = await img.boundingBox();
+      expect(box, `expected a bounding box for ${filename}`).not.toBeNull();
+      if (!box) continue;
+      const renderedRatio = box.width / box.height;
+      expect(Math.abs(renderedRatio - intrinsicRatio) / intrinsicRatio).toBeLessThan(0.02);
+      expect(Math.abs(renderedRatio - 16 / 10) / (16 / 10)).toBeGreaterThan(0.01);
+    }
+  });
+
+  test("no generic placeholder asset remains for DropSpot", async ({ page }) => {
+    await page.goto("/work/dropspot");
+    const html = await page.content();
+    expect(html).not.toContain("placeholder-asset-pending.svg");
+    expect(html.toUpperCase()).not.toContain("PLACEHOLDER — ASSET PENDING");
+  });
+
+  test("no [CONTENT REQUIRED marker, credential, or local path renders", async ({ page }) => {
+    await page.goto("/work/dropspot");
+    const bodyText = await page.locator("body").innerText();
+    expect(bodyText).not.toContain("CONTENT REQUIRED");
+    expect(bodyText).not.toMatch(/AIza[0-9A-Za-z_-]{20,}/);
+    expect(bodyText).not.toContain("/home/");
+    expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]?admin123|user123/);
+  });
+
+  test("Next project link points at the published Professional Systems, never at draft JointLedger", async ({
+    page,
+  }) => {
+    await page.goto("/work/dropspot");
+    await expect(page.getByText("Next project")).toBeVisible();
+    await expect(page.locator("a[href='/work/professional-systems']")).toBeVisible();
+    await expect(page.locator("a[href='/work/jointledger']")).toHaveCount(0);
+  });
+
+  for (const width of [375, 768, 1024, 1440]) {
+    test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/work/dropspot");
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
       );

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="cfd-title cfd-desc">
+  <title id="cfd-title">DropSpot core flow diagram: Browse, Join, Wait, Claim</title>
+  <desc id="cfd-desc">A diagram of DropSpot's core flow — browse drops, join a waitlist, wait for the claim window to open, then claim and receive a unique claim code — connected in sequence, with a branch showing that a claim outside the window or with a position beyond available stock fails honestly instead of succeeding. This is a verified flow diagram traced to the audited repository, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED FLOW DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">Browse, join, wait, claim</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">The core loop from a public drop listing to a claim code</text>
+
+  <!-- Stage 1: Browse -->
+  <g>
+    <rect x="64" y="380" width="300" height="200" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Browse</text>
+    <line x1="94" y1="462" x2="334" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="94" y="498" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#504e48">
+      <tspan x="94" dy="0">No account</tspan>
+      <tspan x="94" dy="26">needed</tspan>
+    </text>
+  </g>
+
+  <path d="M 364 480 L 424 480" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 2: Join waitlist -->
+  <g>
+    <rect x="428" y="380" width="300" height="200" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="458" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Join waitlist</text>
+    <line x1="458" y1="462" x2="698" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="458" y="498" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#504e48">
+      <tspan x="458" dy="0">Sign-in required,</tspan>
+      <tspan x="458" dy="26">idempotent</tspan>
+    </text>
+  </g>
+
+  <path d="M 728 480 L 788 480" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 3: Claim window -->
+  <g>
+    <rect x="792" y="380" width="300" height="200" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="822" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Claim window</text>
+    <line x1="822" y1="462" x2="1062" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="822" y="498" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#504e48">
+      <tspan x="822" dy="0">Opens; priority</tspan>
+      <tspan x="822" dy="26">score decides order</tspan>
+    </text>
+  </g>
+
+  <path d="M 1092 480 L 1152 480" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+
+  <!-- Stage 4: Claim (signal accent) -->
+  <g>
+    <rect x="1156" y="380" width="300" height="200" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="1186" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="30" font-weight="600" fill="#161616">Claim</text>
+    <line x1="1186" y1="462" x2="1426" y2="462" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1186" y="498" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="19" fill="#504e48">
+      <tspan x="1186" dy="0">Row-locked</tspan>
+      <tspan x="1186" dy="26">transaction</tspan>
+    </text>
+  </g>
+
+  <!-- Success branch -->
+  <path d="M 1306 580 L 1306 660" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
+  <g>
+    <rect x="1106" y="664" width="400" height="130" fill="#e5e2d8" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1130" y="710" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Unique claim code</text>
+    <text x="1130" y="742" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">Stock decremented, waitlist entry removed</text>
+  </g>
+
+  <!-- Honest failure branch -->
+  <path d="M 1250 580 L 900 660" stroke="#504e48" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#ah-muted)" />
+  <g>
+    <rect x="580" y="664" width="400" height="130" fill="none" stroke="#b8b5ac" stroke-width="1" stroke-dasharray="6 6" />
+    <text x="604" y="710" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" font-weight="600" fill="#161616">Fails honestly</text>
+    <text x="604" y="740" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">Window closed, no stock, or position beyond stock</text>
+  </g>
+
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#161616" />
+    </marker>
+    <marker id="ah-muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#504e48" />
+    </marker>
+  </defs>
+
+  <line x1="64" y1="944" x2="1536" y2="944" stroke="#b8b5ac" stroke-width="1" />
+  <text x="64" y="972" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="1" fill="#504e48">Sequence verified against the audited repository — not a captured screen.</text>
+</svg>

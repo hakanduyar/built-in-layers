@@ -1,1 +1,21 @@
-[CONTENT REQUIRED: System layer — architecture, data model, API boundaries, offline strategy, deployment, and performance decisions. Pending repository audit and Hakan's input for TASK-006.]
+DropSpot is a two-repository system: a Node.js/Express API backed by PostgreSQL, and a separate React/Vite single-page frontend talking to it over a JSON REST API via Axios. There is no server-side rendering and no shared code between the two — the frontend holds its auth token in `localStorage` and attaches it as a bearer header, and the backend's own JWT middleware and a separate admin-role middleware are the only gate on every protected route, independently of whatever the frontend's route guards already checked.
+
+The database schema is four PostgreSQL tables — `users`, `drops`, `waitlist`, `claims` — with foreign keys cascading on delete, two `CHECK` constraints keeping `available_stock` between zero and the drop's total, and a composite index on `(drop_id, priority_score DESC)` supporting the waitlist ordering query. There is no versioned migration history: one script drops and recreates the whole schema in a single transaction, appropriate for a project with no production data to preserve, not a design that would survive a real deployment unchanged (see Decisions).
+
+<Figure
+  src="/images/projects/dropspot/claim-transaction-diagram.svg"
+  alt="Diagram of the claim transaction: a database transaction that row-locks the claim and drop records, checks the claim window and available stock, then atomically inserts the claim, decrements stock, and clears the waitlist entry."
+  caption="Verified architecture diagram, not a product screenshot."
+  index={1}
+/>
+
+The claim path is the system's real subject. A claim request opens a single PostgreSQL transaction that takes a `SELECT ... FOR UPDATE` row lock on the caller's existing-claim row first (making the whole operation idempotent — a repeat claim returns the existing one and commits immediately), then a second `FOR UPDATE` lock on the drop's own row while checking that the current time is inside its claim window. Only after both locks are held does the code check remaining stock and recompute the caller's waitlist position from priority score and join time; if the position is within the available stock, the transaction inserts the claim row, decrements `available_stock`, and deletes the waitlist entry — all three writes committed together, or all rolled back together on any failure. The waitlist join path uses the identical pattern: a `FOR UPDATE` lock on the existing-entry check makes joining idempotent before a fresh priority score is computed and inserted.
+
+<Figure
+  src="/images/projects/dropspot/priority-score-diagram.svg"
+  alt="Diagram of the priority-score formula: a deployment-unique seed produces three coefficients, which combine with signup latency, account age, and rapid-action count into a waitlist priority score."
+  caption="Verified architecture diagram, not a product screenshot."
+  index={2}
+/>
+
+Waitlist priority is not first-come-first-served alone: a SHA-256 seed derived from the repository's git remote URL, its first commit timestamp, and a build-time value produces three coefficients, which feed a formula combining signup latency, account age in days, and a rolling count of "rapid actions" (waitlist joins in the last ten minutes) into a single score, floored at zero and unit-tested directly in the repository. Authentication is JWT-based with a 7-day default expiry, passwords hashed with bcrypt at 10 rounds and never returned from any endpoint except the internal login-comparison lookup, and every write endpoint validates its input with `express-validator` before touching the database. A GitHub Actions CI workflow exists in the repository — a real Postgres service container, a backend test job running migrations then the Jest suite, a frontend build job — but it's committed at `github/workflows/ci.yml` rather than `.github/workflows/ci.yml`, so GitHub Actions never actually picked it up; the backend's Jest/Supertest integration tests and unit tests for the scoring math are real and passing locally, just never run as live CI.

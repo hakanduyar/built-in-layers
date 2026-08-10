@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
 import {
+  ALLOWED_ASSET_EXTENSIONS,
   LAYER_MAX_SIMILARITY,
   LAYER_MIN_LENGTH,
+  checkImageAssets,
   checkLayerMeaning,
   checkRequiredSectionHeadings,
   containsContentRequiredMarker,
@@ -12,6 +14,21 @@ import {
   stripMarkup,
   validatePublicationGates,
 } from "@/lib/content/validate";
+
+type ProjectImage = ProjectFrontmatter["images"][number];
+
+function image(overrides: Partial<ProjectImage> = {}): ProjectImage {
+  return {
+    src: "/images/projects/example/diagram.svg",
+    alt: "A diagram of the example system.",
+    caption: "Verified architecture diagram, not a product screenshot.",
+    assetType: "verified-diagram",
+    ...overrides,
+  };
+}
+
+const alwaysExists = () => true;
+const neverExists = () => false;
 
 const SURFACE_TEXT =
   "Surface work here means the visible interface: grid layout, responsive breakpoints across four widths, a small type scale reused everywhere, and keyboard-reachable controls. Every interactive element carries a visible focus ring and a minimum touch target of forty-four pixels. Color pairs were checked against contrast ratios before shipping. Card compositions favor asymmetric placement over centered, equal-width grids, echoing the project's editorial visual language.";
@@ -307,5 +324,143 @@ describe("validatePublicationGates", () => {
       indexBody: "A short preview body with no narrative sections at all.",
     });
     expect(errors).toEqual([]);
+  });
+});
+
+// D-019 (docs/DECISIONS.md) reusable image-asset gate. Uses an injected
+// fileExists predicate throughout instead of touching the real filesystem —
+// real on-disk existence for the actual project assets is covered by
+// tests/unit/kivilcim-assets.test.ts and tests/unit/dropspot-assets.test.ts,
+// which read the real files. This suite exercises the gate's own logic in
+// isolation: path safety, extension allow-listing, and caption honesty.
+describe("checkImageAssets", () => {
+  it("passes a well-formed verified-diagram entry", () => {
+    const errors = checkImageAssets("example", [image()], alwaysExists);
+    expect(errors).toEqual([]);
+  });
+
+  it("passes a well-formed real-screenshot entry with an allowed raster extension", () => {
+    const errors = checkImageAssets(
+      "example",
+      [
+        image({
+          src: "/images/projects/example/home.png",
+          assetType: "real-screenshot",
+          caption: "Real product screenshot.",
+        }),
+      ],
+      alwaysExists,
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("rejects a src outside the project's own asset directory", () => {
+    const errors = checkImageAssets(
+      "example",
+      [image({ src: "/images/projects/another-project/diagram.svg" })],
+      alwaysExists,
+    );
+    expect(errors.some((e) => e.rule.includes("project-relative path"))).toBe(true);
+  });
+
+  it("rejects path traversal even when the prefix looks correct", () => {
+    const errors = checkImageAssets(
+      "example",
+      [image({ src: "/images/projects/example/../../../etc/passwd" })],
+      alwaysExists,
+    );
+    expect(errors.some((e) => e.rule.includes("traversal"))).toBe(true);
+  });
+
+  it("rejects a missing file", () => {
+    const errors = checkImageAssets("example", [image()], neverExists);
+    expect(errors.some((e) => e.rule.includes("does not resolve to a real file"))).toBe(true);
+  });
+
+  it("rejects a verified-diagram registered with a raster extension", () => {
+    const errors = checkImageAssets(
+      "example",
+      [image({ src: "/images/projects/example/diagram.png" })],
+      alwaysExists,
+    );
+    expect(errors.some((e) => e.rule.includes("not allowed for assetType"))).toBe(true);
+  });
+
+  it("rejects a real-screenshot registered as .svg", () => {
+    const errors = checkImageAssets(
+      "example",
+      [
+        image({
+          src: "/images/projects/example/home.svg",
+          assetType: "real-screenshot",
+          caption: "Real product screenshot.",
+        }),
+      ],
+      alwaysExists,
+    );
+    expect(errors.some((e) => e.rule.includes("not allowed for assetType"))).toBe(true);
+  });
+
+  it("rejects a verified-diagram/provisional-illustration with an empty caption", () => {
+    const errors = checkImageAssets("example", [image({ caption: undefined })], alwaysExists);
+    expect(errors.some((e) => e.rule.includes("requires a non-empty caption"))).toBe(true);
+  });
+
+  it("rejects a verified-diagram caption that never says diagram or illustration", () => {
+    const errors = checkImageAssets(
+      "example",
+      [image({ caption: "A picture of the system, not a product screenshot." })],
+      alwaysExists,
+    );
+    expect(errors.some((e) => e.rule.includes("must honestly identify it as a diagram"))).toBe(
+      true,
+    );
+  });
+
+  it("accepts a provisional-illustration caption using 'illustrative' rather than the literal word 'illustration'", () => {
+    const errors = checkImageAssets(
+      "example",
+      [
+        image({
+          assetType: "provisional-illustration",
+          caption: "Illustrative product map based on the audited repository.",
+        }),
+      ],
+      alwaysExists,
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("does not require a caption honesty check for real-screenshot entries", () => {
+    const errors = checkImageAssets(
+      "example",
+      [
+        image({
+          src: "/images/projects/example/home.png",
+          assetType: "real-screenshot",
+          caption: "The home page.",
+        }),
+      ],
+      alwaysExists,
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("passes an empty images array", () => {
+    expect(checkImageAssets("example", [], neverExists)).toEqual([]);
+  });
+
+  it("every error identifies the project slug and the source file", () => {
+    const errors = checkImageAssets("example", [image({ caption: undefined })], neverExists);
+    for (const error of errors) {
+      expect(error.slug).toBe("example");
+      expect(error.file).toBe("index.mdx");
+    }
+  });
+
+  it("ALLOWED_ASSET_EXTENSIONS keeps verified-diagram and provisional-illustration SVG-only", () => {
+    expect(ALLOWED_ASSET_EXTENSIONS["verified-diagram"]).toEqual([".svg"]);
+    expect(ALLOWED_ASSET_EXTENSIONS["provisional-illustration"]).toEqual([".svg"]);
+    expect(ALLOWED_ASSET_EXTENSIONS["real-screenshot"]).toEqual([".png", ".jpg", ".jpeg", ".webp"]);
   });
 });

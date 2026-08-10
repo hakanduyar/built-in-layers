@@ -88,24 +88,33 @@ Repository:
 
 `https://github.com/hakanduyar/dropspot-project`
 
-Status: `PARTIAL`, repository audit required.
+Status: `VERIFIED` — repository audit complete (TASK-006, 2026-08-05, remediated same day; read-only clone deleted after each audit pass), `status: "published"`, `verificationStatus: "verified"`, under **D-019** (`docs/DECISIONS.md`). The case study uses four real screenshots (`assetType: "real-screenshot"`) sourced directly from the audited repository's own `screenshots/` directory, plus three `verified-diagram` technical SVGs — DropSpot is the first project on this site to use real screenshots under D-019, not provisional diagrams standing in for them.
 
-Known direction:
+Verified direction (repository-audited, TASK-006, code read directly — not just the README):
 
-- limited-stock drop/waitlist product
-- frontend and backend
-- claim/allocation logic
-- PostgreSQL transaction/concurrency considerations
+- limited-stock drop/waitlist product — confirmed: browse (public), join a waitlist, claim during a claim window
+- React/Vite/Tailwind v3 frontend, Node.js/Express/PostgreSQL backend — confirmed in both `package.json` files
+- claim/allocation logic — confirmed: a single PostgreSQL transaction takes `SELECT ... FOR UPDATE` row locks on the claim and drop records before checking the claim window, stock, and waitlist position, then commits three writes together
+- PostgreSQL transaction/concurrency considerations — confirmed genuinely implemented (not just claimed): quoted directly from `dropspot-backend/src/models/Claim.js`/`Waitlist.js`
+- a deployment-unique seed-based priority formula — confirmed in `seedGenerator.js`, unit-tested in the repository
+- real Jest/Supertest backend tests and Vitest/RTL frontend tests — confirmed present and passing locally
+- 8 real product screenshots exist in the repository's own `screenshots/` directory — 4 selected and used (see below); the remaining 4 (`home.png`, `sign-up.png`, `my-waitlist.png`, `my-claims.png`) were inspected and not selected — `home.png` was redundant with the selected `home-login.png` (which shows strictly more state), `sign-up.png` is a generic auth form with no DropSpot-specific value, `my-waitlist.png` and `my-claims.png` add little beyond what the selected four already show (and `my-claims.png` is mostly empty whitespace around an empty-state message)
+
+Rejected/corrected claims (repository audit, TASK-006):
+
+- **No test exercises genuinely concurrent/simultaneous requests** — the row-locking mechanism is verified by reading the transaction code directly, not by a passing concurrency test; the case study says this plainly rather than implying load-tested behavior
+- **The repository's CI workflow never actually ran** — `github/workflows/ci.yml` is misplaced (should be `.github/workflows/ci.yml`), so GitHub Actions never picked it up; the tests are real, the live CI claim is not
+- **The `signup_latency_ms` priority-score term is near-inert** — the frontend computes it from two `Date.now()` calls issued back to back on the same line, so it contributes almost nothing in practice; account age and the rapid-action penalty do the real ordering work
+- **No accessibility-specific work exists** — zero `aria-*`/`role` attributes anywhere in the frontend source, stated as a verified gap, not assumed
+- No production deployment, no real users, no usage data — the README's framing as "a case study for Alpaco Full Stack Developer position" is noted but not further characterized; the case study makes no employment or client claim either way
+- **The repository's own screenshot filenames and README captions are not reliable** — `waitlist-claimed.png` (README: "User successfully claimed a drop. Shows unique claim code...") actually shows the waitlist-**joined** confirmation state ("You're in the waitlist!" / "Leave Waitlist"), not a claim or claim code; `my-claims.png` (README: "User's claimed drops with unique claim codes...") actually shows the empty "No claims yet" state. No screenshot in the repository shows an actual completed claim with a visible claim code — the case study does not claim otherwise. Both files were used under corrected, directly-observed descriptions (`waitlist-joined.webp`), not their original names/captions.
+- **`db.png` is not a schema diagram** — despite the README calling it "Database Schema (Bonus)... showing relationships between users, drops, waitlist, and claims tables," the actual image is a pgAdmin dashboard screenshot of generic server activity graphs (sessions, transactions/sec, tuples in/out, block I/O) with no table structure, columns, or relationships visible anywhere. Rejected outright — not imported under any description.
 
 Needed:
 
-- screenshots
-- demo URL
-- exact implementation status
-- test evidence
-- Hakan's specific contribution
-- what was learned
-- known limitations
+- **4 more real screenshots exist but were not selected**: `home.png` (redundant with `home-login.png`), `sign-up.png` (generic, no DropSpot-specific value), `my-waitlist.png`, `my-claims.png` (see above) — available if a future task wants a larger gallery.
+- demo URL — none exists; no live deployment.
+- what Hakan personally learned building this — the Reflection section is written from direct code evidence (what holds up, what doesn't), not a personal statement in Hakan's own words; see the task completion report for the honesty caveat recorded on this basis.
 
 ### JointLedger
 
@@ -220,10 +229,13 @@ Still needed (real screenshots/photographs/video):
 
 ```text
 public/images/projects/kivilcim/     — real screenshots still wanted; see Kıvılcım section above
-public/images/projects/dropspot/
+public/images/projects/dropspot/     — DONE: 4 real screenshots in use (browse-drops.webp,
+                                        drop-detail.webp, admin-panel.webp, waitlist-joined.webp),
+                                        sourced directly from the audited repository; see DropSpot
+                                        section above for the 4 not selected and why
 public/images/projects/jointledger/
 public/images/projects/professional/
 public/images/projects/archive/
 ```
 
-**D-019 (2026-08-05)**: until real screenshots exist, a project may publish with repository-verified, visibly labelled `verified-diagram`/`provisional-illustration` SVGs instead of a generic development placeholder — see `docs/DECISIONS.md`. Kıvılcım is the first project to use this (`product-areas-map.svg`, `core-flow-diagram.svg`, `local-first-architecture.svg`, `focus-lifecycle.svg`, all under `public/images/projects/kivilcim/`). DropSpot, JointLedger, and Professional Systems remain on generic labelled development placeholders (or `images: []`) until either real assets or D-019 diagrams are created for them.
+**D-019 (2026-08-05)**: until real screenshots exist, a project may publish with repository-verified, visibly labelled `verified-diagram`/`provisional-illustration` SVGs instead of a generic development placeholder — see `docs/DECISIONS.md`. Kıvılcım (`product-areas-map.svg`, `core-flow-diagram.svg`, `local-first-architecture.svg`, `focus-lifecycle.svg`) still uses diagrams only, since its real screenshots don't exist yet. **DropSpot is the first project to use real screenshots under D-019** (`browse-drops.webp`, `drop-detail.webp`, `admin-panel.webp`, `waitlist-joined.webp`, `assetType: "real-screenshot"`) alongside three `verified-diagram` technical SVGs (`core-flow-diagram.svg`, `claim-transaction-diagram.svg`, `priority-score-diagram.svg`) — its earlier `provisional-illustration` (`screens-map.svg`) was removed once real screenshots covered the interface areas it illustrated, per D-019's own "real assets replace provisional ones... as a pure asset swap" principle. A reusable validator (`checkImageAssets`, `lib/content/validate.ts`, added TASK-006) enforces D-019's structural/honesty rules for every project's registered images and every asset type, not just these two projects. JointLedger and Professional Systems remain on generic labelled development placeholders (or `images: []`) until either real assets or D-019 diagrams are created for them.
