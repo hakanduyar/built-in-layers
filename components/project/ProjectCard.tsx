@@ -1,10 +1,17 @@
 import { Figure } from "@/components/ui/Figure";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { TextLink } from "@/components/ui/TextLink";
+import { Reveal } from "@/components/ui/motion/Reveal";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
 
 type ProjectCardProps = {
   project: ProjectFrontmatter;
+  /** Stagger offset in ms for a reveal-on-scroll entrance (TASK-007).
+   *  Omitted entirely (no Reveal, no client boundary pulled in for this
+   *  card) unless a caller explicitly opts in -- today only the homepage's
+   *  Selected Systems list does, capped at 4 items well inside DESIGN_SYSTEM
+   *  §13's <=5-item stagger cap. */
+  revealDelayMs?: number;
 };
 
 // D-017: Kıvılcım's first English-language introduction may gloss "Spark".
@@ -14,9 +21,9 @@ function displayTitle(project: ProjectFrontmatter): string {
   return project.slug === "kivilcim" ? `${project.title} — "Spark"` : project.title;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
-  return (
-    <li className="border-t border-line py-6">
+export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
+  const content = (
+    <>
       <MonoLabel className="text-ink-muted">{project.categoryLabel}</MonoLabel>
       <h3 className="mt-2 font-display text-heading-m text-ink">
         <TextLink href={`/work/${project.slug}`}>{displayTitle(project)}</TextLink>
@@ -51,6 +58,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
         </div>
       )}
+    </>
+  );
+
+  return (
+    <li className="border-t border-line py-6 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:border-signal-ui focus-within:border-signal-ui">
+      {revealDelayMs !== undefined ? <Reveal delayMs={revealDelayMs}>{content}</Reveal> : content}
     </li>
   );
 }

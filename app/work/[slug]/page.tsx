@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CaseStudyHero } from "@/components/project/CaseStudyHero";
 import { DecisionList } from "@/components/project/DecisionList";
-import { LayerSection } from "@/components/project/LayerSection";
+import { LayerExplorer } from "@/components/project/LayerExplorer";
 import { NextProject } from "@/components/project/NextProject";
 import { Container } from "@/components/ui/Container";
 import { TextLink } from "@/components/ui/TextLink";
@@ -96,12 +96,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </ul>
       )}
 
-      {/* IA 5-7: Surface, Flow, System */}
+      {/* IA 5-7: Surface, Flow, System -- TASK-007: enhanced into an ARIA
+          tabs interface on hydration; the stacked rendering (LayerSection)
+          remains the no-JS/pre-hydration output, unchanged. */}
       {layers && (
         <div className="mt-16">
-          <LayerSection label="Surface">{layers.surface}</LayerSection>
-          <LayerSection label="Flow">{layers.flow}</LayerSection>
-          <LayerSection label="System">{layers.system}</LayerSection>
+          <LayerExplorer layers={layers} />
         </div>
       )}
 

@@ -1,5 +1,6 @@
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/motion/Reveal";
 import { builtForRealLifeSubheading, pendingCopy } from "@/data/copy";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
 
@@ -21,13 +22,13 @@ export function BuiltForRealLife({ projects }: BuiltForRealLifeProps) {
       </p>
 
       {projects.length === 0 ? (
-        <p className="mt-8 max-w-[42rem] font-display text-body text-ink-muted">
-          {pendingCopy.realLife}
-        </p>
+        <Reveal className="mt-8 max-w-[42rem]">
+          <p className="font-display text-body text-ink-muted">{pendingCopy.realLife}</p>
+        </Reveal>
       ) : (
         <ul className="mt-8 lg:grid lg:grid-cols-2 lg:gap-x-12">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {projects.map((project, index) => (
+            <ProjectCard key={project.slug} project={project} revealDelayMs={index * 60} />
           ))}
         </ul>
       )}

@@ -102,37 +102,45 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
       "One-minute summary",
       "Why it exists",
       "Constraints",
-      "Surface",
-      "Flow",
-      "System",
       "Decisions",
       "Evolution",
       "Reflection",
     ]) {
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
     }
+    // TASK-007: Surface/Flow/System are now the interactive Layer Explorer's
+    // tabs, not headings -- the tab labels are their accessible names.
+    for (const label of ["Surface", "Flow", "System"]) {
+      await expect(page.getByRole("tab", { name: label })).toBeVisible();
+    }
   });
 
-  test("renders all four D-019 assets with honest, non-screenshot labelling", async ({ page }) => {
+  test("renders all four D-019 assets with honest, non-screenshot labelling (across the three tabs)", async ({
+    page,
+  }) => {
     await page.goto("/work/kivilcim");
-    const images = page.locator("main img");
-    await expect(images).toHaveCount(4);
 
-    for (const filename of [
-      "product-areas-map.svg",
-      "core-flow-diagram.svg",
-      "local-first-architecture.svg",
-      "focus-lifecycle.svg",
-    ]) {
-      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
-    }
-
-    const bodyText = await page.locator("main").innerText();
+    // Surface: the illustrative product map.
+    await expect(page.locator('main img[src*="product-areas-map.svg"]')).toBeVisible();
+    let bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Illustrative product map based on the audited repository");
+
+    // Flow: the core flow diagram + the focus lifecycle state diagram.
+    await page.getByRole("tab", { name: "Flow" }).click();
+    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    await expect(page.locator('main img[src*="focus-lifecycle.svg"]')).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
-    expect(bodyText).toContain("Verified architecture diagram");
     expect(bodyText).toContain("Verified state diagram");
-    expect(bodyText.toLowerCase()).not.toContain("screenshot of");
+
+    // System: the local-first architecture diagram.
+    await page.getByRole("tab", { name: "System" }).click();
+    await expect(page.locator('main img[src*="local-first-architecture.svg"]')).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
+    expect(bodyText).toContain("Verified architecture diagram");
+
+    const fullText = (await page.locator("main").innerText()).toLowerCase();
+    expect(fullText).not.toContain("screenshot of");
   });
 
   test("no generic placeholder asset remains for Kıvılcım", async ({ page }) => {
@@ -191,46 +199,50 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
       "One-minute summary",
       "Why it exists",
       "Constraints",
-      "Surface",
-      "Flow",
-      "System",
       "Decisions",
       "Reflection",
     ]) {
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
     }
+    // TASK-007: Surface/Flow/System are now the interactive Layer Explorer's
+    // tabs, not headings.
+    for (const label of ["Surface", "Flow", "System"]) {
+      await expect(page.getByRole("tab", { name: label })).toBeVisible();
+    }
   });
 
-  test("renders all 7 D-019 assets: 4 real screenshots + 3 diagrams, each honestly labelled", async ({
+  test("renders all 7 D-019 assets: 4 real screenshots + 3 diagrams, each honestly labelled (across the three tabs)", async ({
     page,
   }) => {
     await page.goto("/work/dropspot");
-    const images = page.locator("main img");
-    await expect(images).toHaveCount(7);
 
-    for (const filename of [
-      "browse-drops.webp",
-      "drop-detail.webp",
-      "admin-panel.webp",
-      "waitlist-joined.webp",
-      "core-flow-diagram.svg",
-      "claim-transaction-diagram.svg",
-      "priority-score-diagram.svg",
-    ]) {
+    // Surface (default tab): the three real screenshots.
+    for (const filename of ["browse-drops.webp", "drop-detail.webp", "admin-panel.webp"]) {
       await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
     }
-
-    const bodyText = await page.locator("main").innerText();
-    // Real screenshots: plain, honest captions, no "not a screenshot" denial.
+    let bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Home page, signed in — browsing drops with waitlist status");
     expect(bodyText).toContain("Drop detail page before joining the waitlist.");
     expect(bodyText).toContain("Admin panel — drop management table");
+
+    // Flow: the 4th real screenshot + the flow diagram.
+    await page.getByRole("tab", { name: "Flow" }).click();
+    await expect(page.locator('main img[src*="waitlist-joined.webp"]')).toBeVisible();
+    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Drop detail page after joining the waitlist.");
-    // Diagrams: still carry their honest denial framing.
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
+
+    // System: the two remaining architecture diagrams.
+    await page.getByRole("tab", { name: "System" }).click();
+    await expect(page.locator('main img[src*="claim-transaction-diagram.svg"]')).toBeVisible();
+    await expect(page.locator('main img[src*="priority-score-diagram.svg"]')).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
+
     // The removed provisional screens-map must not linger anywhere.
-    expect(bodyText).not.toContain("Illustrative screens map");
+    const fullText = await page.locator("main").innerText();
+    expect(fullText).not.toContain("Illustrative screens map");
   });
 
   test("real screenshots keep their true aspect ratio — no stretching to 16:10", async ({
@@ -240,18 +252,42 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     // Intrinsic ratios (from the source files): browse-drops 1806x822,
     // drop-detail 1731x837, admin-panel 1878x808, waitlist-joined 1804x812 —
     // none is 16:10 (1.6). Figure's plain <img> with no fixed height must
-    // render each at its own natural ratio, not a forced 1.6.
-    const expected: Record<string, number> = {
+    // render each at its own natural ratio, not a forced 1.6. browse-drops/
+    // drop-detail/admin-panel live under Surface (default); waitlist-joined
+    // lives under Flow.
+    const surfaceExpected: Record<string, number> = {
       "browse-drops.webp": 1806 / 822,
       "drop-detail.webp": 1731 / 837,
       "admin-panel.webp": 1878 / 808,
-      "waitlist-joined.webp": 1804 / 812,
     };
-    for (const [filename, intrinsicRatio] of Object.entries(expected)) {
+    for (const [filename, intrinsicRatio] of Object.entries(surfaceExpected)) {
       const img = page.locator(`main img[src*="${filename}"]`);
+      // `boundingBox()` is a raw, non-retrying layout read -- it can catch
+      // the image before its real bytes have finished decoding (no explicit
+      // width/height on Figure's <img>, so pre-decode layout can be
+      // zero-size). `toBeVisible()` alone wasn't a strong enough guard
+      // (still observed one webkit-only null read immediately after it
+      // passed); polling `boundingBox()` itself until it's genuinely
+      // non-null is the robust fix -- it retries the exact value this test
+      // needs, not a proxy for it.
+      await expect.poll(async () => await img.boundingBox(), { timeout: 10_000 }).not.toBeNull();
       const box = await img.boundingBox();
       expect(box, `expected a bounding box for ${filename}`).not.toBeNull();
       if (!box) continue;
+      const renderedRatio = box.width / box.height;
+      expect(Math.abs(renderedRatio - intrinsicRatio) / intrinsicRatio).toBeLessThan(0.02);
+      expect(Math.abs(renderedRatio - 16 / 10) / (16 / 10)).toBeGreaterThan(0.01);
+    }
+
+    await page.getByRole("tab", { name: "Flow" }).click();
+    const waitlistImg = page.locator('main img[src*="waitlist-joined.webp"]');
+    await expect
+      .poll(async () => await waitlistImg.boundingBox(), { timeout: 10_000 })
+      .not.toBeNull();
+    const box = await waitlistImg.boundingBox();
+    expect(box, "expected a bounding box for waitlist-joined.webp").not.toBeNull();
+    if (box) {
+      const intrinsicRatio = 1804 / 812;
       const renderedRatio = box.width / box.height;
       expect(Math.abs(renderedRatio - intrinsicRatio) / intrinsicRatio).toBeLessThan(0.02);
       expect(Math.abs(renderedRatio - 16 / 10) / (16 / 10)).toBeGreaterThan(0.01);
@@ -312,13 +348,15 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
       "One-minute summary",
       "Why it exists",
       "Constraints",
-      "Surface",
-      "Flow",
-      "System",
       "Decisions",
       "Reflection",
     ]) {
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    }
+    // TASK-007: Surface/Flow/System are now the interactive Layer Explorer's
+    // tabs, not headings.
+    for (const label of ["Surface", "Flow", "System"]) {
+      await expect(page.getByRole("tab", { name: label })).toBeVisible();
     }
   });
 
@@ -334,25 +372,33 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
     ).toBeVisible();
   });
 
-  test("renders all 4 D-019 verified-diagram assets, each honestly labelled", async ({ page }) => {
+  test("renders all 4 D-019 verified-diagram assets, each honestly labelled (across the three tabs)", async ({
+    page,
+  }) => {
     await page.goto("/work/jointledger");
-    const images = page.locator("main img");
-    await expect(images).toHaveCount(4);
 
-    for (const filename of [
-      "upstream-extension-map.svg",
-      "personal-book-backfill-flow.svg",
-      "book-data-model-diagram.svg",
-      "book-scoped-authorization-diagram.svg",
-    ]) {
-      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
-    }
-
-    const bodyText = await page.locator("main").innerText();
+    // Surface (default tab): the upstream extension map.
+    await expect(page.locator('main img[src*="upstream-extension-map.svg"]')).toBeVisible();
+    let bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Verified extension diagram, not a product screenshot");
+
+    // Flow: the personal-book backfill flow diagram.
+    await page.getByRole("tab", { name: "Flow" }).click();
+    await expect(page.locator('main img[src*="personal-book-backfill-flow.svg"]')).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
+
+    // System: the two remaining architecture diagrams.
+    await page.getByRole("tab", { name: "System" }).click();
+    await expect(page.locator('main img[src*="book-data-model-diagram.svg"]')).toBeVisible();
+    await expect(
+      page.locator('main img[src*="book-scoped-authorization-diagram.svg"]'),
+    ).toBeVisible();
+    bodyText = await page.getByRole("tabpanel").innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
-    expect(bodyText.toLowerCase()).not.toContain("screenshot of");
+
+    const fullText = (await page.locator("main").innerText()).toLowerCase();
+    expect(fullText).not.toContain("screenshot of");
   });
 
   test("does not claim transactions are book-scoped, an invitation flow exists, or the shared-book work is merged", async ({

@@ -9,7 +9,7 @@ import { PositioningStatement } from "@/components/sections/PositioningStatement
 import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { Container } from "@/components/ui/Container";
 import { notes } from "@/data/notes";
-import { getProjectsByTier } from "@/lib/content/work";
+import { getProjectLayers, getProjectsByTier } from "@/lib/content/work";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
@@ -23,15 +23,25 @@ export const metadata: Metadata = buildMetadata({
   path: "/",
 });
 
-export default function Home() {
+export default async function Home() {
   const featuredProjects = getProjectsByTier("featured");
   const realLifeProjects = getProjectsByTier("real-life");
+
+  // TASK-007: the Built in Layers explorer previews a real, published
+  // project's layers rather than staying an abstract, content-free
+  // definition -- derived from the same loader-fed data as everything
+  // else on this page (the first featured project deep enough to have
+  // real Surface/Flow/System bodies), never a hard-coded slug.
+  const previewProject = featuredProjects.find(
+    (project) => project.depth === "full" || project.depth === "short",
+  );
+  const previewLayers = previewProject ? await getProjectLayers(previewProject.slug) : null;
 
   return (
     <Container className="py-16">
       <Hero />
       <PositioningStatement />
-      <LayerExplorerIntro />
+      <LayerExplorerIntro previewProject={previewProject} previewLayers={previewLayers} />
       <SelectedSystems projects={featuredProjects} />
       <BuiltForRealLife projects={realLifeProjects} />
       <HowIBuild />

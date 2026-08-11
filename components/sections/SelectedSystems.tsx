@@ -10,7 +10,9 @@ type SelectedSystemsProps = {
 // IA section 5. Data comes from app/page.tsx (getProjectsByTier("featured"))
 // -- never hard-coded here. Reuses the same ProjectCard as /work so a single
 // published entry still reads as a complete, intentional section rather
-// than a broken grid.
+// than a broken grid. TASK-007: each card gets a light stagger reveal on
+// scroll (60ms steps, well inside DESIGN_SYSTEM §13's <=90ms/5-item cap --
+// there are only ever 4 featured cards today).
 export function SelectedSystems({ projects }: SelectedSystemsProps) {
   return (
     <section className="mt-16 lg:mt-32">
@@ -25,8 +27,8 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
         </p>
       ) : (
         <ul className="mt-8">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {projects.map((project, index) => (
+            <ProjectCard key={project.slug} project={project} revealDelayMs={index * 60} />
           ))}
         </ul>
       )}

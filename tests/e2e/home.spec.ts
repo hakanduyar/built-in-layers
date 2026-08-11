@@ -32,13 +32,20 @@ test.describe("Home: Built in Layers", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Built in Layers" })).toBeVisible();
 
+    // TASK-007: below this static definitions list, the section also
+    // previews a real project's layers via the Layer Explorer. Its no-JS/
+    // pre-hydration fallback is itself a stacked, labelled "Surface"/"Flow"/
+    // "System" heading group -- honest, required content, not a defect --
+    // so briefly (and, without JS, permanently) there can be two heading
+    // groups sharing these words. `.first()` checks the static definitions
+    // list specifically, matching this test's own original intent.
     const layers: Array<[string, string]> = [
       ["Surface", "interface and interaction"],
       ["Flow", "behavior, states, and user journeys"],
       ["System", "architecture, data, and constraints"],
     ];
     for (const [label, body] of layers) {
-      await expect(page.getByRole("heading", { name: label, exact: true })).toBeVisible();
+      await expect(page.getByRole("heading", { name: label, exact: true }).first()).toBeVisible();
       await expect(page.locator("body")).toContainText(body);
     }
   });
@@ -53,9 +60,21 @@ test.describe("Home: Built in Layers", () => {
 });
 
 test.describe("Home: selected systems", () => {
+  // Scoped to the Selected Systems <ul> itself, not all of <main> -- TASK-007
+  // adds a legitimate 5th /work/ link on the homepage (the Layer Explorer
+  // preview's "Previewing real layers from <Project>" link, inside the Built
+  // in Layers section), so a bare `main a[href^='/work/']` locator now
+  // over-matches by one.
+  const cardLinks = (page: import("@playwright/test").Page) =>
+    page
+      .locator("section", {
+        has: page.getByRole("heading", { name: "Selected systems", level: 2 }),
+      })
+      .locator("li a[href^='/work/']");
+
   test("lists exactly the four published projects, in D-016 order", async ({ page }) => {
     await page.goto("/");
-    const links = page.locator("main a[href^='/work/']");
+    const links = cardLinks(page);
     await expect(links).toHaveCount(4);
     await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
@@ -77,7 +96,8 @@ test.describe("Home: selected systems", () => {
 
   test("Kıvılcım renders with its real title and description", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("Kıvılcım")).toBeVisible();
+    const card = page.locator("main li", { has: page.locator("a[href='/work/kivilcim']") });
+    await expect(card.getByText("Kıvılcım", { exact: false }).first()).toBeVisible();
     await expect(page.locator("body")).toContainText(
       "A local-first system for planning, focus, and personal growth.",
     );
