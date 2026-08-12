@@ -1,3 +1,5 @@
+import { readIntrinsicDimensions } from "@/lib/utils/imageDimensions";
+
 type FigureProps = {
   src: string;
   alt: string;
@@ -8,6 +10,7 @@ type FigureProps = {
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
 // 3, aria-hidden, decorative only), radius-1, mono-meta "FIG NN — caption".
 export function Figure({ src, alt, caption, index }: FigureProps) {
+  const dimensions = readIntrinsicDimensions(src);
   return (
     <figure className="relative border border-line bg-soft-paper p-1 rounded-1">
       <span
@@ -26,8 +29,38 @@ export function Figure({ src, alt, caption, index }: FigureProps) {
         aria-hidden="true"
         className="absolute bottom-0 right-0 h-2 w-2 border-b border-r border-ink"
       />
+      {/* TASK-008 (Lighthouse-measured, 2026-08-11): every Figure usage
+          (ProjectCard thumbnails, case-study layer figures) sits below the
+          real LCP candidate (each page's own text h1) -- React 19's
+          automatic initial-render image preloading was hoisting all of
+          them, including a 338KB screenshot, into high-priority <link
+          rel="preload"> requests competing with the page's actual critical
+          path. fetchPriority="low" suppresses that auto-preload hinting
+          while still fetching the image in normal document order --
+          `loading="lazy"` was tried first and reverted: combined with this
+          `<img>` having no explicit width/height, native lazy-loading left
+          the element at a genuine 0x0 layout box (no reserved space) until
+          it scrolled near the viewport, a real CLS/visibility regression
+          caught by tests/e2e/home.spec.ts, not merely a test artifact. */}
+      {/* TASK-008 (Lighthouse-measured, 2026-08-12): a real CLS regression
+          (0.068, /work) traced to this <img> never having had explicit
+          width/height -- readIntrinsicDimensions reads each asset's real
+          pixel size directly so the browser can reserve its layout box
+          before the file loads (the mechanism ARCHITECTURE §9 already
+          described but this component never actually implemented).
+          h-auto keeps the element fully responsive at its reserved
+          aspect ratio; dimensions is null (attributes omitted) only for a
+          format readIntrinsicDimensions doesn't recognize -- unchanged
+          prior behavior, not a regression. */}
       {/* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */}
-      <img src={src} alt={alt} className="block w-full" />
+      <img
+        src={src}
+        alt={alt}
+        fetchPriority="low"
+        decoding="async"
+        className="block h-auto w-full"
+        {...dimensions}
+      />
       {caption && (
         <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
           {index ? `FIG ${String(index).padStart(2, "0")} — ${caption}` : caption}

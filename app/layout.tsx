@@ -3,6 +3,7 @@ import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipLink } from "@/components/layout/SkipLink";
+import { SITE_URL } from "@/lib/seo/metadata";
 import "@/styles/globals.css";
 
 const archivo = Archivo({
@@ -25,7 +26,13 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+// `metadataBase` resolves the auto-discovered `app/opengraph-image.tsx`
+// (and any relative OG/Twitter image) into an absolute URL using the same
+// single SITE_URL mechanism every other metadata surface uses — it does
+// not invent a second production-URL source, and still resolves to the
+// safe development fallback until a real domain is configured.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Hakan Duyar — Frontend & Product Engineer",
     template: "%s — Hakan Duyar",

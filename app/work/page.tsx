@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { Container } from "@/components/ui/Container";
-import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { pendingCopy } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
@@ -42,7 +41,13 @@ export default function WorkPage() {
       ) : (
         groups.map((group) => (
           <div key={group.tier} className="mt-12">
-            <MonoLabel className="text-ink-muted">{group.label}</MonoLabel>
+            {/* axe "heading-order" (2026-08-11): each tier group is a real
+                h2 -- previously a plain styled span, which skipped straight
+                from h1 to each ProjectCard's h3. Visual role (mono-label)
+                is unchanged; only the semantic element changed. */}
+            <h2 className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+              {group.label}
+            </h2>
             <ul className="mt-4">
               {group.projects.map((project) => (
                 <ProjectCard key={project.slug} project={project} />

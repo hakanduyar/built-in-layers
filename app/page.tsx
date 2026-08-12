@@ -8,9 +8,10 @@ import { LayerExplorerIntro } from "@/components/sections/LayerExplorerIntro";
 import { PositioningStatement } from "@/components/sections/PositioningStatement";
 import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { Container } from "@/components/ui/Container";
+import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
 import { getProjectLayers, getProjectsByTier } from "@/lib/content/work";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
 // sections (header/nav and the contact CTA/footer are global, from
@@ -39,6 +40,7 @@ export default async function Home() {
 
   return (
     <Container className="py-16">
+      <JsonLd data={buildPersonJsonLd()} />
       <Hero />
       <PositioningStatement />
       <LayerExplorerIntro previewProject={previewProject} previewLayers={previewLayers} />
