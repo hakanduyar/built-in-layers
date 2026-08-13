@@ -1,99 +1,196 @@
 import { describe, expect, it } from "vitest";
 import {
-  cameraPosition,
+  BREAK_COVER_START,
+  BREAK_CUT,
+  BREAK_REVEAL_END,
   COLLISION_PROGRESS,
-  currentRouteId,
-  DESKTOP_NODE_POSITION,
-  IMPACT_BAND,
-  IMPACT_END_PROGRESS,
+  COLLISION_WORLD,
+  ROUTE_LENGTH_VH,
+  SCENES,
+  sceneAnchor,
+  sceneById,
+} from "@/lib/spatial/scenes";
+import {
+  approachTension,
+  breakWipeOffset,
+  cameraPosition,
+  currentSceneId,
+  hasRepositioned,
+  isBreakActive,
   isImpact,
-  MOBILE_NODE_POSITION,
-  NODE_PROGRESS,
 } from "@/lib/spatial/sceneRoute";
 
+// Spatial Portfolio V2. The binding semantics carried over from V1
+// (collision != bounce, discontinuous reposition, mobile choreography) are
+// tested here unchanged in meaning; the V2 additions (scene dwell, a
+// controlled route length, and a break that bridges the cut) are tested
+// alongside them. Deliberately no assertions on arbitrary exact world
+// coordinates -- those are art direction and must stay free to move.
+
+describe("scene configuration", () => {
+  it("every scene has a focus/hold window, in ascending route order", () => {
+    let previous = -1;
+    for (const scene of SCENES) {
+      expect(scene.holdUntil).toBeGreaterThanOrEqual(scene.focus);
+      expect(scene.focus).toBeGreaterThan(previous);
+      previous = scene.focus;
+    }
+  });
+
+  it("mobile anchors are purely vertical -- same scenes, different choreography", () => {
+    for (const scene of SCENES) {
+      expect(scene.mobileWorld.x).toBe(0);
+    }
+  });
+
+  it("keeps the total route length controlled, well under V1's 600vh spacer", () => {
+    expect(ROUTE_LENGTH_VH).toBeGreaterThan(0);
+    expect(ROUTE_LENGTH_VH).toBeLessThan(500);
+  });
+});
+
 describe("cameraPosition", () => {
-  it("starts exactly at hero", () => {
-    expect(cameraPosition(0)).toEqual(DESKTOP_NODE_POSITION.hero);
+  it("starts framed on the hero scene", () => {
+    expect(cameraPosition(0)).toEqual(sceneAnchor("hero"));
   });
 
-  it("reaches kivilcim, dropspot, and tail exactly at their progress stops", () => {
-    expect(cameraPosition(NODE_PROGRESS.kivilcim)).toEqual(DESKTOP_NODE_POSITION.kivilcim);
-    expect(cameraPosition(NODE_PROGRESS.dropspot)).toEqual(DESKTOP_NODE_POSITION.dropspot);
-    expect(cameraPosition(NODE_PROGRESS.tail)).toEqual(DESKTOP_NODE_POSITION.tail);
+  it("dwells on each travelled scene for its whole hold window, so it can be read", () => {
+    for (const id of ["hero", "kivilcim", "dropspot", "tail"] as const) {
+      const scene = sceneById(id);
+      const anchor = sceneAnchor(id);
+      expect(cameraPosition(scene.focus)).toEqual(anchor);
+      expect(cameraPosition(scene.holdUntil)).toEqual(anchor);
+      expect(cameraPosition((scene.focus + scene.holdUntil) / 2)).toEqual(anchor);
+    }
   });
 
-  it("interpolates smoothly between two known waypoints", () => {
-    const mid = (NODE_PROGRESS.kivilcim + NODE_PROGRESS.dropspot) / 2;
-    const point = cameraPosition(mid);
-    expect(point.x).toBeGreaterThan(DESKTOP_NODE_POSITION.kivilcim.x);
-    expect(point.x).toBeLessThan(DESKTOP_NODE_POSITION.dropspot.x);
-    expect(point.y).toBeGreaterThan(DESKTOP_NODE_POSITION.kivilcim.y);
-    expect(point.y).toBeLessThan(DESKTOP_NODE_POSITION.dropspot.y);
+  it("travels between scenes, staying strictly between their anchors", () => {
+    const from = sceneById("kivilcim");
+    const to = sceneById("dropspot");
+    const mid = cameraPosition((from.holdUntil + to.focus) / 2);
+    expect(mid.x).toBeGreaterThan(sceneAnchor("kivilcim").x);
+    expect(mid.x).toBeLessThan(sceneAnchor("dropspot").x);
+    expect(mid.y).toBeGreaterThan(sceneAnchor("kivilcim").y);
+    expect(mid.y).toBeLessThan(sceneAnchor("dropspot").y);
   });
 
-  it("holds at the collision wall throughout the impact band (no easing onward, no reversal)", () => {
-    const atCollision = cameraPosition(COLLISION_PROGRESS);
-    const midImpact = cameraPosition((IMPACT_BAND[0] + IMPACT_BAND[1]) / 2);
-    expect(midImpact).toEqual(atCollision);
+  it("travels diagonally on desktop -- both axes advance across the route", () => {
+    const early = cameraPosition(sceneById("hero").focus);
+    const late = cameraPosition(sceneById("tail").focus);
+    expect(late.x).toBeGreaterThan(early.x);
+    expect(late.y).toBeGreaterThan(early.y);
   });
 
-  it("jumps discontinuously to sceneTwo at IMPACT_END_PROGRESS -- not a continuation of the diagonal", () => {
-    const justBefore = cameraPosition(IMPACT_END_PROGRESS - 0.001);
-    const atJump = cameraPosition(IMPACT_END_PROGRESS);
-    expect(atJump).toEqual(DESKTOP_NODE_POSITION.sceneTwo);
-    // A real discontinuity: the jump is not a small step continuing the
-    // same direction of travel -- sceneTwo's x is far below the collision
-    // wall's x, encoding "reposition", not "arrival".
-    expect(Math.abs(atJump.x - justBefore.x)).toBeGreaterThan(10);
+  it("does not repeat one zig-zag angle between consecutive scene legs", () => {
+    const legs = (["hero", "kivilcim", "dropspot", "tail"] as const)
+      .map((id) => sceneAnchor(id))
+      .slice(1)
+      .map((point, index) => {
+        const previous = sceneAnchor((["hero", "kivilcim", "dropspot"] as const)[index]!);
+        return (point.y - previous.y) / (point.x - previous.x);
+      });
+    expect(new Set(legs.map((slope) => slope.toFixed(3))).size).toBe(legs.length);
   });
 
-  it("stays at sceneTwo for the remaining dwell scroll (no further movement, no bounce-back)", () => {
-    expect(cameraPosition(0.8)).toEqual(DESKTOP_NODE_POSITION.sceneTwo);
-    expect(cameraPosition(1)).toEqual(DESKTOP_NODE_POSITION.sceneTwo);
+  it("stops dead at the wall and never eases past it or reverses off it (collision != bounce)", () => {
+    const atWall = cameraPosition(COLLISION_PROGRESS);
+    expect(atWall).toEqual(COLLISION_WORLD);
+    // Held for the entire impact window: no drift onward, no rebound back
+    // toward the tail.
+    const midImpact = cameraPosition((COLLISION_PROGRESS + BREAK_CUT) / 2);
+    expect(midImpact).toEqual(atWall);
+    expect(cameraPosition(BREAK_CUT - 0.001)).toEqual(atWall);
+  });
+
+  it("repositions discontinuously at the cut -- a break, not a continuation", () => {
+    const justBefore = cameraPosition(BREAK_CUT - 0.001);
+    const atCut = cameraPosition(BREAK_CUT);
+    expect(atCut).toEqual(sceneAnchor("sceneTwo"));
+    // The jump reverses direction of travel entirely: the whole route ran
+    // left-to-right, and sceneTwo sits far back to the left. Nothing about
+    // this reads as the camera continuing on its path.
+    expect(atCut.x).toBeLessThan(justBefore.x);
+    expect(Math.abs(atCut.x - justBefore.x)).toBeGreaterThan(100);
+  });
+
+  it("settles at sceneTwo for the remaining dwell -- no drift, no bounce-back", () => {
+    expect(cameraPosition(0.95)).toEqual(sceneAnchor("sceneTwo"));
+    expect(cameraPosition(1)).toEqual(sceneAnchor("sceneTwo"));
   });
 
   it("clamps out-of-range progress", () => {
-    expect(cameraPosition(-1)).toEqual(DESKTOP_NODE_POSITION.hero);
-    expect(cameraPosition(2)).toEqual(DESKTOP_NODE_POSITION.sceneTwo);
+    expect(cameraPosition(-1)).toEqual(sceneAnchor("hero"));
+    expect(cameraPosition(2)).toEqual(sceneAnchor("sceneTwo"));
   });
 
-  it("mobile route stays at x=0 throughout -- same nodes, vertical-only choreography", () => {
-    for (const p of [0, 0.1, NODE_PROGRESS.kivilcim, 0.3, NODE_PROGRESS.dropspot, 0.5, 0.7, 1]) {
+  it("keeps the mobile camera on a single vertical axis for the whole route", () => {
+    for (let p = 0; p <= 1; p += 0.05) {
       expect(cameraPosition(p, true).x).toBe(0);
     }
-    expect(cameraPosition(NODE_PROGRESS.kivilcim, true)).toEqual(MOBILE_NODE_POSITION.kivilcim);
-  });
-
-  it("desktop route genuinely moves diagonally (x and y both increase) before the collision", () => {
-    const early = cameraPosition(0.05);
-    const later = cameraPosition(NODE_PROGRESS.tail);
-    expect(later.x).toBeGreaterThan(early.x);
-    expect(later.y).toBeGreaterThan(early.y);
+    expect(cameraPosition(sceneById("dropspot").focus, true)).toEqual(
+      sceneAnchor("dropspot", true),
+    );
   });
 });
 
-describe("currentRouteId", () => {
-  it("returns the right id at each named progress stop and inside the impact band", () => {
-    expect(currentRouteId(0)).toBe("hero");
-    expect(currentRouteId(NODE_PROGRESS.kivilcim)).toBe("kivilcim");
-    expect(currentRouteId(NODE_PROGRESS.dropspot)).toBe("dropspot");
-    expect(currentRouteId(NODE_PROGRESS.tail)).toBe("tail");
-    expect(currentRouteId(COLLISION_PROGRESS)).toBe("collision");
-    expect(currentRouteId(IMPACT_END_PROGRESS)).toBe("sceneTwo");
-    expect(currentRouteId(1)).toBe("sceneTwo");
+describe("currentSceneId", () => {
+  it("names the scene that owns the camera at each focal moment", () => {
+    for (const scene of SCENES) {
+      expect(currentSceneId(scene.focus)).toBe(scene.id);
+    }
+  });
+
+  it("reports the collision as its own camera-only event, then sceneTwo after the cut", () => {
+    expect(currentSceneId(COLLISION_PROGRESS)).toBe("collision");
+    expect(currentSceneId(BREAK_CUT)).toBe("sceneTwo");
+    expect(currentSceneId(1)).toBe("sceneTwo");
   });
 });
 
-describe("isImpact", () => {
-  it("is true only inside the impact band, false at its own end and outside", () => {
+describe("impact and approach", () => {
+  it("flags impact only while the camera is stopped at the wall", () => {
     expect(isImpact(COLLISION_PROGRESS - 0.01)).toBe(false);
     expect(isImpact(COLLISION_PROGRESS)).toBe(true);
-    expect(isImpact((IMPACT_BAND[0] + IMPACT_BAND[1]) / 2)).toBe(true);
-    expect(isImpact(IMPACT_END_PROGRESS)).toBe(false);
+    expect(isImpact(BREAK_CUT)).toBe(false);
   });
 
-  it("impact band precedes the sceneTwo jump", () => {
-    expect(IMPACT_BAND[1]).toBeLessThanOrEqual(1);
-    expect(IMPACT_BAND[0]).toBeLessThan(IMPACT_BAND[1]);
+  it("builds tension continuously from the tail to the wall", () => {
+    const tail = sceneById("tail");
+    expect(approachTension(tail.holdUntil)).toBe(0);
+    expect(approachTension(COLLISION_PROGRESS)).toBe(1);
+    const mid = approachTension((tail.holdUntil + COLLISION_PROGRESS) / 2);
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
+  });
+});
+
+describe("scene break", () => {
+  it("is parked off-screen outside its window and never covers the scenes", () => {
+    expect(breakWipeOffset(0)).toBe(100);
+    expect(breakWipeOffset(BREAK_COVER_START)).toBe(100);
+    expect(breakWipeOffset(1)).toBe(-100);
+    expect(isBreakActive(0.5)).toBe(false);
+    expect(isBreakActive(1)).toBe(false);
+  });
+
+  it("fully covers the viewport at exactly the cut, so the jump is never witnessed", () => {
+    expect(breakWipeOffset(BREAK_CUT)).toBe(0);
+    expect(isBreakActive(BREAK_CUT)).toBe(true);
+  });
+
+  it("wipes in before the cut and out after it, in one direction", () => {
+    const covering = breakWipeOffset((BREAK_COVER_START + BREAK_CUT) / 2);
+    const revealing = breakWipeOffset((BREAK_CUT + BREAK_REVEAL_END) / 2);
+    expect(covering).toBeGreaterThan(0);
+    expect(covering).toBeLessThan(100);
+    expect(revealing).toBeLessThan(0);
+    expect(revealing).toBeGreaterThan(-100);
+  });
+
+  it("brackets the route's discontinuity: cover starts before the cut, reveal ends after", () => {
+    expect(BREAK_COVER_START).toBeLessThan(BREAK_CUT);
+    expect(BREAK_REVEAL_END).toBeGreaterThan(BREAK_CUT);
+    expect(hasRepositioned(BREAK_CUT - 0.001)).toBe(false);
+    expect(hasRepositioned(BREAK_CUT)).toBe(true);
   });
 });
