@@ -228,3 +228,38 @@ A page passes only if all are true:
 6. All copy is specific to Hakan's real work — zero phrases from the forbidden template list; project descriptions name concrete mechanisms ("transactional inventory claims"), not adjectives ("blazing fast").
 7. Layer tabs change real content (different text and figures per layer).
 8. Side-by-side check against 2–3 common AI portfolio templates shows no structural resemblance (reviewer judgment, recorded in the task report).
+
+## 18. EXPERIMENTAL — Spatial Portfolio homepage prototype (branch-only, not approved for main)
+
+**This section applies only to `feature/spatial-portfolio`. It is not merged into `main`, does not amend §§1–17 above, and does not represent an approved design direction.** `main` remains governed by §§1–17 exactly as written. This entry exists so the branch is self-documenting for independent review against the sibling `feature/layered-editorial-prototype` experiment — see `docs/PROGRESS.md` for the dated log entry recording both branches' relationship to `main`.
+
+### 18.1 Concept
+
+A scroll-driven "spatial camera" reinterprets the homepage's top section as a small world: a fixed HERO origin, two real project nodes (Kıvılcım, DropSpot) reached by diagonal travel, a near-empty content tail, a collision with a wall, an intentional camera reposition (not a smooth continuation) to a second scene, and a real route onward to the full Work index. Implemented in `components/spatial/` (`SpatialExperience.tsx`, `SpatialCamera.tsx`, `AtmosphereEmbers.tsx`) and `lib/spatial/sceneRoute.ts` (pure route/camera math, unit-tested).
+
+### 18.2 Disclosed departure from §13's binding motion rules
+
+DESIGN_SYSTEM §13 forbids "scroll-linked (scrub) animation" as a binding rule for the approved system. This prototype's entire premise — real scroll position mapped to a camera's world position via a pinned/sticky container (Motion's `useScroll`/`useTransform`) — is exactly that pattern. This is a **deliberate, disclosed experimental hypothesis under test, not an oversight or a silent rule change.** It is isolated to this branch, never merged, and exists specifically to be compared against the approved, §13-compliant direction (`main`, and the Layered Editorial prototype, which does not use this pattern). No other §13 rule is violated: movement stays within transform/opacity (no layout-triggering properties), stagger/scale/rotation caps are respected where those mechanics are reused (the collision shake), and reduced-motion strictly disables the entire mechanic rather than offering a softened version of it (see 18.4).
+
+The ambient ember atmosphere (18.3) is a second, narrower disclosed departure: §13 forbids "looping/idle animations," and slow-drifting particles are exactly that. Also isolated to this branch, also fully disabled under reduced motion.
+
+Everything else in this prototype (semantic HTML, one `h1`, real heading order verified by axe, keyboard operability, `--paper`/`--ink`/`--signal` tokens, real project content via the existing content loaders, `Figure`'s D-019 asset-honesty rules) follows the approved system and this codebase's existing conventions exactly — the departure is scoped narrowly to the camera/scroll mechanic and the atmosphere, not a wholesale rewrite of the design language.
+
+### 18.3 Visual rules (additive, this branch only)
+
+- **World/camera vocabulary**: a fixed set of named route stops (`hero`, `kivilcim`, `dropspot`, `tail`, `sceneTwo`) plus one camera-only event (`collision`, between `tail` and `sceneTwo`) — see `lib/spatial/sceneRoute.ts`. Desktop travels diagonally (x and y both increase); mobile travels purely vertically (x stays 0) — "same world, different camera choreography," not a different world.
+- **Collision != bounce**: the camera never eases past the collision point or springs back — `cameraPosition()` holds at the wall through a short impact window, then jumps discontinuously to `sceneTwo`, encoded as an explicit, unit-tested discontinuity (`tests/unit/spatial-route.test.ts`), not a smoothed transition.
+- **Impact feedback**: a brief (`320ms`) translate shake (`motion`'s own `animate` keyframes, ≤6px, matching the codebase's existing `Reveal`/`PanelTransition` idiom of using `motion.div` + explicit transition values) plus a brief `--color-signal` opacity flash (peak `0.28`, within DESIGN_SYSTEM's existing "few times per viewport" spirit for the signal accent) — never a spring/overshoot easing, consistent with §13's forbidden-pattern list even inside this otherwise-experimental mechanic.
+- **Atmosphere**: exactly one seasonal/atmospheric prototype (embers), Canvas 2D only (no WebGL), reading `--color-signal`/`--color-line` at runtime via `getComputedStyle` rather than a hardcoded hex (respects ARCHITECTURE §17 rule 4's "no hex values inside components" in spirit, adapted for a canvas context where a literal Tailwind class isn't applicable).
+- **Functional vs. expressive typography**: unchanged existing type roles only, no new role invented. Functional: `mono-meta` route-progress label (existing role). Expressive: `display-xl` for the h1 (unchanged from main's own Hero), `heading-l` for the primary line (matches main's own Hero exactly — not the sibling prototype's V3/V4 clamp overrides, which this branch deliberately does not reproduce), one `statement`-role (Newsreader italic) usage for the positioning line — kept to exactly one on this page, within §17 criterion 5's two-per-page cap.
+- **Accessibility discipline preserved inside the departure**: off-camera content stays attached to the DOM (never `display:none`/`aria-hidden`), and focusing any interactive element inside a not-yet-reached node re-centers the camera on it first, so keyboard focus is never left invisible — a mitigation, not a disclosed gap.
+
+### 18.4 Reduced-motion and no-JS fallback
+
+Both fully disable the camera mechanic, not soften it: `SpatialCamera` renders the same real content nodes in **plain linear document flow** (no sticky/pinned container, no transform, no canvas atmosphere) whenever `prefers-reduced-motion: reduce` or before JavaScript hydrates — mirroring this codebase's existing progressive-enhancement pattern (`LayerExplorer`'s stacked no-JS fallback, `MobileNav`'s `<noscript>` block) rather than inventing a new one.
+
+### 18.5 Known remaining weaknesses (deliberately not resolved this pass)
+
+- The vertical slice only spatializes two of the four D-016 projects (Kıvılcım, DropSpot); JointLedger and Professional Systems are reachable only via the real "See every system" link to `/work`, not individually staged nodes — an explicit, disclosed scope boundary of the vertical slice, not an oversight.
+- A keyboard user tabbing directly to a not-yet-reached node triggers a `smooth` scroll re-center (18.3); this is a real, tested mitigation, but the visual motion of that re-center has not been separately evaluated against §13's own reduced-motion carve-outs beyond "reduced motion disables it entirely" — worth a closer look if this direction is ever pursued further.
+- `SPACER_VH = 600` (six viewport-heights of real scroll distance) was tuned once via visual QA at 1440×900 and not independently re-validated for pacing at every intermediate viewport size.
