@@ -2,15 +2,12 @@ import type { Metadata } from "next";
 import { AboutPreview } from "@/components/sections/AboutPreview";
 import { BuiltForRealLife } from "@/components/sections/BuiltForRealLife";
 import { FieldNotes } from "@/components/sections/FieldNotes";
-import { Hero } from "@/components/sections/Hero";
 import { HowIBuild } from "@/components/sections/HowIBuild";
-import { LayerExplorerIntro } from "@/components/sections/LayerExplorerIntro";
-import { PositioningStatement } from "@/components/sections/PositioningStatement";
-import { SelectedSystems } from "@/components/sections/SelectedSystems";
+import { SpatialExperience } from "@/components/spatial/SpatialExperience";
 import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
-import { getProjectLayers, getProjectsByTier } from "@/lib/content/work";
+import { getProjectsByTier } from "@/lib/content/work";
 import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
@@ -19,32 +16,29 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // loaders, and passed down as props -- no project data is hard-coded in any
 // section component, and no disposable/temporary data module exists (D-011
 // rejected).
+//
+// Spatial Portfolio prototype (feature/spatial-portfolio, not merged to
+// main -- docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
+// replaces Hero, PositioningStatement, LayerExplorerIntro, and
+// SelectedSystems as the homepage's top section. `Hero.tsx`,
+// `PositioningStatement.tsx`, `LayerExplorerIntro.tsx`, and
+// `SelectedSystems.tsx` are all intentionally left unmodified and still
+// present in the repository, simply unused from this file -- reverting this
+// branch's homepage change is a one-line swap back to those four
+// components. BuiltForRealLife, HowIBuild, FieldNotes, and AboutPreview are
+// untouched below, exactly as the brief requires.
 export const metadata: Metadata = buildMetadata({
   description: "Hakan Duyar — Frontend & Product Engineer.",
   path: "/",
 });
 
-export default async function Home() {
-  const featuredProjects = getProjectsByTier("featured");
+export default function Home() {
   const realLifeProjects = getProjectsByTier("real-life");
-
-  // TASK-007: the Built in Layers explorer previews a real, published
-  // project's layers rather than staying an abstract, content-free
-  // definition -- derived from the same loader-fed data as everything
-  // else on this page (the first featured project deep enough to have
-  // real Surface/Flow/System bodies), never a hard-coded slug.
-  const previewProject = featuredProjects.find(
-    (project) => project.depth === "full" || project.depth === "short",
-  );
-  const previewLayers = previewProject ? await getProjectLayers(previewProject.slug) : null;
 
   return (
     <Container className="py-16">
       <JsonLd data={buildPersonJsonLd()} />
-      <Hero />
-      <PositioningStatement />
-      <LayerExplorerIntro previewProject={previewProject} previewLayers={previewLayers} />
-      <SelectedSystems projects={featuredProjects} />
+      <SpatialExperience />
       <BuiltForRealLife projects={realLifeProjects} />
       <HowIBuild />
       <FieldNotes notes={notes} />
