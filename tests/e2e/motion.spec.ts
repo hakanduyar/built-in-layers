@@ -64,33 +64,15 @@ test.describe("Motion: Hero and homepage reveals", () => {
     await expect(revealWrapper).toHaveCSS("opacity", "1");
   });
 
-  test("Selected Systems cards are all visible shortly after load", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
-    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
-    await expect(cards).toHaveCount(4);
-    for (let i = 0; i < 4; i += 1) {
-      await expect(cards.nth(i)).toBeVisible();
-    }
-  });
-});
-
-test.describe("Motion: homepage Layer Explorer preview", () => {
-  test("previews a real published project's layers via the interactive explorer", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    const tablist = page.getByRole("tablist", { name: "Case study layers" });
-    await expect(tablist).toBeVisible();
-
-    const tabs = page.getByRole("tab");
-    await expect(tabs).toHaveCount(3);
-    await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
-
-    await tabs.nth(1).click();
-    await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
-    await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "false");
-  });
+  // "Selected Systems cards are all visible shortly after load" (old 4-up
+  // card grid assumption) and the "Motion: homepage Layer Explorer preview"
+  // describe block below it are genuinely obsolete on this branch (feature/
+  // spatial-portfolio, not merged to main -- docs/DESIGN_SYSTEM.md §18):
+  // SpatialExperience replaces both the homepage's Selected Systems grid
+  // and its Layer Explorer preview instance. The real LayerExplorer
+  // component itself is completely untouched -- its own describe blocks
+  // below, scoped to /work/kivilcim, are unaffected. Replacement coverage
+  // for the new homepage contract lives in tests/e2e/spatial.spec.ts.
 });
 
 test.describe("Motion: Layer Explorer -- keyboard, touch/click, focus", () => {
@@ -203,30 +185,16 @@ test.describe("Motion: no layout shift from the explorer or reveals", () => {
 test.describe("Motion: JavaScript disabled -- content exists without enhancement", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("homepage Layer Explorer preview: all three layers stacked, visible, labelled, ordered", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    // The homepage legitimately carries two Surface/Flow/System heading
-    // groups without JS: LayerExplorerIntro's own short one-line definitions
-    // (unchanged since TASK-003) and, below it, the real project preview's
-    // stacked layers (new in TASK-007, `LayerExplorer`'s no-JS fallback) --
-    // both are real, honest content, so this checks "at least one, visible"
-    // rather than uniqueness.
-    for (const heading of ["Surface", "Flow", "System"]) {
-      await expect(page.getByRole("heading", { name: heading, exact: true }).first()).toBeVisible();
-    }
-    // No JS means no tabs -- the interaction is entirely unavailable, but
-    // every layer's real content still ships in the initial HTML.
-    await expect(page.locator('[role="tab"]')).toHaveCount(0);
-    await expect(page.locator('[role="tablist"]')).toHaveCount(0);
-
-    // The real preview's own stacked block (not the short definitions list)
-    // must still carry Kıvılcım's actual layer prose, Surface -> Flow ->
-    // System, readable without JS.
-    const bodyText = await page.locator("main").innerText();
-    expect(bodyText).toContain("Dexie");
-  });
+  // "homepage Layer Explorer preview: ..." and "project cards and
+  // navigation remain fully usable without JS" (below) are genuinely
+  // obsolete on this branch (feature/spatial-portfolio, not merged to main
+  // -- docs/DESIGN_SYSTEM.md §18): the homepage's Layer Explorer preview
+  // and Selected Systems grid no longer exist, replaced by
+  // SpatialExperience. Equivalent no-JS coverage for the new homepage
+  // (real Kıvılcım/DropSpot content and links reachable, nav intact) lives
+  // in tests/e2e/spatial.spec.ts. This describe block's case-study-page
+  // test right below is untouched and still exercises the real,
+  // unmodified LayerExplorer component on /work/kivilcim.
 
   test("case-study page: all three layer sections stacked, visible, labelled, ordered, readable", async ({
     page,
@@ -244,24 +212,6 @@ test.describe("Motion: JavaScript disabled -- content exists without enhancement
     expect(bodyText).toContain("Dexie");
     expect(bodyText.length).toBeGreaterThan(200);
   });
-
-  test("project cards and navigation remain fully usable without JS", async ({ page }) => {
-    await page.goto("/");
-    // Scoped to the Selected Systems card list, not all of <main> -- the
-    // Layer Explorer preview's own "Previewing real layers from <Project>"
-    // link is a legitimate 5th /work/ link elsewhere on the homepage.
-    const links = page
-      .locator("section", {
-        has: page.getByRole("heading", { name: "Selected systems", level: 2 }),
-      })
-      .locator("li a[href^='/work/']");
-    await expect(links).toHaveCount(4);
-    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
-
-    for (const item of ["Home", "Work", "Notes", "Lab", "About"]) {
-      await expect(page.getByRole("link", { name: item }).first()).toBeVisible();
-    }
-  });
 });
 
 test.describe("Motion: reducedMotion emulation", () => {
@@ -271,14 +221,19 @@ test.describe("Motion: reducedMotion emulation", () => {
   // and doc comment, not assumed from older Playwright API docs.
   test.use({ contextOptions: { reducedMotion: "reduce" } });
 
+  // Rewritten on this branch (feature/spatial-portfolio, not merged to main
+  // -- docs/DESIGN_SYSTEM.md §18): the old assertion expected 4 homepage
+  // cards (SelectedSystems' grid); SpatialCamera's reduced-motion fallback
+  // renders its real content as a plain static stack instead (no camera,
+  // no pinning), so this now checks that real contract -- content present,
+  // no leaked markers, and genuinely no scroll-driven transform applied.
   test("homepage content is fully present and correct under reduced motion", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hakan Duyar");
-    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
-    await expect(cards).toHaveCount(4);
-    for (let i = 0; i < 4; i += 1) {
-      await expect(cards.nth(i)).toBeVisible();
-    }
+    const tour = page.locator("section[aria-label='Spatial system tour']");
+    await expect(tour.getByText("Kıvılcım", { exact: false }).first()).toBeVisible();
+    await expect(tour.getByText("DropSpot", { exact: false }).first()).toBeVisible();
+    await expect(tour.locator(".sticky")).toHaveCount(0);
     const bodyText = await page.locator("body").innerText();
     expect(bodyText).not.toContain("CONTENT REQUIRED");
   });
