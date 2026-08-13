@@ -126,21 +126,84 @@ test.describe("Home: selected systems", () => {
     expect(bodyText.toLowerCase()).not.toContain("ai-assisted");
   });
 
-  test("each of the four project cards shows exactly one representative image, capped to a secondary size", async ({
+  // Replaces the old uniform "every card image <=400px" rule, which the
+  // approved Layered Editorial Systems prototype deliberately supersedes:
+  // evidence now earns unequal visual space instead of every project
+  // sharing one thumbnail size. This asserts the real, rendered hierarchy
+  // (dominant real-screenshot and technical-plate evidence vs. a smaller
+  // JointLedger diagram vs. a deliberately restrained Professional Systems
+  // treatment) rather than hard-coding one arbitrary pixel ceiling for all
+  // four -- so a future genuine redesign of any one project's treatment
+  // doesn't have to fight this test's numbers, only the relationship
+  // between them.
+  test("Selected Systems evidence hierarchy: unequal visual weight per project, not a uniform thumbnail grid", async ({
     page,
   }) => {
     await page.goto("/");
-    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
-    await expect(cards).toHaveCount(4);
+    const links = cardLinks(page);
+    await expect(links).toHaveCount(4);
+    // D-016 order is preserved -- unequal visual weight is layered on top
+    // of this order, never a reordering of it.
+    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
 
-    for (let i = 0; i < 4; i += 1) {
-      const card = cards.nth(i);
+    async function representativeImageWidth(slug: string) {
+      const card = page.locator("main li", { has: page.locator(`a[href='/work/${slug}']`) });
       const images = card.locator("img");
-      await expect(images).toHaveCount(1);
-      const box = await images.first().boundingBox();
-      expect(box, "expected a bounding box for the card image").not.toBeNull();
-      if (box) expect(box.width).toBeLessThanOrEqual(400);
+      // Each project still renders exactly one registered representative
+      // asset -- unequal weight comes from that one image's size and
+      // composition, never from adding a second image.
+      await expect(images, `${slug} should render exactly one image`).toHaveCount(1);
+
+      const image = images.first();
+      const box = await image.boundingBox();
+      expect(box, `expected a bounding box for ${slug}'s image`).not.toBeNull();
+      if (!box) throw new Error(`no bounding box for ${slug}`);
+
+      // No image bleeds past its own card -- contained within the
+      // container/viewport, never wider than the page itself.
+      const cardBox = await card.boundingBox();
+      expect(cardBox, `expected a bounding box for ${slug}'s card`).not.toBeNull();
+      if (cardBox) expect(box.x + box.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1);
+
+      // Intrinsic aspect ratio is real -- a genuinely loaded asset, not a
+      // broken or zero-size one.
+      const naturalSize = await image.evaluate((el) => {
+        const img = el as HTMLImageElement;
+        return { width: img.naturalWidth, height: img.naturalHeight };
+      });
+      expect(naturalSize.width, `${slug} image should have real intrinsic width`).toBeGreaterThan(
+        0,
+      );
+      expect(naturalSize.height, `${slug} image should have real intrinsic height`).toBeGreaterThan(
+        0,
+      );
+
+      return box.width;
     }
+
+    const kivilcimWidth = await representativeImageWidth("kivilcim");
+    const dropspotWidth = await representativeImageWidth("dropspot");
+    const jointledgerWidth = await representativeImageWidth("jointledger");
+    const professionalWidth = await representativeImageWidth("professional-systems");
+
+    // DropSpot's real screenshot is the dominant evidence moment --
+    // materially larger than the old uniform secondary-thumbnail cap.
+    expect(dropspotWidth).toBeGreaterThan(400);
+    // Kıvılcım's technical plate is intentionally large too -- a system-map
+    // moment, not a thumbnail.
+    expect(kivilcimWidth).toBeGreaterThan(400);
+    // JointLedger's diagram is a real but deliberately smaller, quieter
+    // evidence composition than the two major plates.
+    expect(jointledgerWidth).toBeLessThan(kivilcimWidth);
+    expect(jointledgerWidth).toBeLessThan(dropspotWidth);
+    // Professional Systems stays visually restrained relative to the major
+    // evidence treatments -- the one project where the old secondary-
+    // thumbnail scale remains the deliberately correct choice.
+    expect(professionalWidth).toBeLessThan(dropspotWidth);
+    expect(professionalWidth).toBeLessThan(kivilcimWidth);
   });
 
   test("DropSpot's homepage card image is its real screenshot; Kıvılcım/JointLedger/Professional Systems keep their honest diagram/illustration labelling", async ({
@@ -251,7 +314,11 @@ test.describe("Home: no JavaScript", () => {
 });
 
 test.describe("Home: responsive", () => {
-  for (const width of [375, 768, 1024, 1440]) {
+  // 320px included per DESIGN_SYSTEM §15's "no horizontal overflow at any
+  // width >= 320px" -- the Layered Editorial Systems prototype's evidence-
+  // hierarchy test (above) depends on this floor holding for its own
+  // per-image containment checks to mean anything at the narrowest width.
+  for (const width of [320, 375, 768, 1024, 1440]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/");
