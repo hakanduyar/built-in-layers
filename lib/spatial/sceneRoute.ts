@@ -1,68 +1,44 @@
-// Spatial Portfolio prototype (feature/spatial-portfolio, not merged to
-// main -- see docs/DESIGN_SYSTEM.md §18). Pure route/camera math, no JSX,
-// no "use client" -- unit-testable in isolation (tests/unit/spatial-route.test.ts).
+// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// see docs/DESIGN_SYSTEM.md §18). Pure route/camera math, no JSX, no
+// "use client" -- unit-testable in isolation (tests/unit/spatial-route.test.ts).
 //
-// Model: a small "world" of named content nodes at fixed coordinates. The
-// camera's position is a function of scroll progress (0..1) that
-// interpolates smoothly between nodes, hits a "collision" wall past the
-// last content node, then -- deliberately, not smoothly -- reposition-jumps
-// to a final node in a different region of the world. That discontinuity is
-// the mechanical expression of "collision != bounce": the camera does not
-// ease, reverse, or spring back onto the same path, it breaks to a new one.
+// Preserved from V1 (proven, deliberately not rewritten for novelty):
+// normalized 0..1 progress, desktop/mobile coordinate separation, and the
+// binding collision semantics -- the camera never eases past the wall and
+// never reverses off it; it stops dead, then jumps discontinuously. That
+// discontinuity is the reposition.
+//
+// Rebuilt for V2: the camera no longer interpolates between arbitrary
+// points. It moves between SCENES (lib/spatial/scenes.ts), dwelling at each
+// one so the scene can actually be read before the camera leaves, and the
+// jump is now paired with a perceptual break window (see breakWipeOffset)
+// so it reads as a cut rather than a teleport.
 
-export type RouteId = "hero" | "kivilcim" | "dropspot" | "tail" | "sceneTwo";
+import {
+  BREAK_COVER_START,
+  BREAK_CUT,
+  BREAK_REVEAL_END,
+  COLLISION_MOBILE_WORLD,
+  COLLISION_PROGRESS,
+  COLLISION_WORLD,
+  sceneAnchor,
+  sceneById,
+  type SceneConfig,
+  type SceneId,
+  type WorldPoint,
+} from "@/lib/spatial/scenes";
 
-export type WorldPoint = { x: number; y: number };
+export type { SceneId, WorldPoint };
 
-export const ROUTE_ORDER: readonly RouteId[] = ["hero", "kivilcim", "dropspot", "tail", "sceneTwo"];
+/** Scenes the camera physically travels between, in route order. `sceneTwo`
+ *  is deliberately absent: it is reached only by the reposition jump. */
+const TRAVEL_SCENES: readonly SceneConfig[] = (
+  ["hero", "kivilcim", "dropspot", "tail"] as const
+).map((id) => sceneById(id));
 
-// World coordinates in vw/vh units, desktop: x and y both increase together
-// (a genuine diagonal), until sceneTwo -- which sits back toward the left
-// edge at a much larger y, so arriving there reads as a new region, not a
-// continuation of the diagonal.
-export const DESKTOP_NODE_POSITION: Record<RouteId, WorldPoint> = {
-  hero: { x: 0, y: 0 },
-  kivilcim: { x: 20, y: 14 },
-  dropspot: { x: 40, y: 27 },
-  tail: { x: 52, y: 34 },
-  sceneTwo: { x: 8, y: 62 },
-};
-
-// Mobile: same nodes, same order, same content -- "same world" -- but the
-// camera choreography is purely vertical (x stays 0), per the brief's
-// "mobile = same world, different camera choreography" requirement. Gaps
-// are much larger than desktop's: with no horizontal separation to keep
-// neighbors apart, each node needs roughly its own real card height
-// (title, description, tech list, figure) worth of clear vertical run so
-// adjacent nodes don't visually overlap when one is camera-centered --
-// confirmed empirically (an earlier, tighter spacing genuinely overlapped
-// in a real browser at 375px, caught by direct screenshot QA).
-export const MOBILE_NODE_POSITION: Record<RouteId, WorldPoint> = {
-  hero: { x: 0, y: 0 },
-  kivilcim: { x: 0, y: 130 },
-  dropspot: { x: 0, y: 280 },
-  tail: { x: 0, y: 380 },
-  sceneTwo: { x: 0, y: 520 },
-};
-
-// Progress (0..1) at which the camera is centered exactly on each node.
-export const NODE_PROGRESS: Record<RouteId, number> = {
-  hero: 0,
-  kivilcim: 0.2,
-  dropspot: 0.4,
-  tail: 0.52,
-  sceneTwo: 1,
-};
-
-// Camera-only event: not a content node. The route keeps heading past
-// "tail" and reaches a wall here.
-const DESKTOP_COLLISION_POINT: WorldPoint = { x: 60, y: 40 };
-const MOBILE_COLLISION_POINT: WorldPoint = { x: 0, y: 440 };
-
-export const COLLISION_PROGRESS = 0.6;
-/** Impact/shake window closes here; the reposition snap happens exactly at this progress. */
-export const IMPACT_END_PROGRESS = 0.66;
-export const IMPACT_BAND: readonly [number, number] = [COLLISION_PROGRESS, IMPACT_END_PROGRESS];
+function clamp01(value: number): number {
+  return Math.min(Math.max(value, 0), 1);
+}
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
@@ -72,62 +48,122 @@ function lerpPoint(a: WorldPoint, b: WorldPoint, t: number): WorldPoint {
   return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) };
 }
 
-function clamp01(value: number): number {
-  return Math.min(Math.max(value, 0), 1);
+/** Camera accelerates away from a scene and decelerates into the next one --
+ *  the difference between "arriving somewhere" and V1's constant-velocity
+ *  drift past things. */
+function easeInOut(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+}
+
+/** The wall approach deliberately does NOT decelerate: the camera keeps
+ *  building speed and is stopped by the wall, not by easing. */
+function easeIn(t: number): number {
+  return t * t;
 }
 
 /**
- * Camera world-position at a given scroll progress. Smooth interpolation
- * hero -> kivilcim -> dropspot -> tail -> collision wall; holds at the wall
- * through the impact window; then jumps -- with no interpolation, no
- * easing, no overshoot -- straight to sceneTwo. That jump is intentional:
- * it is the "scene break", not a bug to be smoothed over.
+ * Camera world-position at a given scroll progress:
+ * dwell at hero -> travel -> dwell at Kıvılcım -> travel -> dwell at
+ * DropSpot -> travel -> tail -> accelerate into the wall -> hold dead at
+ * the wall -> (discontinuous jump) -> sceneTwo.
  */
 export function cameraPosition(progress: number, mobile = false): WorldPoint {
-  const nodes = mobile ? MOBILE_NODE_POSITION : DESKTOP_NODE_POSITION;
-  const collision = mobile ? MOBILE_COLLISION_POINT : DESKTOP_COLLISION_POINT;
   const p = clamp01(progress);
+  const wall = mobile ? COLLISION_MOBILE_WORLD : COLLISION_WORLD;
 
-  if (p <= NODE_PROGRESS.kivilcim) {
-    return lerpPoint(nodes.hero, nodes.kivilcim, p / NODE_PROGRESS.kivilcim);
+  // Past the cut the camera is simply AT sceneTwo. It never interpolates
+  // from the wall -- no bounce, no fly-back, no smoothed return.
+  if (p >= BREAK_CUT) return sceneAnchor("sceneTwo", mobile);
+
+  for (const [index, scene] of TRAVEL_SCENES.entries()) {
+    // Dwell: the scene owns the viewport and the camera holds still.
+    if (p <= scene.holdUntil) return sceneAnchor(scene.id, mobile);
+
+    const next = TRAVEL_SCENES[index + 1];
+
+    if (next) {
+      if (p <= next.focus) {
+        const t = (p - scene.holdUntil) / (next.focus - scene.holdUntil);
+        return lerpPoint(sceneAnchor(scene.id, mobile), sceneAnchor(next.id, mobile), easeInOut(t));
+      }
+      continue;
+    }
+
+    // Last composed scene (the tail): accelerate into the wall.
+    if (p <= COLLISION_PROGRESS) {
+      const t = (p - scene.holdUntil) / (COLLISION_PROGRESS - scene.holdUntil);
+      return lerpPoint(sceneAnchor(scene.id, mobile), wall, easeIn(t));
+    }
+    // Stopped dead at the wall for the impact + cover window.
+    return wall;
   }
-  if (p <= NODE_PROGRESS.dropspot) {
-    const t = (p - NODE_PROGRESS.kivilcim) / (NODE_PROGRESS.dropspot - NODE_PROGRESS.kivilcim);
-    return lerpPoint(nodes.kivilcim, nodes.dropspot, t);
-  }
-  if (p <= NODE_PROGRESS.tail) {
-    const t = (p - NODE_PROGRESS.dropspot) / (NODE_PROGRESS.tail - NODE_PROGRESS.dropspot);
-    return lerpPoint(nodes.dropspot, nodes.tail, t);
-  }
-  if (p <= COLLISION_PROGRESS) {
-    const t = (p - NODE_PROGRESS.tail) / (COLLISION_PROGRESS - NODE_PROGRESS.tail);
-    return lerpPoint(nodes.tail, collision, t);
-  }
-  if (p < IMPACT_END_PROGRESS) {
-    // Impact window: the camera holds at the wall. It does not ease onward
-    // and does not reverse toward "tail" -- no bounce.
-    return collision;
-  }
-  return nodes.sceneTwo;
+
+  return sceneAnchor("hero", mobile);
 }
 
-/** Which named node/event the camera is currently closest to -- drives the functional mono-label. */
-export function currentRouteId(progress: number): RouteId | "collision" {
+/** Which scene currently owns the camera, or the camera-only collision event. */
+export function currentSceneId(progress: number): SceneId | "collision" {
   const p = clamp01(progress);
-  if (p < NODE_PROGRESS.kivilcim) return "hero";
-  if (p < NODE_PROGRESS.dropspot) return "kivilcim";
-  if (p < NODE_PROGRESS.tail) return "dropspot";
-  if (p < COLLISION_PROGRESS) return "tail";
-  if (p < IMPACT_END_PROGRESS) return "collision";
-  return "sceneTwo";
+  if (p >= BREAK_CUT) return "sceneTwo";
+  if (p >= COLLISION_PROGRESS) return "collision";
+
+  for (const [index, scene] of TRAVEL_SCENES.entries()) {
+    if (p <= scene.holdUntil) return scene.id;
+    const next = TRAVEL_SCENES[index + 1];
+    if (next && p <= next.focus) {
+      // Mid-travel belongs to whichever scene the camera is closer to.
+      const midpoint = (scene.holdUntil + next.focus) / 2;
+      return p < midpoint ? scene.id : next.id;
+    }
+  }
+  return "tail";
 }
 
+/** True only while the camera is stopped dead at the wall. */
 export function isImpact(progress: number): boolean {
   const p = clamp01(progress);
-  return p >= IMPACT_BAND[0] && p < IMPACT_BAND[1];
+  return p >= COLLISION_PROGRESS && p < BREAK_CUT;
 }
 
-/** Fixed placement for a content node's own DOM wrapper -- world coordinates, not camera-relative. */
-export function nodePosition(id: RouteId, mobile = false): WorldPoint {
-  return mobile ? MOBILE_NODE_POSITION[id] : DESKTOP_NODE_POSITION[id];
+/**
+ * Rising 0..1 tension as the camera accelerates into the wall, so the tail
+ * composition can visually compress before the hit instead of the impact
+ * arriving unannounced.
+ */
+export function approachTension(progress: number): number {
+  const p = clamp01(progress);
+  const tailHold = sceneById("tail").holdUntil;
+  if (p <= tailHold) return 0;
+  if (p >= COLLISION_PROGRESS) return 1;
+  return (p - tailHold) / (COLLISION_PROGRESS - tailHold);
+}
+
+/**
+ * Horizontal offset of the scene-break panel, in percent of its own width:
+ * +100 = parked off-screen right (inactive), 0 = fully covering the
+ * viewport (the instant the route cuts), -100 = swept off to the left,
+ * revealing the new region. The route's discontinuity happens at BREAK_CUT,
+ * exactly when this reads 0 -- so the jump is never actually witnessed.
+ */
+export function breakWipeOffset(progress: number): number {
+  const p = clamp01(progress);
+  if (p <= BREAK_COVER_START) return 100;
+  if (p >= BREAK_REVEAL_END) return -100;
+  if (p <= BREAK_CUT) {
+    const t = (p - BREAK_COVER_START) / (BREAK_CUT - BREAK_COVER_START);
+    return lerp(100, 0, t);
+  }
+  const t = (p - BREAK_CUT) / (BREAK_REVEAL_END - BREAK_CUT);
+  return lerp(0, -100, t);
+}
+
+/** Whether the break panel is on screen at all (skip rendering otherwise). */
+export function isBreakActive(progress: number): boolean {
+  const p = clamp01(progress);
+  return p > BREAK_COVER_START && p < BREAK_REVEAL_END;
+}
+
+/** True once the reposition has happened -- drives the orientation cue. */
+export function hasRepositioned(progress: number): boolean {
+  return clamp01(progress) >= BREAK_CUT;
 }

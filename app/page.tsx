@@ -17,8 +17,8 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // section component, and no disposable/temporary data module exists (D-011
 // rejected).
 //
-// Spatial Portfolio prototype (feature/spatial-portfolio, not merged to
-// main -- docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
+// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
 // replaces Hero, PositioningStatement, LayerExplorerIntro, and
 // SelectedSystems as the homepage's top section. `Hero.tsx`,
 // `PositioningStatement.tsx`, `LayerExplorerIntro.tsx`, and
@@ -27,6 +27,14 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // branch's homepage change is a one-line swap back to those four
 // components. BuiltForRealLife, HowIBuild, FieldNotes, and AboutPreview are
 // untouched below, exactly as the brief requires.
+//
+// V2 moves the spatial section OUTSIDE the shared `Container`: a camera
+// that travels between scenes which "temporarily own the viewport" has to
+// be measured against the viewport, not against a 1320px padded column.
+// V1 kept it inside the container while positioning the world in vw/vh,
+// so the world's units and its actual frame disagreed -- part of why
+// content read as tiny. The scenes carry their own inset, and every
+// ordinary section below still uses the normal container exactly as before.
 export const metadata: Metadata = buildMetadata({
   description: "Hakan Duyar — Frontend & Product Engineer.",
   path: "/",
@@ -36,13 +44,15 @@ export default function Home() {
   const realLifeProjects = getProjectsByTier("real-life");
 
   return (
-    <Container className="py-16">
-      <JsonLd data={buildPersonJsonLd()} />
+    <>
       <SpatialExperience />
-      <BuiltForRealLife projects={realLifeProjects} />
-      <HowIBuild />
-      <FieldNotes notes={notes} />
-      <AboutPreview />
-    </Container>
+      <Container className="py-16">
+        <JsonLd data={buildPersonJsonLd()} />
+        <BuiltForRealLife projects={realLifeProjects} />
+        <HowIBuild />
+        <FieldNotes notes={notes} />
+        <AboutPreview />
+      </Container>
+    </>
   );
 }

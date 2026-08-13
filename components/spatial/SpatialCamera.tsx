@@ -8,66 +8,55 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { AtmosphereEmbers } from "@/components/spatial/AtmosphereEmbers";
+import { ErosionWord } from "@/components/spatial/ErosionWord";
 import {
-  cameraPosition,
-  currentRouteId,
-  DESKTOP_NODE_POSITION,
-  IMPACT_END_PROGRESS,
-  isImpact,
-  MOBILE_NODE_POSITION,
-  NODE_PROGRESS,
-  ROUTE_ORDER,
-  type RouteId,
-} from "@/lib/spatial/sceneRoute";
+  BREAK_CUT,
+  CAMERA_INSET,
+  CAMERA_INSET_MOBILE,
+  COLLISION_PROGRESS,
+  ROUTE_LENGTH_VH,
+  SCENE_IDS,
+  SCENE_MIN_HEIGHT,
+  SCENE_WIDTH,
+  SCENE_WIDTH_MOBILE,
+  sceneAnchor,
+  sceneById,
+  type SceneId,
+} from "@/lib/spatial/scenes";
+import { breakWipeOffset, cameraPosition, isImpact } from "@/lib/spatial/sceneRoute";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
-/** One real content node per named route stop -- same content, positioned
- *  differently depending on enhancement/viewport, never duplicated. */
-type SpatialCameraProps = Record<RouteId, ReactNode>;
+/** Composed scenes. `tail` is deliberately absent: it is the deliberately
+ *  near-empty beat before the wall, and its whole composition is the giant
+ *  eroding word, which only this component can drive. */
+type ComposedSceneId = Exclude<SceneId, "tail">;
 
-// Total real scroll distance (in viewport heights) driving the whole route:
-// hero -> kivilcim -> dropspot -> tail -> collision -> impact -> sceneTwo,
-// plus a short dwell at the end. Not scroll-hijacked -- this is genuine
-// page height; the camera is a function of real scrollY via Motion's
-// useScroll, the same "pinned/sticky scrollytelling" technique used by many
-// production sites, not a wheel-event interception.
-const SPACER_VH = 600;
-
-const ROUTE_LABELS: Record<ReturnType<typeof currentRouteId>, string> = {
-  hero: "00 · HERO",
-  kivilcim: "01 · KIVILCIM",
-  dropspot: "02 · DROPSPOT",
-  tail: "03 · TAIL",
-  collision: "04 · IMPACT",
-  sceneTwo: "05 · REPOSITIONED",
+type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
+  /** Decorative word eroded by the wind during the tail->collision
+   *  transition. Always duplicated in real semantic copy elsewhere. */
+  erosionWord: string;
 };
 
-function useIsDesktop(): boolean {
-  const [desktop, setDesktop] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false,
-  );
-  useEffect(() => {
-    // The lazy useState initializer above already reads the correct value
-    // on the client's first render -- this effect only needs to subscribe
-    // to future changes (e.g. a resize across the breakpoint), never to
-    // set the initial value again.
-    const query = window.matchMedia("(min-width: 1024px)");
-    const handler = (event: MediaQueryListEvent) => setDesktop(event.matches);
-    query.addEventListener("change", handler);
-    return () => query.removeEventListener("change", handler);
-  }, []);
-  return desktop;
-}
-
-// DESIGN_SYSTEM §18 (this branch only): the camera concept, real scroll
-// re-mapped to world position and a genuine wall/collision, is a disclosed
-// departure from the approved system's "no scroll-linked animation" rule --
-// see that section for the full disclosure. Everything else here (real
-// content in real DOM order, progressive enhancement, keyboard-triggered
-// re-centering, reduced-motion static fallback) follows this codebase's
-// existing accessibility conventions exactly (compare LayerExplorer.tsx).
-export function SpatialCamera(props: SpatialCameraProps) {
+// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// see docs/DESIGN_SYSTEM.md §18).
+//
+// Preserved from V1 (proven infrastructure, deliberately not rewritten):
+// the pinned/sticky camera over a real scroll spacer driven by Motion's
+// `useScroll` (real scroll, never wheel interception), the mount-gated
+// progressive-enhancement branch, the reduced-motion static fallback, and
+// focus-driven re-centering so keyboard users never land on content the
+// camera has not reached.
+//
+// Rebuilt for V2:
+// - Scenes are viewport-scale and laid out from the shared scene geometry,
+//   so world spacing and scene size can never drift apart. V1's core visual
+//   failure was small cards at arbitrary world points; here a focal scene
+//   occupies the viewport it is framed in.
+// - The reposition is bridged by a scene-break wipe, so the discontinuous
+//   route jump is never actually witnessed -- it reads as a cut.
+// - V1's permanent bottom-left route-progress label is gone (§22: the world
+//   was full of technical confetti; this was some of it).
+export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
   const mounted = useHasMounted();
   const reduceMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
@@ -77,18 +66,14 @@ export function SpatialCamera(props: SpatialCameraProps) {
   const { scrollYProgress } = useScroll({ target: spacerRef, offset: ["start start", "end end"] });
 
   const [impact, setImpact] = useState(false);
-  const [routeId, setRouteId] = useState<ReturnType<typeof currentRouteId>>("hero");
 
-  // Only two derived, discrete values are ever set from the continuous
-  // scroll signal -- React bails out of re-rendering when a value is
-  // unchanged, so this fires actual re-renders only at the handful of
-  // progress boundaries where impact/routeId genuinely change, not on
-  // every scroll frame. The camera's own per-frame movement (below) never
-  // goes through React state at all -- it's a MotionValue, applied to the
-  // DOM directly by Motion outside React's render cycle.
+  // The only continuous scroll signal that reaches React state, and it is a
+  // boolean -- React bails out when unchanged, so this re-renders at exactly
+  // two progress boundaries for the whole journey. Camera movement, the
+  // wipe, and the erosion never touch React state at all: they are
+  // MotionValues written straight to the DOM.
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     setImpact(isImpact(value));
-    setRouteId(currentRouteId(value));
   });
 
   const worldX = useTransform(
@@ -98,6 +83,14 @@ export function SpatialCamera(props: SpatialCameraProps) {
   const worldY = useTransform(
     scrollYProgress,
     (value) => `${-cameraPosition(value, !isDesktop).y}vh`,
+  );
+  const wipeX = useTransform(scrollYProgress, (value) => `${breakWipeOffset(value)}%`);
+  // The erosion belongs to exactly one transition: it starts as the tail
+  // scene is reached, peaks at the wall, and is gone by the cut (§19).
+  const erosion = useTransform(
+    scrollYProgress,
+    [sceneById("tail").focus, COLLISION_PROGRESS, BREAK_CUT],
+    [0, 1, 1],
   );
 
   function scrollToProgress(progress: number) {
@@ -109,77 +102,121 @@ export function SpatialCamera(props: SpatialCameraProps) {
     window.scrollTo({ top: start + (end - start) * progress, behavior: "smooth" });
   }
 
+  /**
+   * Bring the camera to the scene a newly-focused element belongs to.
+   *
+   * Re-asserted on the next frame on purpose: WebKit runs its own native
+   * "scroll the focused element into view" pass AFTER this handler, and
+   * because the element lives inside a transformed world layer that
+   * computation lands the camera in a completely unrelated region (measured
+   * in WebKit: focus jumped the route to ~0.78 progress and left the link at
+   * x=-922). Chromium happens to run its pass first, so it never showed the
+   * bug. Re-issuing the scroll on the following frame makes the camera's own
+   * framing authoritative in both engines.
+   */
+  function recenterOnScene(id: SceneId) {
+    const target = sceneById(id).focus;
+    scrollToProgress(target);
+    requestAnimationFrame(() => scrollToProgress(target));
+  }
+
+  function sceneContent(id: SceneId): ReactNode {
+    if (id === "tail") return <ErosionWord word={erosionWord} erosion={erosion} />;
+    return scenes[id];
+  }
+
   if (!enhanced) {
-    // No-JS and reduced-motion fallback: the exact same real content, in
-    // normal linear document flow. No transform, no pinning, no camera --
-    // just a readable, fully scrollable stack, matching this codebase's
-    // existing progressive-enhancement pattern (LayerExplorer, MobileNav).
+    // No-JS and reduced-motion fallback (§26): the same real, fully composed
+    // scenes in normal document flow -- no camera, no pinning, no shake, no
+    // erosion. Deliberately NOT a stripped-down dump: each scene keeps its
+    // own full composition, so this reads as a designed linear page.
     return (
-      <div className="flex flex-col gap-24 lg:gap-40">
-        {ROUTE_ORDER.map((id) => (
-          <div key={id}>{props[id]}</div>
+      <div className="mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
+        {SCENE_IDS.map((id) => (
+          <div key={id}>
+            {id === "tail" ? <ErosionWord word={erosionWord} erosion={null} /> : scenes[id]}
+          </div>
         ))}
       </div>
     );
   }
 
   return (
-    <div ref={spacerRef} style={{ height: `${SPACER_VH}vh` }} className="relative">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-paper">
-        <AtmosphereEmbers impact={impact} dense={!isDesktop} />
-
+    <div ref={spacerRef} style={{ height: `${ROUTE_LENGTH_VH}vh` }} className="relative">
+      {/* `overflow-clip`, not `overflow-hidden`. An `overflow: hidden` box is
+          still a programmatically scrollable container, so when focus moved
+          to a link the camera had not reached, the browser "helpfully"
+          scrolled THIS box internally to reveal it -- shifting the entire
+          world off its camera position and leaving the focused link
+          off-screen anyway (measured: scrollLeft jumped to 2475px, link at
+          x=-1178). `overflow: clip` creates no scroll container, so the only
+          thing that can move the world is the camera itself. */}
+      <div className="sticky top-0 h-screen w-full overflow-clip bg-paper">
         <motion.div
           className="absolute inset-0"
-          animate={impact ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
-          transition={{ duration: 0.32, ease: "easeOut" }}
+          // The impact impulse: one short, controlled shake (140ms, inside
+          // the 80-180ms the brief allows), small amplitude, no spring, no
+          // overshoot, no elastic settle -- a hit, not a bounce.
+          animate={impact ? { x: [0, -7, 6, -3, 0] } : { x: 0 }}
+          transition={{ duration: 0.14, ease: "easeOut" }}
         >
+          {/* World layer. Its own inset frames a focal scene comfortably
+              inside the viewport, so scene anchors stay pure world
+              coordinates rather than each carrying framing offsets. */}
           <motion.div
-            className="absolute left-6 top-20 lg:left-10 lg:top-24"
-            style={{ x: worldX, y: worldY }}
+            className="absolute"
+            style={{ x: worldX, y: worldY, ...(isDesktop ? CAMERA_INSET : CAMERA_INSET_MOBILE) }}
           >
-            {ROUTE_ORDER.map((id) => {
-              const point = isDesktop ? DESKTOP_NODE_POSITION[id] : MOBILE_NODE_POSITION[id];
+            {SCENE_IDS.map((id) => {
+              const point = sceneAnchor(id, !isDesktop);
               return (
                 <div
                   key={id}
-                  // Keyboard/AT re-centering: content off the currently
-                  // visible camera position is clipped by the sticky box's
-                  // `overflow: hidden`, not hidden from the accessibility
-                  // tree or from Tab order (position: absolute + overflow:
-                  // hidden clips paint only). Without this, a keyboard user
-                  // could Tab focus into a node the camera hasn't panned
-                  // to yet, landing on something invisible -- a real
-                  // "focus goes nowhere visible" defect. Focusing any
-                  // interactive element inside a node re-centers the
-                  // camera on that node first, so focus is always visible.
-                  onFocus={() => scrollToProgress(NODE_PROGRESS[id] ?? IMPACT_END_PROGRESS)}
-                  className="absolute max-w-[85vw] sm:max-w-sm"
-                  style={{ transform: `translate3d(${point.x}vw, ${point.y}vh, 0)` }}
+                  // Keyboard/AT re-centering, preserved from V1: content the
+                  // camera has not reached is clipped by the sticky box's
+                  // overflow, never hidden from the accessibility tree or
+                  // from Tab order. Focusing anything inside a scene brings
+                  // the camera there first, so focus is always visible.
+                  onFocus={() => recenterOnScene(id)}
+                  className="absolute left-0 top-0 flex items-center"
+                  style={{
+                    width: isDesktop ? SCENE_WIDTH : SCENE_WIDTH_MOBILE,
+                    minHeight: SCENE_MIN_HEIGHT,
+                    transform: `translate3d(${point.x}vw, ${point.y}vh, 0)`,
+                  }}
                 >
-                  {props[id]}
+                  {sceneContent(id)}
                 </div>
               );
             })}
           </motion.div>
-
-          {impact && (
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-signal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.28, 0] }}
-              transition={{ duration: 0.32, ease: "easeOut" }}
-            />
-          )}
         </motion.div>
 
-        <div
+        {/* Scene break. A full-bleed ink panel wipes across, the route's
+            discontinuous jump happens behind it at BREAK_CUT, then it wipes
+            away to reveal the new region. This is the difference between a
+            deliberate cut and V1's teleport. */}
+        <motion.div
           aria-hidden="true"
-          className="absolute bottom-6 left-6 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:bottom-8 lg:left-8"
-        >
-          {ROUTE_LABELS[routeId]}
-        </div>
+          className="pointer-events-none absolute inset-0 bg-ink"
+          style={{ x: wipeX }}
+        />
       </div>
     </div>
   );
+}
+
+function useIsDesktop(): boolean {
+  const [desktop, setDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false,
+  );
+  useEffect(() => {
+    // The lazy initializer above already read the correct value on the
+    // client's first render; this only subscribes to later changes.
+    const query = window.matchMedia("(min-width: 1024px)");
+    const handler = (event: MediaQueryListEvent) => setDesktop(event.matches);
+    query.addEventListener("change", handler);
+    return () => query.removeEventListener("change", handler);
+  }, []);
+  return desktop;
 }
