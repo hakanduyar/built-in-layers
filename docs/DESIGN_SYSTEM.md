@@ -228,3 +228,38 @@ A page passes only if all are true:
 6. All copy is specific to Hakan's real work — zero phrases from the forbidden template list; project descriptions name concrete mechanisms ("transactional inventory claims"), not adjectives ("blazing fast").
 7. Layer tabs change real content (different text and figures per layer).
 8. Side-by-side check against 2–3 common AI portfolio templates shows no structural resemblance (reviewer judgment, recorded in the task report).
+
+## 18. EXPERIMENTAL — Layered Editorial Systems homepage prototype (branch-only, not approved for main)
+
+**This section exists only on `feature/layered-editorial-prototype`. It is not part of the approved system §§1–17 govern, and must not be merged into `main`'s copy of this document without a separate, explicit approval.** It records an experimental homepage art-direction pass (Hero, Positioning, Built in Layers/Layer Explorer intro, Selected Systems, favicon) built across four iterative rounds (V1–V4) and reviewed by Hakan after each. The direction itself — Layered Editorial Systems — is approved for continued comparison against the upcoming Spatial Portfolio experiment; full-site propagation is **not** approved or performed.
+
+### 18.1 Principles
+
+- Layer = structure.
+- Evidence earns space.
+- Contrast creates rhythm.
+
+### 18.2 Visual rules (additive to, never replacing, §§1–17 on the untouched routes)
+
+- Surface / Flow / System used as literal spatial grammar (offset-as-depth), not only as case-study labels: a fixed 3-column stagger per depth step (established by the Hero's own "Hakan"→"Duyar" offset, reused identically in Built in Layers' staircase and JointLedger's internal upstream/identity/system tiers).
+- A sparse, fragment-only exposed structural grid (`components/ui/ExposedGridLines.tsx`) — deliberately not part of the closed §8 vocabulary; disclosed here rather than silently folded into it. Fragments mark only real content anchors, never a continuous field.
+- The §8-item-5 registration mark, extracted into a reusable primitive (`components/ui/LayerRegistrationMark.tsx`), capped at exactly 3 placements homepage-wide (Hero, Built in Layers heading, Selected Systems heading).
+- Unequal project visual weight in Selected Systems, replacing the equal-card grid §16 forbids being used as the *only* pattern: real-screenshot, verified-diagram, and provisional-illustration assets (D-019) receive intentionally different presentation weight and composition per project, not a uniform thumbnail size. See `tests/e2e/home.spec.ts`'s "Selected Systems evidence hierarchy" test for the enforced, non-arbitrary contract.
+- A wider type-scale spectrum than §3's table alone provides on the homepage specifically (see §18.3).
+- Mobile expresses the same depth relationships through indentation/rail-color choreography instead of horizontal grid columns — never a second, unrelated mobile-only device.
+- No card-on-card stacking, no shadow-as-depth, no 3D/glass/gradient spectacle — §16 remains fully binding throughout this experiment.
+
+### 18.3 Typography governance
+
+Two homepage-only, component-scoped type sizes exceed §3's token ceilings and are deliberately **not** promoted into the shared `--text-*` token system in `styles/globals.css` — doing so would silently widen every other component's available scale on the strength of an unapproved, comparison-stage experiment, which is a real architecture decision this branch is not authorized to make. Both live as Tailwind arbitrary-value utilities directly in `components/sections/Hero.tsx` (not opaque `style={{}}` props, so they're visible in the class list like every other styling decision in this codebase):
+
+| Use | Value | Notes |
+|---|---|---|
+| Hero name (`h1`) | `text-[clamp(3.5rem,11vw,9rem)] leading-[0.9] tracking-[-0.02em]` | Exceeds `--text-display-xl`'s ceiling (6.5rem) by design — the brief's explicit "editorial cover" requirement. |
+| Hero primary line | `text-[clamp(1.75rem,3.2vw,3rem)] leading-[1.25]` | Exceeds `--text-statement`'s ceiling (2.25rem) — the Hero's "second region," strengthened per V4's explicit instruction, still far below the h1. |
+
+If Layered Editorial Systems is later approved for full-site propagation, these two values (and the 3-column depth-offset unit in §18.2) are the concrete candidates for real `--text-*`/spacing-scale token entries — that promotion is intentionally deferred to that approval, not made preemptively here.
+
+### 18.4 Known remaining weakness
+
+Built in Layers/Layer Explorer intro is the quietest of the homepage's three anchor moments at reduced full-page thumbnail scale (confirmed via direct screenshot review) — it is typography-only with no image plate of its own, by design (the section's technical plate lives in Kıvılcım's Selected Systems treatment instead, not duplicated here). Not resolved as of V4; flagged for the next design pass if this direction is chosen over Spatial Portfolio.
