@@ -10,7 +10,7 @@ import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
-import { getProjectLayers, getProjectsByTier } from "@/lib/content/work";
+import { getProjectsByTier } from "@/lib/content/work";
 import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
@@ -24,26 +24,31 @@ export const metadata: Metadata = buildMetadata({
   path: "/",
 });
 
-export default async function Home() {
+export default function Home() {
   const featuredProjects = getProjectsByTier("featured");
   const realLifeProjects = getProjectsByTier("real-life");
 
-  // TASK-007: the Built in Layers explorer previews a real, published
-  // project's layers rather than staying an abstract, content-free
-  // definition -- derived from the same loader-fed data as everything
-  // else on this page (the first featured project deep enough to have
-  // real Surface/Flow/System bodies), never a hard-coded slug.
+  // TASK-007 says the explorer must "preview a featured project's real
+  // layers" -- it does not require the homepage to reproduce a case
+  // study's complete compiled MDX prose verbatim (re-read for the V3
+  // prototype; see LayerExplorerIntro's own comment for the full
+  // reasoning). `previewProject` stays the same real, loader-fed selection
+  // (first featured project deep enough to have real Surface/Flow/System
+  // content) -- no hard-coded slug, no second content source. Unlike V1/V2,
+  // this no longer needs `getProjectLayers`'s async MDX compile: the real,
+  // already-approved one-line `layers.<layer>.summary` fields already live
+  // on this same `ProjectFrontmatter` object, so `Home` no longer needs to
+  // be an async component at all.
   const previewProject = featuredProjects.find(
     (project) => project.depth === "full" || project.depth === "short",
   );
-  const previewLayers = previewProject ? await getProjectLayers(previewProject.slug) : null;
 
   return (
     <Container className="py-16">
       <JsonLd data={buildPersonJsonLd()} />
       <Hero />
       <PositioningStatement />
-      <LayerExplorerIntro previewProject={previewProject} previewLayers={previewLayers} />
+      <LayerExplorerIntro previewProject={previewProject} />
       <SelectedSystems projects={featuredProjects} />
       <BuiltForRealLife projects={realLifeProjects} />
       <HowIBuild />

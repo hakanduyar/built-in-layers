@@ -1,4 +1,5 @@
-import { ProjectCard } from "@/components/project/ProjectCard";
+import { SelectedSystemsSpread } from "@/components/sections/SelectedSystemsSpread";
+import { LayerRegistrationMark } from "@/components/ui/LayerRegistrationMark";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { pendingCopy, selectedSystemsSubheading } from "@/data/copy";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
@@ -8,16 +9,22 @@ type SelectedSystemsProps = {
 };
 
 // IA section 5. Data comes from app/page.tsx (getProjectsByTier("featured"))
-// -- never hard-coded here. Reuses the same ProjectCard as /work so a single
-// published entry still reads as a complete, intentional section rather
-// than a broken grid. TASK-007: each card gets a light stagger reveal on
-// scroll (60ms steps, well inside DESIGN_SYSTEM §13's <=90ms/5-item cap --
-// there are only ever 4 featured cards today).
+// -- never hard-coded here.
+//
+// PROTOTYPE (Layered Editorial Systems, visual-only): the homepage's third
+// deliberate high point (evidence/portfolio, after Hero=impact and Layer
+// Explorer=technical). SelectedSystemsSpread replaces the equal-card list
+// with a bespoke, unequal-weight composition per project -- see that
+// component's own comments. Falls back to the original honest pending copy
+// when zero featured projects exist (unchanged from before).
 export function SelectedSystems({ projects }: SelectedSystemsProps) {
   return (
-    <section className="mt-16 lg:mt-32">
+    <section className="mt-24 lg:mt-40">
       <SectionHeading index="04" label="Selected systems" />
-      <h2 className="mt-4 font-display text-display-l uppercase text-ink">Selected systems</h2>
+      <div className="mt-4 flex items-end justify-between">
+        <h2 className="font-display text-display-l uppercase text-ink">Selected systems</h2>
+        <LayerRegistrationMark className="hidden shrink-0 lg:flex" />
+      </div>
       <p className="mt-4 max-w-[42rem] font-display text-body-l text-ink-muted">
         {selectedSystemsSubheading}
       </p>
@@ -26,11 +33,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
           {pendingCopy.work}
         </p>
       ) : (
-        <ul className="mt-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.slug} project={project} revealDelayMs={index * 60} />
-          ))}
-        </ul>
+        <SelectedSystemsSpread projects={projects} />
       )}
     </section>
   );

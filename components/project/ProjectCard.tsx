@@ -16,8 +16,11 @@ type ProjectCardProps = {
 
 // D-017: Kıvılcım's first English-language introduction may gloss "Spark".
 // A one-off naming rule for a single project, not a generalizable schema
-// field — handled here rather than as speculative frontmatter.
-function displayTitle(project: ProjectFrontmatter): string {
+// field — handled here rather than as speculative frontmatter. Exported so
+// any other real presentation of these same projects (e.g. the homepage
+// Selected Systems prototype) reuses this one rule instead of growing a
+// second slug->title map.
+export function displayTitle(project: ProjectFrontmatter): string {
   return project.slug === "kivilcim" ? `${project.title} — "Spark"` : project.title;
 }
 
