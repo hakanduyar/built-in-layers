@@ -3,24 +3,28 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
+  useAnimationFrame,
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
   type MotionStyle,
   type MotionValue,
 } from "motion/react";
+import { DirectionalField } from "@/components/spatial/DirectionalField";
 import { ErosionWord } from "@/components/spatial/ErosionWord";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
+import { SystemPOV } from "@/components/spatial/SystemPOV";
 import { WorldGrammar } from "@/components/spatial/WorldGrammar";
+import { advanceFilter, type FilterState } from "@/lib/spatial/cameraFilter";
 import {
   CAMERA_INSET,
   CAMERA_INSET_MOBILE,
   PLANE_DISTANT,
   PLANE_NEAR,
   ROUTE_LENGTH_VH,
+  ROUTE_TWO_IDS,
   SCENE_IDS,
   SCENE_MIN_HEIGHT,
   SCENE_SCALE_FAR,
@@ -36,9 +40,10 @@ import {
   approachTension,
   cameraPosition,
   isImpact,
+  sceneApproach,
   sceneFocusProgress,
-  sceneProximity,
 } from "@/lib/spatial/sceneRoute";
+import type { SystemAnnotation } from "@/lib/spatial/systemPov";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
 /** Composed scenes. `tail` is the near-empty beat before the wall, and its
@@ -51,29 +56,61 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
   /** Distant/near travel material, rendered on their own depth planes. */
   distantMaterial?: ReactNode;
   nearMaterial?: ReactNode;
+  /**
+   * What the observing system is allowed to say about a scene, derived from
+   * real project frontmatter by lib/spatial/systemPov.ts. Scenes without one
+   * are simply not annotated -- there is no placeholder readout.
+   */
+  annotations?: Partial<Record<SceneId, SystemAnnotation>>;
 };
 
 /**
- * Scroll smoothing (§7).
+ * Velocity-aware scroll filtering (§7). V4's fixed overdamped spring is
+ * replaced by two cascaded first-order lags whose time constant shrinks as
+ * scroll speed rises -- see lib/spatial/cameraFilter.ts for the measurements
+ * that motivated it and the proof that it cannot overshoot.
  *
- * Deliberately OVERDAMPED (damping ratio ~1.07, not the bouncy default): an
- * underdamped spring would overshoot, and because the collision cut is a
- * threshold on this same value, overshoot could carry the journey across
- * BREAK_CUT and back again -- the reposition would flicker. Overdamping makes
- * that impossible by construction, which is the explicit boundary strategy
- * §8 asks for: rather than special-casing the cut, the smoothing simply
- * cannot cross it twice.
- *
- * The time constant is ~70ms (about four frames). Enough to dissolve
- * wheel-step edges, short enough that the camera never reads as chasing the
- * scroll position.
+ * Everything visual still reads ONE value. Deriving some of it from raw
+ * scroll and some from the filtered value is what would smear the collision
+ * cut, by letting the break panel and the camera jump disagree about when the
+ * cut happened.
  */
-const SMOOTHING = { stiffness: 170, damping: 28, mass: 1, restDelta: 0.00002 } as const;
+function useFilteredProgress(source: MotionValue<number>, enabled: boolean): MotionValue<number> {
+  const filtered = useMotionValue(source.get());
+  const state = useRef<FilterState>({
+    stage1: source.get(),
+    stage2: source.get(),
+    speed: 0,
+  });
+
+  useAnimationFrame((_, delta) => {
+    if (!enabled) return;
+    const target = source.get();
+    const previous = state.current;
+    // Cheap bail-out once the filter has caught up: the frame callback still
+    // fires, but a settled camera costs nothing.
+    if (
+      Math.abs(target - previous.stage1) < 1e-7 &&
+      Math.abs(previous.stage1 - previous.stage2) < 1e-7 &&
+      previous.speed < 1e-4
+    ) {
+      return;
+    }
+    // Clamped so a backgrounded tab returning after a long gap resumes rather
+    // than teleporting the camera through the collision.
+    const next = advanceFilter(previous, target, source.getVelocity(), Math.min(delta, 50));
+    state.current = next;
+    filtered.set(next.stage2);
+  });
+
+  return enabled ? filtered : source;
+}
 
 export function SpatialCamera({
   erosionWord,
   distantMaterial,
   nearMaterial,
+  annotations = {},
   ...scenes
 }: SpatialCameraProps) {
   const mounted = useHasMounted();
@@ -85,12 +122,10 @@ export function SpatialCamera({
   const spacerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: spacerRef, offset: ["start start", "end end"] });
 
-  // Raw scroll drives a smoothed "visual progress"; EVERYTHING visual reads
-  // from the smoothed value -- camera, break, erosion, depth. Deriving some
-  // of it from raw and some from smoothed is what would smear the cut, by
-  // letting the panel and the jump disagree about when the cut happened.
-  const smoothed = useSpring(scrollYProgress, SMOOTHING);
-  const progress = reduceMotion ? scrollYProgress : smoothed;
+  // Raw scroll drives a filtered "visual progress"; EVERYTHING visual reads
+  // from the filtered value -- camera, break, erosion, depth, system
+  // annotations.
+  const progress = useFilteredProgress(scrollYProgress, !reduceMotion);
 
   const [impact, setImpact] = useState(false);
 
@@ -136,11 +171,18 @@ export function SpatialCamera({
     // linear page rather than a stripped dump.
     return (
       <div className="mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
-        {SCENE_IDS.map((id) => (
-          <div key={id}>
-            {id === "tail" ? <ErosionWord word={erosionWord} erosion={null} /> : scenes[id]}
-          </div>
-        ))}
+        {SCENE_IDS.map((id) => {
+          const annotation = annotations[id];
+          return (
+            // The system annotation survives here in its resolved, static form:
+            // §37 keeps useful system metadata, and these two rows are real
+            // project facts stated nowhere else on the page.
+            <div key={id} className={annotation ? "relative" : undefined}>
+              {annotation && <SystemPOV annotation={annotation} approach={null} />}
+              {id === "tail" ? <ErosionWord word={erosionWord} erosion={null} /> : scenes[id]}
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -166,6 +208,26 @@ export function SpatialCamera({
           {isDesktop && (
             <CameraPlane progress={progress} rate={PLANE_DISTANT} inset={inset} mobile={mobile}>
               {distantMaterial}
+              {/* Directional architecture (§22-23). Exactly two fields in the
+                  whole journey: one in the run at the wall, which compresses
+                  as the route runs out of room (§24), and one on the far side
+                  of the reposition, re-aimed along the new route. Not behind
+                  any scene, and not on mobile -- there is no distant plane
+                  there at all (§36). */}
+              <DirectionalField
+                at={(sceneFocusProgress("tail") + COLLISION_PROGRESS) / 2}
+                along={[sceneFocusProgress("tail"), COLLISION_PROGRESS]}
+                offset={{ x: 46, y: 20 }}
+                tension={tension}
+                opacity={0.075}
+              />
+              <DirectionalField
+                at={(BREAK_CUT + sceneFocusProgress("approach")) / 2}
+                along={[BREAK_CUT, sceneFocusProgress("approach")]}
+                offset={{ x: 38, y: 16 }}
+                count={4}
+                opacity={0.06}
+              />
             </CameraPlane>
           )}
 
@@ -185,6 +247,7 @@ export function SpatialCamera({
                 progress={progress}
                 mobile={mobile}
                 isDesktop={isDesktop}
+                annotation={annotations[id]}
                 onFocus={() => recenterOnScene(id)}
               >
                 {id === "tail" ? (
@@ -255,6 +318,7 @@ function SceneFrame({
   progress,
   mobile,
   isDesktop,
+  annotation,
   onFocus,
   children,
 }: {
@@ -262,11 +326,13 @@ function SceneFrame({
   progress: MotionValue<number>;
   mobile: boolean;
   isDesktop: boolean;
+  annotation?: SystemAnnotation;
   onFocus: () => void;
   children: ReactNode;
 }) {
   const point = sceneAnchor(id, mobile);
-  const resolve = useTransform(progress, (value) => sceneProximity(id, value, mobile));
+  const approach = useTransform(progress, (value) => sceneApproach(id, value, mobile));
+  const resolve = useTransform(approach, (value) => 1 - Math.abs(value));
   const scale = useTransform(resolve, [0, 1], [SCENE_SCALE_FAR, SCENE_SCALE_FOCUS]);
   // Mobile keeps scenes at full size: depth treatment is reduced there (§30).
   const flat = useMotionValue(1);
@@ -293,6 +359,14 @@ function SceneFrame({
       }
     >
       {children}
+      {annotation && (
+        <SystemPOV
+          annotation={annotation}
+          approach={approach}
+          compact={mobile}
+          resolved={ROUTE_TWO_IDS.some((routeTwoId) => routeTwoId === id)}
+        />
+      )}
     </motion.div>
   );
 }

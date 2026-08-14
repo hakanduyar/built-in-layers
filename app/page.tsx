@@ -3,8 +3,8 @@ import { AboutPreview } from "@/components/sections/AboutPreview";
 import { BuiltForRealLife } from "@/components/sections/BuiltForRealLife";
 import { FieldNotes } from "@/components/sections/FieldNotes";
 import { HowIBuild } from "@/components/sections/HowIBuild";
+import { DriftBlock, EditorialDrift } from "@/components/spatial/EditorialDrift";
 import { SpatialExperience } from "@/components/spatial/SpatialExperience";
-import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
 import { getProjectsByTier } from "@/lib/content/work";
@@ -46,13 +46,29 @@ export default function Home() {
   return (
     <>
       <SpatialExperience />
-      <Container className="py-16">
+      {/* Spatial V5 §26-31: the lower homepage keeps its exact semantic order
+          and its exact content, but is composed along a deterministic drift
+          track instead of a centred column, so the world's physics continue
+          past the end of the spatial route rather than stopping dead at it.
+          The shared `Container` is replaced by the drift track, which carries
+          its own responsive width and padding. */}
+      <div className="py-16">
         <JsonLd data={buildPersonJsonLd()} />
-        <BuiltForRealLife projects={realLifeProjects} />
-        <HowIBuild />
-        <FieldNotes notes={notes} />
-        <AboutPreview />
-      </Container>
+        <EditorialDrift>
+          <DriftBlock id="real-life">
+            <BuiltForRealLife projects={realLifeProjects} />
+          </DriftBlock>
+          <DriftBlock id="how-i-build">
+            <HowIBuild />
+          </DriftBlock>
+          <DriftBlock id="field-notes">
+            <FieldNotes notes={notes} />
+          </DriftBlock>
+          <DriftBlock id="about">
+            <AboutPreview />
+          </DriftBlock>
+        </EditorialDrift>
+      </div>
     </>
   );
 }

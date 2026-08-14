@@ -394,12 +394,35 @@ describe("world grammar derives from the route", () => {
   });
 
   it("draws rails that actually lie on the camera path", () => {
+    // Distance to the drawn POLYLINE, not to its nearest vertex: the rail is
+    // the line, and a camera position landing midway between two vertices is
+    // on it. (Measuring to vertices instead makes the bound a function of the
+    // sample count, which is a drawing detail, not a contract.)
+    const distanceToPolyline = (points: { x: number; y: number }[], at: { x: number; y: number }) =>
+      Math.min(
+        ...points.slice(1).map((to, i) => {
+          const from = points[i]!;
+          const dx = (to.x - from.x) * VW_PER_VH;
+          const dy = to.y - from.y;
+          const lengthSquared = dx * dx + dy * dy;
+          const t =
+            lengthSquared > 0
+              ? Math.min(
+                  Math.max(
+                    (((at.x - from.x) * VW_PER_VH * dx + (at.y - from.y) * dy) / lengthSquared),
+                    0,
+                  ),
+                  1,
+                )
+              : 0;
+          return screenDistance({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t }, at);
+        }),
+      );
+
     for (const leg of routeLegs()) {
       for (let i = 0; i <= 6; i += 1) {
         const p = leg.fromProgress + ((leg.toProgress - leg.fromProgress) * i) / 6;
-        const camera = cameraPosition(p);
-        const nearest = Math.min(...leg.points.map((point) => screenDistance(point, camera)));
-        expect(nearest).toBeLessThan(4);
+        expect(distanceToPolyline(leg.points, cameraPosition(p))).toBeLessThan(1);
       }
     }
   });

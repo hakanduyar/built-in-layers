@@ -13,6 +13,7 @@ import {
 } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
+import { systemAnnotation } from "@/lib/spatial/systemPov";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -106,6 +107,14 @@ export function SpatialExperience() {
           />
         }
         nearMaterial={<TravelMaterial plane="near" words={[]} />}
+        // What the observing system may say about each scene (§9, §12). Both
+        // entries are built by systemAnnotation() from the project's own
+        // validated frontmatter -- there is no slug->copy table here and no
+        // field this file invents.
+        annotations={{
+          kivilcim: systemAnnotation(kivilcim, "01"),
+          dropspot: systemAnnotation(dropspot, "02"),
+        }}
         hero={
           // Scroll position 0. Still calm and still readable as a premium
           // first screen -- but no longer generic (§12). The name owns one
@@ -191,8 +200,8 @@ export function SpatialExperience() {
             </div>
           </div>
         }
-        kivilcim={<SpatialProjectScene project={kivilcim} index="01" variant="split" />}
-        dropspot={<SpatialProjectScene project={dropspot} index="02" variant="stacked" />}
+        kivilcim={<SpatialProjectScene project={kivilcim} variant="split" />}
+        dropspot={<SpatialProjectScene project={dropspot} variant="stacked" />}
         reorient={
           // The reposition target. The giant word is no longer an isolated
           // piece of typography floating in space (§9): it stands at the

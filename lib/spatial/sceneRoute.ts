@@ -1,4 +1,4 @@
-// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
+// Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18). Pure route/camera math, no JSX, no
 // "use client" -- unit-testable in isolation (tests/unit/spatial-route.test.ts).
 //
@@ -7,7 +7,7 @@
 // positions across 900 frames, a median response of 0.00 camera px per scroll
 // px, and 1276px of dead scroll followed by bursts 24x the local rate.
 //
-// V4 replaces it with a continuous curve and a continuous speed profile:
+// V4 replaced it with a continuous curve and a continuous speed profile:
 //
 //   1. POSITION continuity -- one Catmull-Rom spline per route, passing
 //      exactly through every scene anchor. Tangents are shared between
@@ -20,6 +20,27 @@
 //   3. FOCUS AS SLOWNESS, NOT STOPPING -- that shared boundary constant is a
 //      fraction of the route's average speed, not zero. A scene is where the
 //      camera is slowest, never where it is parked.
+//
+// V5 adds the piece V4's own report listed as a remaining weakness:
+//
+//   4. ARC-LENGTH REPARAMETERISATION (§5). A Catmull-Rom curve's parameter is
+//      not proportional to distance along it, so under V4 equal scroll bought
+//      unequal physical travel depending only on how the curve happened to
+//      bend. Each segment now carries a cumulative distance table built once at
+//      module load; the easing produces a DISTANCE fraction, and the table maps
+//      that to the curve parameter.
+//
+//      This cleanly separates the two things §6 asks to be separated:
+//        - GEOMETRY NORMALISATION is the arc-length table;
+//        - the FOCUS VELOCITY PROFILE is the Hermite easing on top of it.
+//
+//      It also simplifies the easing. Camera speed is now exactly
+//      L · e'(t) / width, with L the segment's true arc length, so one shared
+//      boundary speed is hit exactly at both ends by a single symmetric
+//      derivative. V4 needed asymmetric ends to compensate for the curve's
+//      own tangent-magnitude variation; that compensation is gone, and the
+//      speed profile inside every ordinary segment is now symmetric -- which
+//      is the property the unit tests assert.
 //
 // The one intentional exception is the collision: the approach accelerates,
 // the camera stops dead at the wall for a short impact window, and the route
@@ -80,20 +101,77 @@ function reflect(inner: WorldPoint, outer: WorldPoint): WorldPoint {
   return { x: 2 * inner.x - outer.x, y: 2 * inner.y - outer.y };
 }
 
+/* ------------------------------------------------------ arc-length lookup */
+
+/**
+ * Samples per segment for the cumulative distance table. 64 is far more than
+ * the geometry needs -- these are gentle curves whose chord/arc error is under
+ * a tenth of a percent by ~24 samples -- and the whole thing is built once, at
+ * module load, for six segments per viewport mode.
+ */
+const ARC_SAMPLES = 64;
+
+type ArcTable = {
+  /** Fraction of the segment's length reached at parameter i/ARC_SAMPLES. */
+  travelled: number[];
+  /** True arc length, in the same screen measure as screenDistance. */
+  length: number;
+};
+
+function buildArcTable(p0: WorldPoint, p1: WorldPoint, p2: WorldPoint, p3: WorldPoint): ArcTable {
+  const cumulative: number[] = [0];
+  let total = 0;
+  let previous = catmullRom(p0, p1, p2, p3, 0);
+  for (let i = 1; i <= ARC_SAMPLES; i += 1) {
+    const point = catmullRom(p0, p1, p2, p3, i / ARC_SAMPLES);
+    total += screenDistance(previous, point);
+    cumulative.push(total);
+    previous = point;
+  }
+  const length = Math.max(total, 1e-6);
+  return { travelled: cumulative.map((value) => value / length), length: total };
+}
+
+/**
+ * Inverse lookup: distance fraction -> curve parameter. Binary search plus
+ * linear interpolation inside the bracketing pair, which is all this needs --
+ * the table is dense enough that the residual error is far below a pixel.
+ *
+ * The two ends are returned exactly, so the curve still passes through every
+ * scene anchor to full precision (§5.4).
+ */
+function arcParam(table: ArcTable, distanceFraction: number): number {
+  const target = clamp01(distanceFraction);
+  if (target <= 0) return 0;
+  if (target >= 1) return 1;
+  const { travelled } = table;
+  let lo = 0;
+  let hi = travelled.length - 1;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (travelled[mid]! <= target) lo = mid;
+    else hi = mid;
+  }
+  const low = travelled[lo]!;
+  const high = travelled[hi]!;
+  const within = high > low ? (target - low) / (high - low) : 0;
+  return (lo + within) / ARC_SAMPLES;
+}
+
 /* ------------------------------------------------------- speed profiling */
 
 /**
- * Cubic Hermite easing with INDEPENDENT end derivatives.
+ * Cubic Hermite easing with independent end derivatives, mapping normalised
+ * scroll within a segment to a FRACTION OF THE SEGMENT'S LENGTH.
  *
  *   e(0) = 0, e(1) = 1, e'(0) = a0, e'(1) = a1
  *   e(t) = a0·t + (3 - 2a0 - a1)·t² + (a0 + a1 - 2)·t³
  *
- * Independent ends are what make exact speed matching possible. A segment's
- * camera speed is |dP/dt| · e'(t) / width, and on a Catmull-Rom curve
- * |dP/dt| differs between the two ends of a segment -- so a single symmetric
- * derivative cannot hit the same speed at both. (An earlier pass used one,
- * and the tail join measured 0.187 of average where every other join
- * measured 0.267.)
+ * Because the output is a distance fraction (arc-length reparameterisation
+ * turns it into a curve parameter afterwards), camera speed is exactly
+ * L · e'(t) / width. Every ordinary segment therefore uses a0 = a1 and its
+ * speed profile is symmetric; only the collision approach sets them apart, and
+ * it does so deliberately, to accelerate into the wall.
  *
  * e' is never zero for a0, a1 > 0, which is the whole point: no plateau.
  */
@@ -110,6 +188,8 @@ type Segment = {
   p1: WorldPoint;
   p2: WorldPoint;
   p3: WorldPoint;
+  /** Cumulative distance table: the geometry-normalisation half of §6. */
+  arc: ArcTable;
   from: number;
   to: number;
   /** Easing derivatives at each end, solved so joins match in speed. */
@@ -117,42 +197,33 @@ type Segment = {
   a1: number;
 };
 
-/** Length of a world vector in the same screen measure as screenDistance. */
-function screenNorm(v: WorldPoint): number {
-  return Math.hypot(v.x * VW_PER_VH, v.y);
-}
-
-/** Catmull-Rom tangents at a segment's two ends: 0.5·(p2-p0) and 0.5·(p3-p1).
- *  Adjacent segments share the tangent at the anchor between them, which is
- *  exactly why matching speed there also matches direction. */
-function endTangents(p0: WorldPoint, p1: WorldPoint, p2: WorldPoint, p3: WorldPoint) {
-  return {
-    start: screenNorm({ x: (p2.x - p0.x) / 2, y: (p2.y - p0.y) / 2 }),
-    end: screenNorm({ x: (p3.x - p1.x) / 2, y: (p3.y - p1.y) / 2 }),
-  };
-}
-
 type RouteTable = {
   segments: Segment[];
   /** Progress at which the camera is exactly on each anchor. */
   focus: Partial<Record<SceneId, number>>;
 };
 
-function buildSegments(points: WorldPoint[], from: number, to: number) {
-  const lengths = points.slice(1).map((point, i) => screenDistance(points[i]!, point));
-  const weights = lengths.map((length) => length + FOCUS_ALLOWANCE);
-  const weightTotal = weights.reduce((sum, w) => sum + w, 0);
-  const span = to - from;
+/** Catmull-Rom control quads for a polyline, with reflected phantom ends. */
+function segmentControls(points: WorldPoint[]) {
+  return points.slice(1).map((_, i) => ({
+    p0: i === 0 ? reflect(points[0]!, points[1]!) : points[i - 1]!,
+    p1: points[i]!,
+    p2: points[i + 1]!,
+    p3:
+      i + 2 < points.length
+        ? points[i + 2]!
+        : reflect(points[points.length - 1]!, points[points.length - 2]!),
+  }));
+}
 
-  const bounds: number[] = [from];
-  let cursor = from;
-  for (const weight of weights) {
-    cursor += (span * weight) / weightTotal;
-    bounds.push(cursor);
-  }
-  bounds[bounds.length - 1] = to; // kill float drift so the last anchor is exact
-
-  return { lengths, bounds };
+/**
+ * TRUE arc lengths, not chords. V4 allocated scroll by the straight distance
+ * between anchors, which under-served the segments that bend most -- the
+ * curve's own detour was unpaid for. Allocating by arc length is the first
+ * half of §6: normalise the geometry, then shape the velocity.
+ */
+function arcTables(points: WorldPoint[]): ArcTable[] {
+  return segmentControls(points).map((c) => buildArcTable(c.p0, c.p1, c.p2, c.p3));
 }
 
 /**
@@ -165,12 +236,15 @@ function routePoints(mobile: boolean) {
   const wall = mobile ? COLLISION_MOBILE_WORLD : COLLISION_WORLD;
   const one = [...ROUTE_ONE_IDS.map((id) => sceneAnchor(id, mobile)), wall];
   const two = ROUTE_TWO_IDS.map((id) => sceneAnchor(id, mobile));
-  const lengths = (points: WorldPoint[]) =>
-    points.slice(1).map((p, i) => screenDistance(points[i]!, p));
-  return { one, two, oneLengths: lengths(one), twoLengths: lengths(two) };
+  return { one, two };
 }
 
 const AVAILABLE = 1 - IMPACT_WINDOW;
+
+/** Scroll weight of a run of segments: distance travelled + reading allowance. */
+function routeWeight(tables: ArcTable[]): number {
+  return tables.reduce((sum, table) => sum + table.length + FOCUS_ALLOWANCE, 0);
+}
 
 /**
  * Where route one ends, shared by BOTH viewport modes.
@@ -183,20 +257,22 @@ const AVAILABLE = 1 - IMPACT_WINDOW;
  * to remove, reintroduced by accident and caught by a speed scan.
  */
 const SPLIT = (() => {
-  const { oneLengths, twoLengths } = routePoints(false);
-  const weight = (list: number[]) => list.reduce((s, l) => s + l + FOCUS_ALLOWANCE, 0);
-  const oneWeight = weight(oneLengths);
-  return (AVAILABLE * oneWeight) / (oneWeight + weight(twoLengths));
+  const { one, two } = routePoints(false);
+  const oneWeight = routeWeight(arcTables(one));
+  return (AVAILABLE * oneWeight) / (oneWeight + routeWeight(arcTables(two)));
 })();
 
 function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
-  const { one: onePoints, two: twoPoints, oneLengths, twoLengths } = routePoints(mobile);
+  const { one: onePoints, two: twoPoints } = routePoints(mobile);
+  const oneArcs = arcTables(onePoints);
+  const twoArcs = arcTables(twoPoints);
 
   const collision = SPLIT;
   const cut = collision + IMPACT_WINDOW;
   const available = AVAILABLE;
 
-  const totalLength = oneLengths.reduce((s, l) => s + l, 0) + twoLengths.reduce((s, l) => s + l, 0);
+  const sum = (tables: ArcTable[]) => tables.reduce((s, table) => s + table.length, 0);
+  const totalLength = sum(oneArcs) + sum(twoArcs);
   // One shared boundary speed for the entire world, expressed in world units
   // per unit progress.
   const focusSpeed = FOCUS_SPEED_RATIO * (totalLength / available);
@@ -205,40 +281,51 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
   // than the route average so the approach genuinely builds.
   const approachExitSpeed = 1.35 * (totalLength / available);
 
-  const assemble = (points: WorldPoint[], from: number, to: number, lastIsApproach: boolean) => {
-    const { lengths, bounds } = buildSegments(points, from, to);
-    return lengths.map((_, i): Segment => {
-      const p0 = i === 0 ? reflect(points[0]!, points[1]!) : points[i - 1]!;
-      const p1 = points[i]!;
-      const p2 = points[i + 1]!;
-      const p3 =
-        i + 2 < points.length
-          ? points[i + 2]!
-          : reflect(points[points.length - 1]!, points[points.length - 2]!);
+  const assemble = (
+    points: WorldPoint[],
+    arcs: ArcTable[],
+    from: number,
+    to: number,
+    lastIsApproach: boolean,
+  ) => {
+    const controls = segmentControls(points);
+    const weightTotal = routeWeight(arcs);
+    const span = to - from;
 
+    const bounds: number[] = [from];
+    let cursor = from;
+    for (const arc of arcs) {
+      cursor += (span * (arc.length + FOCUS_ALLOWANCE)) / weightTotal;
+      bounds.push(cursor);
+    }
+    bounds[bounds.length - 1] = to; // kill float drift so the last anchor is exact
+
+    return controls.map((control, i): Segment => {
+      const arc = arcs[i]!;
       const width = bounds[i + 1]! - bounds[i]!;
-      const tangent = endTangents(p0, p1, p2, p3);
-      const isApproach = lastIsApproach && i === lengths.length - 1;
+      const isApproach = lastIsApproach && i === controls.length - 1;
 
-      // speed(end) = |dP/dt| · e'(end) / width, so e'(end) = target · width / |dP/dt|.
-      const solve = (target: number, magnitude: number) =>
-        Math.min(Math.max((target * width) / Math.max(magnitude, 1e-6), 0.06), 1.9);
+      // With the curve reparameterised by arc length, camera speed is exactly
+      //   speed(t) = L · e'(t) / width
+      // so the derivative for a target boundary speed is a plain ratio, and it
+      // is the same expression at both ends. No tangent magnitudes involved --
+      // that is what makes the profile symmetric and the joins exact.
+      const solve = (target: number) =>
+        Math.min(Math.max((target * width) / arc.length, 0.06), 1.9);
 
       return {
-        p0,
-        p1,
-        p2,
-        p3,
+        ...control,
+        arc,
         from: bounds[i]!,
         to: bounds[i + 1]!,
-        a0: solve(focusSpeed, tangent.start),
-        a1: solve(isApproach ? approachExitSpeed : focusSpeed, tangent.end),
+        a0: solve(focusSpeed),
+        a1: solve(isApproach ? approachExitSpeed : focusSpeed),
       };
     });
   };
 
-  const oneSegments = assemble(onePoints, 0, collision, true);
-  const twoSegments = assemble(twoPoints, cut, 1, false);
+  const oneSegments = assemble(onePoints, oneArcs, 0, collision, true);
+  const twoSegments = assemble(twoPoints, twoArcs, cut, 1, false);
 
   const focusOf = (
     ids: readonly SceneId[],
@@ -283,8 +370,24 @@ function evaluate(segments: Segment[], progress: number): WorldPoint | null {
     if (progress > segment.to) continue;
     const width = segment.to - segment.from;
     const t = width > 0 ? clamp01((progress - segment.from) / width) : 0;
-    const eased = hermiteEase(t, segment.a0, segment.a1);
-    return catmullRom(segment.p0, segment.p1, segment.p2, segment.p3, eased);
+    // The ends are returned as the control points themselves rather than as
+    // the polynomial's value there. Algebraically they are the same point, but
+    // neither the easing nor the cubic lands exactly on it in floating point,
+    // and "the curve passes exactly through every scene anchor" (§5.4) is a
+    // contract worth holding exactly rather than to within a few ulps.
+    if (t <= 0) return segment.p1;
+    if (t >= 1) return segment.p2;
+    // Two distinct steps, in this order (§6): the easing decides HOW FAR ALONG
+    // the segment the camera should be, and the arc table decides which curve
+    // parameter that distance corresponds to.
+    const travelled = hermiteEase(t, segment.a0, segment.a1);
+    return catmullRom(
+      segment.p0,
+      segment.p1,
+      segment.p2,
+      segment.p3,
+      arcParam(segment.arc, travelled),
+    );
   }
   return null;
 }
@@ -346,6 +449,17 @@ export function approachTension(progress: number, mobile = false): number {
  * neighbouring anchor owns the frame.
  */
 export function sceneProximity(id: SceneId, progress: number, mobile = false): number {
+  return 1 - Math.abs(sceneApproach(id, progress, mobile));
+}
+
+/**
+ * SIGNED position of the camera relative to a scene: -1 still on the way in,
+ * 0 exactly framed, +1 already gone. V5's system annotations need the sign --
+ * an acquisition frame that behaved identically on approach and on departure
+ * would read as a decoration attached to the scene rather than as something
+ * watching the camera arrive and let go (§10).
+ */
+export function sceneApproach(id: SceneId, progress: number, mobile = false): number {
   const focus = sceneFocusProgress(id, mobile);
   const { one, two } = tables(mobile);
   const segments = [...one.segments, ...two.segments];
@@ -357,8 +471,9 @@ export function sceneProximity(id: SceneId, progress: number, mobile = false): n
       reach = Math.min(reach, segment.to - segment.from);
     }
   }
-  if (!Number.isFinite(reach) || reach <= 0) return 0;
-  return clamp01(1 - Math.abs(clamp01(progress) - focus) / reach);
+  if (!Number.isFinite(reach) || reach <= 0) return 1;
+  const offset = (clamp01(progress) - focus) / reach;
+  return Math.min(Math.max(offset, -1), 1);
 }
 
 /**
@@ -420,13 +535,23 @@ export type RouteLeg = {
  * The camera path itself, sampled leg by leg. The world-grammar layer draws
  * its rails straight from this, so the orientation marks in the travel space
  * trace the real curve and cannot describe a path the camera does not take.
+ *
+ * Sampled at even ARC LENGTH rather than even parameter (V5): vertices are
+ * then evenly spaced along the drawn line, which both looks right and keeps
+ * every vertex close to a real camera position.
  */
 export function routeLegs(mobile = false, samples = 18): RouteLeg[] {
   const { one, two } = tables(mobile);
   const build = (segments: Segment[], route: 1 | 2): RouteLeg[] =>
     segments.map((segment) => ({
       points: Array.from({ length: samples + 1 }, (_, i) =>
-        catmullRom(segment.p0, segment.p1, segment.p2, segment.p3, i / samples),
+        catmullRom(
+          segment.p0,
+          segment.p1,
+          segment.p2,
+          segment.p3,
+          arcParam(segment.arc, i / samples),
+        ),
       ),
       fromProgress: segment.from,
       toProgress: segment.to,
@@ -461,6 +586,19 @@ export function travelWindVector(): WorldPoint {
   const screenY = to.y - from.y;
   const length = Math.hypot(screenX, screenY) || 1;
   return { x: screenX / length, y: screenY / length };
+}
+
+/**
+ * Screen angle, in degrees, of the camera's travel between two progress
+ * points. The directional architecture (§22) is aligned with this rather than
+ * with an authored angle, so the environmental structures always point along
+ * the route the camera actually takes -- the same discipline the rails and the
+ * erosion wind already follow.
+ */
+export function routeScreenAngle(fromProgress: number, toProgress: number, mobile = false): number {
+  const from = cameraPosition(fromProgress, mobile);
+  const to = cameraPosition(toProgress, mobile);
+  return (Math.atan2(to.y - from.y, (to.x - from.x) * VW_PER_VH) * 180) / Math.PI;
 }
 
 /**

@@ -4,6 +4,7 @@ import { motion, useTransform, type MotionValue } from "motion/react";
 import {
   COLLISION_MOBILE_WORLD,
   COLLISION_WORLD,
+  ROUTE_TWO_IDS,
   SCENE_IDS,
   WALL_MARKER_OFFSET,
   sceneAnchor,
@@ -11,7 +12,7 @@ import {
 } from "@/lib/spatial/scenes";
 import { routeLegs } from "@/lib/spatial/sceneRoute";
 
-// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
+// Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
 // V2's honest remaining weakness was that the space between scenes was
@@ -35,6 +36,14 @@ import { routeLegs } from "@/lib/spatial/sceneRoute";
 //                         rules that CONVERGE on it as the approach tension
 //                         rises. This is the collision's own grammar (§4):
 //                         the rails tighten before the camera is stopped.
+//   5. boundary regs   -- V5. Two system brackets in the approach that both
+//                         converge on the boundary AND lose registration as
+//                         tension rises, so the collision reads as the system
+//                         failing to hold its coordinate model (§13).
+//
+// V5 also gives marks on route two their RESOLVED form (§25): the same two
+// strokes, longer and closed by a second inset mark. One design system in two
+// states, never two themes.
 //
 // Every mark here is decorative and aria-hidden (§24). Nothing in this file
 // carries information that is not already stated in real semantic text.
@@ -57,10 +66,18 @@ export function WorldGrammar({ progress, tension, mobile }: WorldGrammarProps) {
       ))}
 
       {SCENE_IDS.map((id) => (
-        <RegistrationTick key={id} at={sceneAnchor(id, mobile)} />
+        <RegistrationTick
+          key={id}
+          at={sceneAnchor(id, mobile)}
+          // §25: after the reposition the same grammar is held more strictly.
+          // A route-two anchor is only ever seen after the break, so its mark
+          // is the resolved form -- a closed corner rather than an open tick.
+          strict={ROUTE_TWO_IDS.some((routeTwoId) => routeTwoId === id)}
+        />
       ))}
 
       <WallBoundary at={wall} tension={tension} mobile={mobile} />
+      <BoundaryRegistration at={wall} tension={tension} mobile={mobile} />
     </div>
   );
 }
@@ -138,16 +155,26 @@ function RouteRail({
   );
 }
 
-/** A single corner tick registering a scene's anchor in the world. Offset up
- *  and left of the scene block so it never sits on top of scene content. */
-function RegistrationTick({ at }: { at: WorldPoint }) {
+/**
+ * A corner tick registering a scene's anchor in the world. Offset up and left
+ * of the scene block so it never sits on top of scene content.
+ *
+ * `strict` is the post-collision form (§25): the same two strokes, drawn
+ * longer, at higher contrast, and closed by a short second mark inset from the
+ * corner. The world has not changed theme -- it is being measured more
+ * carefully.
+ */
+function RegistrationTick({ at, strict = false }: { at: WorldPoint; strict?: boolean }) {
+  const arm = strict ? "w-10" : "w-7";
+  const drop = strict ? "h-10" : "h-7";
   return (
     <div
-      className="absolute opacity-30"
+      className={`absolute ${strict ? "opacity-50" : "opacity-30"}`}
       style={{ left: `${at.x - 1.6}vw`, top: `${at.y - 4.5}vh` }}
     >
-      <span className="absolute left-0 top-0 block h-px w-7 bg-ink" />
-      <span className="absolute left-0 top-0 block h-7 w-px bg-ink" />
+      <span className={`absolute left-0 top-0 block h-px ${arm} bg-ink`} />
+      <span className={`absolute left-0 top-0 block w-px ${drop} bg-ink`} />
+      {strict && <span className="absolute left-1.5 top-1.5 block h-px w-3 bg-ink" />}
     </div>
   );
 }
@@ -194,6 +221,76 @@ function WallBoundary({
         <ConvergingRule key={index} offset={offset} tension={tension} mobile={mobile} />
       ))}
     </div>
+  );
+}
+
+/**
+ * The collision, read as a SYSTEM event rather than as a wipe (§13).
+ *
+ * Two acquisition-style brackets stand in the approach, drawn in exactly the
+ * vocabulary the system uses to frame a project scene. As tension rises they
+ * do two things at once: they converge toward the boundary, and they LOSE
+ * REGISTRATION -- each bracket's two arms slide out of their corner, so the
+ * marks stop describing a coherent coordinate. By the moment of impact the
+ * system is visibly no longer able to hold the frame it was holding, which is
+ * the perception §13 asks for: the world was recalculated, not slid over.
+ *
+ * Nothing here says so in words. There is no "RECALCULATING" (§14).
+ */
+function BoundaryRegistration({
+  at,
+  tension,
+  mobile,
+}: {
+  at: WorldPoint;
+  tension: MotionValue<number>;
+  mobile: boolean;
+}) {
+  // Placed in the frame the camera occupies as it runs at the wall, on the
+  // approach side of the boundary rather than beyond it.
+  const marks = mobile
+    ? [
+        { x: at.x - 26, y: at.y - 12 },
+        { x: at.x + 12, y: at.y + 4 },
+      ]
+    : [
+        { x: at.x - 30, y: at.y - 26 },
+        { x: at.x - 14, y: at.y + 22 },
+      ];
+
+  return (
+    <>
+      {marks.map((mark, index) => (
+        <DeregisteringBracket key={index} at={mark} tension={tension} flip={index === 1} />
+      ))}
+    </>
+  );
+}
+
+function DeregisteringBracket({
+  at,
+  tension,
+  flip,
+}: {
+  at: WorldPoint;
+  tension: MotionValue<number>;
+  flip: boolean;
+}) {
+  const direction = flip ? -1 : 1;
+  // Arrives with the approach, holds, and is still present at impact -- it is
+  // the thing that fails, so it must be visible when it fails.
+  const opacity = useTransform(tension, [0, 0.22, 0.85, 1], [0, 0.34, 0.5, 0.42]);
+  // Converging: the pair closes on the boundary as the camera runs out of room.
+  const shift = useTransform(tension, [0, 1], ["0vw", `${direction * 5}vw`]);
+  // Losing registration: the two arms leave the corner they defined.
+  const armX = useTransform(tension, [0.45, 1], [0, direction * 13]);
+  const armY = useTransform(tension, [0.45, 1], [0, -direction * 9]);
+
+  return (
+    <motion.div className="absolute" style={{ left: `${at.x}vw`, top: `${at.y}vh`, x: shift, opacity }}>
+      <motion.span className="absolute left-0 top-0 block h-px w-9 bg-ink" style={{ x: armX }} />
+      <motion.span className="absolute left-0 top-0 block h-9 w-px bg-ink" style={{ y: armY }} />
+    </motion.div>
   );
 }
 

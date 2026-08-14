@@ -2,6 +2,7 @@ import { Figure } from "@/components/ui/Figure";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { TextLink } from "@/components/ui/TextLink";
 import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/schemas";
+import { representativeAsset } from "@/lib/spatial/systemPov";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -22,8 +23,6 @@ import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/sc
 
 type SpatialProjectSceneProps = {
   project: ProjectFrontmatter;
-  /** Route index shown as the scene's single mono marker, e.g. "01". */
-  index: string;
   /**
    * `split` puts the evidence plate beside the text; `stacked` leads with a
    * dominant full-width plate. Two genuinely different editorial
@@ -39,33 +38,18 @@ const EVIDENCE_LABEL: Record<ProjectImageAssetType, string> = {
   "provisional-illustration": "Illustrative diagram",
 };
 
-/**
- * Picks the one asset a scene leads with, entirely from the asset's own
- * registered metadata -- never a hard-coded filename or slug lookup.
- * Real photographic evidence outranks a diagram; failing that, the
- * system-layer diagram is the most load-bearing thing a project can show at
- * this scale; failing that, whatever is registered first.
- *
- * On the two current scenes this resolves to DropSpot's real signed-in home
- * screenshot and Kıvılcım's verified local-first architecture diagram --
- * the right lead asset for each, derived rather than dictated.
- */
-function representativeAsset(project: ProjectFrontmatter) {
-  return (
-    project.images.find((image) => image.assetType === "real-screenshot") ??
-    project.images.find((image) => image.layer === "system") ??
-    project.images[0]
-  );
-}
-
-export function SpatialProjectScene({ project, index, variant }: SpatialProjectSceneProps) {
+export function SpatialProjectScene({ project, variant }: SpatialProjectSceneProps) {
+  // Shared with the system annotation (lib/spatial/systemPov.ts) so the scene
+  // and the system can never disagree about which asset is the lead one --
+  // the annotation names that asset's LAYER, and two copies of the selection
+  // rule could drift apart and label the wrong one.
   const asset = representativeAsset(project);
   const stacked = variant === "stacked";
 
-  // One mono line carries both the route index and the evidence type. V1
-  // scattered several competing micro-labels per node; V2 spends that
-  // attention budget once (§22: fewer elements, larger meaning).
-  const marker = asset ? `${index} / ${EVIDENCE_LABEL[asset.assetType]}` : index;
+  // The evidence type, and only that. V5 moves the route index into the
+  // system's acquisition frame (§9): indexing scenes is the observing
+  // system's job, and stating it in both places would duplicate it (§12).
+  const marker = asset ? EVIDENCE_LABEL[asset.assetType] : null;
 
   // Arrival depth resolution (§14). `--depth-resolve` runs 0 (distant) -> 1
   // (framed) and is set by the camera's SceneFrame; it falls back to 1 in the
@@ -82,7 +66,7 @@ export function SpatialProjectScene({ project, index, variant }: SpatialProjectS
 
   const identity = (
     <div style={resolveUp}>
-      <MonoLabel className="text-ink-muted">{marker}</MonoLabel>
+      {marker && <MonoLabel className="text-ink-muted">{marker}</MonoLabel>}
       {/* Deliberately NOT uppercased: CSS `text-transform: uppercase` turns
           "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography
           that D-017 fixes as the project's primary display name. Display
