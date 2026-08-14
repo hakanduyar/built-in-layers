@@ -17,7 +17,7 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // section component, and no disposable/temporary data module exists (D-011
 // rejected).
 //
-// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
 // replaces Hero, PositioningStatement, LayerExplorerIntro, and
 // SelectedSystems as the homepage's top section. `Hero.tsx`,

@@ -1,0 +1,142 @@
+import { PLANE_DISTANT, PLANE_NEAR, type SceneId, type WorldPoint } from "@/lib/spatial/scenes";
+import { cameraPosition, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
+
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
+// see docs/DESIGN_SYSTEM.md §18).
+//
+// V3 answered "what is the travel space made of?" with orientation
+// INFORMATION (rails, ticks) and nothing else, and the honest V3 report said
+// so: correct, but still visually empty. V4 adds MATERIAL -- and the rule
+// (§21) is that every piece derives from the world's own language:
+//
+//   - oversized cropped typography taken from the REAL title of the scene the
+//     camera is heading toward, clipped by its own box so the eye reads
+//     letterform edges rather than a legible label;
+//   - very low-contrast paper-density fields, giving the travel space tonal
+//     variation without introducing a new shape vocabulary;
+//   - a few heavy structural rules on the NEAR plane, which sweep past faster
+//     than the world -- material in front of the camera, not only behind it,
+//     which is what actually sells depth.
+//
+// PLACEMENT IS DERIVED, NOT AUTHORED. A parallax plane moves at a different
+// rate from the world, so a mark placed at world coordinates does not appear
+// where those coordinates suggest: an earlier pass positioned each fragment
+// relative to its scene's anchor, and at 0.62 rate that put Kıvılcım's
+// fragment inside the HERO frame and off-screen by the time the camera
+// actually reached Kıvılcım -- exactly backwards, and it read as broken text
+// rather than as material. Each mark is now placed at
+// `rate x cameraPosition(atProgress) + offset`, which frames it at the
+// progress it is meant for, on whatever plane it lives on.
+//
+// No particles. Everything here is aria-hidden, and every word duplicates
+// copy that already exists as real semantic text in the scene it names, so
+// the depth planes add no screen-reader content (§36).
+
+type MaterialWord = {
+  /** Real scene title, cropped. */
+  word: string;
+  /** The scene it announces; the fragment is framed on the way there. */
+  before: SceneId;
+  /** Where it sits in the frame, in vw/vh from the camera's anchor point. */
+  offset?: WorldPoint;
+};
+
+type TravelMaterialProps = {
+  words: MaterialWord[];
+  plane: "distant" | "near";
+};
+
+/** Position on a parallax plane that frames a mark at a given progress. */
+function planePosition(atProgress: number, rate: number, offset: WorldPoint): WorldPoint {
+  const camera = cameraPosition(atProgress);
+  return { x: camera.x * rate + offset.x, y: camera.y * rate + offset.y };
+}
+
+/** The progress at which a fragment is framed: partway along the leg into the
+ *  scene it announces, so it is seen during travel and gone on arrival. */
+function leadProgress(before: SceneId): number {
+  const target = sceneFocusProgress(before);
+  const order: SceneId[] = ["hero", "kivilcim", "dropspot", "tail", "reorient", "approach"];
+  const index = order.indexOf(before);
+  const previous = index > 0 ? sceneFocusProgress(order[index - 1]!) : 0;
+  return previous + (target - previous) * 0.55;
+}
+
+/** Paper-density fields: progress they are framed at, plus in-frame offset. */
+const DENSITY: { at: number; offset: WorldPoint; w: number; h: number }[] = [
+  { at: 0.09, offset: { x: 46, y: 34 }, w: 40, h: 30 },
+  { at: 0.26, offset: { x: 18, y: -18 }, w: 34, h: 44 },
+  { at: 0.44, offset: { x: 52, y: 26 }, w: 38, h: 26 },
+  { at: 0.72, offset: { x: 30, y: 30 }, w: 44, h: 32 },
+  { at: 0.9, offset: { x: 14, y: -22 }, w: 36, h: 26 },
+];
+
+/** Near-plane rules, framed at the progress where they should sweep past. */
+const NEAR_RULES: { at: number; offset: WorldPoint; length: number; vertical?: boolean }[] = [
+  { at: 0.08, offset: { x: 30, y: -6 }, length: 52 },
+  { at: 0.22, offset: { x: 62, y: 40 }, length: 34, vertical: true },
+  { at: 0.4, offset: { x: 10, y: 62 }, length: 58 },
+  { at: 0.68, offset: { x: 54, y: 12 }, length: 40, vertical: true },
+  { at: 0.86, offset: { x: 20, y: 58 }, length: 50 },
+];
+
+export function TravelMaterial({ words, plane }: TravelMaterialProps) {
+  if (plane === "near") {
+    return (
+      <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
+        {NEAR_RULES.map((rule, index) => {
+          const at = planePosition(rule.at, PLANE_NEAR, rule.offset);
+          return (
+            <span
+              key={index}
+              className={`absolute block bg-ink opacity-[0.13] ${rule.vertical ? "w-px" : "h-px"}`}
+              style={{
+                left: `${at.x}vw`,
+                top: `${at.y}vh`,
+                ...(rule.vertical ? { height: `${rule.length}vh` } : { width: `${rule.length}vw` }),
+              }}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
+      {DENSITY.map((field, index) => {
+        const at = planePosition(field.at, PLANE_DISTANT, field.offset);
+        return (
+          <span
+            key={index}
+            className="absolute block bg-soft-paper opacity-60"
+            style={{
+              left: `${at.x}vw`,
+              top: `${at.y}vh`,
+              width: `${field.w}vw`,
+              height: `${field.h}vh`,
+            }}
+          />
+        );
+      })}
+
+      {words.map(({ word, before, offset = { x: 22, y: 30 } }) => {
+        const at = planePosition(leadProgress(before), PLANE_DISTANT, offset);
+        return (
+          <div
+            key={`${before}-${word}`}
+            className="absolute overflow-hidden"
+            style={{ left: `${at.x}vw`, top: `${at.y}vh`, width: "52vw", height: "17vh" }}
+          >
+            {/* Pushed up out of its own clip box so only the lower third of
+                the letterforms shows. Legible as shape, not as a word --
+                which is the difference between material and a label. */}
+            <span className="block -translate-y-[58%] whitespace-nowrap font-display text-[15vw] leading-none tracking-[-0.04em] uppercase text-ink opacity-[0.06]">
+              {word}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

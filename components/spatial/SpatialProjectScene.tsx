@@ -3,7 +3,7 @@ import { MonoLabel } from "@/components/ui/MonoLabel";
 import { TextLink } from "@/components/ui/TextLink";
 import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/schemas";
 
-// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
 // This component exists because V1's spatial "nodes" reused the ordinary
@@ -67,8 +67,21 @@ export function SpatialProjectScene({ project, index, variant }: SpatialProjectS
   // attention budget once (§22: fewer elements, larger meaning).
   const marker = asset ? `${index} / ${EVIDENCE_LABEL[asset.assetType]}` : index;
 
+  // Arrival depth resolution (§14). `--depth-resolve` runs 0 (distant) -> 1
+  // (framed) and is set by the camera's SceneFrame; it falls back to 1 in the
+  // reduced-motion and no-JS trees, where the scene is simply already
+  // resolved. Only two elements use it, they move a handful of pixels in
+  // opposite directions, and both settle at their real layout position -- so
+  // nothing functional ever rests somewhere the static design did not put it.
+  const resolveUp = {
+    transform: "translate3d(0, calc((1 - var(--depth-resolve, 1)) * -16px), 0)",
+  } as const;
+  const resolveDown = {
+    transform: "translate3d(0, calc((1 - var(--depth-resolve, 1)) * 22px), 0)",
+  } as const;
+
   const identity = (
-    <div>
+    <div style={resolveUp}>
       <MonoLabel className="text-ink-muted">{marker}</MonoLabel>
       {/* Deliberately NOT uppercased: CSS `text-transform: uppercase` turns
           "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography
@@ -109,13 +122,32 @@ export function SpatialProjectScene({ project, index, variant }: SpatialProjectS
   // changes here.
   const plate = asset ? <Figure src={asset.src} alt={asset.alt} caption={asset.caption} /> : null;
 
+  // Both layouts deliberately let the evidence plate break the text column's
+  // alignment edge (§16): it starts left of the identity column in `stacked`
+  // and overhangs the block's right edge in `split`, so neither scene reads
+  // as a rectangular webpage composition dropped into a larger canvas. The
+  // plate is never bordered as a card and never gains a drop shadow -- the
+  // asymmetry does the work.
+  // The overhang is a SPATIAL device: it works because the camera's frame
+  // clips it. In the reduced-motion / no-JS tree there is no camera, so the
+  // same negative margin simply overflowed the document (31px at 1024, caught
+  // by the responsive check). Driving it from a custom property the camera
+  // sets means the overhang exists exactly where something can clip it, and
+  // collapses to zero everywhere else.
+  const overhangLeft = { marginLeft: "var(--scene-overhang, 0px)" } as const;
+  const overhangRight = { marginRight: "var(--scene-overhang, 0px)" } as const;
+
   if (stacked) {
     return (
       <div className="w-full">
-        {plate && <div className="w-full lg:w-[72%]">{plate}</div>}
+        {plate && (
+          <div className="w-full lg:w-[74%]" style={{ ...resolveDown, ...overhangLeft }}>
+            {plate}
+          </div>
+        )}
         <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-5">{identity}</div>
-          <div className="lg:col-span-7">{detail}</div>
+          <div className="lg:col-span-6 lg:col-start-7">{detail}</div>
         </div>
       </div>
     );
@@ -127,7 +159,11 @@ export function SpatialProjectScene({ project, index, variant }: SpatialProjectS
         {identity}
         {detail}
       </div>
-      {plate && <div className="lg:col-span-8">{plate}</div>}
+      {plate && (
+        <div className="lg:col-span-8" style={{ ...resolveDown, ...overhangRight }}>
+          {plate}
+        </div>
+      )}
     </div>
   );
 }

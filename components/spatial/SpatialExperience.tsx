@@ -1,5 +1,6 @@
 import { SpatialCamera } from "@/components/spatial/SpatialCamera";
 import { SpatialProjectScene } from "@/components/spatial/SpatialProjectScene";
+import { TravelMaterial } from "@/components/spatial/TravelMaterial";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -13,7 +14,7 @@ import {
 import { getProjectsByTier } from "@/lib/content/work";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
 
-// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
 // ROUTE ONE (evidence): HERO -> KIVILCIM -> DROPSPOT -> TAIL -> COLLISION
@@ -52,6 +53,10 @@ const [transitionWord = "Systems", orientationWord = "underneath"] = systemsClau
 // where the camera is about to go, and cannot drift if the route moves.
 const HERO_LEAD = heroLeadRule(18);
 
+/** The approved wordmark, split for the hero's two-line setting. Derived so
+ *  the composition can never disagree with CLAUDE.md §4's name. */
+const [givenName = "Hakan", familyName = "Duyar"] = homeWordmark.split(" ");
+
 // Depth positions of the layer registration marks on the reorient scene's
 // rail, in vh above the giant word. The rail starts above the top of the
 // frame so it reads as coming down from the surface the camera left.
@@ -79,6 +84,28 @@ export function SpatialExperience() {
     <section aria-label="Spatial system tour">
       <SpatialCamera
         erosionWord={transitionWord}
+        // Travel material (§21). The distant plane carries oversized cropped
+        // fragments of the REAL titles of the scenes the camera is heading
+        // toward -- material derived from the world's own content, never
+        // decoration, and aria-hidden because each title is already present
+        // as a real link in the scene it names.
+        distantMaterial={
+          <TravelMaterial
+            plane="distant"
+            words={[
+              { word: kivilcim.title, before: "kivilcim" },
+              { word: dropspot.title, before: "dropspot" },
+              // Route two's material names a project the tour does NOT stage
+              // but the handoff does mention, so the second route carries its
+              // own content rather than echoing the giant word already
+              // standing at the reposition.
+              ...(beyondTour[0]
+                ? [{ word: beyondTour[0].title, before: "approach" as const }]
+                : []),
+            ]}
+          />
+        }
+        nearMaterial={<TravelMaterial plane="near" words={[]} />}
         hero={
           // Scroll position 0. Still calm and still readable as a premium
           // first screen -- but no longer generic (§12). The name owns one
@@ -87,35 +114,63 @@ export function SpatialExperience() {
           // exact angle the camera is about to travel. The spatial world's
           // DNA is present before anything moves; none of it is a grid, a
           // debug label, or an animation.
-          <div className="w-full">
-            <div className="lg:max-w-[74%]">
+          // `overflow-clip` is load-bearing, not cosmetic: the oversized
+          // SURFACE fragment below is deliberately larger than the frame, and
+          // in the reduced-motion / no-JS tree there is no camera box to clip
+          // it, so without this it overflowed the document by 125px at 1440
+          // (caught by the responsive check, not by eye). `clip` rather than
+          // `hidden` so it never becomes a scrollable container.
+          <div className="relative w-full overflow-clip">
+            {/* The hero's own distant plane: the first noun of the approved
+                thesis, oversized and clipped by the top of the composition.
+                It is the same material language the travel space uses, so the
+                world's depth is already present before anything moves -- and
+                it is a decorative duplicate of the line stated in full below,
+                so it adds no screen-reader content. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-[26vh] left-[6%] hidden select-none overflow-hidden font-display text-[22vw] leading-none tracking-[-0.05em] uppercase text-ink opacity-[0.055] lg:block"
+            >
+              Surface
+            </span>
+
+            <div className="relative lg:max-w-[78%]">
+              <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+                {homePositioning}
+              </p>
               {/* Scene-scoped display scale: the shared `display-xl` token
-                  caps at 6.5rem, which left the name occupying under half
-                  the frame and reading as a small object in a large space.
-                  Kept component-scoped (not promoted into the token system,
-                  which governs main) and recorded in DESIGN_SYSTEM §18. */}
-              <h1 className="font-display text-[clamp(3rem,10vw,9rem)] leading-[0.86] tracking-[-0.03em] uppercase text-ink">
-                {homeWordmark}
+                  caps at 6.5rem, which left the name occupying under half the
+                  frame. Kept component-scoped (not promoted into the token
+                  system, which governs main) and recorded in DESIGN_SYSTEM
+                  §18. The second line is indented into the route's own
+                  direction, so the wordmark itself leans the way the camera
+                  is about to travel. */}
+              {/* Split across two lines from the approved wordmark itself,
+                  never retyped, and joined by a real space so the accessible
+                  name stays exactly "Hakan Duyar" -- a visually-hidden
+                  duplicate would have added the name to the page twice for
+                  screen readers, which is precisely what the depth planes are
+                  forbidden from doing (§36). */}
+              <h1 className="mt-6 font-display text-[clamp(3rem,10.5vw,9.5rem)] leading-[0.82] tracking-[-0.035em] uppercase text-ink">
+                <span className="block">{givenName}</span>{" "}
+                <span className="block lg:ml-[16%]">{familyName}</span>
               </h1>
               {/* Real heading level between the h1 and each scene's project
                   h3. Visually hidden because the spatial composition has no
                   room for a literal section label, but the document outline
                   and axe's heading-order rule both need it. */}
               <h2 className="sr-only">Selected systems</h2>
-              <p className="mt-5 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
-                {homePositioning}
-              </p>
             </div>
 
             <div
               aria-hidden="true"
-              className="relative ml-[6vw] hidden lg:block"
+              className="relative ml-[30vw] hidden lg:block"
               style={{ width: `${HERO_LEAD.width}vw`, height: `${HERO_LEAD.height}vh` }}
             >
               <svg
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
-                className="absolute inset-0 h-full w-full text-ink opacity-35"
+                className="absolute inset-0 h-full w-full text-ink opacity-40"
               >
                 <line
                   x1="0"
@@ -129,8 +184,8 @@ export function SpatialExperience() {
               </svg>
             </div>
 
-            <div className="mt-10 lg:ml-[24vw] lg:mt-0">
-              <p className="max-w-[38rem] border-l-2 border-ink pl-6 font-display text-heading-l tracking-heading-l uppercase text-ink">
+            <div className="mt-10 lg:ml-[48vw] lg:mt-0">
+              <p className="max-w-[26rem] border-l-2 border-ink pl-6 font-display text-heading-l tracking-heading-l uppercase text-ink">
                 {heroPrimaryLine}
               </p>
             </div>
@@ -144,7 +199,13 @@ export function SpatialExperience() {
           // foot of a depth rail that descends from above the frame and is
           // registered by the three layer names, so it labels a coordinate
           // in the world -- the depth the camera was thrown to.
-          <div className="w-full">
+          // Indented into the block on purpose: the break's reveal takes about
+          // 10vw of camera travel to finish, so a rail sitting at the scene
+          // block's own left edge is already off-frame by the moment the scene
+          // becomes visible. Padding the composition inward keeps the depth
+          // rail -- the thing that makes UNDERNEATH structural rather than
+          // decorative -- inside the frame for the whole arrival.
+          <div className="w-full lg:pl-[11vw]">
             <div className="relative pl-8">
               <span
                 aria-hidden="true"
