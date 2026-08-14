@@ -9,6 +9,8 @@ import {
   useTransform,
 } from "motion/react";
 import { ErosionWord } from "@/components/spatial/ErosionWord";
+import { SceneBreak } from "@/components/spatial/SceneBreak";
+import { WorldGrammar } from "@/components/spatial/WorldGrammar";
 import {
   BREAK_CUT,
   CAMERA_INSET,
@@ -23,12 +25,12 @@ import {
   sceneById,
   type SceneId,
 } from "@/lib/spatial/scenes";
-import { breakWipeOffset, cameraPosition, isImpact } from "@/lib/spatial/sceneRoute";
+import { approachTension, cameraPosition, isImpact } from "@/lib/spatial/sceneRoute";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
-/** Composed scenes. `tail` is deliberately absent: it is the deliberately
- *  near-empty beat before the wall, and its whole composition is the giant
- *  eroding word, which only this component can drive. */
+/** Composed scenes. `tail` is deliberately absent: it is the near-empty beat
+ *  before the wall, and its whole composition is the giant eroding word,
+ *  which only this component can drive. */
 type ComposedSceneId = Exclude<SceneId, "tail">;
 
 type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
@@ -37,25 +39,25 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
   erosionWord: string;
 };
 
-// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
-// Preserved from V1 (proven infrastructure, deliberately not rewritten):
+// Preserved from V1/V2 (proven infrastructure, deliberately not rewritten):
 // the pinned/sticky camera over a real scroll spacer driven by Motion's
-// `useScroll` (real scroll, never wheel interception), the mount-gated
-// progressive-enhancement branch, the reduced-motion static fallback, and
-// focus-driven re-centering so keyboard users never land on content the
-// camera has not reached.
+// `useScroll` (real scroll, never wheel interception), scene geometry shared
+// with the scene layer, the mount-gated progressive-enhancement branch, the
+// reduced-motion static fallback, and focus-driven re-centering so keyboard
+// users never land on content the camera has not reached.
 //
-// Rebuilt for V2:
-// - Scenes are viewport-scale and laid out from the shared scene geometry,
-//   so world spacing and scene size can never drift apart. V1's core visual
-//   failure was small cards at arbitrary world points; here a focal scene
-//   occupies the viewport it is framed in.
-// - The reposition is bridged by a scene-break wipe, so the discontinuous
-//   route jump is never actually witnessed -- it reads as a cut.
-// - V1's permanent bottom-left route-progress label is gone (§22: the world
-//   was full of technical confetti; this was some of it).
+// New in V3:
+// - Seven scenes across TWO routes. The camera no longer parks after the
+//   break; it starts a new diagonal (see lib/spatial/sceneRoute.ts).
+// - A sparse world-grammar layer travels with the world, so the space
+//   between scenes carries orientation instead of being empty.
+// - The break is built from converging rails rather than one sweeping panel.
+// - Approach tension drives both the boundary rules tightening and the
+//   expressive word compressing, so the collision is announced by the world
+//   itself rather than arriving as an unrelated overlay.
 export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
   const mounted = useHasMounted();
   const reduceMotion = useReducedMotion();
@@ -70,8 +72,8 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
   // The only continuous scroll signal that reaches React state, and it is a
   // boolean -- React bails out when unchanged, so this re-renders at exactly
   // two progress boundaries for the whole journey. Camera movement, the
-  // wipe, and the erosion never touch React state at all: they are
-  // MotionValues written straight to the DOM.
+  // rails, the break, and the erosion never touch React state at all: they
+  // are MotionValues written straight to the DOM.
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     setImpact(isImpact(value));
   });
@@ -84,7 +86,7 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
     scrollYProgress,
     (value) => `${-cameraPosition(value, !isDesktop).y}vh`,
   );
-  const wipeX = useTransform(scrollYProgress, (value) => `${breakWipeOffset(value)}%`);
+  const tension = useTransform(scrollYProgress, approachTension);
   // The erosion belongs to exactly one transition: it starts as the tail
   // scene is reached, peaks at the wall, and is gone by the cut (§19).
   const erosion = useTransform(
@@ -120,16 +122,13 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
     requestAnimationFrame(() => scrollToProgress(target));
   }
 
-  function sceneContent(id: SceneId): ReactNode {
-    if (id === "tail") return <ErosionWord word={erosionWord} erosion={erosion} />;
-    return scenes[id];
-  }
-
   if (!enhanced) {
-    // No-JS and reduced-motion fallback (§26): the same real, fully composed
+    // No-JS and reduced-motion fallback (§17): the same real, fully composed
     // scenes in normal document flow -- no camera, no pinning, no shake, no
-    // erosion. Deliberately NOT a stripped-down dump: each scene keeps its
-    // own full composition, so this reads as a designed linear page.
+    // erosion, and no world grammar (rails describe a camera path that does
+    // not exist here). Deliberately NOT a stripped-down dump: each scene
+    // keeps its own full composition, so this reads as a designed linear
+    // page.
     return (
       <div className="mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
         {SCENE_IDS.map((id) => (
@@ -155,8 +154,8 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
         <motion.div
           className="absolute inset-0"
           // The impact impulse: one short, controlled shake (140ms, inside
-          // the 80-180ms the brief allows), small amplitude, no spring, no
-          // overshoot, no elastic settle -- a hit, not a bounce.
+          // the 80-180ms budget), small amplitude, no spring, no overshoot,
+          // no elastic settle -- a hit, not a bounce.
           animate={impact ? { x: [0, -7, 6, -3, 0] } : { x: 0 }}
           transition={{ duration: 0.14, ease: "easeOut" }}
         >
@@ -167,6 +166,11 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
             className="absolute"
             style={{ x: worldX, y: worldY, ...(isDesktop ? CAMERA_INSET : CAMERA_INSET_MOBILE) }}
           >
+            {/* Behind every scene, travelling with the world: the route the
+                camera is on, the anchors it registers against, and the
+                boundary it is about to hit. */}
+            <WorldGrammar progress={scrollYProgress} tension={tension} mobile={!isDesktop} />
+
             {SCENE_IDS.map((id) => {
               const point = sceneAnchor(id, !isDesktop);
               return (
@@ -185,22 +189,18 @@ export function SpatialCamera({ erosionWord, ...scenes }: SpatialCameraProps) {
                     transform: `translate3d(${point.x}vw, ${point.y}vh, 0)`,
                   }}
                 >
-                  {sceneContent(id)}
+                  {id === "tail" ? (
+                    <ErosionWord word={erosionWord} erosion={erosion} tension={tension} />
+                  ) : (
+                    scenes[id]
+                  )}
                 </div>
               );
             })}
           </motion.div>
         </motion.div>
 
-        {/* Scene break. A full-bleed ink panel wipes across, the route's
-            discontinuous jump happens behind it at BREAK_CUT, then it wipes
-            away to reveal the new region. This is the difference between a
-            deliberate cut and V1's teleport. */}
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-ink"
-          style={{ x: wipeX }}
-        />
+        <SceneBreak progress={scrollYProgress} />
       </div>
     </div>
   );

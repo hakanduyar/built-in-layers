@@ -17,7 +17,7 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // section component, and no disposable/temporary data module exists (D-011
 // rejected).
 //
-// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
 // docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
 // replaces Hero, PositioningStatement, LayerExplorerIntro, and
 // SelectedSystems as the homepage's top section. `Hero.tsx`,
@@ -28,7 +28,7 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // components. BuiltForRealLife, HowIBuild, FieldNotes, and AboutPreview are
 // untouched below, exactly as the brief requires.
 //
-// V2 moves the spatial section OUTSIDE the shared `Container`: a camera
+// The spatial section sits OUTSIDE the shared `Container` (since V2): a camera
 // that travels between scenes which "temporarily own the viewport" has to
 // be measured against the viewport, not against a 1320px padded column.
 // V1 kept it inside the container while positioning the world in vw/vh,
