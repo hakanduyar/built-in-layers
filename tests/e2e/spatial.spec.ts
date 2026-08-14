@@ -1,16 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-// Spatial Portfolio V2 (feature/spatial-portfolio-v2, not merged to main --
+// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
 // docs/DESIGN_SYSTEM.md §18). Tests experience contracts, not CSS transform
 // values: scenes own real viewport territory, evidence is not a thumbnail,
-// the collision reads as a break rather than a bounce, the atmosphere is
-// scene-scoped and reduced-motion-safe, fallbacks are complete, keyboard/AT
-// access is preserved, and existing project routes stay untouched.
+// the collision reads as a break rather than a bounce, THE JOURNEY CONTINUES
+// AS A DIAGONAL ROUTE AFTER THE BREAK, the atmosphere is scene-scoped and
+// reduced-motion-safe, fallbacks are complete, keyboard/AT access is
+// preserved, and existing project routes stay untouched.
 //
 // Deliberately no assertions on exact world coordinates or transform
 // matrices-as-such: those are art direction and must stay free to move.
 // Where a number appears it is a deliberately loose art-direction bound
-// (e.g. "not a thumbnail", "not microtext").
+// (e.g. "not a thumbnail", "not microtext", "x genuinely moved").
 
 const TOUR = "section[aria-label='Spatial system tour']";
 
@@ -37,26 +38,73 @@ async function readWorldTransform(page: import("@playwright/test").Page) {
   }, TOUR);
 }
 
-/** Extracts tx from a computed `matrix(a, b, c, d, tx, ty)`. Parsed in Node
- *  -- `DOMMatrix` is browser-only and not available in the test process. */
-function matrixTranslateX(transform: string): number {
+/** Extracts tx/ty from a computed `matrix(a, b, c, d, tx, ty)`. Parsed in
+ *  Node -- `DOMMatrix` is browser-only, not available in the test process. */
+function matrixTranslate(transform: string): { x: number; y: number } {
   const match = /matrix\(([^)]+)\)/.exec(transform);
-  if (!match) return 0;
-  return Number.parseFloat(match[1]!.split(",")[4]!.trim()) || 0;
+  if (!match) return { x: 0, y: 0 };
+  const parts = match[1]!.split(",");
+  return {
+    x: Number.parseFloat(parts[4]!.trim()) || 0,
+    y: Number.parseFloat(parts[5]!.trim()) || 0,
+  };
 }
 
-/** Scrolls to a progress point and waits until the scroll-driven transform
- *  has genuinely changed -- Motion updates via a scroll+rAF pipeline, so an
- *  immediate read can still return the previous position. */
+/**
+ * Scrolls to a progress point and waits for the scroll-driven transform to
+ * SETTLE -- two identical consecutive reads. Motion updates via a scroll+rAF
+ * pipeline, so an immediate read can still return the previous position.
+ *
+ * Deliberately not "wait until it changes": a scroll that lands inside a
+ * scene's dwell window legitimately leaves the camera where it was, and an
+ * earlier version of this helper hung for its whole timeout on exactly that
+ * case (sampling route one at progress 0.05, inside the hero's hold).
+ */
+async function worldTranslateAt(page: import("@playwright/test").Page, y: number) {
+  // Wait on the browser's own scroll event and two subsequent frames, rather
+  // than on a timeout. Motion updates the camera from that event via a rAF
+  // pipeline, so this is the causal signal that THIS scroll has been
+  // processed; a fixed delay was not enough on WebKit under parallel load
+  // and silently produced stale (and in one case zeroed) measurements.
+  await page.evaluate(
+    (target) =>
+      new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          window.removeEventListener("scroll", onScroll);
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        };
+        const onScroll = () => finish();
+        window.addEventListener("scroll", onScroll);
+        window.scrollTo(0, Math.round(target));
+        // A scroll to the position we are already at fires no event.
+        setTimeout(finish, 500);
+      }),
+    y,
+  );
+
+  // `none` means Motion has not written a transform at all yet -- never
+  // treat it as a settled reading.
+  let previous: string | null = null;
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    const current = await readWorldTransform(page);
+    if (current !== null && current !== "none") {
+      if (current === previous) return matrixTranslate(current);
+      previous = current;
+    }
+    await page.waitForTimeout(60);
+  }
+  return previous === null ? null : matrixTranslate(previous);
+}
+
 async function worldTranslateXAt(page: import("@playwright/test").Page, y: number) {
-  const before = await readWorldTransform(page);
-  await page.evaluate((yy) => window.scrollTo(0, Math.round(yy)), y);
-  await expect.poll(() => readWorldTransform(page), { timeout: 3000 }).not.toBe(before);
-  const after = await readWorldTransform(page);
-  return after === null ? null : matrixTranslateX(after);
+  const point = await worldTranslateAt(page, y);
+  return point === null ? null : point.x;
 }
 
-test.describe("Spatial V2: page identity unaffected", () => {
+test.describe("Spatial V3: page identity unaffected", () => {
   test("h1 is still exactly the approved name; exactly one h1", async ({ page }) => {
     await page.goto("/");
     const h1 = page.getByRole("heading", { level: 1 });
@@ -65,7 +113,7 @@ test.describe("Spatial V2: page identity unaffected", () => {
   });
 });
 
-test.describe("Spatial V2: scenes are composed from real loader data, not cards", () => {
+test.describe("Spatial V3: scenes are composed from real loader data, not cards", () => {
   test("no ProjectCard list markup exists anywhere in the spatial world", async ({ page }) => {
     await page.goto("/");
     // ProjectCard renders each project as an <li>. A scene is not a list
@@ -111,7 +159,7 @@ test.describe("Spatial V2: scenes are composed from real loader data, not cards"
   });
 });
 
-test.describe("Spatial V2: scene framing owns real viewport territory", () => {
+test.describe("Spatial V3: scene framing owns real viewport territory", () => {
   test("the focal evidence plate is viewport-scale, not a thumbnail, and titles are not microtext", async ({
     page,
   }) => {
@@ -150,7 +198,7 @@ test.describe("Spatial V2: scene framing owns real viewport territory", () => {
   });
 });
 
-test.describe("Spatial V2: atmosphere", () => {
+test.describe("Spatial V3: atmosphere", () => {
   test("V1's ember canvas is gone entirely", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
@@ -164,7 +212,7 @@ test.describe("Spatial V2: atmosphere", () => {
   });
 });
 
-test.describe("Spatial V2: no inaccessible transformed content", () => {
+test.describe("Spatial V3: no inaccessible transformed content", () => {
   test("off-camera content stays attached to the DOM so keyboard/AT users can reach it", async ({
     page,
   }) => {
@@ -190,6 +238,10 @@ test.describe("Spatial V2: no inaccessible transformed content", () => {
 
   test("Tab reaches project links with a visible focus state", async ({ page }) => {
     await page.goto("/");
+    // Same reason as the test above: focusing before hydration finishes puts
+    // focus on the fallback's link, which is then detached when the camera
+    // tree replaces it. Surfaced only under full-suite parallel load.
+    await page.locator(`${TOUR} .sticky`).waitFor({ state: "attached" });
     const kivilcimLink = page.locator(TOUR).getByRole("link", { name: /Kıvılcım/ });
     await kivilcimLink.focus();
     await expect(kivilcimLink).toBeFocused();
@@ -198,7 +250,7 @@ test.describe("Spatial V2: no inaccessible transformed content", () => {
   });
 });
 
-test.describe("Spatial V2: collision reads as a scene break, not a bounce", () => {
+test.describe("Spatial V3: collision reads as a scene break, not a bounce", () => {
   test("world position after the break differs sharply from a continuation of the approach", async ({
     page,
   }) => {
@@ -217,31 +269,150 @@ test.describe("Spatial V2: collision reads as a scene break, not a bounce", () =
     }
   });
 
-  test("a scene-break panel bridges the cut so the jump is never witnessed", async ({ page }) => {
+  test("every break rail closes onto the frame at the cut, so no gap exposes the jump", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    // At the cut the panel must be covering the viewport; well away from it
-    // the panel must be parked entirely off-screen.
-    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * 0.87);
-    await page.waitForTimeout(350);
-    const covering = await page.locator(`${TOUR} .sticky > div`).last().boundingBox();
-    expect(covering).not.toBeNull();
+    // The break is built from converging rails, not one sweeping panel
+    // (V2's most conventional device). Several rails, closing from
+    // alternating sides -- and at the cut all of them must be home.
+    const rails = page.locator(`${TOUR} [data-break-rail]`);
+    expect(await rails.count()).toBeGreaterThan(3);
 
-    const panelXAtCut = await page.evaluate((selector) => {
-      const panels = document.querySelectorAll(`${selector} .sticky > div`);
-      const panel = panels[panels.length - 1];
-      if (!panel) return null;
-      const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(panel).transform);
-      return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
+    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * 0.75);
+    await page.waitForTimeout(350);
+
+    const offsets = await page.evaluate((selector) => {
+      return [...document.querySelectorAll(`${selector} [data-break-rail]`)].map((rail) => {
+        const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
+        return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
+      });
     }, TOUR);
-    expect(panelXAtCut).not.toBeNull();
-    if (panelXAtCut !== null) expect(Math.abs(panelXAtCut)).toBeLessThan(80);
+    expect(offsets.length).toBeGreaterThan(3);
+    for (const offset of offsets) expect(Math.abs(offset)).toBeLessThan(80);
+  });
+
+  test("rails converge from alternating sides rather than sweeping one way", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const { start, end } = await measureRoute(page, 900);
+
+    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * 0.7375);
+    await page.waitForTimeout(350);
+
+    const offsets = await page.evaluate((selector) => {
+      return [...document.querySelectorAll(`${selector} [data-break-rail]`)].map((rail) => {
+        const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
+        return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
+      });
+    }, TOUR);
+    expect(offsets.some((value) => value > 1)).toBe(true);
+    expect(offsets.some((value) => value < -1)).toBe(true);
   });
 });
 
-test.describe("Spatial V2: reduced motion", () => {
+// The central V3 requirement (§5): after the collision the route must not
+// drop into a straight-down / normal vertical flow. Both axes have to keep
+// moving, and the new route has to be visibly a different one.
+test.describe("Spatial V3: the route continues after the collision", () => {
+  test("post-collision camera moves on BOTH axes on desktop", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const { start, end } = await measureRoute(page, 900);
+
+    const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
+    const landing = await at(0.79);
+    const middle = await at(0.9);
+    const final = await at(0.99);
+
+    expect(landing).not.toBeNull();
+    expect(middle).not.toBeNull();
+    expect(final).not.toBeNull();
+    if (!landing || !middle || !final) return;
+
+    const xs = [landing.x, middle.x, final.x];
+    const ys = [landing.y, middle.y, final.y];
+    const deltaX = Math.max(...xs) - Math.min(...xs);
+    const deltaY = Math.max(...ys) - Math.min(...ys);
+
+    // Not "x moved a little": the second route is a real diagonal.
+    expect(deltaX, "post-collision deltaX").toBeGreaterThan(200);
+    expect(deltaY, "post-collision deltaY").toBeGreaterThan(100);
+  });
+
+  test("the second route runs at a visibly different slope from the first", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const { start, end } = await measureRoute(page, 900);
+
+    // Sampled where the camera is genuinely travelling on each route, not
+    // inside a dwell window at either end.
+    const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
+    const routeOneStart = await at(0.16);
+    const routeOneEnd = await at(0.64);
+    const routeTwoStart = await at(0.79);
+    const routeTwoEnd = await at(0.99);
+
+    if (!routeOneStart || !routeOneEnd || !routeTwoStart || !routeTwoEnd) {
+      throw new Error("expected four world transforms");
+    }
+
+    const slopeOne =
+      (routeOneEnd.y - routeOneStart.y) / (routeOneEnd.x - routeOneStart.x || Number.NaN);
+    const slopeTwo =
+      (routeTwoEnd.y - routeTwoStart.y) / (routeTwoEnd.x - routeTwoStart.x || Number.NaN);
+
+    expect(Number.isFinite(slopeOne)).toBe(true);
+    expect(Number.isFinite(slopeTwo)).toBe(true);
+    // Opposite sign: one descends to the right, the other climbs.
+    expect(Math.sign(slopeOne)).not.toBe(Math.sign(slopeTwo));
+    expect(Math.abs(slopeTwo - slopeOne)).toBeGreaterThan(0.2);
+  });
+
+  test("normal document flow is delayed until after the second-route teaser", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const tour = page.locator(TOUR);
+
+    // The thinking region is reached inside the world, not after it: the
+    // teaser lives in the spatial section, the ordinary sections do not.
+    await expect(tour.getByRole("heading", { name: "Built in Layers" })).toBeAttached();
+    for (const label of ["Surface", "Flow", "System"]) {
+      await expect(tour.getByText(label, { exact: true }).first()).toBeAttached();
+    }
+    await expect(tour.getByRole("link", { name: "See every system" })).toBeAttached();
+    await expect(tour.getByText("Back on the surface")).toBeAttached();
+
+    // ...and the ordinary homepage still begins only after the tour ends.
+    await expect(page.getByRole("heading", { name: "Built for real life" })).toBeAttached();
+    const tourBottom = await tour.evaluate(
+      (el) => el.getBoundingClientRect().bottom + window.scrollY,
+    );
+    const nextSectionTop = await page
+      .getByRole("heading", { name: "Built for real life" })
+      .evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+    expect(nextSectionTop).toBeGreaterThan(tourBottom - 1);
+  });
+
+  test("the travel space carries orientation structure, sparsely", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    await page.locator(`${TOUR} .sticky`).waitFor({ state: "attached" });
+
+    // Rails are drawn for every travelled leg -- present, but few. This is
+    // an orientation system, not a particle field or a visible grid.
+    const rails = page.locator(`${TOUR} .sticky svg line`);
+    const count = await rails.count();
+    expect(count).toBeGreaterThan(2);
+    expect(count).toBeLessThan(20);
+    await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
+  });
+});
+
+test.describe("Spatial V3: reduced motion", () => {
   test.use({ contextOptions: { reducedMotion: "reduce" } });
 
   test("renders a designed linear composition -- no camera, no atmosphere, all real content", async ({
@@ -252,10 +423,18 @@ test.describe("Spatial V2: reduced motion", () => {
     await expect(tour.getByRole("link", { name: /Kıvılcım/ })).toBeVisible();
     await expect(tour.getByRole("link", { name: "DropSpot" })).toBeVisible();
     await expect(tour.getByText("See every system")).toBeVisible();
-    // No pinned camera, no canvas, and no drifting fragments.
+    // Route two's beats survive as real composed sections, not as motion.
+    await expect(tour.getByRole("heading", { name: "Built in Layers" })).toBeVisible();
+    await expect(tour.getByText("architecture, data, and constraints")).toBeVisible();
+    await expect(
+      tour.getByText("I design clear interfaces and build the systems that make them work."),
+    ).toBeVisible();
+    // No pinned camera, no canvas, no drifting fragments, and no world
+    // grammar (rails would describe a camera path that does not exist here).
     await expect(tour.locator(".sticky")).toHaveCount(0);
     await expect(tour.locator("canvas")).toHaveCount(0);
     await expect(page.locator("[data-erosion-fragments]")).toHaveCount(0);
+    await expect(tour.locator("[data-break-rail]")).toHaveCount(0);
     // Still a composed scene, not a stripped dump: the evidence plates and
     // their honest captions survive.
     expect(await tour.locator("img").count()).toBeGreaterThanOrEqual(2);
@@ -276,7 +455,7 @@ test.describe("Spatial V2: reduced motion", () => {
   });
 });
 
-test.describe("Spatial V2: no JavaScript", () => {
+test.describe("Spatial V3: no JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
   test("hero, real project content, and navigation remain usable without JS", async ({ page }) => {
@@ -301,7 +480,7 @@ test.describe("Spatial V2: no JavaScript", () => {
   });
 });
 
-test.describe("Spatial V2: mobile choreography", () => {
+test.describe("Spatial V3: mobile choreography", () => {
   test("mobile camera stays on a single vertical axis while desktop travels diagonally", async ({
     page,
   }) => {
@@ -339,9 +518,28 @@ test.describe("Spatial V2: mobile choreography", () => {
     expect(plate).not.toBeNull();
     if (plate) expect(plate.width).toBeGreaterThan(375 * 0.6);
   });
+
+  test("mobile still breaks and reaches route two -- same world, different camera", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/");
+    const { start, end } = await measureRoute(page, 812);
+
+    const beforeBreak = await worldTranslateAt(page, start + (end - start) * 0.68);
+    const afterBreak = await worldTranslateAt(page, start + (end - start) * 0.79);
+    if (!beforeBreak || !afterBreak) throw new Error("expected mobile world transforms");
+
+    // The reposition is a real discontinuity vertically, and x stays pinned
+    // to the single axis: a large diagonal at 375px costs readability and
+    // buys nothing (§17).
+    expect(beforeBreak.x).toBe(0);
+    expect(afterBreak.x).toBe(0);
+    expect(Math.abs(afterBreak.y - beforeBreak.y)).toBeGreaterThan(400);
+  });
 });
 
-test.describe("Spatial V2: existing project routes are unaffected", () => {
+test.describe("Spatial V3: existing project routes are unaffected", () => {
   for (const slug of ["kivilcim", "dropspot", "jointledger", "professional-systems"]) {
     test(`/work/${slug} still renders correctly`, async ({ page }) => {
       const response = await page.goto(`/work/${slug}`);
@@ -363,7 +561,7 @@ test.describe("Spatial V2: existing project routes are unaffected", () => {
   });
 });
 
-test.describe("Spatial V2: responsive", () => {
+test.describe("Spatial V3: responsive", () => {
   for (const width of [320, 375, 768, 1024, 1440]) {
     test(`no horizontal overflow at ${width}px (default motion)`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
