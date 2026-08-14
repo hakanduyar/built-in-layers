@@ -229,97 +229,101 @@ A page passes only if all are true:
 7. Layer tabs change real content (different text and figures per layer).
 8. Side-by-side check against 2–3 common AI portfolio templates shows no structural resemblance (reviewer judgment, recorded in the task report).
 
-## 18. EXPERIMENTAL — Spatial Portfolio V3 homepage prototype (branch-only, not approved for main)
+## 18. EXPERIMENTAL — Spatial Portfolio V4 homepage prototype (branch-only, not approved for main)
 
-**This section applies only to `feature/spatial-portfolio-v3`. It is not merged into `main`, does not amend §§1–17 above, and does not represent an approved design direction.** `main` remains governed by §§1–17 exactly as written. This entry exists so the branch is self-documenting for independent review against the sibling `feature/layered-editorial-prototype` experiment and against V1 (`feature/spatial-portfolio`) and V2 (`feature/spatial-portfolio-v2`), both preserved unchanged — see `docs/PROGRESS.md` for the dated log entries recording all four branches' relationship to `main`.
+**This section applies only to `feature/spatial-portfolio-v4`. It is not merged into `main`, does not amend §§1–17 above, and does not represent an approved design direction.** `main` remains governed by §§1–17 exactly as written. V1–V3 are preserved unchanged on their own branches; see `docs/PROGRESS.md` for the dated log entries recording all five branches' relationship to `main`.
 
-### 18.1 The three iterations
+### 18.1 The four iterations
 
-| | V1 — rejected | V2 — scene reset | V3 — route choreography |
-|---|---|---|---|
-| **Verdict** | "The camera travels across a huge empty world containing tiny webpage components." | "Dramatically better. The scene-first reset was correct — but still not the intended experience." | this pass |
-| **Scenes** | none: world coordinates holding `ProjectCard`s | real scene layer; viewport-scale compositions | unchanged, extended to 7 scenes |
-| **After the collision** | reposition, then nothing | reposition, then the camera parks and the page falls into ordinary vertical flow | **a second, genuinely different diagonal route** |
-| **Travel space** | empty | empty (V2's own stated weakness) | sparse orientation grammar derived from the route |
-| **Break** | a mathematically correct teleport | one solid ink panel sweeping across — "the most conventional device in the prototype" | converging rails; the solid field is one element, not the idea |
-| **Atmosphere** | continuous canvas embers | erosion wind on one transition, hand-picked direction | same treatment, direction **derived from the route**, fewer fragments |
-| **Hero** | small object in a large space | correctly scaled but deliberately generic | two offset regions joined by a rule running at the first leg's own angle |
-| **Route length** | 600vh | 360vh | 420vh — the extra 60vh is spent entirely after the break |
+| | V1 — rejected | V2 — scene reset | V3 — route choreography | V4 — continuous camera + depth |
+|---|---|---|---|---|
+| **Verdict** | "A huge empty world containing tiny webpage components." | "Dramatically better, still not the intended experience." | "Dramatically better; direction worth continuing. Not final quality." | this pass |
+| **Named problem** | scale | post-collision route died | *"nothing moves for a while, then suddenly too much"* + scenes read as flat rectangles | — |
+| **Scene focus** | none | dwell window | dwell window (camera parked) | **velocity minimum — the camera never stops** |
+| **Route model** | point-to-point lerp | piecewise easing | piecewise easing | **one Catmull-Rom spline per route, C1 in position and speed** |
+| **Progress values** | authored | authored | authored | **derived from route geometry** |
+| **Scroll input** | raw | raw | raw | **overdamped spring** |
+| **Depth** | none | none | none | **three planes + arrival scale + per-scene resolution** |
+| **Travel space** | empty | empty | orientation marks | **orientation marks + material** |
+| **Route length** | 600vh | 360vh | 420vh | **340vh** |
 
-### 18.2 The world has two routes
+### 18.2 The motion model — focus is slowness, not stopping
 
-This is V3's whole subject. The owner's V2 review named one requirement above the rest: **after the collision the route must not drop into a straight-down / normal vertical flow.**
+V3's camera was measured under natural wheel input and the numbers matched the complaint exactly: it resolved to **29 distinct positions across 900 frames**, its **median response was 0.00 camera px per scroll px**, 406px of scrolling could pass with the camera moving under 8px, and it then burst at **23.7× the local rate**. Scene focus was implemented as a zero-velocity plateau, so more than half of all scrolling produced no movement at all.
 
-- **Route one — the evidence region.** `hero → kivilcim → dropspot → tail → wall`. Descends left-to-right. Leg angles deliberately vary rather than repeating one zig-zag.
-- **The break.** The camera accelerates into the wall, stops dead, and jumps discontinuously behind a full cover.
-- **Route two — the thinking region.** `reorient → approach → handoff`. Starts at the world's lowest and left-most point and **climbs back up and to the right.** Every route-two slope is negative where every route-one slope is positive, and no two legs anywhere in the world share an angle.
+V4 replaces that with three linked mechanisms:
 
-The direction change carries meaning, not just geometry: route one is what was actually built and can actually be shown; the collision is the end of that evidence; route two is how the work is thought about. That is why the reposition lands at the depth the approved primary line already calls *"underneath"*, and why the first thing standing there is the site's own Surface / Flow / System framework.
+1. **Position continuity.** One Catmull-Rom spline per route, interpolating (not approximating), so the curve passes exactly through every scene anchor while adjacent segments share the tangent at the anchor between them.
+2. **Scroll allocation by distance.** Each segment receives scroll in proportion to `distance travelled + a fixed reading allowance`. Reading time is bought with the allowance rather than with a stop.
+3. **Speed continuity.** Each segment's easing is a cubic Hermite with **independent end derivatives**, solved so its speed at both ends equals one shared constant. Independence is required, not stylistic: camera speed is `|dP/dt| · e'(t) / width`, and on a Catmull-Rom curve `|dP/dt|` differs between a segment's two ends, so a symmetric easing cannot match both. An earlier pass used one and the tail join measured 0.187 of average where every other join measured 0.267.
 
-Binding, and unit-tested: **both axes must move on both routes.** A leg with no horizontal component is exactly the failure this iteration exists to prevent, so `deltaX != 0 && deltaY != 0` is asserted for the post-collision route in both the unit suite and the browser suite.
+That shared constant is `FOCUS_SPEED_RATIO` (0.26) of the route's average speed — inside the brief's conceptual 0.12–0.30 band, and never zero. Measured across the whole route: minimum 0.265 of average, maximum 1.51, **dynamic range 5.7×** on desktop and 6.1× on mobile.
 
-### 18.3 Disclosed departures from §13's binding motion rules
+**Verified by measurement, not assertion.** Under identical natural-wheel harnesses:
 
-§13 forbids "scroll-linked (scrub) animation." This prototype's entire premise — real scroll position mapped to a camera's world position via a pinned/sticky container (Motion's `useScroll`/`useTransform`) — is exactly that pattern. This is a **deliberate, disclosed experimental hypothesis under test, not an oversight or a silent rule change.** It is isolated to this branch, never merged, and exists to be compared against the approved, §13-compliant direction.
+| | V3 | V4 |
+|---|---|---|
+| distinct camera positions | 29 | **436** |
+| longest dead scroll | 406 px / 1133 ms | **58 px / 17 ms** |
+| response p05 | 0.00 | **1.27** |
+| response median | 0.03 | **3.64** |
+| response p95 | 13.04 | **4.89** |
+| largest spike vs local rate | 23.7× | **1.91×** |
 
-The erosion atmosphere (18.6) is a second, narrower disclosed departure: §13 forbids "looping/idle animations." It is scoped to one transition and fully disabled under reduced motion. The expressive word's `scaleX` compression during the approach is a third: it is a deformation of decorative typography only, never of functional text, and never a growth (§13's `scale > 1.03` bound is not approached).
+### 18.3 Scroll smoothing, and why the collision cannot smear
 
-Everything else follows the approved system and this codebase's existing conventions: semantic HTML, one `h1`, correct heading order (axe-verified), keyboard operability, approved tokens only, real loader-fed project content, and `Figure`'s D-019 asset-honesty rules including TASK-008's explicit-intrinsic-dimensions CLS fix. No rotation, no spring/overshoot, no parallax, no WebGL, no new dependency.
+Raw scroll arrives in wheel steps. A spring sits between raw scroll progress and the visual progress everything reads from — **deliberately overdamped** (ratio ≈ 1.07, time constant ≈ 70ms), not the bouncy default.
 
-### 18.4 Scene and camera rules (additive, this branch only)
+Overdamping is the explicit boundary strategy for the collision. The cut is a threshold on this same value; an underdamped spring would overshoot and could carry the journey across `BREAK_CUT` and back, flickering the reposition. An overdamped spring provably cannot cross a threshold twice, so the cut needs no special-casing.
 
-- **A scene owns the viewport.** Scene blocks are `min(84vw, 1180px)` wide (`92vw` on mobile) with a `72vh` minimum, framed by a camera inset. At 1440×900 a focal scene occupies ~82% of viewport width and its evidence plate ~53–59%.
-- **Dwell is tuned per scene, never set to one convenient constant.** DropSpot holds longest because a real product screenshot is the strongest evidence on the route; the tail is a deliberately brief beat before the wall. Asserted as a property (dwells differ; DropSpot's is the longest) rather than as fixed numbers.
-- **The first leg is gentler than the rest.** Hero → Kıvılcım uses smootherstep, so the hero stays readable well into the movement and is *discovered* to be part of a world rather than snatched out of frame. Unit-tested as "under 15% of the leg covered in its first quarter."
-- **Two compositions, not one template.** `split` (text beside plate, Kıvılcım) and `stacked` (dominant plate leading, DropSpot).
-- **Evidence selection is data-derived.** The lead asset is chosen from the asset's own registered metadata (real screenshot > system-layer diagram > first registered), never a hard-coded filename or slug→asset map.
-- **Titles are not CSS-uppercased.** `text-transform: uppercase` turns "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography D-017 fixes as the primary display name. This applies to every line that interpolates a project title, including the handoff copy.
-- **Mobile is the same world with different choreography.** Purely vertical on both routes — a large post-collision diagonal at 375px costs readability and buys nothing. The break and its reposition still happen, and are still discontinuous.
-- **No `<li>` may exist in the spatial world.** That is the structural contract keeping V1's rejected `ProjectCard` nodes out; it is why the layer teaser is a `<dl>`, which is also the semantically correct element for term/definition pairs.
+Equally important: **every visual reads from the smoothed value** — camera, break panel, impact flag, erosion, depth. Deriving some from raw and some from smoothed is precisely what would smear the cut, by letting the panel and the jump disagree about when it happened.
 
-### 18.5 World grammar — the sparse orientation system
+### 18.4 Depth planes
 
-V2's honest weakness was that the travel space was empty. V3 fills it with orientation, not decoration, from four kinds of mark and nothing else:
+Three planes, and the middle one is pinned at exactly **1.0**:
 
-1. **Leg rails** — drawn from the route's own leg list, so a rail can never describe a path the camera does not take. Route two is dashed and signal-coloured, so "you are on a different route now" is legible without a label.
-2. **Route residue** — a rail brightens once the camera has travelled it. The path behind you is more present than the path ahead.
-3. **Registration ticks** — one corner tick per scene anchor, offset outside the scene block so it reads as a world coordinate rather than scene content.
-4. **The wall boundary** — a rule running off both edges of the frame, with three coordinate rules that **converge** on it as approach tension rises, stopping just short of collapsing into one line. This is the collision's own grammar: the coordinate system visibly tightens before the camera is stopped by it.
+- **Distant (0.62)** — travel material only.
+- **World (1.0)** — scenes, route rails, registration ticks, wall boundary.
+- **Near (1.13)** — a few structural rules that sweep past faster than the world.
 
-No grid, no particles, no technical confetti, no permanent progress label. Everything in this layer is `aria-hidden` and states nothing that is not already in real semantic text.
+The world plane does not parallax, and that is a deliberate departure from the brief's suggested 0.82 for the structural layer: the rails and ticks are *derived from the camera path*, so sliding them would make the world's own orientation system point where the camera never goes. Depth is therefore built **around** that plane — material behind it and in front of it — which also gives a stronger cue than two layers both behind.
 
-**The depth rail** is the same vocabulary used compositionally: at the reposition, a rail descends from above the frame, registered by the three layer names, with the giant `UNDERNEATH` standing at its foot. The word therefore labels a coordinate in the world instead of floating as isolated typography.
+Mobile renders the world plane only. Parallax at 375px buys little and risks motion sickness.
 
-### 18.6 The scene break — converging rails
+**Arrival resolution.** Each scene carries a `--depth-resolve` custom property (0 distant → 1 framed) and a scale that runs 0.972 → 1.0. Two elements per project scene move a handful of pixels in opposite directions and settle at their real layout position, so nothing functional ever rests somewhere the static design did not put it. Driving it as a CSS variable rather than through React context keeps the scene components server-rendered.
 
-The route's discontinuity is bridged by seven horizontal rails that close on the frame **from alternating sides**, each on a different arrival curve, so the coordinate system reads as snapping shut rather than being swiped over. A linear solid field sits behind them and is therefore always the last thing to close — its only job is to guarantee the frame is genuinely opaque at the instant the route jumps. Unit-tested: every rail's offset is exactly zero at the cut, so no gap can expose the jump; rails close from both directions; adjacent rails never share an arrival rate; every rail is ahead of the solid field.
+### 18.5 Composition — scenes are not rectangles
 
-Impact impulse is unchanged from V2: a single ≤7px shake at 140ms, no spring, no elastic settle, no flash. **Collision != bounce** remains binding — the camera never eases past the wall and never reverses off it.
+Each project scene lets its evidence plate break the text column's alignment edge, via a `--scene-overhang` custom property the camera sets. The overhang is a **spatial** device that works because the camera frame clips it, so it is set only where something can clip it and collapses to zero in the linear fallback — an earlier pass hard-coded the negative margin and overflowed the document by 31px at 1024px.
 
-### 18.7 Atmosphere — erosion wind (the single prototype)
+No card borders, no drop shadows, no perspective skew on evidence. Asymmetry does the work.
 
-- Acts on **expressive typography only** — the giant transition word's trailing edge sheds fragments. Body text, project content, and every functional label are untouched.
-- **The wind direction is derived, not chosen.** It is the exact opposite of the camera's screen-space travel on the collision-approach leg, so fragments trail the word along the vector the camera is dragging it against. Unit-tested as "opposes the camera's screen travel."
-- 13 fragments across 3 depth layers (down from V2's 17 — fewer and more deliberate), sized in `em` so they scale with the letterforms.
-- Real **start → peak → decay** tied to exactly one transition, and absent everywhere else in the journey.
-- Plain DOM transforms driven by MotionValues — **no canvas, no particle system, no WebGL, no dependency.**
-- Renders as a static word under reduced motion and before hydration.
+### 18.6 Travel material
 
-### 18.8 Typography split
+Material derives from the world's own language: oversized cropped fragments of the **real titles** of scenes the camera is heading toward, low-contrast paper-density fields, and near-plane rules.
 
-- **Functional (always stable, never rotated, never fragmented, never compressed):** project titles, descriptions, tech lists, captions, CTA, nav, layer definitions, evidence markers.
-- **Expressive (may respond to camera progress):** the hero display name, the eroding/compressing transition word, and the orientation word. Both giant words are `aria-hidden` decorative duplicates of copy already present in real semantic text on the same page. Two expressive words for the whole journey, per §19 of the brief.
-- One scene-scoped clamp override exists (hero display name, `clamp(3rem,10vw,9rem)`), because the shared `display-xl` token caps at 6.5rem. Kept component-scoped and **not** promoted into the token system, which governs `main`.
-- Giant single words use viewport-driven clamp floors, not rem floors: an unbreakable word cannot wrap and overflows narrow viewports otherwise.
+**Placement is derived, not authored.** A parallax plane moves at a different rate from the world, so a mark placed at world coordinates does not appear where those coordinates suggest. An earlier pass positioned each fragment relative to its scene's anchor, and at 0.62 rate that put Kıvılcım's fragment inside the *hero* frame and off-screen by the time the camera reached Kıvılcım — exactly backwards, and it read as broken text. Each mark is now placed at `rate × cameraPosition(atProgress) + offset`.
+
+Every fragment is `aria-hidden` and echoes copy that already exists as real semantic text in the scene it names, so the depth planes add no screen-reader content.
+
+### 18.7 Disclosed departures from §13's binding motion rules
+
+§13 forbids scroll-linked (scrub) animation. This prototype's entire premise is exactly that pattern. It is a **deliberate, disclosed experimental hypothesis under test**, isolated to this branch, never merged. The erosion atmosphere is a second disclosed departure (§13 forbids looping/idle animation); the expressive word's `scaleX` compression and the scenes' ≤3% arrival scale are a third — decorative type and framing only, never functional text, and never a growth beyond 1.0.
+
+Everything else follows the approved system: semantic HTML, one `h1`, correct heading order (axe-verified), keyboard operability, approved tokens only, real loader-fed content, and `Figure`'s D-019 asset-honesty rules including TASK-008's CLS fix. No rotation, no perspective, no mouse-following, no WebGL, no new dependency.
+
+### 18.8 Collision, atmosphere, and the rest
+
+Unchanged in intent from V3 and re-verified: the approach accelerates, the camera stops dead for one short impact window (the only stationary window in V4), seven rails close from alternating sides on different curves with a linear solid field closing last, and the route jumps behind full cover. `collision != bounce` remains binding. The erosion wind vector is still derived from the collision-approach leg; fragment count is unchanged at 13.
 
 ### 18.9 Reduced-motion and no-JS fallback
 
-Both fully disable the camera, the world grammar, the break, and the atmosphere rather than softening them: the same real, **fully composed** scenes render in plain linear document flow. Deliberately not a stripped-down dump — each scene keeps its own composition, including the layer teaser and the positioning statement, so this reads as a designed linear page. Mirrors the codebase's existing progressive-enhancement pattern (`LayerExplorer`, `MobileNav`).
+Both disable the camera, the planes, the grammar, the break, the material and the atmosphere entirely — verified as zero of each — and render the same real, fully composed V4 scenes in linear document flow. Not a stripped dump: the layer teaser, the positioning statement, both evidence plates and their honest captions all survive.
 
 ### 18.10 Known remaining weaknesses (deliberately not resolved this pass)
 
-- Only 2 of 4 D-016 projects are staged as scenes; JointLedger and Professional Systems are reached through the real Work index — an explicit vertical-slice boundary, not an oversight.
-- Route two's three beats are each shorter than route one's, and the handoff beat in particular is close to the minimum that still reads as a scene.
-- The world grammar is derived and sparse, but it is still made only of hairlines. Whether the travel space now has enough *material* — as opposed to enough *information* — is the most open art-direction question in V3.
-- Scene compositions sit vertically centred in their blocks, which leaves the upper third of the two route-two scenes carrying only an incoming rail.
-- `VW_PER_VH` is a single nominal aspect ratio (1440×900). Directions stay correct across the common desktop range but the hero rule and the wind are exactly aligned to the route only near that aspect.
+- Only 2 of 4 D-016 projects are staged as scenes — an explicit vertical-slice boundary.
+- Under a deliberately fast wheel profile (~1340 px/s, the whole route in 1.6s) the motion trace is too coarse — 260 frames for the entire journey — to separate the intentional reposition from ordinary fast travel, so the spike figure is not meaningful at that speed. Slow and normal profiles both measure under 2×.
+- The distant plane's density fields and near-plane rules are placed by hand-tuned in-frame offsets. Their *progress* is derived, but where they sit in the frame is art direction and was tuned at 1440×900.
+- `VW_PER_VH` is still a single nominal aspect ratio; the hero rule, the wind vector and the scroll allocation are all exactly aligned to the route only near 16:10.
+- The Catmull-Rom parameter is not arc-length normalised, so within a segment the true speed varies slightly beyond the solved profile. On these near-straight segments the effect is small, and the measured dynamic range already accounts for it.

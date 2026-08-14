@@ -1,24 +1,28 @@
 import { describe, expect, it } from "vitest";
 import {
-  BREAK_COVER_START,
-  BREAK_CUT,
-  BREAK_REVEAL_END,
-  COLLISION_PROGRESS,
   COLLISION_WORLD,
+  IMPACT_WINDOW,
   ROUTE_LENGTH_VH,
   ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
   SCENES,
   SCENE_BREAK_BANDS,
+  SCENE_IDS,
   VW_PER_VH,
   sceneAnchor,
-  sceneById,
+  screenDistance,
 } from "@/lib/spatial/scenes";
 import {
+  BREAK_COVER_START,
+  BREAK_CUT,
+  BREAK_REVEAL_END,
+  COLLISION_PROGRESS,
   approachTension,
+  averageCameraSpeed,
   breakBandOffset,
   breakWipeOffset,
   cameraPosition,
+  cameraSpeed,
   currentSceneId,
   hasRepositioned,
   heroLeadRule,
@@ -26,147 +30,236 @@ import {
   isImpact,
   routeLegs,
   routeSlope,
+  sceneFocusProgress,
+  sceneProximity,
   travelWindVector,
 } from "@/lib/spatial/sceneRoute";
 
-// Spatial Portfolio V3. The binding semantics carried over from V1/V2
-// (collision != bounce, discontinuous reposition, mobile choreography, a
-// controlled route length) are tested here unchanged in meaning. The V3
-// subject -- that the journey CONTINUES as a spatial route after the break
-// instead of dropping into straight-down flow -- is tested as directional
-// properties, never as exact pixel values, so art direction stays free to
-// move the world without rewriting the suite.
+// Spatial Portfolio V4. The binding semantics carried over from V1-V3
+// (collision != bounce, discontinuous reposition, a post-collision diagonal,
+// mobile choreography, a controlled route length) are tested here unchanged
+// in meaning. The V4 subject -- that the camera RESPONDS CONTINUOUSLY to
+// scroll instead of parking and then lurching -- is tested as speed
+// properties, never as exact easing constants.
 
-/** Samples camera positions across a progress window. */
-function sample(from: number, to: number, steps = 24, mobile = false) {
-  return Array.from({ length: steps + 1 }, (_, i) =>
-    cameraPosition(from + ((to - from) * i) / steps, mobile),
-  );
+/** Every progress value outside the deliberate collision hold. */
+function movingProgress(step = 0.001): number[] {
+  const out: number[] = [];
+  for (let p = 0; p <= 1 + 1e-9; p += step) {
+    if (p >= COLLISION_PROGRESS - 0.002 && p < BREAK_CUT + 0.002) continue;
+    out.push(Math.min(p, 1));
+  }
+  return out;
 }
 
 function span(points: { x: number; y: number }[]) {
   const xs = points.map((p) => p.x);
   const ys = points.map((p) => p.y);
-  return {
-    deltaX: Math.max(...xs) - Math.min(...xs),
-    deltaY: Math.max(...ys) - Math.min(...ys),
-  };
+  return { deltaX: Math.max(...xs) - Math.min(...xs), deltaY: Math.max(...ys) - Math.min(...ys) };
 }
 
 describe("scene configuration", () => {
-  it("every scene has a focus/hold window, in ascending route order", () => {
-    let previous = -1;
-    for (const scene of SCENES) {
-      expect(scene.holdUntil).toBeGreaterThanOrEqual(scene.focus);
-      expect(scene.focus).toBeGreaterThan(previous);
-      previous = scene.focus;
-    }
-  });
-
   it("mobile anchors are purely vertical -- same scenes, different choreography", () => {
-    for (const scene of SCENES) {
-      expect(scene.mobileWorld.x).toBe(0);
+    for (const scene of SCENES) expect(scene.mobileWorld.x).toBe(0);
+  });
+
+  it("keeps the total route length controlled, and under V3's 420vh", () => {
+    expect(ROUTE_LENGTH_VH).toBeGreaterThan(0);
+    expect(ROUTE_LENGTH_VH).toBeLessThan(420);
+  });
+
+  it("derives focal progress rather than authoring it, in strict route order", () => {
+    let previous = -1;
+    for (const id of SCENE_IDS) {
+      const focus = sceneFocusProgress(id);
+      expect(focus).toBeGreaterThan(previous);
+      previous = focus;
+    }
+    expect(sceneFocusProgress("hero")).toBe(0);
+    expect(sceneFocusProgress("handoff")).toBeCloseTo(1, 6);
+  });
+});
+
+// The central V4 contract (§2, §3, §10): scrolling must always produce
+// perceptible camera response. V3 measured 0.00 camera px per scroll px at
+// every scene; that is what these tests exist to prevent returning.
+describe("continuous camera response", () => {
+  it("never parks the camera outside the collision hold, in either mode", () => {
+    for (const mobile of [false, true]) {
+      const average = averageCameraSpeed(mobile);
+      for (const p of movingProgress()) {
+        const speed = cameraSpeed(p, mobile);
+        expect(
+          speed / average,
+          `camera effectively stationary at progress ${p.toFixed(3)} (mobile=${mobile})`,
+        ).toBeGreaterThan(0.1);
+      }
     }
   });
 
-  it("keeps the total route length controlled, well under V1's 600vh spacer", () => {
-    expect(ROUTE_LENGTH_VH).toBeGreaterThan(0);
-    expect(ROUTE_LENGTH_VH).toBeLessThan(500);
+  it("slows at every scene without stopping -- focus is velocity, not parking", () => {
+    const average = averageCameraSpeed();
+    for (const id of SCENE_IDS) {
+      const focus = sceneFocusProgress(id);
+      // reorient sits exactly on the cut, where speed is undefined by design.
+      if (Math.abs(focus - BREAK_CUT) < 1e-9) continue;
+      const ratio = cameraSpeed(focus) / average;
+      expect(ratio, `${id} is parked`).toBeGreaterThan(0.1);
+      expect(ratio, `${id} is not a focus zone`).toBeLessThan(0.6);
+    }
   });
 
-  it("gives each scene its own dwell length rather than one convenient constant", () => {
-    const dwells = SCENES.map((scene) => Number((scene.holdUntil - scene.focus).toFixed(4)));
-    expect(new Set(dwells).size).toBeGreaterThan(1);
-    // DropSpot leads with a real product screenshot and is deliberately the
-    // longest hold on route one.
-    const dropspot = sceneById("dropspot");
-    for (const id of ["hero", "kivilcim", "tail"] as const) {
-      const other = sceneById(id);
-      expect(dropspot.holdUntil - dropspot.focus).toBeGreaterThan(other.holdUntil - other.focus);
+  it("keeps the whole journey inside a narrow speed band -- no lurching", () => {
+    const average = averageCameraSpeed();
+    const speeds = movingProgress().map((p) => cameraSpeed(p));
+    const min = Math.min(...speeds);
+    const max = Math.max(...speeds);
+    expect(min / average).toBeGreaterThan(0.1);
+    expect(max / average).toBeLessThan(2.2);
+    // V3's band was effectively 0x to 20x. Anything under an order of
+    // magnitude is a different experience.
+    expect(max / min).toBeLessThan(9);
+  });
+
+  it("matches speed on both sides of every segment join", () => {
+    // The actual C1 property, measured one-sided so neither reading straddles
+    // the join. A join where one easing ended and another started at a
+    // different rate shows up here immediately; a merely-C2 kink does not,
+    // which is correct -- curvature is allowed to change at an anchor.
+    const h = 0.0002;
+    const oneSided = (from: number, to: number, mobile: boolean) =>
+      screenDistance(cameraPosition(from, mobile), cameraPosition(to, mobile)) /
+      Math.abs(to - from);
+
+    for (const mobile of [false, true]) {
+      for (const id of SCENE_IDS) {
+        const focus = sceneFocusProgress(id, mobile);
+        // Skip the route ends and the cut, where there is no join to match.
+        if (focus <= h || focus >= 1 - h) continue;
+        if (Math.abs(focus - BREAK_CUT) < 1e-9) continue;
+
+        const left = oneSided(focus - h, focus, mobile);
+        const right = oneSided(focus, focus + h, mobile);
+        expect(
+          Math.abs(left - right) / Math.max(left, right),
+          `speed mismatch across ${id} (mobile=${mobile}): ${left.toFixed(1)} vs ${right.toFixed(1)}`,
+        ).toBeLessThan(0.03);
+      }
+    }
+  });
+
+  it("never steps sharply in speed anywhere along the route", () => {
+    for (const mobile of [false, true]) {
+      const step = 0.0005;
+      const samples = movingProgress(step);
+      for (let i = 1; i < samples.length; i += 1) {
+        // Skip the pair that spans the excluded collision window: that gap is
+        // the intentional discontinuity, not a join.
+        if (samples[i]! - samples[i - 1]! > step * 1.5) continue;
+        const a = cameraSpeed(samples[i - 1]!, mobile);
+        const b = cameraSpeed(samples[i]!, mobile);
+        // Loose enough to tolerate the finite-difference window smearing a
+        // curvature change at a join, tight enough that a real velocity
+        // discontinuity cannot hide.
+        expect(
+          Math.abs(b - a) / Math.max(a, b, 1),
+          `speed step at ${samples[i]!.toFixed(4)} (mobile=${mobile})`,
+        ).toBeLessThan(0.08);
+      }
+    }
+  });
+
+  it("advances monotonically along each route -- the camera never backtracks", () => {
+    for (const [ids, lo, hi] of [
+      [ROUTE_ONE_IDS, 0, COLLISION_PROGRESS],
+      [ROUTE_TWO_IDS, BREAK_CUT, 1],
+    ] as const) {
+      const start = sceneAnchor(ids[0]!);
+      let travelled = -1;
+      for (let p = lo; p <= hi; p += 0.002) {
+        const here = screenDistance(start, cameraPosition(p));
+        expect(here).toBeGreaterThanOrEqual(travelled - 1e-6);
+        travelled = here;
+      }
     }
   });
 });
 
-describe("cameraPosition: route one", () => {
-  it("starts framed on the hero scene", () => {
-    expect(cameraPosition(0)).toEqual(sceneAnchor("hero"));
-  });
-
-  it("dwells on each travelled scene for its whole hold window, so it can be read", () => {
-    for (const id of ROUTE_ONE_IDS) {
-      const scene = sceneById(id);
-      const anchor = sceneAnchor(id);
-      expect(cameraPosition(scene.focus)).toEqual(anchor);
-      expect(cameraPosition(scene.holdUntil)).toEqual(anchor);
-      expect(cameraPosition((scene.focus + scene.holdUntil) / 2)).toEqual(anchor);
+describe("the curve still goes where the route says", () => {
+  it("passes exactly through every scene anchor, in both modes", () => {
+    for (const mobile of [false, true]) {
+      for (const id of SCENE_IDS) {
+        const at = cameraPosition(sceneFocusProgress(id, mobile), mobile);
+        const anchor = sceneAnchor(id, mobile);
+        expect(at.x).toBeCloseTo(anchor.x, 6);
+        expect(at.y).toBeCloseTo(anchor.y, 6);
+      }
     }
   });
 
-  it("travels between scenes, staying strictly between their anchors", () => {
-    const from = sceneById("kivilcim");
-    const to = sceneById("dropspot");
-    const mid = cameraPosition((from.holdUntil + to.focus) / 2);
-    expect(mid.x).toBeGreaterThan(sceneAnchor("kivilcim").x);
-    expect(mid.x).toBeLessThan(sceneAnchor("dropspot").x);
-    expect(mid.y).toBeGreaterThan(sceneAnchor("kivilcim").y);
-    expect(mid.y).toBeLessThan(sceneAnchor("dropspot").y);
+  it("does not let smoothing bow the path away from the route", () => {
+    // Between two anchors the curve must stay near the chord: a spline that
+    // wandered would frame empty world instead of the scenes.
+    const from = sceneAnchor("kivilcim");
+    const to = sceneAnchor("dropspot");
+    const chord = screenDistance(from, to);
+    for (let p = sceneFocusProgress("kivilcim"); p <= sceneFocusProgress("dropspot"); p += 0.004) {
+      const point = cameraPosition(p);
+      const detour = screenDistance(from, point) + screenDistance(point, to);
+      expect(detour).toBeLessThan(chord * 1.06);
+    }
   });
 
-  it("moves on BOTH axes across the whole of route one -- never straight down", () => {
-    const { deltaX, deltaY } = span(sample(0, COLLISION_PROGRESS));
-    expect(deltaX).toBeGreaterThan(0);
-    expect(deltaY).toBeGreaterThan(0);
+  it("starts framed on the hero and ends framed on the handoff", () => {
+    expect(cameraPosition(0)).toEqual(sceneAnchor("hero"));
+    expect(cameraPosition(1)).toEqual(sceneAnchor("handoff"));
+    expect(cameraPosition(-1)).toEqual(sceneAnchor("hero"));
+    expect(cameraPosition(2)).toEqual(sceneAnchor("handoff"));
   });
+});
 
-  it("gives the hero a gentler first leg, so it stays readable as the camera commits", () => {
-    const hero = sceneById("hero");
-    const kivilcim = sceneById("kivilcim");
-    const quarter = hero.holdUntil + (kivilcim.focus - hero.holdUntil) * 0.25;
-    const travelled = cameraPosition(quarter).x - sceneAnchor("hero").x;
-    const legLength = sceneAnchor("kivilcim").x - sceneAnchor("hero").x;
-    // A quarter of the way through the leg, well under a quarter of the
-    // distance has been covered: the hero has not been snatched away.
-    expect(travelled / legLength).toBeLessThan(0.15);
-  });
-
-  it("stops dead at the wall and never eases past it or reverses off it (collision != bounce)", () => {
+describe("collision remains the one deliberate discontinuity", () => {
+  it("stops dead at the wall and never eases past it or reverses off it", () => {
     const atWall = cameraPosition(COLLISION_PROGRESS);
     expect(atWall).toEqual(COLLISION_WORLD);
-    // Held for the entire impact window: no drift onward, no rebound back
-    // toward the tail.
-    const midImpact = cameraPosition((COLLISION_PROGRESS + BREAK_CUT) / 2);
-    expect(midImpact).toEqual(atWall);
+    expect(cameraPosition((COLLISION_PROGRESS + BREAK_CUT) / 2)).toEqual(atWall);
     expect(cameraPosition(BREAK_CUT - 0.001)).toEqual(atWall);
   });
-});
 
-describe("cameraPosition: reposition and route two", () => {
+  it("keeps the impact hold short -- it is the only stationary window", () => {
+    expect(IMPACT_WINDOW).toBeLessThan(0.06);
+    expect(BREAK_CUT - COLLISION_PROGRESS).toBeCloseTo(IMPACT_WINDOW, 9);
+  });
+
+  it("accelerates into the wall instead of easing into it", () => {
+    const last = sceneFocusProgress("tail");
+    const early = cameraSpeed(last + (COLLISION_PROGRESS - last) * 0.2);
+    const late = cameraSpeed(last + (COLLISION_PROGRESS - last) * 0.9);
+    expect(late).toBeGreaterThan(early * 1.5);
+  });
+
   it("repositions discontinuously at the cut -- a break, not a continuation", () => {
     const justBefore = cameraPosition(BREAK_CUT - 0.001);
     const atCut = cameraPosition(BREAK_CUT);
     expect(atCut).toEqual(sceneAnchor("reorient"));
-    // The jump reverses the direction of travel entirely: route one ran
-    // left-to-right, and the reposition lands far back to the left and far
-    // below. Nothing about this reads as the camera continuing on its path.
     expect(atCut.x).toBeLessThan(justBefore.x);
     expect(atCut.y).toBeGreaterThan(justBefore.y);
     expect(Math.abs(atCut.x - justBefore.x)).toBeGreaterThan(100);
   });
 
-  it("does NOT park after the reposition -- a second route continues", () => {
-    const parked = sceneAnchor("reorient");
-    expect(cameraPosition(1)).not.toEqual(parked);
-    expect(cameraPosition(1)).toEqual(sceneAnchor("handoff"));
+  it("uses the same collision progress in both modes, so the break cannot desync", () => {
+    // Deriving the split per mode left the mobile camera parked between the
+    // shared cut and its own route-two start.
+    expect(cameraPosition(BREAK_CUT, true)).toEqual(sceneAnchor("reorient", true));
+    expect(cameraPosition(BREAK_CUT - 0.001, true)).not.toEqual(sceneAnchor("reorient", true));
   });
+});
 
-  // The single most important V3 contract (§5): after the collision the
-  // camera must keep moving spatially, on both axes. A route that only
-  // changed y would be exactly the straight-down document flow the owner
-  // rejected.
-  it("moves on BOTH axes after the collision: deltaX != 0 AND deltaY != 0", () => {
-    const { deltaX, deltaY } = span(sample(BREAK_CUT, 1));
-    expect(deltaX).not.toBe(0);
-    expect(deltaY).not.toBe(0);
+describe("route two", () => {
+  it("moves on BOTH axes after the collision", () => {
+    const points: { x: number; y: number }[] = [];
+    for (let p = BREAK_CUT; p <= 1; p += 0.01) points.push(cameraPosition(p));
+    const { deltaX, deltaY } = span(points);
     expect(deltaX).toBeGreaterThan(50);
     expect(deltaY).toBeGreaterThan(20);
   });
@@ -182,62 +275,51 @@ describe("cameraPosition: reposition and route two", () => {
     }
   });
 
-  it("climbs where route one descended -- the second route is not a repeat", () => {
+  it("climbs where route one descended, at a different slope", () => {
     expect(routeSlope(1)).toBeGreaterThan(0);
     expect(routeSlope(2)).toBeLessThan(0);
     expect(Math.abs(routeSlope(2) - routeSlope(1))).toBeGreaterThan(0.3);
   });
 
-  it("uses a different rhythm as well as a different direction: no repeated leg angle", () => {
-    const slopes = routeLegs().map((leg) =>
-      ((leg.to.y - leg.from.y) / (leg.to.x - leg.from.x)).toFixed(3),
-    );
-    expect(new Set(slopes).size).toBe(slopes.length);
+  it("gets a real share of the journey, and of the world's travel", () => {
+    expect(1 - BREAK_CUT).toBeGreaterThan(0.25);
   });
 
-  it("dwells on each route-two scene so the second route is read, not skimmed", () => {
-    for (const id of ROUTE_TWO_IDS) {
-      const scene = sceneById(id);
-      expect(cameraPosition(scene.focus)).toEqual(sceneAnchor(id));
-      expect(cameraPosition((scene.focus + scene.holdUntil) / 2)).toEqual(sceneAnchor(id));
-    }
-  });
-
-  it("spends a real share of the journey after the break", () => {
-    // Not a token beat: at least a fifth of the whole route is post-collision.
-    expect(1 - BREAK_CUT).toBeGreaterThan(0.2);
-  });
-
-  it("clamps out-of-range progress", () => {
-    expect(cameraPosition(-1)).toEqual(sceneAnchor("hero"));
-    expect(cameraPosition(2)).toEqual(sceneAnchor("handoff"));
-  });
-
-  it("keeps the mobile camera on a single vertical axis for the whole route", () => {
-    for (let p = 0; p <= 1; p += 0.05) {
-      expect(cameraPosition(p, true).x).toBe(0);
-    }
-    expect(cameraPosition(sceneById("dropspot").focus, true)).toEqual(
-      sceneAnchor("dropspot", true),
-    );
-    // Mobile still breaks and repositions -- same world, different camera.
-    expect(cameraPosition(BREAK_CUT, true).y).toBeGreaterThan(
-      cameraPosition(BREAK_CUT - 0.001, true).y + 100,
-    );
+  it("travels at a comparable speed to route one -- one world, not two paces", () => {
+    const speedIn = (lo: number, hi: number) => {
+      let total = 0;
+      let count = 0;
+      for (let p = lo; p <= hi; p += 0.002) {
+        total += cameraSpeed(p);
+        count += 1;
+      }
+      return total / count;
+    };
+    const one = speedIn(0, COLLISION_PROGRESS - 0.01);
+    const two = speedIn(BREAK_CUT + 0.01, 1);
+    expect(Math.max(one, two) / Math.min(one, two)).toBeLessThan(1.35);
   });
 });
 
-describe("currentSceneId", () => {
+describe("currentSceneId and proximity", () => {
   it("names the scene that owns the camera at each focal moment", () => {
-    for (const scene of SCENES) {
-      expect(currentSceneId(scene.focus)).toBe(scene.id);
+    for (const id of SCENE_IDS) {
+      expect(currentSceneId(sceneFocusProgress(id))).toBe(id);
     }
   });
 
-  it("reports the collision as its own camera-only event, then route two after the cut", () => {
+  it("reports the collision as its own camera-only event", () => {
     expect(currentSceneId(COLLISION_PROGRESS)).toBe("collision");
     expect(currentSceneId(BREAK_CUT)).toBe("reorient");
     expect(currentSceneId(1)).toBe("handoff");
+  });
+
+  it("resolves a scene fully at its anchor and not at all at its neighbours", () => {
+    for (const id of SCENE_IDS) {
+      expect(sceneProximity(id, sceneFocusProgress(id))).toBeCloseTo(1, 6);
+    }
+    expect(sceneProximity("kivilcim", sceneFocusProgress("dropspot"))).toBe(0);
+    expect(sceneProximity("dropspot", sceneFocusProgress("hero"))).toBe(0);
   });
 });
 
@@ -248,14 +330,12 @@ describe("impact and approach", () => {
     expect(isImpact(BREAK_CUT)).toBe(false);
   });
 
-  it("builds tension continuously from the tail to the wall, and nowhere else", () => {
-    const tail = sceneById("tail");
-    expect(approachTension(tail.holdUntil)).toBe(0);
+  it("builds tension across the run at the wall, and nowhere else", () => {
+    expect(approachTension(0.2)).toBe(0);
     expect(approachTension(COLLISION_PROGRESS)).toBe(1);
-    const mid = approachTension((tail.holdUntil + COLLISION_PROGRESS) / 2);
+    const mid = approachTension((sceneFocusProgress("tail") + COLLISION_PROGRESS) / 2);
     expect(mid).toBeGreaterThan(0);
     expect(mid).toBeLessThan(1);
-    expect(approachTension(0.2)).toBe(0);
   });
 });
 
@@ -264,56 +344,36 @@ describe("scene break", () => {
     expect(breakWipeOffset(0)).toBe(100);
     expect(breakWipeOffset(BREAK_COVER_START)).toBe(100);
     expect(breakWipeOffset(1)).toBe(-100);
-    expect(isBreakActive(0.5)).toBe(false);
+    expect(isBreakActive(0.4)).toBe(false);
     expect(isBreakActive(1)).toBe(false);
   });
 
   it("fully covers the viewport at exactly the cut, so the jump is never witnessed", () => {
     expect(breakWipeOffset(BREAK_CUT)).toBe(0);
     expect(isBreakActive(BREAK_CUT)).toBe(true);
-    // Every rail closes onto zero at the cut too -- no rail can leave a gap
-    // through which the discontinuity would be visible.
     for (let index = 0; index < SCENE_BREAK_BANDS; index += 1) {
       expect(Math.abs(breakBandOffset(BREAK_CUT, index))).toBeLessThan(1e-9);
     }
   });
 
-  it("closes from alternating sides -- convergence, not a single sweep", () => {
+  it("opens entirely before the camera resumes real travel", () => {
+    // The reveal has to finish while route two is still in its slow focus
+    // zone, or the panel would be sliding across a moving world.
+    expect(BREAK_REVEAL_END).toBeLessThan(sceneFocusProgress("approach"));
+  });
+
+  it("closes from alternating sides at different rates, ahead of the solid field", () => {
     const mid = (BREAK_COVER_START + BREAK_CUT) / 2;
     const offsets = Array.from({ length: SCENE_BREAK_BANDS }, (_, i) => breakBandOffset(mid, i));
     expect(offsets.some((value) => value > 0)).toBe(true);
     expect(offsets.some((value) => value < 0)).toBe(true);
-  });
-
-  it("gives adjacent rails different arrival rates, so alignment snaps unevenly", () => {
-    const mid = (BREAK_COVER_START + BREAK_CUT) / 2;
-    const magnitudes = Array.from({ length: SCENE_BREAK_BANDS }, (_, i) =>
-      Math.abs(breakBandOffset(mid, i)).toFixed(4),
-    );
-    expect(new Set(magnitudes).size).toBeGreaterThan(1);
-  });
-
-  it("keeps every rail ahead of the solid field, which closes last", () => {
-    const mid = (BREAK_COVER_START + BREAK_CUT) / 2;
+    expect(new Set(offsets.map((v) => Math.abs(v).toFixed(4))).size).toBeGreaterThan(1);
     const field = Math.abs(breakWipeOffset(mid));
-    for (let index = 0; index < SCENE_BREAK_BANDS; index += 1) {
-      expect(Math.abs(breakBandOffset(mid, index))).toBeLessThan(field);
-    }
+    for (const offset of offsets) expect(Math.abs(offset)).toBeLessThan(field);
   });
 
-  it("wipes in before the cut and out after it, in one direction per rail", () => {
-    const covering = breakWipeOffset((BREAK_COVER_START + BREAK_CUT) / 2);
-    const revealing = breakWipeOffset((BREAK_CUT + BREAK_REVEAL_END) / 2);
-    expect(covering).toBeGreaterThan(0);
-    expect(covering).toBeLessThan(100);
-    expect(revealing).toBeLessThan(0);
-    expect(revealing).toBeGreaterThan(-100);
-    // A rail that closed from the right opens to the left, and vice versa.
-    expect(Math.sign(breakBandOffset((BREAK_COVER_START + BREAK_CUT) / 2, 0))).toBe(1);
-    expect(Math.sign(breakBandOffset((BREAK_CUT + BREAK_REVEAL_END) / 2, 0))).toBe(-1);
-  });
-
-  it("brackets the route's discontinuity: cover starts before the cut, reveal ends after", () => {
+  it("brackets the route's discontinuity", () => {
+    expect(BREAK_COVER_START).toBeGreaterThan(COLLISION_PROGRESS);
     expect(BREAK_COVER_START).toBeLessThan(BREAK_CUT);
     expect(BREAK_REVEAL_END).toBeGreaterThan(BREAK_CUT);
     expect(hasRepositioned(BREAK_CUT - 0.001)).toBe(false);
@@ -322,28 +382,38 @@ describe("scene break", () => {
 });
 
 describe("world grammar derives from the route", () => {
-  it("draws a rail for every travelled leg, including the run at the wall", () => {
+  it("samples the real curve for every travelled leg, not straight chords", () => {
     const legs = routeLegs();
     expect(legs).toHaveLength(6);
     expect(legs.filter((leg) => leg.route === 1)).toHaveLength(4);
     expect(legs.filter((leg) => leg.route === 2)).toHaveLength(2);
     for (const leg of legs) {
       expect(leg.toProgress).toBeGreaterThan(leg.fromProgress);
+      expect(leg.points.length).toBeGreaterThan(4);
     }
   });
 
-  it("points the erosion wind against the camera's screen travel, not at an arbitrary angle", () => {
+  it("draws rails that actually lie on the camera path", () => {
+    for (const leg of routeLegs()) {
+      for (let i = 0; i <= 6; i += 1) {
+        const p = leg.fromProgress + ((leg.toProgress - leg.fromProgress) * i) / 6;
+        const camera = cameraPosition(p);
+        const nearest = Math.min(...leg.points.map((point) => screenDistance(point, camera)));
+        expect(nearest).toBeLessThan(4);
+      }
+    }
+  });
+
+  it("points the erosion wind against the camera's screen travel", () => {
     const wind = travelWindVector();
     const from = sceneAnchor("tail");
-    // Screen displacement of the world during the approach is the negation
-    // of the camera's advance; fragments must trail the opposite way.
     const screenTravelX = -(COLLISION_WORLD.x - from.x) * VW_PER_VH;
     const screenTravelY = -(COLLISION_WORLD.y - from.y);
     expect(wind.x * screenTravelX + wind.y * screenTravelY).toBeLessThan(0);
     expect(Math.hypot(wind.x, wind.y)).toBeCloseTo(1, 6);
   });
 
-  it("sizes the hero's lead rule to the first leg's own angle", () => {
+  it("sizes the hero's lead rule to the direction the camera leaves on", () => {
     const rule = heroLeadRule(18);
     const legRatio =
       (sceneAnchor("kivilcim").y - sceneAnchor("hero").y) /
