@@ -11,7 +11,7 @@ import {
 } from "@/lib/spatial/scenes";
 import { routeLegs } from "@/lib/spatial/sceneRoute";
 
-// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
 // V2's honest remaining weakness was that the space between scenes was
@@ -66,10 +66,14 @@ export function WorldGrammar({ progress, tension, mobile }: WorldGrammarProps) {
 }
 
 /**
- * One travel leg, drawn corner-to-corner inside a box that spans the leg's
- * own world extent. `preserveAspectRatio="none"` lets the box stretch to the
- * leg's exact (non-uniform: vw by vh) geometry, and `non-scaling-stroke`
- * keeps the line a hairline regardless of that stretch.
+ * One travel leg, drawn as a POLYLINE sampled from the camera curve itself
+ * rather than as a straight chord between anchors. V4's route is a spline, so
+ * a straight rail would diverge from the path it claims to describe; sampling
+ * keeps the world's orientation system literally true.
+ *
+ * `preserveAspectRatio="none"` lets the box stretch to the leg's exact
+ * (non-uniform: vw by vh) geometry, and `non-scaling-stroke` keeps the line a
+ * hairline regardless of that stretch.
  */
 function RouteRail({
   leg,
@@ -85,10 +89,12 @@ function RouteRail({
     leg.route === 1 ? [0.08, 0.2] : [0.18, 0.4],
   );
 
-  const left = Math.min(leg.from.x, leg.to.x);
-  const top = Math.min(leg.from.y, leg.to.y);
-  const width = Math.abs(leg.to.x - leg.from.x);
-  const height = Math.abs(leg.to.y - leg.from.y);
+  const xs = leg.points.map((point) => point.x);
+  const ys = leg.points.map((point) => point.y);
+  const left = Math.min(...xs);
+  const top = Math.min(...ys);
+  const width = Math.max(...xs) - left;
+  const height = Math.max(...ys) - top;
   const tone = leg.route === 1 ? "text-ink" : "text-signal";
 
   // Mobile legs are purely vertical, so there is no diagonal to draw and the
@@ -103,7 +109,9 @@ function RouteRail({
     );
   }
 
-  const descending = (leg.to.y - leg.from.y) * (leg.to.x - leg.from.x) >= 0;
+  const points = leg.points
+    .map((point) => `${((point.x - left) / width) * 100},${((point.y - top) / height) * 100}`)
+    .join(" ");
 
   return (
     <motion.svg
@@ -118,11 +126,9 @@ function RouteRail({
         opacity,
       }}
     >
-      <line
-        x1="0"
-        y1={descending ? 0 : 100}
-        x2="100"
-        y2={descending ? 100 : 0}
+      <polyline
+        points={points}
+        fill="none"
         stroke="currentColor"
         strokeWidth={1}
         vectorEffect="non-scaling-stroke"

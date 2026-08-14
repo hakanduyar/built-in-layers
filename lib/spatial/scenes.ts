@@ -1,47 +1,36 @@
-// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18). Scene DATA only: where each scene lives in
-// the world and when the camera owns it. No JSX, no camera math (that stays
-// in sceneRoute.ts, which imports this).
+// the world. No JSX, no camera math, and -- new in V4 -- no authored
+// progress values either.
 //
-// V2 established the scene layer and fixed V1's scale failure. V3's subject
-// is CHOREOGRAPHY: V2 collided, repositioned, and then simply parked -- the
-// spatial world effectively ended at the break and the page fell into
-// ordinary vertical flow. V3 gives the world TWO routes: a descending
-// right-diagonal through the evidence region, and -- after the break -- a
-// genuinely new ascending right-diagonal back up through the thinking
-// region. Both axes move on both routes; the slopes differ in sign and
-// magnitude, so the second route can never read as a continuation of the
-// first.
+// V3 authored `focus` and `holdUntil` per scene, which made scene focus a
+// literal zero-velocity camera plateau. Measured under natural wheel input,
+// V3's camera resolved to 29 distinct positions across 900 frames, its median
+// response was 0.00 camera px per scroll px, and 1276px of scrolling could
+// pass with the camera moving under 8px -- then burst at 24x the local rate.
+// That is the stop/go the owner reported.
+//
+// In V4 progress is DERIVED from route geometry (see sceneRoute.ts): each
+// segment is allocated scroll in proportion to how far it travels plus a
+// fixed reading allowance, and focus is expressed as a velocity minimum
+// rather than a stop. Anchors below stay authoritative -- the camera curve
+// still passes exactly through every one of them.
 
 export type SceneId =
   "hero" | "kivilcim" | "dropspot" | "tail" | "reorient" | "approach" | "handoff";
 
 export type WorldPoint = { x: number; y: number };
 
-/**
- * Easing of the leg LEAVING this scene.
- * `gentle` holds the origin scene in frame noticeably longer before the
- * camera commits -- used for hero->kivilcim so the first movement reveals
- * that the hero was part of a larger world instead of yanking it away (§13).
- */
-export type TravelEase = "gentle" | "standard";
-
 export type SceneConfig = {
   id: SceneId;
-  /** Desktop world anchor, in vw/vh. The camera targets this point. */
+  /** Desktop world anchor, in vw/vh. The camera curve passes through this. */
   world: WorldPoint;
   /**
    * Mobile world anchor. x is always 0 -- "same world, different camera
-   * choreography" (§17): a large post-collision diagonal at 375px costs
-   * readability and buys nothing, so mobile keeps the same scenes and the
-   * same break on a single vertical axis.
+   * choreography": a large diagonal at 375px costs readability and buys
+   * nothing, and aggressive parallax there risks motion sickness.
    */
   mobileWorld: WorldPoint;
-  /** Progress at which the camera is centred on this scene. */
-  focus: number;
-  /** Progress until which the camera dwells here, letting the scene be read. */
-  holdUntil: number;
-  travelEase?: TravelEase;
 };
 
 // Scene block geometry, shared by the camera (for framing) and the scene
@@ -57,137 +46,95 @@ export const CAMERA_INSET_MOBILE = { left: "4vw", top: "10vh" };
 
 /**
  * Nominal viewport aspect used to convert world units (vw for x, vh for y)
- * into a single screen-space direction. World geometry is deliberately
- * expressed in mixed units so scenes stay proportional to the viewport, but
- * anything that has to point ALONG the route on screen -- the hero's lead-in
- * rule, the erosion wind -- needs one ratio. 1.6 is 1440x900 exactly, and is
- * close enough across the common desktop range that no direction inverts.
+ * into one screen-space measure. Route geometry is deliberately expressed in
+ * mixed units so scenes stay proportional to the viewport, but anything that
+ * measures DISTANCE along the route -- which is now what allocates scroll --
+ * needs a single ratio. 1.6 is 1440x900 exactly.
  */
 export const VW_PER_VH = 1.6;
 
 /**
- * ROUTE ONE -- the evidence region. Descends left-to-right: the camera is
- * working its way down and across a surface. Deltas deliberately vary
- * (shallower, shallower still, steeper) rather than repeating one angle.
+ * ROUTE ONE -- the evidence region, descending left-to-right.
+ * ROUTE TWO -- the thinking region, reached only through the break, starting
+ * at the world's deepest and left-most point and climbing back up and right.
  *
- * ROUTE TWO -- the thinking region, reached only through the break. Starts
- * far to the LEFT and far BELOW everything on route one (the world's deepest
- * point, which is what "underneath" labels) and climbs back up and to the
- * right. Both legs rise, so every route-two slope is negative where every
- * route-one slope is positive.
- *
- * Dwell windows are tuned per scene, not set to one convenient constant
- * (§14): the hero opens calmly, Kıvılcım needs long enough to read a title
- * and an architecture diagram, DropSpot holds longest because a real product
- * screenshot is the strongest evidence on the route and deserves the time,
- * and the tail is a deliberately brief beat before the wall.
+ * Unchanged from V3: the route was reviewed as correct, and §6 of the V4
+ * brief requires the curve to still travel through these scenes.
  */
 export const SCENES: readonly SceneConfig[] = [
-  {
-    id: "hero",
-    world: { x: 0, y: 0 },
-    mobileWorld: { x: 0, y: 0 },
-    focus: 0,
-    holdUntil: 0.115,
-    travelEase: "gentle",
-  },
-  {
-    id: "kivilcim",
-    world: { x: 120, y: 86 },
-    mobileWorld: { x: 0, y: 128 },
-    focus: 0.225,
-    holdUntil: 0.335,
-  },
-  {
-    id: "dropspot",
-    world: { x: 242, y: 162 },
-    mobileWorld: { x: 0, y: 268 },
-    focus: 0.425,
-    holdUntil: 0.56,
-  },
-  {
-    id: "tail",
-    world: { x: 322, y: 244 },
-    mobileWorld: { x: 0, y: 392 },
-    focus: 0.635,
-    holdUntil: 0.665,
-  },
-  {
-    id: "reorient",
-    world: { x: -14, y: 452 },
-    mobileWorld: { x: 0, y: 620 },
-    focus: 0.75,
-    holdUntil: 0.8,
-  },
-  {
-    id: "approach",
-    world: { x: 132, y: 386 },
-    mobileWorld: { x: 0, y: 748 },
-    focus: 0.87,
-    holdUntil: 0.93,
-  },
-  {
-    id: "handoff",
-    world: { x: 264, y: 348 },
-    mobileWorld: { x: 0, y: 872 },
-    focus: 0.965,
-    holdUntil: 1,
-  },
+  { id: "hero", world: { x: 0, y: 0 }, mobileWorld: { x: 0, y: 0 } },
+  { id: "kivilcim", world: { x: 120, y: 86 }, mobileWorld: { x: 0, y: 128 } },
+  { id: "dropspot", world: { x: 242, y: 162 }, mobileWorld: { x: 0, y: 268 } },
+  { id: "tail", world: { x: 322, y: 244 }, mobileWorld: { x: 0, y: 392 } },
+  { id: "reorient", world: { x: -14, y: 452 }, mobileWorld: { x: 0, y: 620 } },
+  { id: "approach", world: { x: 132, y: 386 }, mobileWorld: { x: 0, y: 748 } },
+  { id: "handoff", world: { x: 264, y: 348 }, mobileWorld: { x: 0, y: 872 } },
 ] as const;
 
 export const SCENE_IDS: readonly SceneId[] = SCENES.map((scene) => scene.id);
 
-/** Scenes the camera physically travels between on each route. The break is
- *  the only way from one list to the other. */
 export const ROUTE_ONE_IDS = ["hero", "kivilcim", "dropspot", "tail"] as const;
 export const ROUTE_TWO_IDS = ["reorient", "approach", "handoff"] as const;
 
-/**
- * The wall route one runs into. A camera-only event, not a scene -- nothing
- * is composed here, which is precisely why hitting it reads as an ending
- * rather than an arrival.
- */
-// Deliberately close to the tail anchor: the collision is the camera being
-// STOPPED, not the camera arriving somewhere else, so the tail composition
-// must still hold the frame when it happens. An earlier pass put the wall
-// 44vw/42vh out and the giant word had slid almost entirely off the left
-// edge by the impact -- the frame was 80% empty paper and read as a debug
-// screen rather than a composed moment (caught by screenshot review).
+/** The wall route one runs into. A camera-only event, not a scene. */
 export const COLLISION_WORLD: WorldPoint = { x: 352, y: 268 };
 export const COLLISION_MOBILE_WORLD: WorldPoint = { x: 0, y: 470 };
 
-/**
- * How far past the stopping point the visible boundary is drawn. The camera
- * stops at COLLISION_WORLD; the rule marking the edge of the coordinate
- * system sits ahead of it, inside the frame, so the impact has something to
- * happen against instead of against empty paper. Tuned so the boundary sits
- * just clear of the eroding word's trailing edge at full stop.
- */
+/** How far past the stopping point the visible boundary is drawn. */
 export const WALL_MARKER_OFFSET = 46;
 
-/** Camera reaches the wall and stops dead here. */
-export const COLLISION_PROGRESS = 0.7;
 /**
- * The scene break. Rails slam shut across the viewport, the route jumps
- * discontinuously behind them at the cut, then they part in the opposite
- * direction to reveal the new region.
+ * Progress spent stopped dead at the wall. THE ONE PLACE in V4 where the
+ * camera is deliberately stationary while scroll continues -- it is the
+ * impact, and it is short.
  */
-export const BREAK_COVER_START = 0.725;
-export const BREAK_CUT = 0.75;
-export const BREAK_REVEAL_END = 0.775;
+export const IMPACT_WINDOW = 0.045;
+/** Break panel timing, relative to the cut. */
+export const BREAK_COVER_LEAD = 0.024;
+export const BREAK_REVEAL_TAIL = 0.026;
 
-/** Horizontal rails the break is built from. Odd count so no single seam
- *  runs through the middle of the frame. */
+/** Horizontal rails the break is built from. */
 export const SCENE_BREAK_BANDS = 7;
 
 /**
- * Total scroll distance driving the whole route, in viewport heights.
- * V1 used a flat 600vh spacer with enormous dead travel; V2 cut it to 360vh
- * but had almost nothing after the break. V3 spends the extra 60vh entirely
- * on the second route (three more beats and two more travel legs) and is
- * still 30% shorter than V1.
+ * Reading allowance added to every segment's scroll weight, in vh-equivalent
+ * screen units. This is what buys time at a scene now that no scene parks the
+ * camera: a segment gets scroll proportional to (distance travelled +
+ * allowance), and the velocity profile spends that allowance at the two ends,
+ * where a scene is framed.
  */
-export const ROUTE_LENGTH_VH = 420;
+export const FOCUS_ALLOWANCE = 74;
+
+/**
+ * Camera speed at a scene, as a fraction of the route's average speed.
+ * The brief's conceptual range is 0.12-0.30 against a normal travel of 1.0;
+ * this sits inside it, and the mid-segment peak lands near 1.35x average, so
+ * the whole journey moves within roughly a 5x band instead of V3's 0x-to-20x.
+ */
+export const FOCUS_SPEED_RATIO = 0.26;
+
+/**
+ * Total scroll driving the route, in viewport heights. Lower than V3's 420vh
+ * on purpose (§24): with literal dwell removed, scroll no longer has to be
+ * spent standing still, so the same reading time costs less distance.
+ */
+export const ROUTE_LENGTH_VH = 340;
+
+/**
+ * Depth planes (§12). The middle plane is the world itself and is pinned at
+ * exactly 1.0 on purpose: the route rails, registration ticks and wall
+ * boundary are DERIVED from the camera path, so parallaxing them would make
+ * the world's own orientation system point at the wrong place. Depth is
+ * therefore built around that plane -- material behind it, material in front
+ * of it -- rather than by sliding it.
+ */
+export const PLANE_DISTANT = 0.62;
+export const PLANE_WORLD = 1;
+export const PLANE_NEAR = 1.13;
+
+/** Scale a scene resolves through as the camera arrives (§15). A few percent. */
+export const SCENE_SCALE_FAR = 0.972;
+export const SCENE_SCALE_FOCUS = 1;
 
 export function sceneById(id: SceneId): SceneConfig {
   const scene = SCENES.find((entry) => entry.id === id);
@@ -198,4 +145,9 @@ export function sceneById(id: SceneId): SceneConfig {
 export function sceneAnchor(id: SceneId, mobile = false): WorldPoint {
   const scene = sceneById(id);
   return mobile ? scene.mobileWorld : scene.world;
+}
+
+/** Distance between two world points in one screen measure (vh-equivalents). */
+export function screenDistance(a: WorldPoint, b: WorldPoint): number {
+  return Math.hypot((b.x - a.x) * VW_PER_VH, b.y - a.y);
 }

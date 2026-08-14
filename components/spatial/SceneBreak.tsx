@@ -4,7 +4,7 @@ import { motion, useTransform, type MotionValue } from "motion/react";
 import { SCENE_BREAK_BANDS } from "@/lib/spatial/scenes";
 import { breakBandOffset, breakWipeOffset } from "@/lib/spatial/sceneRoute";
 
-// Spatial Portfolio V3 (feature/spatial-portfolio-v3, not merged to main --
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
 //
 // V2 bridged the route's discontinuity with a single solid ink panel sweeping
