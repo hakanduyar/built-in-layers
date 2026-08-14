@@ -229,73 +229,97 @@ A page passes only if all are true:
 7. Layer tabs change real content (different text and figures per layer).
 8. Side-by-side check against 2–3 common AI portfolio templates shows no structural resemblance (reviewer judgment, recorded in the task report).
 
+## 18. EXPERIMENTAL — Spatial Portfolio V3 homepage prototype (branch-only, not approved for main)
 
-## 18. EXPERIMENTAL — Spatial Portfolio V2 homepage prototype (branch-only, not approved for main)
+**This section applies only to `feature/spatial-portfolio-v3`. It is not merged into `main`, does not amend §§1–17 above, and does not represent an approved design direction.** `main` remains governed by §§1–17 exactly as written. This entry exists so the branch is self-documenting for independent review against the sibling `feature/layered-editorial-prototype` experiment and against V1 (`feature/spatial-portfolio`) and V2 (`feature/spatial-portfolio-v2`), both preserved unchanged — see `docs/PROGRESS.md` for the dated log entries recording all four branches' relationship to `main`.
 
-**This section applies only to `feature/spatial-portfolio-v2`. It is not merged into `main`, does not amend §§1–17 above, and does not represent an approved design direction.** `main` remains governed by §§1–17 exactly as written. This entry exists so the branch is self-documenting for independent review against the sibling `feature/layered-editorial-prototype` experiment and against V1 (`feature/spatial-portfolio`, preserved unchanged) — see `docs/PROGRESS.md` for the dated log entries recording all three branches' relationship to `main`.
+### 18.1 The three iterations
 
-### 18.1 What V1 got wrong, and what V2 changes
+| | V1 — rejected | V2 — scene reset | V3 — route choreography |
+|---|---|---|---|
+| **Verdict** | "The camera travels across a huge empty world containing tiny webpage components." | "Dramatically better. The scene-first reset was correct — but still not the intended experience." | this pass |
+| **Scenes** | none: world coordinates holding `ProjectCard`s | real scene layer; viewport-scale compositions | unchanged, extended to 7 scenes |
+| **After the collision** | reposition, then nothing | reposition, then the camera parks and the page falls into ordinary vertical flow | **a second, genuinely different diagonal route** |
+| **Travel space** | empty | empty (V2's own stated weakness) | sparse orientation grammar derived from the route |
+| **Break** | a mathematically correct teleport | one solid ink panel sweeping across — "the most conventional device in the prototype" | converging rails; the solid field is one element, not the idea |
+| **Atmosphere** | continuous canvas embers | erosion wind on one transition, hand-picked direction | same treatment, direction **derived from the route**, fewer fragments |
+| **Hero** | small object in a large space | correctly scaled but deliberately generic | two offset regions joined by a rule running at the first leg's own angle |
+| **Route length** | 600vh | 360vh | 420vh — the extra 60vh is spent entirely after the break |
 
-V1 proved the camera infrastructure and was **visually rejected** by the owner after real-browser and screen-recording review. The verdict: *"the camera travels across a huge empty world containing tiny webpage components"* when the intent was *"the camera travels between fully composed scenes that temporarily own the viewport."*
+### 18.2 The world has two routes
 
-V2 keeps V1's proven engine and replaces its presentation:
+This is V3's whole subject. The owner's V2 review named one requirement above the rest: **after the collision the route must not drop into a straight-down / normal vertical flow.**
 
-| Rejected in V1 | V2 |
-|---|---|
-| World coordinates existed, scenes did not | `lib/spatial/scenes.ts` is a real scene layer: anchor, focal progress, and dwell window per scene |
-| Nodes reused the ordinary homepage `ProjectCard` (~384px cards adrift in a 4000px world) | `SpatialProjectScene` — a dedicated viewport-scale editorial composition; **no `ProjectCard` anywhere in the spatial world** (e2e-enforced) |
-| 600vh blind spacer, enormous dead travel | 360vh, derived from what the scenes and the break actually need |
-| Camera drifted past things at constant velocity | Camera *dwells* at each scene, and eases in/out of travel so arrivals read as arrivals |
-| Collision was a mathematically correct but perceptually teleporting jump | Same discontinuous route jump, now bridged by a scene-break wipe so it reads as a cut |
-| Continuous random ember canvas across the whole journey | One erosion-wind treatment attached to exactly one transition |
-| Permanent route-progress label + scattered micro-metadata | Removed; one mono marker per scene |
-| Section sat inside the 1320px `Container` while positioning in vw/vh | Full-bleed, so the world's units and its actual frame finally agree |
+- **Route one — the evidence region.** `hero → kivilcim → dropspot → tail → wall`. Descends left-to-right. Leg angles deliberately vary rather than repeating one zig-zag.
+- **The break.** The camera accelerates into the wall, stops dead, and jumps discontinuously behind a full cover.
+- **Route two — the thinking region.** `reorient → approach → handoff`. Starts at the world's lowest and left-most point and **climbs back up and to the right.** Every route-two slope is negative where every route-one slope is positive, and no two legs anywhere in the world share an angle.
 
-### 18.2 Disclosed departures from §13's binding motion rules
+The direction change carries meaning, not just geometry: route one is what was actually built and can actually be shown; the collision is the end of that evidence; route two is how the work is thought about. That is why the reposition lands at the depth the approved primary line already calls *"underneath"*, and why the first thing standing there is the site's own Surface / Flow / System framework.
+
+Binding, and unit-tested: **both axes must move on both routes.** A leg with no horizontal component is exactly the failure this iteration exists to prevent, so `deltaX != 0 && deltaY != 0` is asserted for the post-collision route in both the unit suite and the browser suite.
+
+### 18.3 Disclosed departures from §13's binding motion rules
 
 §13 forbids "scroll-linked (scrub) animation." This prototype's entire premise — real scroll position mapped to a camera's world position via a pinned/sticky container (Motion's `useScroll`/`useTransform`) — is exactly that pattern. This is a **deliberate, disclosed experimental hypothesis under test, not an oversight or a silent rule change.** It is isolated to this branch, never merged, and exists to be compared against the approved, §13-compliant direction.
 
-The erosion atmosphere (18.4) is a second, narrower disclosed departure: §13 forbids "looping/idle animations." It is scoped to one transition and fully disabled under reduced motion.
+The erosion atmosphere (18.6) is a second, narrower disclosed departure: §13 forbids "looping/idle animations." It is scoped to one transition and fully disabled under reduced motion. The expressive word's `scaleX` compression during the approach is a third: it is a deformation of decorative typography only, never of functional text, and never a growth (§13's `scale > 1.03` bound is not approached).
 
-Everything else follows the approved system and this codebase's existing conventions: semantic HTML, one `h1`, correct heading order (axe-verified), keyboard operability, approved tokens only, real loader-fed project content, and `Figure`'s D-019 asset-honesty rules including TASK-008's explicit-intrinsic-dimensions CLS fix. No scale >1.03, no rotation, no spring/overshoot, no parallax, no WebGL, no new dependency.
+Everything else follows the approved system and this codebase's existing conventions: semantic HTML, one `h1`, correct heading order (axe-verified), keyboard operability, approved tokens only, real loader-fed project content, and `Figure`'s D-019 asset-honesty rules including TASK-008's explicit-intrinsic-dimensions CLS fix. No rotation, no spring/overshoot, no parallax, no WebGL, no new dependency.
 
-### 18.3 Scene and camera rules (additive, this branch only)
+### 18.4 Scene and camera rules (additive, this branch only)
 
-- **A scene owns the viewport.** Scene blocks are `min(84vw, 1180px)` wide (`92vw` on mobile) with a `72vh` minimum, framed by a camera inset. At 1440×900 a focal scene occupies ~82% of viewport width and its evidence plate ~56% — inside the 55–85% art-direction range, and roughly 2× the linear size of V1's cards.
-- **No microtext, no thumbnails.** Project titles render at `display-l` (up to 64px); evidence plates are viewport-scale. Both are e2e-enforced as loose lower bounds ("not a thumbnail", "not microtext"), never as exact pixel layouts.
-- **Two compositions, not one template.** `split` (text beside plate, Kıvılcım) and `stacked` (dominant plate leading, DropSpot) — so the two project scenes never read as one repeated card, per §17 criterion 4.
+- **A scene owns the viewport.** Scene blocks are `min(84vw, 1180px)` wide (`92vw` on mobile) with a `72vh` minimum, framed by a camera inset. At 1440×900 a focal scene occupies ~82% of viewport width and its evidence plate ~53–59%.
+- **Dwell is tuned per scene, never set to one convenient constant.** DropSpot holds longest because a real product screenshot is the strongest evidence on the route; the tail is a deliberately brief beat before the wall. Asserted as a property (dwells differ; DropSpot's is the longest) rather than as fixed numbers.
+- **The first leg is gentler than the rest.** Hero → Kıvılcım uses smootherstep, so the hero stays readable well into the movement and is *discovered* to be part of a world rather than snatched out of frame. Unit-tested as "under 15% of the leg covered in its first quarter."
+- **Two compositions, not one template.** `split` (text beside plate, Kıvılcım) and `stacked` (dominant plate leading, DropSpot).
 - **Evidence selection is data-derived.** The lead asset is chosen from the asset's own registered metadata (real screenshot > system-layer diagram > first registered), never a hard-coded filename or slug→asset map.
-- **Titles are not CSS-uppercased.** `text-transform: uppercase` turns "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography D-017 fixes as the primary display name. Display scale carries the emphasis instead of case.
-- **Route geometry connects compositions.** Desktop travels diagonally with deliberately varying leg angles (no repeating zig-zag, unit-tested); mobile is purely vertical — "same world, same scenes, different choreography," never the desktop diagonal shrunk down.
-- **Collision != bounce (carried over from V1, unchanged semantics).** The camera never eases past the wall and never reverses off it: it accelerates in, stops dead, holds, then jumps discontinuously. Unit-tested.
-- **The break is perceptual, not just mathematical.** An ink panel wipes across, the route's discontinuity happens behind it at full cover, then it wipes away to reveal the new region — the difference between a cut and a teleport. Impact impulse is a single ≤7px shake at 140ms (inside the 80–180ms budget), no spring, no elastic settle, no flash-bang.
-- **Orientation after reposition.** The landing scene leads with a giant expressive word that is the second half of the approved primary line — the visitor immediately understands the world changed.
-- **Fewer elements, larger meaning (§22 of the brief).** One mono marker per scene carrying both route index and evidence type; V1's permanent route label and scattered micro-metadata are deleted.
+- **Titles are not CSS-uppercased.** `text-transform: uppercase` turns "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography D-017 fixes as the primary display name. This applies to every line that interpolates a project title, including the handoff copy.
+- **Mobile is the same world with different choreography.** Purely vertical on both routes — a large post-collision diagonal at 375px costs readability and buys nothing. The break and its reposition still happen, and are still discontinuous.
+- **No `<li>` may exist in the spatial world.** That is the structural contract keeping V1's rejected `ProjectCard` nodes out; it is why the layer teaser is a `<dl>`, which is also the semantically correct element for term/definition pairs.
 
-### 18.4 Atmosphere — erosion wind (the single prototype)
+### 18.5 World grammar — the sparse orientation system
 
-V1's continuous canvas ember field read as random debug particles and was rejected. V2's replacement:
+V2's honest weakness was that the travel space was empty. V3 fills it with orientation, not decoration, from four kinds of mark and nothing else:
 
-- Acts on **expressive typography only** — the giant transition word's trailing edge sheds fragments. Body text, project content, and every functional label are untouched (§20 of the brief).
-- 17 fragments across 3 depth layers, all drifting along **one** shared wind vector (up and to the right), sized in `em` so they scale with the letterforms.
-- Has a real **start → peak → decay** tied to exactly one transition (tail → collision) and does not exist anywhere else in the journey.
+1. **Leg rails** — drawn from the route's own leg list, so a rail can never describe a path the camera does not take. Route two is dashed and signal-coloured, so "you are on a different route now" is legible without a label.
+2. **Route residue** — a rail brightens once the camera has travelled it. The path behind you is more present than the path ahead.
+3. **Registration ticks** — one corner tick per scene anchor, offset outside the scene block so it reads as a world coordinate rather than scene content.
+4. **The wall boundary** — a rule running off both edges of the frame, with three coordinate rules that **converge** on it as approach tension rises, stopping just short of collapsing into one line. This is the collision's own grammar: the coordinate system visibly tightens before the camera is stopped by it.
+
+No grid, no particles, no technical confetti, no permanent progress label. Everything in this layer is `aria-hidden` and states nothing that is not already in real semantic text.
+
+**The depth rail** is the same vocabulary used compositionally: at the reposition, a rail descends from above the frame, registered by the three layer names, with the giant `UNDERNEATH` standing at its foot. The word therefore labels a coordinate in the world instead of floating as isolated typography.
+
+### 18.6 The scene break — converging rails
+
+The route's discontinuity is bridged by seven horizontal rails that close on the frame **from alternating sides**, each on a different arrival curve, so the coordinate system reads as snapping shut rather than being swiped over. A linear solid field sits behind them and is therefore always the last thing to close — its only job is to guarantee the frame is genuinely opaque at the instant the route jumps. Unit-tested: every rail's offset is exactly zero at the cut, so no gap can expose the jump; rails close from both directions; adjacent rails never share an arrival rate; every rail is ahead of the solid field.
+
+Impact impulse is unchanged from V2: a single ≤7px shake at 140ms, no spring, no elastic settle, no flash. **Collision != bounce** remains binding — the camera never eases past the wall and never reverses off it.
+
+### 18.7 Atmosphere — erosion wind (the single prototype)
+
+- Acts on **expressive typography only** — the giant transition word's trailing edge sheds fragments. Body text, project content, and every functional label are untouched.
+- **The wind direction is derived, not chosen.** It is the exact opposite of the camera's screen-space travel on the collision-approach leg, so fragments trail the word along the vector the camera is dragging it against. Unit-tested as "opposes the camera's screen travel."
+- 13 fragments across 3 depth layers (down from V2's 17 — fewer and more deliberate), sized in `em` so they scale with the letterforms.
+- Real **start → peak → decay** tied to exactly one transition, and absent everywhere else in the journey.
 - Plain DOM transforms driven by MotionValues — **no canvas, no particle system, no WebGL, no dependency.**
-- Renders as a static word (no fragments, no motion) under reduced motion and before hydration.
+- Renders as a static word under reduced motion and before hydration.
 
-### 18.5 Typography split
+### 18.8 Typography split
 
-- **Functional (always stable, never rotated, never fragmented):** project titles, descriptions, tech lists, captions, CTA, nav, evidence markers.
-- **Expressive (may respond to camera progress):** the hero display name, the eroding transition word, and the post-reposition orientation word. Both giant words are `aria-hidden` decorative duplicates of copy already present in real semantic text on the same page, so nothing is exclusively locked behind a decorative treatment.
-- One scene-scoped clamp override exists (hero display name, `clamp(3rem,10vw,9rem)`), because the shared `display-xl` token caps at 6.5rem and left the name occupying under half the frame — the exact failure V2 exists to correct. Kept component-scoped and **not** promoted into the token system, which governs `main`.
-- Giant single words use viewport-driven clamp floors, not rem floors: an unbreakable word cannot wrap and overflowed 320px viewports otherwise.
+- **Functional (always stable, never rotated, never fragmented, never compressed):** project titles, descriptions, tech lists, captions, CTA, nav, layer definitions, evidence markers.
+- **Expressive (may respond to camera progress):** the hero display name, the eroding/compressing transition word, and the orientation word. Both giant words are `aria-hidden` decorative duplicates of copy already present in real semantic text on the same page. Two expressive words for the whole journey, per §19 of the brief.
+- One scene-scoped clamp override exists (hero display name, `clamp(3rem,10vw,9rem)`), because the shared `display-xl` token caps at 6.5rem. Kept component-scoped and **not** promoted into the token system, which governs `main`.
+- Giant single words use viewport-driven clamp floors, not rem floors: an unbreakable word cannot wrap and overflows narrow viewports otherwise.
 
-### 18.6 Reduced-motion and no-JS fallback
+### 18.9 Reduced-motion and no-JS fallback
 
-Both fully disable the camera and the atmosphere rather than softening them: the same real, **fully composed** scenes render in plain linear document flow — no sticky container, no transform, no fragments. Deliberately not a stripped-down dump; each scene keeps its own composition, so this reads as a designed linear page. Mirrors the codebase's existing progressive-enhancement pattern (`LayerExplorer`, `MobileNav`).
+Both fully disable the camera, the world grammar, the break, and the atmosphere rather than softening them: the same real, **fully composed** scenes render in plain linear document flow. Deliberately not a stripped-down dump — each scene keeps its own composition, including the layer teaser and the positioning statement, so this reads as a designed linear page. Mirrors the codebase's existing progressive-enhancement pattern (`LayerExplorer`, `MobileNav`).
 
-### 18.7 Known remaining weaknesses (deliberately not resolved this pass)
+### 18.10 Known remaining weaknesses (deliberately not resolved this pass)
 
 - Only 2 of 4 D-016 projects are staged as scenes; JointLedger and Professional Systems are reached through the real Work index — an explicit vertical-slice boundary, not an oversight.
-- The hero scene is intentionally calm and conventional (§7 of the brief) and is therefore the least distinctive frame in the sequence; whether it earns its viewport is the most open art-direction question in V2.
-- Travel segments still show a mostly empty world. The pacing is far tighter than V1, but "what the space between scenes is actually made of" is unanswered — there is no orientation structure out there yet.
-- The scene-break wipe is a solid ink panel. It works, but it is the most conventional device in the prototype and is worth challenging in a further iteration.
+- Route two's three beats are each shorter than route one's, and the handoff beat in particular is close to the minimum that still reads as a scene.
+- The world grammar is derived and sparse, but it is still made only of hairlines. Whether the travel space now has enough *material* — as opposed to enough *information* — is the most open art-direction question in V3.
+- Scene compositions sit vertically centred in their blocks, which leaves the upper third of the two route-two scenes carrying only an incoming rail.
+- `VW_PER_VH` is a single nominal aspect ratio (1440×900). Directions stay correct across the common desktop range but the hero rule and the wind are exactly aligned to the route only near that aspect.
