@@ -363,11 +363,20 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     const { start, end } = await measureRoute(page, 900);
 
     // Sampled where the camera is genuinely travelling on each route, not
-    // inside a dwell window at either end.
+    // inside a dwell window at either end -- and, critically, ENTIRELY ON ONE
+    // SIDE of the collision. Route one must be sampled strictly before
+    // COLLISION_PROGRESS (0.5764) and route two strictly after BREAK_REVEAL_END
+    // (0.6474). An earlier version of this test ended its "route one" span at
+    // 0.64, which is past BREAK_CUT (0.6214), so the span crossed the
+    // discontinuity and measured the reposition rather than route one: it
+    // reported a slope of -3.0 for a route whose real slope is +0.76. That was
+    // never a property of the camera -- `routeSlope(1)`/`routeSlope(2)` have
+    // always been +0.76/-0.37, i.e. genuinely opposite -- it was the sample
+    // window straddling the cut, and it measured the same wrong thing on V4.
     const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
     const routeOneStart = await at(0.16);
-    const routeOneEnd = await at(0.64);
-    const routeTwoStart = await at(0.79);
+    const routeOneEnd = await at(0.5);
+    const routeTwoStart = await at(0.7);
     const routeTwoEnd = await at(0.99);
 
     if (!routeOneStart || !routeOneEnd || !routeTwoStart || !routeTwoEnd) {
