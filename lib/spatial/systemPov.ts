@@ -1,6 +1,7 @@
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). Pure data derivation, no JSX -- what the
-// observing system is allowed to say about a scene, and when.
+// see docs/DESIGN_SYSTEM.md §19). Pure data derivation, no JSX -- what the
+// observing system is allowed to say about a scene, and when. Unit-testable in
+// isolation (tests/unit/spatial-system-pov.test.ts).
 //
 // THE RULE THIS FILE EXISTS TO ENFORCE (§2, §12)
 //

@@ -5,7 +5,7 @@ import { MonoLabel } from "@/components/ui/MonoLabel";
 import type { SystemAnnotation, SystemAnnotationRow } from "@/lib/spatial/systemPov";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). The ACQUISITION half of the V5 transition
+// see docs/DESIGN_SYSTEM.md §19). The ACQUISITION half of the V5 transition
 // vocabulary (§32).
 //
 // WHAT THIS IS NOT
@@ -107,7 +107,13 @@ type Corner = {
 };
 
 const CORNERS: Corner[] = [
-  { key: "tl", box: "left-0 top-0", arm: "left-0 top-0", origin: "origin-top-left", trailing: false },
+  {
+    key: "tl",
+    box: "left-0 top-0",
+    arm: "left-0 top-0",
+    origin: "origin-top-left",
+    trailing: false,
+  },
   {
     key: "tr",
     box: "right-0 top-0",

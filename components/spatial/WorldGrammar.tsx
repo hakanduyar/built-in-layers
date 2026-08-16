@@ -13,7 +13,7 @@ import {
 import { routeLegs } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18).
+// see docs/DESIGN_SYSTEM.md §19).
 //
 // V2's honest remaining weakness was that the space between scenes was
 // empty: pacing was right, but there was nothing out there to tell you where
@@ -287,7 +287,10 @@ function DeregisteringBracket({
   const armY = useTransform(tension, [0.45, 1], [0, -direction * 9]);
 
   return (
-    <motion.div className="absolute" style={{ left: `${at.x}vw`, top: `${at.y}vh`, x: shift, opacity }}>
+    <motion.div
+      className="absolute"
+      style={{ left: `${at.x}vw`, top: `${at.y}vh`, x: shift, opacity }}
+    >
       <motion.span className="absolute left-0 top-0 block h-px w-9 bg-ink" style={{ x: armX }} />
       <motion.span className="absolute left-0 top-0 block h-9 w-px bg-ink" style={{ y: armY }} />
     </motion.div>

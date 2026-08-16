@@ -4,7 +4,7 @@ import { motion, useTransform, type MotionValue } from "motion/react";
 import { travelWindVector } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). The MATERIAL SHIFT half of the V5 transition
+// see docs/DESIGN_SYSTEM.md §19). The MATERIAL SHIFT half of the V5 transition
 // vocabulary (§32), and the iteration's signature effect (§15).
 //
 // WHAT CHANGED FROM V4
@@ -159,8 +159,7 @@ export function ErosionWord({ word, erosion, tension = null }: ErosionWordProps)
 // element's border box, and with leading of 0.82 the letterforms reach past
 // the line box, so an unpadded stack sheared the erosion patches off with a
 // dead-straight horizontal edge across the caps.
-const WORD_CLASS =
-  "block py-[0.07em] font-display leading-[0.82] tracking-[-0.03em] uppercase";
+const WORD_CLASS = "block py-[0.07em] font-display leading-[0.82] tracking-[-0.03em] uppercase";
 
 function CompressingStack({
   word,

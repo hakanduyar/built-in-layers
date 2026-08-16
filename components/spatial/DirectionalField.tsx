@@ -5,7 +5,7 @@ import { PLANE_DISTANT } from "@/lib/spatial/scenes";
 import { cameraPosition, routeScreenAngle } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). Directional architecture (§22-24).
+// see docs/DESIGN_SYSTEM.md §19). Directional architecture (§22-24).
 //
 // The reference is environmental wayfinding -- the very large chevron-like
 // structures that recede down a concourse and tell you which way the space
@@ -82,13 +82,7 @@ export function DirectionalField({
       }}
     >
       {Array.from({ length: count }, (_, index) => (
-        <Chevron
-          key={index}
-          index={index}
-          count={count}
-          tension={tension}
-          baseOpacity={opacity}
-        />
+        <Chevron key={index} index={index} count={count} tension={tension} baseOpacity={opacity} />
       ))}
     </div>
   );

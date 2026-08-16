@@ -409,13 +409,16 @@ describe("world grammar derives from the route", () => {
             lengthSquared > 0
               ? Math.min(
                   Math.max(
-                    (((at.x - from.x) * VW_PER_VH * dx + (at.y - from.y) * dy) / lengthSquared),
+                    ((at.x - from.x) * VW_PER_VH * dx + (at.y - from.y) * dy) / lengthSquared,
                     0,
                   ),
                   1,
                 )
               : 0;
-          return screenDistance({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t }, at);
+          return screenDistance(
+            { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t },
+            at,
+          );
         }),
       );
 

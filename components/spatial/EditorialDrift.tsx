@@ -10,7 +10,7 @@ import {
 } from "@/lib/spatial/editorialDrift";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). §26-31.
+// see docs/DESIGN_SYSTEM.md §19). §26-31.
 //
 // The lower homepage keeps its exact semantic order and its exact content.
 // What changes is that each section is a BLOCK ON A TRACK rather than a
@@ -94,11 +94,7 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
           className="mb-8 hidden lg:block"
           style={{ width: `${rule.width}vw`, height: `${Math.abs(rule.height)}vh` }}
         >
-          <svg
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            className="h-full w-full text-line"
-          >
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full text-line">
             <line
               x1="0"
               y1={rule.height >= 0 ? 0 : 100}
