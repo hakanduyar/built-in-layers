@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <>
       <SpatialExperience />
-      {/* Spatial V5 §26-31: the lower homepage keeps its exact semantic order
+      {/* Spatial V5 (docs/DESIGN_SYSTEM.md §19.9): the lower homepage keeps its exact semantic order
           and its exact content, but is composed along a deterministic drift
           track instead of a centred column, so the world's physics continue
           past the end of the spatial route rather than stopping dead at it.

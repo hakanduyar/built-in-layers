@@ -1,5 +1,5 @@
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). Pure filter math, no React, no motion --
+// see docs/DESIGN_SYSTEM.md §19). Pure filter math, no React, no motion --
 // unit-testable in isolation (tests/unit/spatial-filter.test.ts).
 //
 // WHY THIS REPLACES V4'S SPRING (§7)

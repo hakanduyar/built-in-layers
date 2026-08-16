@@ -1,5 +1,5 @@
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). Pure route/camera math, no JSX, no
+// see docs/DESIGN_SYSTEM.md §19). Pure route/camera math, no JSX, no
 // "use client" -- unit-testable in isolation (tests/unit/spatial-route.test.ts).
 //
 // V3's route was piecewise: dwell at an anchor (velocity exactly zero), then

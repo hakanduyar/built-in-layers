@@ -1,5 +1,5 @@
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
-// see docs/DESIGN_SYSTEM.md §18). Pure geometry for the lower homepage, no
+// see docs/DESIGN_SYSTEM.md §19). Pure geometry for the lower homepage, no
 // JSX -- unit-testable in isolation (tests/unit/spatial-drift.test.ts).
 //
 // THE PROBLEM THIS SOLVES (§26)

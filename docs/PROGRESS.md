@@ -538,3 +538,66 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 - **Accessibility**: zero axe violations across all routes and interactive states in both engines. The depth planes add no screen-reader content — asserted with role queries (which respect `aria-hidden`) rather than text queries (which do not), plus a direct check that every child of a non-world plane is `aria-hidden`.
 - **Known remaining weaknesses**: recorded in `docs/DESIGN_SYSTEM.md` §18.10 — only 2 of 4 D-016 projects are staged; at a deliberately fast wheel profile the trace is too coarse (260 frames for the whole route) for the spike metric to be meaningful; the material's in-frame offsets are hand-tuned at 1440×900 even though their progress is derived; `VW_PER_VH` remains a single nominal aspect; the spline parameter is not arc-length normalised.
 - Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v4`. Continuous camera and depth/material implemented, measured, and documented. Exists for independent comparison against V1–V3 and `feature/layered-editorial-prototype`. Not merged.**
+
+### 2026-08-16 — Spatial Portfolio V5 (system intelligence layer + Editorial Drift): checkpoint recovery, audit, and partial stabilization
+
+**This entry exists only on `feature/spatial-portfolio-v5`. It does not amend TASK-001–008's status above; TASK-008 remains RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`. V1 is preserved at `673c3ef9b07dd182dca6ec2aa3d950bdbe8dc372`, V2 at `4643d11482d1ee5a339ae5314365dc05a5acd57d`, V3 at `628494eb983050b64933baf55d4c7dd94d18d39a`, V4 at `3d4834683dc03510569d747fa1739e6475094345`, and `feature/layered-editorial-prototype` at `922f4e03452804dcdce27f66cc609129b56756b4`. No earlier branch was reset, amended, force-pushed, or merged.
+
+#### Why this entry covers two passes
+
+V5 was implemented on a different machine and had to be abandoned mid-flight; the work was preserved as an emergency WIP checkpoint (`36d5da5`, "wip: checkpoint spatial portfolio v5") rather than lost. This entry records (a) the recovery audit of that checkpoint and (b) the stabilization pass that followed. **V5 is not finished and is not approved.**
+
+#### What V5 adds over V4
+
+- **Arc-length route normalisation** (`lib/spatial/sceneRoute.ts`) — closes V4's own §18.10 known weakness *on this branch only*. V4 itself is unchanged and still carries that weakness.
+- **Cascaded velocity-aware camera filter** (`lib/spatial/cameraFilter.ts`, new) — replaces V4's single overdamped spring with two cascaded first-order lags whose time constant tightens as input speed rises.
+- **System POV** (`components/spatial/SystemPOV.tsx`, `lib/spatial/systemPov.ts`, both new) — the acquisition annotation layer.
+- **Collision intelligence + post-collision state** (`components/spatial/WorldGrammar.tsx`) — the boundary loses registration as tension rises; registration ticks tighten after the cut.
+- **Layered erosion** (`components/spatial/ErosionWord.tsx`, rebuilt) — ink shell → graphite substrate → system trace, with a closed six-archetype debris vocabulary.
+- **Directional architecture** (`components/spatial/DirectionalField.tsx`, new).
+- **Editorial Drift** (`components/spatial/EditorialDrift.tsx`, `lib/spatial/editorialDrift.ts`, both new) — the lower homepage no longer drops into ordinary straight-down scrolling.
+
+Full design rationale, anti-patterns, deferred ideas and per-claim verification status are recorded in `docs/DESIGN_SYSTEM.md §19`.
+
+#### Recovery audit findings (checkpoint `36d5da5`)
+
+- Branch, HEAD and clean-tree assumptions all verified before anything was touched. `feature/spatial-portfolio-v4` exists locally only as a remote-tracking ref; the baseline commit resolves correctly.
+- **`tests/unit/zz-scratch-dump.test.ts` inspected and deleted.** It was a single `it("dump")` writing JSON to a temp path with zero assertions — genuinely the temporary diagnostic file it was described as, not deliverable code. Nothing else was removed.
+- **No fabricated content found.** Verified by grep across the whole V5 diff: no `Math.random`, no `Date.now`/`new Date`, no invented percentages, coordinates, confidence values, statuses or timestamps. Every telemetry-vocabulary hit was in a code comment explaining why such a thing is forbidden, never in rendered output. `lib/spatial/systemPov.ts` reads exclusively from validated project frontmatter.
+- **No new dependencies.** `git diff 3d48346..HEAD -- package.json pnpm-lock.yaml` is empty.
+- The erosion trace tile's two hard-coded hex values were checked against the token set and match exactly (`#161616` = `--color-ink`, `#ff4f1f` = `--color-signal`); they are hard-coded only because an SVG data URI cannot read CSS custom properties.
+- **Two source comments referenced unit-test files that did not exist** (`spatial-filter.test.ts`, `spatial-drift.test.ts`), and all nine V5 source files pointed readers at `DESIGN_SYSTEM.md §18` — which documents V4. Both corrected in the stabilization pass.
+
+#### Stabilization pass — what was actually done
+
+- **Three unit-test suites written for the previously untested V5 modules**: `tests/unit/spatial-filter.test.ts`, `tests/unit/spatial-drift.test.ts`, `tests/unit/spatial-system-pov.test.ts` — **60 tests, all passing**. They lock contracts, not tuning constants: the filter's no-overshoot property for any `dt`/`tau` (including a per-frame-varying `tau`), the single-crossing guarantee at `BREAK_CUT`, drift determinism and in-range geometry, and System POV's honesty rules (absent field ⇒ no row; two projects differing only in slug annotate identically). The drift suite reads `app/page.tsx` directly to prove rendered section order matches the drift table, so the two cannot silently diverge.
+- **Reduced-motion contract change recorded as approved** — `docs/DESIGN_SYSTEM.md §19.10` now supersedes §18.9 for this branch: *reduced motion disables motion, not design*. Static System POV brackets, editorial composition and real metadata may remain; all camera travel, parallax, erosion animation, moving debris, directional-field movement and drift movement must not. This was an owner decision, not an implementation choice.
+- **Source-comment accuracy repaired**: the two aspirational test references are now true, a third was added for `systemPov.ts`, the nine V5 files now cite `§19`, and `app/page.tsx` no longer cites a brief section that does not exist in this repository.
+- **Documentation written**: `docs/DESIGN_SYSTEM.md §19` (14 subsections), and V4's §18.10 amended to point at §19 *without* rewriting V4 history — V4 still has the arc-length weakness; V5 experimentally addresses it.
+
+#### Gate results — and an important caveat about the toolchain
+
+All gates below passed, **but not on the repository-pinned package manager**. This machine runs **Node v22.12.0**, and the pinned `pnpm@11.17.0` requires **Node ≥ 22.13**, so `pnpm` refuses to start at all. Dependencies were installed with a temporary pnpm 10.20.0 under `--frozen-lockfile`; `package.json` and `pnpm-lock.yaml` are byte-unchanged, confirmed by `git status`. Two consequences are recorded honestly rather than hidden: pnpm 10 does not recognise pnpm 11's `allowBuilds` key, so `sharp` and `unrs-resolver` build scripts were skipped; and these results are therefore **provisional, not authoritative**.
+
+| Gate | Result |
+|---|---|
+| `typecheck` | pass |
+| `lint` | pass |
+| `git diff --check` | clean |
+| unit tests | **484 passed / 484**, 20 files (424 pre-existing + 60 new) |
+| production build | pass — 14/14 pages generated |
+
+#### What is still NOT verified
+
+Browser validation was **not** run and was deliberately not faked. Per the owner's instruction, authoritative validation must happen on the repository's own pinned toolchain, which this machine cannot currently run. Outstanding:
+
+- Playwright browser engines are not installed on this machine; no Chromium or WebKit E2E run.
+- **Editorial Drift's runtime behaviour is unproven — the single highest risk.** Its motion is expressed as interpolation between two CSS `calc()` strings; that typechecks, lints and builds, but no current gate can detect it snapping between endpoints instead of drifting.
+- No visual QA, no arc-length runtime measurement, no camera-filter wheel-profile measurement, no axe pass on the V5 surfaces, no mobile verification.
+- The newly approved reduced-motion contract is documented but not yet asserted by an E2E test.
+
+#### Environment recommendation (not applied — awaiting owner review)
+
+`package.json` currently declares `engines.node: ">=22.0.0"` alongside `packageManager: "pnpm@11.17.0"`. These are mutually inconsistent: the pinned pnpm cannot run on large parts of the declared-compatible Node range. Recommended install is **Node v22.23.2** (current v22 LTS "Jod"), which also restores the version line this project was originally developed and tested on (PROGRESS records Node 22.23.1). `engines.node` was deliberately **not** modified in this pass.
+
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v5`. Recovered, audited, unit-tested and documented; runtime/browser proof still outstanding and blocked on the Node runtime. NOT merged, NOT approved, NOT finished.**
