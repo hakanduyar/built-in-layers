@@ -601,3 +601,51 @@ Browser validation was **not** run and was deliberately not faked. Per the owner
 `package.json` currently declares `engines.node: ">=22.0.0"` alongside `packageManager: "pnpm@11.17.0"`. These are mutually inconsistent: the pinned pnpm cannot run on large parts of the declared-compatible Node range. Recommended install is **Node v22.23.2** (current v22 LTS "Jod"), which also restores the version line this project was originally developed and tested on (PROGRESS records Node 22.23.1). `engines.node` was deliberately **not** modified in this pass.
 
 - Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v5`. Recovered, audited, unit-tested and documented; runtime/browser proof still outstanding and blocked on the Node runtime. NOT merged, NOT approved, NOT finished.**
+
+### 2026-08-17 — Spatial Portfolio V5: authoritative runtime proof (Node 22.23.2 / pnpm 11.17.0)
+
+**Branch-only, still `feature/spatial-portfolio-v5`, still NOT merged and NOT approved.** `main` unchanged at `16d3ec0`. V1–V4 and `feature/layered-editorial-prototype` untouched.
+
+The environment blocker from the previous pass is resolved: Node is now v22.23.2 and the repository-pinned `pnpm@11.17.0` runs. `pnpm install --frozen-lockfile` reported "Already up to date"; `pnpm rebuild` then ran the two `allowBuilds` native scripts (`sharp`, `unrs-resolver`) that the temporary pnpm 10 had skipped, so this is the first fully authoritative environment for the branch. `package.json` and `pnpm-lock.yaml` were not modified.
+
+#### The headline result: Editorial Drift works
+
+This was the single largest open risk — the drift is Motion interpolation between two CSS `calc()` strings, and nothing short of a real browser could prove it interpolates rather than snapping between endpoints. Measured in Chromium at 1440×900, all four sections sweep continuously: 41/41 distinct positions for three of them, 34/41 for the deliberately quietest one, with the largest single step at **2.5–3.2% of total travel** (a snap would be ~100%). Horizontal overflow is 0px, values are byte-identical across reloads, semantic DOM order is unchanged, and the track settles at exactly 180px — the arithmetic centre at that width. **No implementation change was required**; the numeric-MotionValue fallback was not needed and was not adopted. Full table in `docs/DESIGN_SYSTEM.md §19.9`.
+
+#### Other runtime findings
+
+- **Reduced motion (D-020) behaves exactly as approved.** Under `prefers-reduced-motion`: camera planes 0, erosion fragments 0, debris archetypes 0, break rails 0, drift movement 0.00px — while System POV stays present with its 4 real metadata rows and all four drift blocks remain readable. Under normal motion the same page reports 1 camera plane, 3 fragment layers, 12 archetypes, 7 break rails and 107.65px of drift travel. Motion disabled, design retained.
+- **Arc-length reparameterisation is real and measurable.** Sampling `routeLegs()` from V4's and V5's own code at equal geometry-progress increments, the worst within-segment step-distance ratio falls from **2.7253 → 1.0247** on desktop (mean coefficient of variation **9.650% → 0.148%**) and **1.4328 → 1.0106** on mobile (3.936% → 0.066%). Segment endpoints are bit-identical between the two versions (max delta 0.000), so anchors did not move. Pooled whole-route figures barely change, and that is expected: they include the deliberate between-segment allocation, which is the velocity profile, not geometry.
+- **The camera does not chase the reader.** Under real incremental `mouse.wheel()` input at three profiles, the settle lag after input stops measured **0ms** in every case, and the longest near-stationary interval while scroll was still increasing was 60px/42ms (slow), 140px/19ms (normal), 400px/18ms (fast) — against V3's measured 406px/1133ms.
+- **Erosion is genuinely layered, not a fade.** Sampling the live mask geometry through the transition, substrate zones open before trace zones and both grow: 0 → 0 → 4 → 7 substrate and 0 → 0 → 1 → 3 trace, with shell opacity pinned at 1 throughout (the coating is always painted; what changes is what is exposed beneath it) and debris opacity rising then thinning (0 → 0 → 0.80 → 0.55).
+- **System POV is a lifecycle, not a HUD.** Bracket counts move 4 (approaching) → 8 (focused) → 0 (departed), with at most 2 metadata rows per scene and one signal accent per scene throughout.
+
+#### One real test defect found and fixed
+
+`spatial.spec.ts` "the second route runs at a visibly different slope from the first" was asserting on a sample window that **straddled the collision**: it ended its "route one" span at progress 0.64, which is past `BREAK_CUT` (0.6214), so it measured the reposition rather than route one and reported a slope of −3.0 for a route whose real slope is +0.76. Verified by running both versions' own code: V4 and V5 produce identical values at those sample points, so the test measured the same wrong thing on V4 and had been passing on transient timing rather than on the property it names. The sample windows now sit entirely on one side of the cut (0.16→0.50 and 0.70→0.99), which yields +0.78 and −0.35 — genuinely opposite, on both versions. **The assertion itself is unchanged**; only the window moved. It passed 3/3 consecutive runs after the fix.
+
+#### New browser coverage
+
+`tests/e2e/spatial-v5.spec.ts` (16 tests) covers what unit tests structurally cannot: drift continuity and determinism from computed transforms, drift overflow at four widths, System POV honesty (approved labels only, no fabricated telemetry, ≤2 rows, brackets `aria-hidden`), the three erosion layers in stacking order, the closed debris archetype vocabulary, and all four halves of the D-020 reduced-motion contract. Three defects in this new suite were found and fixed during development — the top-level `reducedMotion` key is silently ignored in Playwright 1.62.0 (it must be nested under `contextOptions`, as `motion.spec.ts` already documented), `$$eval` does not retry so it read the pre-hydration tree, and drift geometry must be measured after the spatial spacer reaches its final height or the last block samples only a fraction of its passage.
+
+#### Gates
+
+| Gate | Result |
+|---|---|
+| `typecheck` | pass |
+| `lint` | pass |
+| `git diff --check` | clean |
+| unit tests | **484 passed / 484**, 20 files |
+| production build | pass — 14/14 pages |
+| Chromium E2E | **205 passed / 205** |
+| WebKit E2E | **202 passed / 205** — 3 failed |
+
+`format:check` reports 146 files, but that is entirely a local `core.autocrlf=true` artifact: the committed content is correct LF, `git status` sees no change, and `prettier --check . --end-of-line crlf` passes repo-wide. Not a repository defect and deliberately not "fixed" by rewriting every file.
+
+Of the three WebKit failures, one (`spatial-v5.spec.ts` reduced-motion drift) passes in isolation and was contention flake. The other two are in specs that predate V5, fail on WebKit only, and reproduce in isolation: `shell.spec.ts`'s skip-link Tab-focus assertion, and `spatial.spec.ts`'s break-rail gap (163px against an 80px bound). Neither has been traced to a V5 change. **Neither was weakened, skipped, or retried into passing** — both are recorded as open in `docs/DESIGN_SYSTEM.md §19.13`.
+
+#### Visual verification
+
+19 states captured at 1440×900 plus a 375×812 mobile frame (0px horizontal overflow), and a natural-scroll production recording driven by real incremental wheel input with reading pauses — not a scripted `scrollTo` sweep. Both are saved **outside the repository**, under `C:\Users\hakan\spatial-v5-review\`. These are for the owner's next art-direction review and are explicitly not part of this pass.
+
+- Status: **EXPERIMENTAL BRANCH — runtime-proven, still not approved and not merged. Editorial Drift's open risk is closed; two pre-existing WebKit failures remain open.**

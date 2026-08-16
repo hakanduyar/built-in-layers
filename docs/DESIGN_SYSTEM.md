@@ -332,7 +332,7 @@ Both disable the camera, the planes, the grammar, the break, the material and th
 
 **This section applies only to `feature/spatial-portfolio-v5`. It is not merged into `main`, does not amend §§1–17, and does not supersede §18 — V4 is preserved unchanged on its own branch.** `main` remains governed by §§1–17 exactly as written. See `docs/PROGRESS.md` for the dated log entry recording every branch's relationship to `main`.
 
-**Verification status of this section is deliberately mixed and is stated per claim.** At the time of writing, V5 has passed static gates (typecheck, lint, unit tests, production build) but has **not** completed browser validation — no E2E run, no visual QA, no performance measurement. Claims below are marked accordingly. Nothing here may be read as a measured result unless it says so.
+**Verification status is stated per claim.** V5 passes typecheck, lint, unit tests and a production build, and as of 2026-08-17 has also completed authoritative browser validation on the repository's pinned toolchain (Node 22.23.2 / pnpm 11.17.0): full Playwright suite on Chromium and WebKit, plus direct runtime measurement of the drift, the camera filter, the erosion layers and the System POV lifecycle. Two WebKit-only failures in pre-existing specs remain open and are recorded in §19.13. Nothing here may be read as a measured result unless it says so.
 
 ### 19.1 Design thesis
 
@@ -423,7 +423,16 @@ The owner rejected the page dropping into ordinary straight-down scrolling once 
 - **Deterministic, not random.** "Unpredictable" was specified to mean *visually non-obvious*, not nondeterministic. Each section has a different entry, exit and sign of travel, from a fixed table — stable across visits, history and screenshots.
 - The track **settles back to centre** before handing off to the global footer CTA, so the world stops on a deliberate mark instead of running out.
 
-**Open risk, stated plainly:** the drift is expressed as Motion interpolation between two CSS `calc()` strings. This typechecks, lints and builds, but static analysis cannot prove a browser interpolates it smoothly. If it does not, blocks will snap between endpoints and **no current gate would catch it**. Browser proof is required before this section can be called verified; if interpolation proves unreliable, the fix is numeric MotionValues composed into the transform rather than string interpolation.
+**Resolved 2026-08-17 — the `calc()` interpolation works.** This was the largest open risk in the V5 audit: the drift is Motion interpolation between two CSS `calc()` strings, and no static check could prove a browser interpolates that rather than swapping between the two endpoint strings. Measured in Chromium at 1440×900, sampling each block across its own passage:
+
+| section | entry → mid → exit (px) | travel | distinct positions | largest single step |
+|---|---|---|---|---|
+| Built for Real Life | 77.2 → 111.4 → 145.7 | 68.5px | 41/41 | 2.5% of range |
+| How I Build | 214.3 → 160.5 → 106.6 | 107.6px | 41/41 | 2.5% of range |
+| Field Notes | 126.1 → 165.3 → 204.5 | 78.3px | 41/41 | 2.5% of range |
+| About | 189.8 → 180.0 → 174.1 | 15.7px | 34/41 | 3.2% of range |
+
+A failed interpolation would put ~100% of the travel into one step; the measured worst case is 3.2%, and the sweep is monotonic. Horizontal document overflow is 0px, values are byte-identical across reloads, and the settle element lands at exactly 180px — the arithmetic centre of the track at that width. No change to the implementation was required, so the numeric-MotionValue fallback was **not** needed and was not adopted.
 
 ### 19.10 Reduced-motion contract (V5 — approved; supersedes §18.9)
 
@@ -468,9 +477,9 @@ Explicitly out of scope and not present in the code: intro resolve montage; curs
 
 ### 19.13 Known open items
 
-- Browser validation has not been run: no E2E, no visual QA, no performance measurement, no axe pass on the V5 surfaces.
-- Editorial Drift's `calc()` interpolation is unproven at runtime (§19.9).
-- The reduced-motion contract change in §19.10 is approved and documented but not yet covered by an E2E assertion.
+- **Two WebKit-only failures remain open, both in specs that predate V5.** (1) `shell.spec.ts` "skip link is the first Tab stop" — fails on WebKit even run in isolation; a headless window-activation/focus behaviour, unrelated to any spatial code. (2) `spatial.spec.ts` "every break rail closes onto the frame at the cut" — measures a 163px gap against an 80px bound on WebKit only; Chromium passes. Neither has been traced to a V5 change, and neither was weakened or skipped to obtain a green run. They need a dedicated WebKit pass.
+- **The full suite is sensitive to worker parallelism on the current machine.** At the config's default worker count, six axe scans time out at 30s each; run singly they complete in 1.3–3.8s with zero violations. This is CPU contention, already documented for TASK-008, not an accessibility regression. The authoritative runs above used 3 workers.
+- The camera-filter "largest movement spike" figure is not yet a clean metric: the world-plane transform includes the *deliberate* collision reposition, so a naive max-step measurement reports the intended discontinuity as a spike. Isolating non-collision travel needs a progress-gated probe.
 - Only 2 of 4 D-016 projects are staged as scenes — an explicit vertical-slice boundary inherited from V4.
 - `VW_PER_VH` remains a single nominal aspect ratio (inherited from V4).
 - **Dangling brief references.** The V5 source files carry many bare `§NN` citations (`§5`, `§7`, `§11`, `§22-24`, `§26-31`, `§32`, `§37`, `§44`, …). These refer to the original V5 implementation brief, which was never committed to this repository and exists only in the authoring session. Each file's *top-level* pointer has been corrected to `docs/DESIGN_SYSTEM.md §19`, but the inner numbers are not resolvable against any document here. They were deliberately left in place rather than renumbered, because inventing a mapping would risk mislabelling the reasoning they annotate. Either commit the original brief or renumber them against §19 in a dedicated pass.
