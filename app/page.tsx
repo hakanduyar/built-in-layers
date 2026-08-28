@@ -52,7 +52,12 @@ export default function Home() {
           past the end of the spatial route rather than stopping dead at it.
           The shared `Container` is replaced by the drift track, which carries
           its own responsive width and padding. */}
-      <div className="py-16">
+      {/* V6.6 (JOB 3): `py-16` -> `pb-16 pt-8`. The top half of this padding sat
+          inside the measured hand-over dead run, between the spatial section's
+          closing surface-line and the first real section, and it was buying
+          nothing that the drift track's own approach interval (driftPlate.gapVh)
+          was not already buying more deliberately. The bottom is untouched. */}
+      <div className="pb-16 pt-8">
         <JsonLd data={buildPersonJsonLd()} />
         <EditorialDrift>
           <DriftBlock id="real-life">

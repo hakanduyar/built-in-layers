@@ -10,6 +10,9 @@ import {
   lagStep,
   trackSpeed,
   type FilterState,
+  GLIDE_MAX_RATE,
+  GLIDE_RELEASE_GAIN,
+  glideStep,
 } from "@/lib/spatial/cameraFilter";
 import { BREAK_CUT } from "@/lib/spatial/sceneRoute";
 
@@ -229,5 +232,50 @@ describe("the filter is deterministic", () => {
   it("produces identical output for identical input", () => {
     const targets = ramp(0, 1, 250);
     expect(run(targets, 16.7, 0.3).output).toEqual(run(targets, 16.7, 0.3).output);
+  });
+});
+
+// V6.8 (JOB 1): the opening glide governor. Measured before it existed, a normal
+// wheel run peaked at 6,881 px/s of world movement in the departure and a trackpad
+// fling crossed the whole opening in a single frame. These are the contracts that
+// keep that fixed.
+describe("glideStep bounds the opening departure", () => {
+  const ZONE = 0.06;
+
+  it("never exceeds the capped rate inside the glide zone", () => {
+    let position = 0;
+    for (let i = 0; i < 200 && position < ZONE; i += 1) {
+      const next = glideStep(position, 0.5, 16.7, ZONE);
+      expect(next - position).toBeLessThanOrEqual(GLIDE_MAX_RATE * (16.7 / 1000) + 1e-9);
+      position = next;
+    }
+    expect(position).toBeGreaterThan(0);
+  });
+
+  it("is symmetric: reverse travel back into the zone is governed too", () => {
+    const next = glideStep(0.03, -0.5, 16.7, ZONE);
+    expect(0.03 - next).toBeLessThanOrEqual(GLIDE_MAX_RATE * (16.7 / 1000) + 1e-9);
+    expect(next).toBeLessThan(0.03);
+  });
+
+  it("passes movement through untouched past the release band", () => {
+    const past = ZONE * (1 + 2);
+    expect(glideStep(past, past + 0.3, 16.7, ZONE)).toBe(past + 0.3);
+  });
+
+  it("releases gradually: the band's cap grows but stays a cap", () => {
+    const inBand = ZONE * 1.5;
+    const step = glideStep(inBand, 0.9, 16.7, ZONE) - inBand;
+    const capMax = GLIDE_MAX_RATE * GLIDE_RELEASE_GAIN * (16.7 / 1000);
+    expect(step).toBeGreaterThan(GLIDE_MAX_RATE * (16.7 / 1000));
+    expect(step).toBeLessThanOrEqual(capMax + 1e-9);
+  });
+
+  it("is a no-op when no zone is configured", () => {
+    expect(glideStep(0, 0.4, 16.7, 0)).toBe(0.4);
+  });
+
+  it("leaves sub-cap movement exactly alone (slow reading is untouched)", () => {
+    expect(glideStep(0.01, 0.0101, 16.7, ZONE)).toBe(0.0101);
   });
 });

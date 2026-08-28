@@ -84,6 +84,12 @@ export function SystemPOV({
           resolved={resolved}
         />
       ))}
+      {/* V6 (§20.4): one graduated scale along the frame's lower edge, arriving
+          with the classification. It is the difference between a frame drawn
+          around a thing and a frame MEASURING a thing -- the cheapest honest way
+          to read as acquisition rather than as decoration. Desktop only: at
+          375px it would crowd the composition it is supposed to be observing. */}
+      {!compact && <MeasureScale state={state} animated={animated} />}
       <Cluster
         index={annotation.index}
         rows={rows}
@@ -175,6 +181,36 @@ function Bracket({
     >
       <span className={`absolute block h-px w-full bg-ink ${corner.arm}`} />
       <span className={`absolute block h-full w-px bg-ink ${corner.arm}`} />
+    </motion.span>
+  );
+}
+
+/**
+ * A graduated scale on the frame's lower edge: one hairline, ticks of two
+ * lengths, no numbers. Numbers would be fabricated data (§19.11's "no fake
+ * telemetry"); graduation alone carries the meaning, which is that the frame is
+ * an instrument rather than an ornament.
+ */
+function MeasureScale({ state, animated }: { state: MotionValue<number>; animated: boolean }) {
+  // Arrives with the classification and leaves before it, so the frame is never
+  // left measuring a scene the camera has already released.
+  const opacity = useTransform(state, [-0.4, -0.08, 0.14, 0.34], [0, 0.34, 0.34, 0]);
+  const TICKS = 13;
+
+  return (
+    <motion.span
+      aria-hidden="true"
+      className="absolute bottom-0 left-1/2 block h-2 w-[26%] -translate-x-1/2"
+      style={animated ? { opacity } : { opacity: 0.3 }}
+    >
+      <span className="absolute bottom-0 left-0 block h-px w-full bg-ink" />
+      {Array.from({ length: TICKS }, (_, i) => (
+        <span
+          key={i}
+          className="absolute bottom-0 block w-px bg-ink"
+          style={{ left: `${(i / (TICKS - 1)) * 100}%`, height: i % 4 === 0 ? 8 : 4 }}
+        />
+      ))}
     </motion.span>
   );
 }

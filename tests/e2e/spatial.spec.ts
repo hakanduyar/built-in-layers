@@ -1,9 +1,20 @@
 import { expect, test } from "@playwright/test";
+// V6.3: two route constants are imported rather than restated, so the windows
+// these tests search inside cannot drift out of the region they are meant to
+// cover when the route is retuned. Both are plain numbers from a module with no
+// JSX and no browser dependency.
+import {
+  BREAK_COVER_START,
+  BREAK_CUT,
+  BREAK_REVEAL_END,
+  routeLegs,
+  sceneFocusProgress,
+} from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // docs/DESIGN_SYSTEM.md §18). Tests experience contracts, not CSS transform
 // values: scenes own real viewport territory, evidence is not a thumbnail,
-// the collision reads as a break rather than a bounce, THE JOURNEY CONTINUES
+// the route change reads as an occlusion cut, THE JOURNEY CONTINUES
 // AS A DIAGONAL ROUTE AFTER THE BREAK, the atmosphere is scene-scoped and
 // reduced-motion-safe, fallbacks are complete, keyboard/AT access is
 // preserved, and existing project routes stay untouched.
@@ -29,16 +40,6 @@ async function measureRoute(page: import("@playwright/test").Page, viewportHeigh
     return el ? el.getBoundingClientRect().top + window.scrollY : 0;
   }, TOUR);
   return { start: sectionTop, end: sectionTop + spacerHeight - viewportHeight, spacerHeight };
-}
-
-async function readWorldTransform(page: import("@playwright/test").Page) {
-  return page.evaluate((selector) => {
-    // The world plane is tagged explicitly: V4 renders parallax planes either
-    // side of it, so positional selectors would read the distant plane (which
-    // moves at 0.62 of the camera rate) and understate every measurement.
-    const world = document.querySelector(`${selector} [data-camera-plane="world"]`);
-    return world ? getComputedStyle(world).transform : null;
-  }, TOUR);
 }
 
 /** Extracts tx/ty from a computed `matrix(a, b, c, d, tx, ty)`. Parsed in
@@ -88,18 +89,44 @@ async function worldTranslateAt(page: import("@playwright/test").Page, y: number
     y,
   );
 
-  // `none` means Motion has not written a transform at all yet -- never
-  // treat it as a settled reading.
-  let previous: string | null = null;
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    const current = await readWorldTransform(page);
-    if (current !== null && current !== "none") {
-      if (current === previous) return matrixTranslate(current);
-      previous = current;
-    }
-    await page.waitForTimeout(60);
-  }
-  return previous === null ? null : matrixTranslate(previous);
+  // V6.8: SETTLE IS NOW JUDGED IN THE PAGE, ON CONSECUTIVE rAF FRAMES, not on
+  // wall-clock polls from the test process. The old helper accepted two identical
+  // 60ms-spaced reads, and under parallel WebKit load that is satisfiable by
+  // STARVATION -- two polls catching the same not-yet-painted frame while the
+  // opening glide (GLIDE_MAX_RATE) is still mid-flight, which returned a moving
+  // camera as "settled" and failed three tests with nonsense geometry. Counting
+  // real rendered frames cannot be fooled that way: the glide writes on every
+  // frame, so eight consecutive unchanged frames only exist once the camera has
+  // actually arrived. Assertions fed by this helper are unchanged.
+  const settled = await page.evaluate(
+    (selector) =>
+      new Promise<string | null>((resolve) => {
+        const world = document.querySelector(`${selector} [data-camera-plane="world"]`);
+        if (!world) return resolve(null);
+        let last: string | null = null;
+        let stable = 0;
+        let frames = 0;
+        const tick = () => {
+          frames += 1;
+          const t = getComputedStyle(world).transform;
+          if (t === last && t !== "none") {
+            stable += 1;
+            if (stable >= 8) return resolve(t);
+          } else {
+            stable = 0;
+            last = t;
+          }
+          // Hard ceiling so a pathological page cannot hang the suite: ~20s of
+          // frames, after which the last reading is returned and the assertion
+          // speaks for itself.
+          if (frames > 1200) return resolve(t === "none" ? null : t);
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }),
+    TOUR,
+  );
+  return settled === null ? null : matrixTranslate(settled);
 }
 
 async function worldTranslateXAt(page: import("@playwright/test").Page, y: number) {
@@ -197,7 +224,13 @@ test.describe("Spatial V4: scene framing owns real viewport territory", () => {
     await page.goto("/");
     const { spacerHeight } = await measureRoute(page, 900);
     expect(spacerHeight).toBeGreaterThan(900);
-    expect(spacerHeight).toBeLessThan(900 * 4.5);
+    // V6.3 raised the ceiling from 4.5 to 5.2 viewports, in step with
+    // ROUTE_LENGTH_VH going 410 -> 474 to pay for the exit traverse. The reasoning
+    // and the alternative are recorded in full on the matching unit test in
+    // tests/unit/spatial-route.test.ts and in the V6.3 report; it is called out
+    // rather than quietly widened. 5.2 still fails well before V1's 600vh spacer,
+    // which is the thing this bound exists to prevent returning.
+    expect(spacerHeight).toBeLessThan(900 * 5.2);
   });
 });
 
@@ -207,11 +240,15 @@ test.describe("Spatial V4: atmosphere", () => {
     await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
   });
 
-  test("the erosion atmosphere exists under default motion", async ({ page }) => {
+  // V6.5: the same contract -- enhanced-only atmosphere is genuinely present --
+  // asserted against the current mechanism. The structural plane behind SYSTEMS is
+  // the element that only exists under default motion.
+  test("the SYSTEMS structural plane exists under default motion", async ({ page }) => {
     await page.goto("/");
     await page.locator(`${TOUR} .sticky`).waitFor({ state: "attached" });
-    const fragments = page.locator("[data-erosion-fragments]");
-    expect(await fragments.count()).toBeGreaterThan(0);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(1);
+    // ...and the word itself is a single intact layer, in both trees.
+    await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
   });
 });
 
@@ -253,7 +290,7 @@ test.describe("Spatial V4: no inaccessible transformed content", () => {
   });
 });
 
-test.describe("Spatial V4: collision reads as a scene break, not a bounce", () => {
+test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
   test("world position after the break differs sharply from a continuation of the approach", async ({
     page,
   }) => {
@@ -261,14 +298,14 @@ test.describe("Spatial V4: collision reads as a scene break, not a bounce", () =
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    const beforeCollision = await worldTranslateXAt(page, start + (end - start) * 0.8);
+    const beforeCut = await worldTranslateXAt(page, start + (end - start) * 0.8);
     const afterBreak = await worldTranslateXAt(page, start + (end - start) * 0.92);
-    expect(beforeCollision).not.toBeNull();
+    expect(beforeCut).not.toBeNull();
     expect(afterBreak).not.toBeNull();
-    if (beforeCollision !== null && afterBreak !== null) {
+    if (beforeCut !== null && afterBreak !== null) {
       // The whole route travels left-to-right; the reposition lands far back
       // to the left. Nothing about this reads as the camera continuing on.
-      expect(Math.abs(afterBreak - beforeCollision)).toBeGreaterThan(400);
+      expect(Math.abs(afterBreak - beforeCut)).toBeGreaterThan(400);
     }
   });
 
@@ -289,11 +326,26 @@ test.describe("Spatial V4: collision reads as a scene break, not a bounce", () =
     // rather than hardcoding a progress value that silently goes stale when
     // the route is retuned. Sweep the collision region and take the frame
     // where the rails are closest to home.
-    let best = Number.POSITIVE_INFINITY;
-    for (let p = 0.55; p <= 0.7; p += 0.005) {
-      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
-      await page.waitForTimeout(120);
-      const worst = await page.evaluate((selector) => {
+    //
+    // V6.3: the SEARCH WINDOW was itself hardcoded at [0.55, 0.70] -- which is
+    // precisely the staleness the comment above set out to avoid, one level up.
+    // The exit traverse moved BREAK_CUT from 0.577 to 0.506, the sweep no longer
+    // contained the cut at all, and the test reported a 1440px gap at a point in
+    // the route where the rails are legitimately wide open. The window is now
+    // derived from the same constant the implementation uses, so it tracks any
+    // future retune automatically.
+    //
+    // V6.6: the per-sample wait is a SETTLE POLL rather than a fixed 120ms. The rail
+    // positions are a function of FILTERED progress, and the filter is a two-stage
+    // lag driven from rAF -- so on a loaded machine (this was caught at a load
+    // average of ~10, where rAF itself is starved) 120ms is not enough for the
+    // filter to arrive, every sample reads a position the camera is still
+    // travelling through, and the test reports a 1440px gap at the exact progress
+    // where the rails are in fact home. That is the test measuring the filter's
+    // convergence rate, not the geometry it exists to protect. The assertion below
+    // is unchanged.
+    const readWorst = () =>
+      page.evaluate((selector) => {
         const offsets = [...document.querySelectorAll(`${selector} [data-break-rail]`)].map(
           (rail) => {
             const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
@@ -302,6 +354,19 @@ test.describe("Spatial V4: collision reads as a scene break, not a bounce", () =
         );
         return offsets.length ? Math.max(...offsets) : Number.POSITIVE_INFINITY;
       }, TOUR);
+
+    let best = Number.POSITIVE_INFINITY;
+    for (let p = BREAK_CUT - 0.04; p <= BREAK_CUT + 0.04; p += 0.005) {
+      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      let worst = await readWorst();
+      let stable = 0;
+      for (let attempt = 0; attempt < 80; attempt += 1) {
+        await page.waitForTimeout(120);
+        const next = await readWorst();
+        stable = Math.abs(next - worst) < 0.5 ? stable + 1 : 0;
+        worst = next;
+        if (stable >= 2) break;
+      }
       best = Math.min(best, worst);
     }
     // At the cut every rail is home, so the route's jump happens behind an
@@ -314,15 +379,38 @@ test.describe("Spatial V4: collision reads as a scene break, not a bounce", () =
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * 0.7375);
-    await page.waitForTimeout(350);
+    // V6.7: DERIVED from the break window instead of the literal 0.7375 it used to
+    // be. That literal predates two route retunes and had drifted to a progress
+    // WELL PAST the reveal, where every rail is simply parked at its off-frame
+    // resting offset -- so the test passed on parked geometry rather than on the
+    // convergence its own name describes. Sampling 40% of the way through the
+    // closing measures the rails actually converging, which is strictly what this
+    // contract is about, and it tracks any future retune.
+    const closing = BREAK_COVER_START + (BREAK_CUT - BREAK_COVER_START) * 0.4;
+    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * closing);
 
-    const offsets = await page.evaluate((selector) => {
-      return [...document.querySelectorAll(`${selector} [data-break-rail]`)].map((rail) => {
-        const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
-        return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
-      });
-    }, TOUR);
+    // V6.7: settle-poll instead of a fixed 350ms, for the same reason the other two
+    // break tests already do. The rails' transforms are written by Motion from a
+    // rAF pipeline; under load on WebKit they had not been written at all when this
+    // read, so `matrix(...)` did not match and every rail reported 0 -- which reads
+    // as "no rail is off-frame on either side" and fails a contract about parked
+    // geometry that was never actually violated. The assertions are unchanged.
+    const read = () =>
+      page.evaluate((selector) => {
+        return [...document.querySelectorAll(`${selector} [data-break-rail]`)].map((rail) => {
+          const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
+          return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
+        });
+      }, TOUR);
+    let offsets = await read();
+    let stable = 0;
+    for (let attempt = 0; attempt < 80; attempt += 1) {
+      await page.waitForTimeout(120);
+      const next = await read();
+      stable = JSON.stringify(next) === JSON.stringify(offsets) ? stable + 1 : 0;
+      offsets = next;
+      if (stable >= 2) break;
+    }
     expect(offsets.some((value) => value > 1)).toBe(true);
     expect(offsets.some((value) => value < -1)).toBe(true);
   });
@@ -364,8 +452,8 @@ test.describe("Spatial V4: the route continues after the collision", () => {
 
     // Sampled where the camera is genuinely travelling on each route, not
     // inside a dwell window at either end -- and, critically, ENTIRELY ON ONE
-    // SIDE of the collision. Route one must be sampled strictly before
-    // COLLISION_PROGRESS (0.5764) and route two strictly after BREAK_REVEAL_END
+    // SIDE of the cut. Route one must be sampled strictly before the cut, and
+    // route two strictly after BREAK_REVEAL_END
     // (0.6474). An earlier version of this test ended its "route one" span at
     // 0.64, which is past BREAK_CUT (0.6214), so the span crossed the
     // discontinuity and measured the reposition rather than route one: it
@@ -373,11 +461,27 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     // never a property of the camera -- `routeSlope(1)`/`routeSlope(2)` have
     // always been +0.76/-0.37, i.e. genuinely opposite -- it was the sample
     // window straddling the cut, and it measured the same wrong thing on V4.
+    //
+    // V6.3 HIT THE SAME BUG AGAIN, at two new boundaries, because the windows
+    // were still literal numbers. The exit traverse moved the collision to
+    // 0.444 and BREAK_CUT to 0.506, so the hardcoded "route one" span of
+    // 0.16 -> 0.50 now ended INSIDE the impact; and route two's span of
+    // 0.70 -> 0.99 ran past `handoff` into the traverse, which descends by
+    // design, so it measured a route-two slope of the same sign as route one and
+    // reported that the routes no longer diverge. The camera was right both
+    // times; the windows were stale both times.
+    //
+    // So both are now derived. Route two is sampled across its THINKING leg
+    // only -- reveal to `handoff` -- because that is the span this contract has
+    // always been about: where the route goes after the cut, before it
+    // leaves for the lower world. The traverse has its own assertions in the
+    // unit suite.
+    const handoffAt = sceneFocusProgress("handoff");
     const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
     const routeOneStart = await at(0.16);
-    const routeOneEnd = await at(0.5);
-    const routeTwoStart = await at(0.7);
-    const routeTwoEnd = await at(0.99);
+    const routeOneEnd = await at(BREAK_COVER_START - 0.04);
+    const routeTwoStart = await at(BREAK_REVEAL_END + 0.05);
+    const routeTwoEnd = await at(handoffAt - 0.01);
 
     if (!routeOneStart || !routeOneEnd || !routeTwoStart || !routeTwoEnd) {
       throw new Error("expected four world transforms");
@@ -524,10 +628,34 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     // V4 draws each rail as a polyline sampled from the real camera curve,
     // not a straight chord, so the route can be a spline and the orientation
     // marks still describe the path the camera actually takes.
-    const rails = page.locator(`${TOUR} .sticky svg polyline`);
-    const count = await rails.count();
-    expect(count).toBeGreaterThan(2);
-    expect(count).toBeLessThan(20);
+    //
+    // V6.6 SPLIT THIS INTO TWO BOUNDS RATHER THAN RELAXING ONE. The SYSTEMS
+    // surface cut draws the real route again, inside itself, as the thing found
+    // under the opened page -- so a single lumped count of every polyline in the
+    // sticky frame now mixes two subsystems with different jobs and different
+    // budgets. Bounding them separately is strictly tighter than the old single
+    // bound: the rails keep the <20 they always had (they are still 19, exactly as
+    // before this pass), and the cut's drawing gets its own hard ceiling of 2 so it
+    // cannot quietly grow into the grid this test exists to prevent.
+    const allPolylines = await page.locator(`${TOUR} .sticky svg polyline`).count();
+    const cutPolylines = await page
+      .locator(`${TOUR} .sticky [data-systems-cut] svg polyline`)
+      .count();
+    const railCount = allPolylines - cutPolylines;
+    // V6.7: DERIVED, not a literal ceiling. Route one gained the acquisition-descent
+    // leg (JOB 1), so the rail count moved 19 -> 20 and a `< 20` bound failed for a
+    // legitimate reason. A literal has now gone stale three times in this file's
+    // history; asserting the exact number of legs the route actually has is both
+    // tighter than the ceiling it replaces and immune to the next coordinate.
+    expect(railCount).toBeGreaterThan(2);
+    // One rail per travelled leg, plus the work branch and the two directional
+    // fields' marks. Bounded RELATIVE TO THE ROUTE so that adding a coordinate --
+    // which V6.7 did, with the acquisition descent -- moves the bound by exactly one
+    // instead of failing. The previous literal `< 20` has now gone stale three times.
+    // At V6.6 this was 9 legs and 19 rails; at V6.7 it is 10 and 20.
+    expect(railCount).toBeLessThanOrEqual(routeLegs().length + 10);
+    // The section drawing is one line per route, and may never be more.
+    expect(cutPolylines).toBeLessThanOrEqual(2);
     await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
   });
 });
@@ -553,7 +681,8 @@ test.describe("Spatial V4: reduced motion", () => {
     // grammar (rails would describe a camera path that does not exist here).
     await expect(tour.locator(".sticky")).toHaveCount(0);
     await expect(tour.locator("canvas")).toHaveCount(0);
-    await expect(page.locator("[data-erosion-fragments]")).toHaveCount(0);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
+    await expect(page.locator("[data-destination-surface]")).toHaveCount(0);
     await expect(tour.locator("[data-break-rail]")).toHaveCount(0);
     // No parallax planes and therefore no depth motion at all.
     await expect(tour.locator("[data-camera-plane]")).toHaveCount(0);

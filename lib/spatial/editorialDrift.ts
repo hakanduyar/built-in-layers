@@ -23,6 +23,29 @@
 
 export type DriftSectionId = "real-life" | "how-i-build" | "field-notes" | "about";
 
+/**
+ * V6.1 (§21): each section's own spatial relationship to the route, not just its
+ * x-offset.
+ *
+ * V6's four sections differed ONLY in entry/exit fraction. Same wrapper, same
+ * width, same depth, same lead rule, alternating sides -- which is structurally
+ * "one template plus an offset", and is exactly why the lower page still read as
+ * sections arranged beside a timeline rather than as surfaces encountered along a
+ * route.
+ *
+ *   plate    the first stable surface after the transition -- full presence,
+ *            the widest measure, sitting square in the world
+ *   wide     a broader structured plane the route runs alongside
+ *   distant  set back: narrower measure, lighter marks, further from the eye
+ *   near     returns toward the foreground as the journey resolves
+ *
+ * `depth` is the one number those words reduce to: 0 is the world plane, negative
+ * is set back, positive is forward. It drives measure width and the weight of the
+ * section's own structural marks -- NOT the text colour, which stays at full
+ * contrast in every section (§22, and basic readability).
+ */
+export type DriftPlane = "plate" | "wide" | "distant" | "near";
+
 export type DriftSection = {
   id: DriftSectionId;
   /**
@@ -34,6 +57,9 @@ export type DriftSection = {
    */
   entry: number;
   exit: number;
+  plane: DriftPlane;
+  /** -1..+1. Set back / forward relative to the world plane. */
+  depth: number;
 };
 
 /**
@@ -49,12 +75,113 @@ export type DriftSection = {
  * The CTA is the global footer and is not a drift block; the track settles
  * back to centre in the connector after About (see DRIFT_SETTLE).
  */
+/**
+ * V6 WIDENED EVERY AMPLITUDE. The owner's verdict on V5 was that after the
+ * collision the world "becomes too close to a normal downward page" -- and at
+ * V5's fractions the largest block travelled 107px across a whole viewport of
+ * scrolling, a slope of about 6 degrees. That is not an oblique world; it is a
+ * column with a slight lean.
+ *
+ * The fractions below span 0.04-0.78 of the track (V5: 0.08-0.64) and, combined
+ * with the narrower block width in EditorialDrift, roughly double the real
+ * lateral travel. Paired with DRIFT_ROUTE (the visible oblique spine the blocks
+ * are registered to), the lower page reads as continuing the route rather than
+ * abandoning it.
+ */
 export const DRIFT_SECTIONS: readonly DriftSection[] = [
-  { id: "real-life", entry: 0.08, exit: 0.36 },
-  { id: "how-i-build", entry: 0.64, exit: 0.2 },
-  { id: "field-notes", entry: 0.28, exit: 0.6 },
-  { id: "about", entry: 0.54, exit: 0.46 },
+  { id: "real-life", entry: 0.04, exit: 0.4, plane: "plate", depth: 0 },
+  { id: "how-i-build", entry: 0.78, exit: 0.18, plane: "wide", depth: -0.25 },
+  { id: "field-notes", entry: 0.26, exit: 0.68, plane: "distant", depth: -0.7 },
+  { id: "about", entry: 0.58, exit: 0.42, plane: "near", depth: 0.55 },
 ] as const;
+
+/**
+ * Measure width for a section, as a multiplier on the track's `--drift-w`.
+ * Distance reads as a narrower column and proximity as a wider one, which is the
+ * same cue the spatial world above uses (scenes resolve in scale as the camera
+ * arrives) rather than a second, unrelated depth language.
+ *
+ * Bounded tightly: text has to stay comfortable to read in every section (§22),
+ * so this is a few percent, not a dramatic zoom.
+ */
+export function driftMeasure(id: DriftSectionId): number {
+  const { depth } = driftSection(id);
+  return 1 + depth * 0.07;
+}
+
+/** Weight of a section's own structural marks -- lighter when set back. */
+export function driftMarkOpacity(id: DriftSectionId): number {
+  const { depth } = driftSection(id);
+  return +(0.5 + depth * 0.22).toFixed(3);
+}
+
+/**
+ * V6.2 (§15): the SURFACE each section stands on.
+ *
+ * V6.1 gave the four sections different widths and mark weights, which made them
+ * measurably distinct but not spatially distinct -- they were still four blocks
+ * floating on the page beside a line. A plate gives each one an actual surface:
+ * a leading edge it sits on, a corner that registers it in the world, and a
+ * vertical interval before it that says how far the route travelled to get there.
+ *
+ * `lead` is the plate's top edge as a fraction of the block width, so a set-back
+ * plane shows less of its own surface (foreshortening, without fake 3D).
+ * `gapVh` is the interval BEFORE the section: uneven, so the four are encountered
+ * at different distances rather than on a regular rhythm, which is most of what
+ * made the sequence read as a timeline.
+ */
+/** V6.8: the plate VISUAL was deleted (see DriftBlock); what survives is the
+ *  approach interval before each section, which was always the meaningful half. */
+export type DriftPlate = { gapVh: number };
+
+const PLATES: Record<DriftSectionId, DriftPlate> = {
+  // The first stable surface after the transition: shows its full edge, square on.
+  //
+  // V6.3 raised its approach interval from 6vh to 26vh (§5). The spatial world now
+  // ends on a long down-and-right traverse rather than stopping at `handoff`, and
+  // a 6vh gap after that put a section heading roughly half a screen below the
+  // last frame of a journey -- so the traverse handed straight into ordinary
+  // document logic and the extra distance bought nothing. 26vh is the arrival: the
+  // spine runs on alone through it, and the first surface is ENCOUNTERED at the end
+  // of a travel interval rather than being the next thing in the scroll.
+  //
+  // V6.5 BRINGS IT BACK DOWN, 26vh -> 12vh, because the premise of the V6.3 raise
+  // has been removed. 26vh was the arrival interval for a world that ENDED ON
+  // EMPTY TRAVEL: the last frame of the traverse had nothing in it, so distance
+  // after it was the only thing separating the journey from the next heading.
+  // V6.5's route terminates framing the How I Build destination (see
+  // DestinationSurface), so the world now hands over from a composed frame, and
+  // the interval is back to being breathing room rather than a substitute for
+  // content. Measured, the 26vh was the last third of a 1560px run in which the
+  // rendered frame averaged 2.2% ink.
+  //
+  // 12vh, not 6: it is still the arrival, and it is still where the spine runs on
+  // alone. §5 asks for the excess removed, not for the negative space eliminated.
+  "real-life": { gapVh: 5 },
+  // A broader plane the route runs alongside.
+  "how-i-build": { gapVh: 22 },
+  // Set back and further away: the least of its surface visible.
+  //
+  // V6.5: 34vh -> 20vh. This was the SECOND-largest dead run on the measured page
+  // (1320px, 3.7% mean ink) and the largest one outside the spatial section. The
+  // sections either side of it are left exactly as they are (§7) -- only the
+  // interval between them is trimmed, which is the part that carried no
+  // information.
+  // V6.6: 20vh -> 14vh. NOT part of JOB 3 -- the hand-over this pass was asked to
+  // fix is upstream of here and is measured separately -- but once the hand-over
+  // was solved this became the page's longest thin stretch, and trimming one
+  // approach interval is the same class of change V6.5 made (34 -> 20) rather than
+  // a redesign of either section. Judgement, and it is worth stating plainly: the
+  // frames here are SPARSE, not empty. Field Notes is a short section by design
+  // and the metric's ink threshold does not distinguish the two.
+  "field-notes": { gapVh: 14 },
+  // Returning toward the foreground as the journey resolves.
+  about: { gapVh: 14 },
+};
+
+export function driftPlate(id: DriftSectionId): DriftPlate {
+  return PLATES[id];
+}
 
 /** Where the track comes to rest before handing off to the footer CTA. */
 export const DRIFT_SETTLE = 0.5;
@@ -65,19 +192,88 @@ export function driftSection(id: DriftSectionId): DriftSection {
   return section;
 }
 
-/**
- * The structural rule each block carries above its heading (§29). Its tilt is
- * the section's own direction of travel, so the mark states where the block is
- * going -- the same discipline the hero's lead rule and the world's rails
- * already follow, rather than a decorative diagonal.
- */
-export function driftLeadRule(id: DriftSectionId, widthVw = 13): { width: number; height: number } {
-  const section = driftSection(id);
-  return { width: widthVw, height: (section.exit - section.entry) * 26 };
-}
-
 /** Total lateral variation across the whole drift, as a fraction of the track. */
 export function driftSpread(): number {
   const positions = DRIFT_SECTIONS.flatMap((section) => [section.entry, section.exit]);
   return Math.max(...positions) - Math.min(...positions);
+}
+
+/* ------------------------------------------------------- the oblique spine */
+
+export type DriftRouteStop = {
+  /** Vertical position through the drift region, 0 (top) to 1 (bottom). */
+  at: number;
+  /** Lateral position as the same free-space fraction the blocks use. */
+  fraction: number;
+  /** Which section this stop belongs to, or the closing settle. */
+  owner: DriftSectionId | "settle";
+  /** The owning section's depth, carried onto the stop (V6.1). */
+  depth: number;
+};
+
+/**
+ * V6 (§20.2). THE VISIBLE ROUTE THROUGH THE LOWER PAGE.
+ *
+ * Widening the blocks' lateral travel was necessary but not sufficient: a block
+ * that has moved is still just a block that has moved. What makes the lower page
+ * read as *the same world* is that the route itself is drawn, and the blocks are
+ * visibly registered to it — the spine bends where they bend, because it is
+ * generated from the very same table they are positioned by.
+ *
+ * Two stops per section (its entry and its exit) plus the closing settle. The
+ * result is a continuous oblique zigzag descending the page: calmer than the
+ * spatial route above it, unmistakably the continuation of it.
+ *
+ * Expressed in the same free-space fraction as the blocks, so a stop at fraction
+ * `f` lands exactly on the left edge of a block at fraction `f` — at every
+ * viewport width, with no second coordinate system to keep in sync.
+ */
+const SECTION_BAND = 0.225;
+const SETTLE_AT = 0.97;
+
+export function driftRoute(): DriftRouteStop[] {
+  const stops: DriftRouteStop[] = [];
+  DRIFT_SECTIONS.forEach((section, index) => {
+    const top = index * SECTION_BAND;
+    const depth = section.depth;
+    stops.push({ at: top + 0.045, fraction: section.entry, owner: section.id, depth });
+    stops.push({ at: top + 0.18, fraction: section.exit, owner: section.id, depth });
+  });
+  // The route's last coordinate before the finale takes over. Forward of the
+  // world plane, because the journey is resolving toward the viewer.
+  stops.push({ at: SETTLE_AT, fraction: DRIFT_SETTLE, owner: "settle", depth: 0.55 });
+  return stops;
+}
+
+/**
+ * V6.1 (§20): the spine split into FOREGROUND and BACKGROUND runs.
+ *
+ * V6 drew one flat polyline at one depth behind everything, with a mark at every
+ * stop -- structurally a vertical timeline, which is the exact thing §19/§20 want
+ * avoided. Splitting it by the depth of the section each run belongs to means the
+ * route sometimes passes behind a content plane and sometimes comes in front of
+ * it, so it reads as a line travelling THROUGH a space rather than as a rail
+ * drawn beside a list.
+ *
+ * A run is foreground when the section it belongs to is forward of the world
+ * plane. Consecutive stops at the same sign form one run, and runs share their
+ * boundary stop so the line stays visually continuous across a depth change --
+ * the route never breaks, it only changes which side of the content it is on.
+ */
+export function driftRouteRuns(): { foreground: boolean; stops: DriftRouteStop[] }[] {
+  const stops = driftRoute();
+  const runs: { foreground: boolean; stops: DriftRouteStop[] }[] = [];
+  for (const stop of stops) {
+    const foreground = stop.depth > 0;
+    const current = runs[runs.length - 1];
+    if (!current || current.foreground !== foreground) {
+      // Carry the previous run's last stop into the new one, so the two runs
+      // meet rather than leaving a gap at the depth change.
+      const previous = current?.stops[current.stops.length - 1];
+      runs.push({ foreground, stops: previous ? [previous, stop] : [stop] });
+    } else {
+      current.stops.push(stop);
+    }
+  }
+  return runs.filter((run) => run.stops.length > 1);
 }

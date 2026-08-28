@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
-import {
-  BREAK_CUT,
-  BREAK_REVEAL_END,
-  COLLISION_PROGRESS,
-  isImpact,
-} from "@/lib/spatial/sceneRoute";
+import { BREAK_COVER_START, BREAK_CUT, BREAK_REVEAL_END } from "@/lib/spatial/sceneRoute";
 import {
   isResolvedState,
   representativeAsset,
@@ -239,9 +234,16 @@ describe("the acquisition lifecycle maps cleanly onto approach", () => {
 });
 
 describe("world state follows the real route constants", () => {
-  it("reports collision exactly during the impact window", () => {
-    expect(worldState(COLLISION_PROGRESS + 1e-6)).toBe("collision");
-    expect(isImpact(COLLISION_PROGRESS + 1e-6)).toBe(true);
+  // V6.4 RENAMED THIS STATE, `collision` -> `occluded`, and moved where it starts.
+  //
+  // It used to mean "the camera is being held at the wall", which was a real
+  // window of progress (IMPACT_WINDOW) in which the world did not advance. There
+  // is no such window now: the camera travels straight through to the cut. The
+  // state that remains is the one this type was actually read for -- the surfaces
+  // are closing over the world -- so it now begins where they begin to close.
+  it("reports occluded while the surfaces are closing, before the cut", () => {
+    expect(worldState(BREAK_COVER_START + 1e-6)).toBe("occluded");
+    expect(worldState(BREAK_COVER_START - 1e-6)).toBe("travelling");
   });
 
   it("reports reorienting between the cut and the end of the reveal", () => {
@@ -249,7 +251,7 @@ describe("world state follows the real route constants", () => {
     expect(worldState((BREAK_CUT + BREAK_REVEAL_END) / 2)).toBe("reorienting");
   });
 
-  it("reports travelling before the collision and after the reveal", () => {
+  it("reports travelling before the occlusion and after the reveal", () => {
     expect(worldState(0.1)).toBe("travelling");
     expect(worldState(Math.min(BREAK_REVEAL_END + 0.01, 1))).toBe("travelling");
   });
@@ -262,7 +264,7 @@ describe("world state follows the real route constants", () => {
 
   it("never leaves a progress value without a state", () => {
     for (let p = 0; p <= 1; p += 0.002) {
-      expect(["travelling", "collision", "reorienting"]).toContain(worldState(p));
+      expect(["travelling", "occluded", "reorienting"]).toContain(worldState(p));
     }
   });
 });

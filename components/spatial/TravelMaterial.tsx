@@ -36,7 +36,14 @@ type MaterialWord = {
   /** Real scene title, cropped. */
   word: string;
   /** The scene it announces; the fragment is framed on the way there. */
-  before: SceneId;
+  before?: SceneId;
+  /**
+   * V6.3: an explicit progress to frame the fragment at, for material that
+   * announces something the SceneId vocabulary cannot name -- specifically the
+   * exit traverse, whose destination is the lower page rather than a scene.
+   * Takes precedence over `before`.
+   */
+  at?: number;
   /** Where it sits in the frame, in vw/vh from the camera's anchor point. */
   offset?: WorldPoint;
 };
@@ -62,14 +69,27 @@ function leadProgress(before: SceneId): number {
   return previous + (target - previous) * 0.55;
 }
 
-/** Paper-density fields: progress they are framed at, plus in-frame offset. */
-const DENSITY: { at: number; offset: WorldPoint; w: number; h: number }[] = [
-  { at: 0.09, offset: { x: 46, y: 34 }, w: 40, h: 30 },
-  { at: 0.26, offset: { x: 18, y: -18 }, w: 34, h: 44 },
-  { at: 0.44, offset: { x: 52, y: 26 }, w: 38, h: 26 },
-  { at: 0.72, offset: { x: 30, y: 30 }, w: 44, h: 32 },
-  { at: 0.9, offset: { x: 14, y: -22 }, w: 36, h: 26 },
-];
+/**
+ * V6.7 (JOB 4) DELETED THE PAPER-DENSITY FIELDS.
+ *
+ * Seven soft-paper rectangles used to stand here, placed at authored progress
+ * values with authored sizes. The brief's test for anything in the lower world is
+ * "what does this represent?", and the honest answer was written in this file's own
+ * comment: the last two existed because "the terminus frame measured almost
+ * literally empty" and "the last frame of the spatial world is not allowed to be
+ * blank". That is the definition of filler -- geometry added to occupy space rather
+ * than to carry meaning -- and the other five were the same device earlier in the
+ * route.
+ *
+ * They were also actively harmful by V6.6: two of them sat inside the SYSTEMS
+ * surface cut's opened region and read as unrelated rectangles behind it, which the
+ * V6.6 report listed as a known weakness.
+ *
+ * Nothing replaces them here. The emptiness they were hiding is answered by things
+ * that mean something -- the destination surfaces, the work branch, the route rails
+ * and the acquisition states in DestinationSurface -- or it is left as negative
+ * space, which is a design element and not a defect.
+ */
 
 /** Near-plane rules, framed at the progress where they should sweep past. */
 const NEAR_RULES: { at: number; offset: WorldPoint; length: number; vertical?: boolean }[] = [
@@ -78,6 +98,11 @@ const NEAR_RULES: { at: number; offset: WorldPoint; length: number; vertical?: b
   { at: 0.4, offset: { x: 10, y: 62 }, length: 58 },
   { at: 0.68, offset: { x: 54, y: 12 }, length: 40, vertical: true },
   { at: 0.86, offset: { x: 20, y: 58 }, length: 50 },
+  // The exit traverse, on the near plane: material passing IN FRONT of the camera
+  // as it travels, which is what actually sells the leg as movement through space
+  // rather than as a long empty pan.
+  { at: 0.94, offset: { x: 26, y: 30 }, length: 46 },
+  { at: 0.98, offset: { x: 44, y: 8 }, length: 34, vertical: true },
 ];
 
 export function TravelMaterial({ words, plane }: TravelMaterialProps) {
@@ -104,34 +129,33 @@ export function TravelMaterial({ words, plane }: TravelMaterialProps) {
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
-      {DENSITY.map((field, index) => {
-        const at = planePosition(field.at, PLANE_DISTANT, field.offset);
+      {words.map(({ word, before, at: explicitAt, offset = { x: 22, y: 30 } }) => {
+        const progress = explicitAt ?? (before ? leadProgress(before) : 0);
+        const at = planePosition(progress, PLANE_DISTANT, offset);
         return (
-          <span
-            key={index}
-            className="absolute block bg-soft-paper opacity-60"
+          <div
+            key={`${before ?? explicitAt}-${word}`}
+            className="absolute overflow-hidden"
+            // The glyph size and the clip box are CLAMPED, not proportional.
+            // Authored at 1440 (15vw = 216px), these fragments scaled linearly
+            // with the viewport, and on the owner's real screen (~2552px CSS,
+            // seen in the review screencast) the letterforms became 383px slabs
+            // whose visible crop reads as smeared bands with no referent -- the
+            // review's recurring "render accident" finding. Below ~1466px the
+            // clamps never engage and the approved 1440 frames are unchanged;
+            // above it the material keeps its 1440 physical scale, which is
+            // what "distant material" means -- it does not grow with the frame.
             style={{
               left: `${at.x}vw`,
               top: `${at.y}vh`,
-              width: `${field.w}vw`,
-              height: `${field.h}vh`,
+              width: "min(52vw, 780px)",
+              height: "min(17vh, 165px)",
             }}
-          />
-        );
-      })}
-
-      {words.map(({ word, before, offset = { x: 22, y: 30 } }) => {
-        const at = planePosition(leadProgress(before), PLANE_DISTANT, offset);
-        return (
-          <div
-            key={`${before}-${word}`}
-            className="absolute overflow-hidden"
-            style={{ left: `${at.x}vw`, top: `${at.y}vh`, width: "52vw", height: "17vh" }}
           >
             {/* Pushed up out of its own clip box so only the lower third of
                 the letterforms shows. Legible as shape, not as a word --
                 which is the difference between material and a label. */}
-            <span className="block -translate-y-[58%] whitespace-nowrap font-display text-[15vw] leading-none tracking-[-0.04em] uppercase text-ink opacity-[0.06]">
+            <span className="block -translate-y-[58%] whitespace-nowrap font-display text-[min(15vw,220px)] leading-none tracking-[-0.04em] uppercase text-ink opacity-[0.06]">
               {word}
             </span>
           </div>

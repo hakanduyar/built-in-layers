@@ -25,7 +25,7 @@
 // hairline and case index around them are pure orientation and are hidden.
 
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
-import { BREAK_CUT, BREAK_REVEAL_END, isImpact } from "@/lib/spatial/sceneRoute";
+import { BREAK_COVER_START, BREAK_CUT, BREAK_REVEAL_END } from "@/lib/spatial/sceneRoute";
 
 /**
  * The one asset a scene leads with, chosen entirely from the asset's own
@@ -85,8 +85,10 @@ export function systemAnnotation(project: ProjectFrontmatter, index: string): Sy
 // ever rendered as text (§8, §14).
 //
 //   ACQUISITION    a scene is approached, framed, classified, released
-//   MATERIAL SHIFT the expressive word's coating erodes to the system beneath
-//   REORIENTATION  the collision, the cut, and the world's new state
+//   INSPECTION     the expressive word is sectioned, and the system beneath it
+//                  is briefly visible through the cut (V6.4; was MATERIAL SHIFT,
+//                  where the word's coating eroded away)
+//   REORIENTATION  the occlusion cut and the world's new state
 
 /** Where a scene stands relative to the camera: -1 ahead, 0 framed, +1 past. */
 export type SceneState = "idle" | "approaching" | "focused" | "departing";
@@ -98,10 +100,16 @@ export function sceneState(signedApproach: number): SceneState {
   return "departing";
 }
 
-export type WorldState = "travelling" | "collision" | "reorienting";
+/**
+ * V6.4 renamed the middle state `collision` -> `occluded`, and moved where it
+ * begins. It used to mean "the camera is being held at the wall"; it now means
+ * "the surfaces are closing over the world", which is both what actually happens
+ * and the only thing this type was ever read for.
+ */
+export type WorldState = "travelling" | "occluded" | "reorienting";
 
 export function worldState(progress: number): WorldState {
-  if (isImpact(progress)) return "collision";
+  if (progress >= BREAK_COVER_START && progress < BREAK_CUT) return "occluded";
   if (progress >= BREAK_CUT && progress < BREAK_REVEAL_END) return "reorienting";
   return "travelling";
 }

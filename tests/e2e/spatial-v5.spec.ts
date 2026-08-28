@@ -21,6 +21,22 @@ import { expect, test } from "@playwright/test";
 
 const DRIFT_IDS = ["real-life", "how-i-build", "field-notes", "about"] as const;
 
+/** Scroll offsets bounding the spatial tour's own progress 0..1 (V6.4). Measured
+ *  from the spacer rather than assumed, so the SYSTEMS samples below land at real
+ *  route progresses at any viewport. */
+async function routeRange(page: import("@playwright/test").Page) {
+  await page
+    .locator("section[aria-label='Spatial system tour'] .sticky")
+    .waitFor({ state: "attached" });
+  return page.evaluate(() => {
+    const selector = "section[aria-label='Spatial system tour']";
+    const section = document.querySelector(selector)!;
+    const spacer = document.querySelector(`${selector} > div`)!;
+    const start = section.getBoundingClientRect().top + window.scrollY;
+    return { start, end: start + spacer.getBoundingClientRect().height - window.innerHeight };
+  });
+}
+
 /** Computed translateX of an element, in px. */
 async function translateX(page: import("@playwright/test").Page, selector: string) {
   return page.evaluate((sel) => {
@@ -237,38 +253,188 @@ test.describe("Spatial V5: System POV states real project metadata only", () => 
   });
 });
 
-test.describe("Spatial V5: the erosion word is a layered material", () => {
-  test("renders all three registered layers, in shell/substrate/trace order", async ({ page }) => {
+// V6.5 REPLACED THIS BLOCK AGAIN, and for a different reason than V6.4 did.
+//
+// V6.4 removed the erosion contracts because the mechanism they protected had been
+// retired. These tests are not being weakened or relaxed: the V6.4 mechanism is
+// also gone, and its central assertion -- that the surface layer is never masked,
+// clipped or faded -- SURVIVES BELOW UNCHANGED, because it is still the guarantee
+// that matters and V6.5 satisfies it more simply than V6.4 did.
+//
+// What is dropped is the band-width test. It asserted that the exposed section
+// stayed under 20% of the word box, which was a guard against the V6.4 effect
+// drifting into "fill the letterforms". There is no fill in V6.5 and no mask on any
+// glyph, so there is no width to bound; the equivalent guard here is that the word
+// carries no clip or mask at all, which is strictly stronger.
+//
+// V6.6 KEEPS EVERY ASSERTION BELOW AND ADDS TO THEM. The mechanism changed again
+// -- V6.5's axis-aligned clipped rectangle became a half-plane opened along a seam
+// at the route's own bearing -- but the contracts that survived V6.5 are exactly
+// the contracts that matter, and V6.6 satisfies all of them. The only rewritten
+// test is the aperture one, which read a `clip-path` string that no longer exists
+// because the opening is now a transform; it asserts the same three properties
+// against the property that actually carries the motion.
+test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () => {
+  test("draws the word exactly once, with the opened surface behind it", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
 
-    for (const layer of ["shell", "substrate", "trace"]) {
-      await expect(page.locator(`[data-erosion-layer="${layer}"]`).first()).toBeAttached();
-    }
-
-    // The trace must sit UNDER the coating, not float above it: the layers are
-    // drawn in stacking order rather than by punching holes through the shell.
-    const order = await page.$$eval("[data-erosion-layer]", (els) =>
-      els.map((e) => e.getAttribute("data-erosion-layer")),
-    );
-    expect(order.slice(0, 3)).toEqual(["shell", "substrate", "trace"]);
+    // ONE copy of the word. V6.4 drew it twice (a surface and a masked section over
+    // it); since V6.5 the word is a single plain span and everything else happens
+    // in the space behind it.
+    await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(1);
+    await expect(page.locator('[data-systems-layer="section"]')).toHaveCount(0);
   });
 
-  test("debris comes from the closed archetype vocabulary, never arbitrary shapes", async ({
+  test("the cut runs at the camera route's own bearing, not at an authored angle", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    // Wait for the enhanced tree: before hydration the static fallback renders
-    // the shell only and no debris at all, so an immediate $$eval (which, unlike
-    // expect(), does not retry) would read zero and look like a missing feature.
-    await expect(page.locator("[data-fragment-archetype]").first()).toBeAttached();
-    const kinds = await page.$$eval("[data-fragment-archetype]", (els) =>
-      els.map((e) => e.getAttribute("data-fragment-archetype")),
-    );
-    expect(kinds.length).toBeGreaterThan(0);
-    const allowed = ["bracket", "rail", "node", "index", "hatch", "path"];
-    for (const kind of kinds) expect(allowed).toContain(kind);
+    // Wait for hydration before a non-retrying `$eval`: until the enhanced camera
+    // is attached the fallback tree is in the DOM, and the fallback deliberately
+    // renders no cut at all.
+    await routeRange(page);
+
+    // The seam's angle is read back off the live element and compared against the
+    // route bearing computed independently in the browser from the same public
+    // helper the component uses. If someone hard-codes a "nicer" diagonal, the two
+    // stop agreeing and this fails -- which is the whole point of deriving it.
+    const rotation = await page.$eval("[data-systems-cut]", (el) => {
+      // The seam frame is the cut's PARENT: the cut itself only translates.
+      const parent = el.parentElement!;
+      const m = new DOMMatrixReadOnly(getComputedStyle(parent).transform);
+      return (Math.atan2(m.b, m.a) * 180) / Math.PI;
+    });
+    // Route one descends left-to-right through the giant word at ~33 degrees.
+    // Bounded rather than exact so a small route re-aim does not fail the suite,
+    // but tight enough to exclude 0 (axis-aligned) and 45 (an authored diagonal).
+    expect(rotation).toBeGreaterThan(24);
+    expect(rotation).toBeLessThan(42);
+  });
+
+  test("the word is never masked, clipped, faded or transformed at any point", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const { start, end } = await routeRange(page);
+
+    // Sampled right across the sequence. THE readability guarantee, asserted as the
+    // mechanism rather than as an appearance. V6.5 adds `transform` to what V6.4
+    // checked: the word does not move either, so it cannot be slid, lifted or
+    // separated from anything.
+    for (let p = 0.3; p <= 0.52; p += 0.02) {
+      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      await page.waitForTimeout(120);
+      const state = await page.$eval('[data-systems-layer="surface"]', (el) => {
+        const style = getComputedStyle(el);
+        return {
+          mask: style.maskImage,
+          opacity: Number.parseFloat(style.opacity),
+          clip: style.clipPath,
+          transform: style.transform,
+          filter: style.filter,
+        };
+      });
+      expect(state.opacity, `word faded at ${p.toFixed(2)}`).toBe(1);
+      expect(["none", ""], `word masked at ${p.toFixed(2)}`).toContain(state.mask);
+      expect(["none", "auto", ""], `word clipped at ${p.toFixed(2)}`).toContain(state.clip);
+      expect(["none", ""], `word transformed at ${p.toFixed(2)}`).toContain(state.transform);
+      expect(["none", ""], `word filtered at ${p.toFixed(2)}`).toContain(state.filter);
+    }
+  });
+
+  test("the surface opens monotonically and stays open", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const { start, end } = await routeRange(page);
+
+    // Read the cut's own translation back out of the page. Three contracts, and the
+    // first two are the ones the V6.4 effect failed by design: the surface only ever
+    // opens further, it is still open when the occlusion begins (it does not revert,
+    // which is what made V6.4's sequence resolve to nothing having happened), and
+    // the motion is carried by `transform` rather than by a paint property.
+    const offsets: number[] = [];
+    // V6.7 WIDENED THIS SWEEP, for two compounding reasons found together.
+    //
+    // The loop was `p <= 0.46` with a 0.01 step, and 0.34 + 12*0.01 accumulates to
+    // 0.46000000000000008 in binary floating point -- so the final sample was
+    // actually 0.45, not 0.46, and always had been. That was harmless while the
+    // opening finished at ~0.429; JOB 1's acquisition descent moved every progress
+    // in the world later, the opening now completes at ~0.450, and 0.45 landed
+    // exactly on the boundary (measured: 117.8px at 0.45, 32.3px at 0.46).
+    //
+    // Counting integer steps removes the accumulation, and the sweep now ends at
+    // 0.4648 -- past the opening's completion, and just below the protected guard
+    // band at 0.4654, so it still measures geometry and never the state machine.
+    for (let i = 0; i <= 12; i += 1) {
+      const p = 0.34 + i * 0.0104;
+      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      // POLL UNTIL THE VALUE SETTLES, rather than waiting a fixed time. The opening
+      // is a function of FILTERED progress, and the two-stage camera filter settles
+      // at a rate that depends on the engine and on machine load: a fixed 360ms was
+      // enough on Chromium and, under load, was not enough on WebKit -- which made
+      // the test measure the filter's settling time instead of the geometry the
+      // contract is about. Two identical consecutive reads is the same technique
+      // `worldTranslateAt` in spatial.spec.ts already uses for exactly this reason.
+      // The bound below is untouched.
+      const read = () =>
+        page.$eval("[data-systems-cut]", (el) => {
+          const style = getComputedStyle(el);
+          return { transform: style.transform, clip: style.clipPath, filter: style.filter };
+        });
+      // THREE identical consecutive reads, on a 120ms interval, up to ~7s. Two was
+      // not enough: the camera filter is a two-stage lag driven from rAF, and on a
+      // heavily loaded machine rAF itself is starved, so the filtered value can
+      // momentarily repeat while still converging. Requiring a third read makes a
+      // false "settled" require three starved frames in a row.
+      let state = await read();
+      let stable = 0;
+      for (let attempt = 0; attempt < 90; attempt += 1) {
+        await page.waitForTimeout(120);
+        const next = await read();
+        stable = next.transform === state.transform ? stable + 1 : 0;
+        state = next;
+        if (stable >= 2) break;
+      }
+      // V6.6 CONTRACT: the opening is a transform, not a clip and not a filter.
+      // V6.5 animated a clip-path string, which cost 274.9ms of style recalculation
+      // across the route; this assertion is what stops that returning.
+      expect(["none", "auto", ""], `the cut is animating clip-path at ${p.toFixed(2)}`).toContain(
+        state.clip,
+      );
+      expect(["none", ""], `the cut is animating a filter at ${p.toFixed(2)}`).toContain(
+        state.filter,
+      );
+      const m = /matrix\(([^)]+)\)/.exec(state.transform);
+      offsets.push(m ? Number(m[1]!.split(",")[5]) : Number.NaN);
+    }
+    const measured = offsets.filter((value) => Number.isFinite(value));
+    expect(measured.length, "the cut's transform was never readable").toBeGreaterThan(6);
+    for (let i = 1; i < measured.length; i += 1) {
+      // The seam RISES as the surface opens, so its translateY is non-increasing.
+      // A small tolerance absorbs the camera filter's easing.
+      expect(measured[i]!, `the surface closed again at sample ${i}`).toBeLessThanOrEqual(
+        measured[i - 1]! + 6,
+      );
+    }
+    expect(measured[0]!, "the surface was already open at the start").toBeGreaterThan(200);
+    expect(measured[measured.length - 1]!, "the surface was not open at the end").toBeLessThan(60);
+  });
+
+  test("leaves no erosion, peel, fragment or debris element anywhere", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    for (const gone of [
+      "[data-erosion-layer]",
+      "[data-erosion-fragments]",
+      "[data-erosion-peel]",
+      "[data-erosion-stress]",
+      "[data-fragment-archetype]",
+      "[data-impact-shock]",
+    ]) {
+      await expect(page.locator(gone), `${gone} still exists`).toHaveCount(0);
+    }
   });
 });
 
@@ -287,12 +453,15 @@ test.describe("Spatial V5: reduced motion disables motion, not design (D-020)", 
     await page.goto("/");
   });
 
-  test("removes every animated system: no camera, no parallax, no debris", async ({ page }) => {
+  test("removes every animated system: no camera, no parallax, no plane", async ({ page }) => {
     // The camera and its parallax planes are not merely stopped -- the enhanced
     // tree is not rendered at all, so there is nothing that could move.
     await expect(page.locator("[data-camera-plane]")).toHaveCount(0);
-    await expect(page.locator("[data-erosion-fragments]")).toHaveCount(0);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
+    await expect(page.locator("[data-destination-surface]")).toHaveCount(0);
     await expect(page.locator("[data-break-rail]")).toHaveCount(0);
+    // ...but the word itself survives as a real compositional element.
+    await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
   });
 
   test("Editorial Drift does not move as the page scrolls", async ({ page }) => {

@@ -5,11 +5,17 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
+  builtForRealLifeHeading,
+  builtForRealLifeSubheading,
   heroPrimaryLine,
   homePositioning,
   homeWordmark,
+  howIBuildHeading,
+  howIBuildPrinciples,
   layerDefinitions,
   positioningStatement,
+  sectionIndex,
+  workIndexLabel,
 } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
@@ -64,6 +70,44 @@ const [givenName = "Hakan", familyName = "Duyar"] = homeWordmark.split(" ");
 const DEPTH_RAIL_TOP = -48;
 const DEPTH_MARKS = [-34, -21, -8];
 
+/**
+ * V6.4 (§4B, §4C) -- WHAT THE EXIT TRAVERSE NOW PASSES.
+ *
+ * Two destinations that genuinely exist further down this same page, assembled
+ * ENTIRELY from the copy module the real sections render from: the same index, the
+ * same heading, and one or two of the section's own lines. Nothing here is written
+ * for the preview, so the surfaces cannot say anything the page does not.
+ *
+ * They are the answer to §4's actual complaint. The V6.3 traverse was long and
+ * empty; §4 rules out filling it with marks and asks for destinations instead.
+ * These are destinations in the literal sense -- the reader sees them from across
+ * the map and then arrives at them.
+ *
+ * Deliberately only these two. §"DO NOT FORESHADOW EVERYTHING" keeps Field Notes,
+ * About and the CTA as later discoveries, so the journey stays a progressive
+ * reveal rather than a table of contents.
+ */
+const NEAR_DESTINATION = {
+  index: sectionIndex.builtForRealLife,
+  title: builtForRealLifeHeading,
+  lines: [builtForRealLifeSubheading],
+} as const;
+
+const DEEP_DESTINATION = {
+  index: sectionIndex.howIBuild,
+  title: howIBuildHeading,
+  // The first three principles, numbered exactly as the section numbers them.
+  //
+  // V6.5 took this from two lines to three. This surface is now the composition the
+  // route TERMINATES on rather than something glimpsed mid-traverse (see
+  // DestinationSurface), so it has to hold the last frame of the world -- and the
+  // only honest way to give it more presence is to show more of the destination it
+  // is previewing, not to invent anything for it.
+  lines: howIBuildPrinciples
+    .slice(0, 3)
+    .map((principle, index) => `${String(index + 1).padStart(2, "0")} — ${principle.title}`),
+} as const;
+
 export function SpatialExperience() {
   const featured = getProjectsByTier("featured");
   const kivilcim = featured.find((project) => project.slug === TOUR_SLUGS[0]);
@@ -84,7 +128,14 @@ export function SpatialExperience() {
   return (
     <section aria-label="Spatial system tour">
       <SpatialCamera
-        erosionWord={transitionWord}
+        systemsWord={transitionWord}
+        // V6.4 (§4A): the real projects the work-route branch points at, from the
+        // same loader query the handoff paragraph below uses -- so the branch and
+        // the sentence can never name different things -- plus the site's own term
+        // for where they live.
+        branchDestinations={[...beyondTour.map((project) => project.title), workIndexLabel]}
+        nearDestination={NEAR_DESTINATION}
+        deepDestination={DEEP_DESTINATION}
         // Travel material (§21). The distant plane carries oversized cropped
         // fragments of the REAL titles of the scenes the camera is heading
         // toward -- material derived from the world's own content, never
@@ -103,6 +154,16 @@ export function SpatialExperience() {
               ...(beyondTour[0]
                 ? [{ word: beyondTour[0].title, before: "approach" as const }]
                 : []),
+              // V6.4 REMOVED the exit traverse's cropped-word fragment that stood
+              // here. V6.3 added it to announce the lower world during the long
+              // diagonal, which was the right instinct and the wrong object: an
+              // oversized crop of "Built for real life" says the words without
+              // saying what they are. §4B now stages that same destination as a
+              // real surface with its own index, heading and line
+              // (DestinationSurface), and the two collided in frame -- measured at
+              // progress 0.945, the crop sat directly across the How I Build
+              // plate. The better version of the idea replaced the earlier one
+              // rather than joining it.
             ]}
           />
         }
@@ -214,7 +275,14 @@ export function SpatialExperience() {
           // becomes visible. Padding the composition inward keeps the depth
           // rail -- the thing that makes UNDERNEATH structural rather than
           // decorative -- inside the frame for the whole arrival.
-          <div className="w-full lg:pl-[11vw]">
+          // V6.1 (§7): the indent rises from 11vw to 15vw. V6 needed the padding
+          // only to keep the depth rail on screen while the break's reveal was
+          // still finishing over the scene; now that the decompression interval
+          // has moved the arrival clear of the cover entirely
+          // (DECOMPRESSION_REACH in scenes.ts), the indent is free to do what §7
+          // actually asks -- stage the composition in the middle region of the
+          // frame instead of against its left edge -- without losing the rail.
+          <div className="w-full lg:pl-[15vw]">
             <div className="relative pl-8">
               <span
                 aria-hidden="true"
@@ -291,8 +359,8 @@ export function SpatialExperience() {
             </p>
             {beyondTour.length > 0 && (
               <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted">
-                {beyondTour.map((project) => project.title).join(" and ")} continue on the full Work
-                index.
+                {beyondTour.map((project) => project.title).join(" and ")} continue on the full{" "}
+                {workIndexLabel}.
               </p>
             )}
             <div className="mt-10">
@@ -306,10 +374,35 @@ export function SpatialExperience() {
           rather than dumping the visitor into the next ordinary section from
           a blank void. The wording is the other half of the brand's own
           thesis, and it is now literally true -- route two spent its whole
-          length climbing back up. */}
+          length climbing back up.
+
+          V6.6 (JOB 3) GAVE IT WEIGHT. This marker sits at the exact centre of the
+          hand-over -- the stretch measured as the page's longest visually dead run
+          -- and through V6.5 it was a hairline in `--color-line` plus one small
+          muted label, i.e. almost literally nothing at the one moment that most
+          needed to say something. It is now the regime change it always claimed to
+          be: an ink rule at full width, the label in ink, and the world's own
+          closed-corner register tying the moment back to the space that just
+          ended. It is still two rules and four words -- no panel, no heading, no
+          new copy. */}
       <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:px-8">
-        <div className="border-t border-line pt-6">
-          <MonoLabel className="text-ink-muted">Back on the surface</MonoLabel>
+        {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
+            removed. Route two is drawn dashed and signal-toned everywhere in the
+            world above -- that is its registered grammar. Here that exact line
+            arrives from the left, terminates at a junction node, and continues as
+            a solid ink editorial rule: the system's route becoming the page's
+            rule, in one drawing. Everything below this line uses solid editorial
+            rules only; everything above used world grammar. The label is now a
+            caption on the event rather than the event. */}
+        <div className="relative pt-5">
+          <div aria-hidden="true" className="flex items-center">
+            <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:w-32" />
+            <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+            <span className="block h-px flex-1 bg-ink" />
+          </div>
+          <div className="pt-4">
+            <MonoLabel className="text-ink">Back on the surface</MonoLabel>
+          </div>
         </div>
       </div>
     </section>

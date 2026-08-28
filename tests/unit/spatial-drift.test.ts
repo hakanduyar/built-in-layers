@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 import {
   DRIFT_SECTIONS,
   DRIFT_SETTLE,
-  driftLeadRule,
   driftSection,
   driftSpread,
   type DriftSectionId,
@@ -56,9 +55,15 @@ describe("the drift table is a fixed, deterministic composition", () => {
   });
 
   it("uses no runtime nondeterminism anywhere in the spatial layer", () => {
-    // The route, the drift and the erosion debris must all be reproducible.
-    // ErosionWord deliberately uses a seeded sin-based hash instead, so the
-    // scan is for the forbidden source of randomness specifically.
+    // The route, the drift and every generated mark must be reproducible across
+    // visits, reloads and screenshots. SystemField deliberately uses a seeded
+    // sin-based hash instead, so the scan is for the forbidden sources
+    // specifically rather than for arithmetic.
+    //
+    // V6.5: SystemsWord replaces InspectionWord, which replaced ErosionWord. The
+    // entry matters more than the original did -- SystemsWord builds its
+    // structural drawing from `routeLegs()` at module load, so a
+    // nondeterministic route would bake nondeterminism into a data URI.
     const sources = [
       "lib/spatial/editorialDrift.ts",
       "lib/spatial/sceneRoute.ts",
@@ -66,7 +71,9 @@ describe("the drift table is a fixed, deterministic composition", () => {
       "lib/spatial/systemPov.ts",
       "lib/spatial/scenes.ts",
       "components/spatial/EditorialDrift.tsx",
-      "components/spatial/ErosionWord.tsx",
+      "components/spatial/SystemsWord.tsx",
+      "components/spatial/DestinationSurface.tsx",
+      "components/spatial/WorldGrammar.tsx",
       "components/spatial/DirectionalField.tsx",
       "components/spatial/SystemPOV.tsx",
     ];
@@ -150,28 +157,11 @@ describe("every section genuinely drifts, and not all the same way", () => {
   });
 });
 
-describe("the lead rule states the block's own direction of travel", () => {
-  it("tilts with the sign of the section's travel", () => {
-    for (const section of DRIFT_SECTIONS) {
-      const rule = driftLeadRule(section.id);
-      expect(Math.sign(rule.height)).toBe(Math.sign(section.exit - section.entry));
-    }
-  });
-
-  it("scales with how far the block travels", () => {
-    const byTravel = [...DRIFT_SECTIONS].sort(
-      (a, b) => Math.abs(a.exit - a.entry) - Math.abs(b.exit - b.entry),
-    );
-    const smallest = Math.abs(driftLeadRule(byTravel[0]!.id).height);
-    const largest = Math.abs(driftLeadRule(byTravel[byTravel.length - 1]!.id).height);
-    expect(largest).toBeGreaterThan(smallest);
-  });
-
-  it("respects a caller-supplied width without changing the tilt", () => {
-    expect(driftLeadRule("about", 20).width).toBe(20);
-    expect(driftLeadRule("about", 20).height).toBeCloseTo(driftLeadRule("about").height, 12);
-  });
-});
+// V6.8 (JOB 3): the lead-rule contract is GONE WITH THE ELEMENT, not weakened.
+// The tilted hairline it described was deleted from DriftBlock because a viewer
+// cannot decode "tilt = direction of lateral travel" from a lone diagonal -- it
+// read as a stray line in every review capture. driftLeadRule() was removed from
+// the lib with it; a test would now be asserting geometry nothing renders.
 
 describe("the track settles before handing off to the footer CTA", () => {
   it("comes to rest at the centre of the track", () => {

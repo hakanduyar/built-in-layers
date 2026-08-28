@@ -42,16 +42,31 @@
 // one) makes the output's VELOCITY continuous too, which is what a single lag
 // would lose and what actually dissolves wheel-step edges.
 
-/** Time constant, in ms, of each of the two cascaded stages. */
-export const TAU_SETTLED_MS = 62;
-export const TAU_TIGHT_MS = 26;
+/**
+ * Time constant, in ms, of each of the two cascaded stages.
+ *
+ * V6 tightened both (was 62 / 26). The cascade's effective response is roughly
+ * twice one stage, so 48ms per stage is still ~96ms of smoothing -- ample to
+ * dissolve a wheel notch -- while removing the slight "the camera is catching
+ * up with me" softness that a 124ms cascade had during slow, deliberate
+ * reading scrolls. Combined with the flatter velocity profile
+ * (FOCUS_SPEED_RATIO), this is what makes small scroll inputs produce visible
+ * response everywhere instead of only during travel.
+ */
+export const TAU_SETTLED_MS = 48;
+export const TAU_TIGHT_MS = 22;
 
 /**
  * Scroll speeds, in progress-units per second, between which the filter
  * tightens. Derived from the measured wheel profiles at 1440x900: deliberate
  * reading scrolls sit near 0.05-0.15, and a trackpad flick reaches ~0.5.
+ *
+ * V6 lowered the lower bound from 0.10 to 0.06 so that a slow, deliberate
+ * scroll begins tightening the filter immediately rather than sitting in the
+ * fully-settled regime -- the regime where "nothing is happening" was most
+ * noticeable.
  */
-export const SPEED_SETTLED = 0.1;
+export const SPEED_SETTLED = 0.06;
 export const SPEED_TIGHT = 0.55;
 
 /**
@@ -82,6 +97,121 @@ export function lagStep(current: number, target: number, dtMs: number, tauMs: nu
 export function trackSpeed(previous: number, instant: number, dtMs: number): number {
   const decayed = previous * Math.exp(-Math.max(dtMs, 0) / SPEED_RELEASE_MS);
   return Math.max(Math.abs(instant), decayed);
+}
+
+/* ---------------------------------------------- scene-break rate limiting */
+
+/**
+ * PLAYBACK DURATION, in ms, of the occlusion cut.
+ *
+ * THE PROBLEM, which is unchanged and is why this survives V6.4's removals. The
+ * break occupies a fixed span of PROGRESS. Progress is its only natural clock, so
+ * without this its duration is whatever the reader's scroll speed makes it: under
+ * a hard wheel burst the whole event -- close, dwell, open -- crosses in a handful
+ * of frames, and the one deliberate transition in the journey is the thing a fast
+ * reader never sees.
+ *
+ * V6.2 bounded it with a MINIMUM: scroll was clamped to a ramp when it ran ahead,
+ * and left alone when it ran behind. Measured across burst profiles that produced
+ * anything from 50ms to 2.9s, and the cause is the asymmetry itself -- the VISUAL
+ * was driven along the ramp unconditionally while SCROLL was only clamped when it
+ * ran ahead, so a reader slower than the ramp had the event played at them while
+ * their scroll position stayed behind, and release snapped the visual back.
+ *
+ * V6.3 made the playback SYMMETRIC and therefore fixed: once the threshold is
+ * crossed, scroll position IS the ramp -- driven forward if the reader is behind
+ * it, held back if they are ahead -- so scroll and the visual it drives can never
+ * disagree, and there is nothing to reconcile at release.
+ *
+ * V6.4 KEEPS THAT MECHANISM AND SHORTENS IT, 1300 -> 950ms. 1300 was sized for a
+ * five-phase sequence that no longer exists: approach, impact, closing, dwell,
+ * reveal. What is left is three phases and no physics, and an occlusion held for
+ * 1.3s stops reading as a cut and starts reading as a pause. At 950ms the phases
+ * land at roughly 170 / 165 / 200 / 415ms for lead-in / closing / full black /
+ * opening.
+ *
+ * WHERE IT LIVES: `useSceneBreakEvent` (components/spatial/SpatialCamera.tsx).
+ */
+export const BREAK_PLAYBACK_MS = 950;
+
+/**
+ * How far the reader may scroll BACK, in px, before the playback aborts and hands
+ * control straight back. One firm wheel-up. The escape has to be immediate and
+ * unconditional -- that is most of what separates a protected event from
+ * scroll-jacking.
+ */
+export const BREAK_ABORT_PX = 90;
+
+/* --------------------------------------------------- the opening glide (V6.8) */
+
+/**
+ * Maximum rate, in progress-units per second, at which the camera may move while
+ * it is still inside the OPENING GLIDE ZONE (see ENTRY_GLIDE_TO in sceneRoute.ts).
+ *
+ * WHY THIS EXISTS. The acquisition descent added in V6.7 gave the journey the
+ * right OPENING SHAPE -- straight down, then a bend into the diagonal -- but the
+ * filter still let wheel velocity set the opening's SPEED. Measured on the built
+ * page from the true top: a normal 90px wheel run peaked at 6,881 px/s of world
+ * movement with 114px single-frame steps, and a 1400px trackpad fling crossed the
+ * ENTIRE opening region in one frame (>520px of world in a single step). The
+ * page's first move -- the one moment every visitor sees -- was the least
+ * controlled motion on it.
+ *
+ * The governor bounds d(progress)/dt inside the zone. At this cap the world's
+ * opening speed lands between ~420 px/s (early, where the route is slowest) and
+ * ~1,000 px/s (committing into the bend) at 1440x900 -- about one viewport per
+ * second at its fastest, glide rather than drop. Outside the zone the filter is
+ * untouched, so this slows nothing but the departure itself.
+ *
+ * WHY IT IS NOT SCROLL-JACKING. Scroll position is never written; the reader's
+ * position is wherever they put it, instantly. Only the VISUAL's catch-up rate is
+ * bounded, and only inside one ~0.07-wide band at the very top of the route --
+ * the same distinction the camera filter itself has always drawn between input
+ * and presentation. Worst case a fling waits ~0.8s while the camera glides the
+ * opening it would otherwise have skipped.
+ */
+export const GLIDE_MAX_RATE = 0.09;
+
+/**
+ * How much of the route past the glide zone the governor uses to RELEASE, as a
+ * multiple of the zone's own width, and how much faster the cap is allowed to get
+ * by the end of that band.
+ *
+ * A hard release edge was measured before this existed: the first build capped the
+ * zone and nothing after it, and a trackpad fling then jumped 2,183px in the single
+ * frame after the governor let go -- the exact lurch the governor exists to
+ * prevent, relocated 40vh down the page. The cap therefore ramps: rate x1 inside
+ * the zone, rising quadratically to x8 across 1.5 further zone-widths, then
+ * uncapped. Past the band a fling behaves exactly as it always has everywhere else
+ * on the route; the governor is local to the departure.
+ */
+export const GLIDE_RELEASE_SPAN = 1.5;
+export const GLIDE_RELEASE_GAIN = 8;
+
+/**
+ * One governor step. Returns `proposed` untouched when the movement is entirely
+ * past the release band or already inside the rate budget; otherwise advances
+ * from `previous` at the capped rate for where the camera currently is, in
+ * whichever direction the movement was going -- the opening glides on the way
+ * back up, too.
+ */
+export function glideStep(
+  previous: number,
+  proposed: number,
+  dtMs: number,
+  glideUntil: number,
+): number {
+  if (glideUntil <= 0) return proposed;
+  const releaseEnd = glideUntil * (1 + GLIDE_RELEASE_SPAN);
+  if (previous >= releaseEnd && proposed >= releaseEnd) return proposed;
+  // Rate budget at the camera's CURRENT position: x1 in the zone, ramping to
+  // xGLIDE_RELEASE_GAIN across the release band.
+  const over = Math.max(0, previous - glideUntil) / (releaseEnd - glideUntil);
+  const gain = 1 + (GLIDE_RELEASE_GAIN - 1) * over * over;
+  const maxStep = GLIDE_MAX_RATE * gain * (Math.max(dtMs, 0) / 1000);
+  const step = proposed - previous;
+  if (Math.abs(step) <= maxStep) return proposed;
+  return previous + Math.sign(step) * maxStep;
 }
 
 export type FilterState = { stage1: number; stage2: number; speed: number };

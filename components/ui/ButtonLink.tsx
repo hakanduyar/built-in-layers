@@ -34,7 +34,7 @@ export function ButtonLink({
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={sharedClassName}>
         {children}
-        <span aria-hidden="true"> ↗</span>
+        <span aria-hidden="true">{" \u2197\uFE0E"}</span>
         <span className="sr-only"> (opens in new tab)</span>
       </a>
     );

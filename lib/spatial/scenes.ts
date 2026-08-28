@@ -41,8 +41,31 @@ export const SCENE_MIN_HEIGHT = "72vh";
 
 /** Inset of the world layer inside the sticky viewport, so a focal scene
  *  lands comfortably framed rather than flush against the edges. */
-export const CAMERA_INSET = { left: "8vw", top: "14vh" };
-export const CAMERA_INSET_MOBILE = { left: "4vw", top: "10vh" };
+const INSET_LEFT_VW = 8;
+const INSET_TOP_VH = 14;
+const INSET_LEFT_VW_MOBILE = 4;
+const INSET_TOP_VH_MOBILE = 10;
+
+/**
+ * FINAL REMEDIATION -- wide-viewport anchoring. The inset was a plain 8vw: at
+ * the owner's real ~2552px CSS display that parked the px-capped scenes against
+ * the viewport's left edge while the lower page's sections centred in their
+ * 1320px container -- two different grids on one page, and a ~1100px dead right
+ * field on every scene (the review's recurring complaint). The inset now clamps
+ * to the container's own left margin, `calc(50vw - 660px)` (660 = half the
+ * 1320px --container-max): identical to 8vw at every viewport up to ~1571px --
+ * the approved 1440 frames are pixel-untouched -- and at wider viewports the
+ * whole world (scenes, rails, planes, material all derive from this) shares the
+ * lower page's grid instead of hugging the frame edge.
+ */
+export const CAMERA_INSET = {
+  left: `max(${INSET_LEFT_VW}vw, calc(50vw - 660px))`,
+  top: `${INSET_TOP_VH}vh`,
+};
+export const CAMERA_INSET_MOBILE = {
+  left: `${INSET_LEFT_VW_MOBILE}vw`,
+  top: `${INSET_TOP_VH_MOBILE}vh`,
+};
 
 /**
  * Nominal viewport aspect used to convert world units (vw for x, vh for y)
@@ -76,25 +99,193 @@ export const SCENE_IDS: readonly SceneId[] = SCENES.map((scene) => scene.id);
 export const ROUTE_ONE_IDS = ["hero", "kivilcim", "dropspot", "tail"] as const;
 export const ROUTE_TWO_IDS = ["reorient", "approach", "handoff"] as const;
 
-/** The wall route one runs into. A camera-only event, not a scene. */
-export const COLLISION_WORLD: WorldPoint = { x: 352, y: 268 };
-export const COLLISION_MOBILE_WORLD: WorldPoint = { x: 0, y: 470 };
-
-/** How far past the stopping point the visible boundary is drawn. */
-export const WALL_MARKER_OFFSET = 46;
+/**
+ * V6.7 (JOB 1) -- THE ACQUISITION DESCENT.
+ *
+ * A camera-only coordinate directly below the hero, in exactly the sense CUT_WORLD
+ * and TRAVERSE_WORLD are camera-only: the route passes through it, no scene stands
+ * at it.
+ *
+ * THE PROBLEM. Through V6.6 the route left the hero on the hero->Kivilcim bearing
+ * immediately -- 24.1 degrees, diagonal from the very first pixel of scroll. There
+ * was no moment in which the world moved before it committed to a direction, so the
+ * opening read as "a diagonal page" rather than as a system that looks, then departs.
+ *
+ * The fix is one point, and the curve does the rest. Because the spline reflects its
+ * start tangent, the camera leaves the hero travelling STRAIGHT DOWN; because the
+ * tangent at this point is derived from its neighbours (the hero and Kivilcim), the
+ * leg then bends into the diagonal on its own. The choreography the brief asks for --
+ * acquisition, short vertical descent, commitment to the diagonal -- is therefore the
+ * literal shape of the curve rather than three effects sequenced to imply it.
+ *
+ * Kept deliberately short, and weighted as TRAVEL rather than as reading time (see
+ * ENTRY_SEGMENTS in sceneRoute.ts), so the opening is a beat and not a scroll.
+ *
+ * Mobile takes the same beat; its route is vertical throughout, so this simply makes
+ * the first move a measured one there too.
+ */
+export const ENTRY_WORLD: WorldPoint = { x: 0, y: 42 };
+export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
 
 /**
- * Progress spent stopped dead at the wall. THE ONE PLACE in V4 where the
- * camera is deliberately stationary while scroll continues -- it is the
- * impact, and it is short.
+ * THE EXIT TRAVERSE (V6.3, §4-5; kept unchanged by V6.4, §3). Two camera-only
+ * coordinates after `handoff`, in exactly the sense CUT_WORLD is camera-only:
+ * the route passes through them, no scene stands at them.
+ *
+ * V6.4 KEEPS THIS GEOMETRY EXACTLY. The owner's reading is that the leg is
+ * directionally correct and that the problem was never its length -- it was that
+ * the journey along it carried almost no information. So the answer is what
+ * TRAVELS the leg (§4: a work-route junction and two foreshadowed destinations),
+ * not a shorter leg.
+ *
+ * WHY THE ROUTE HAD TO GROW
+ *
+ * Through V6.2 the world simply ENDED at `handoff` and the page dropped into
+ * ordinary downward scrolling one section later. The owner's reading of that was
+ * exact: after Built in Layers the site "begins descending too directly", and the
+ * lower half then reads as a normal editorial page with a zigzag drawn beside it.
+ * No amount of work on the lower sections could fix it, because the problem was
+ * that there was no travel between the world and them -- the transition from
+ * "inside a space" to "reading a page" happened in the gap between two DOM nodes.
+ *
+ * So the camera now leaves `handoff` on a real leg. `traverse` is placed
+ * down-and-right at a screen bearing of almost exactly 45 degrees, and `descent`
+ * turns that travel toward vertical, so the world hands over to the lower page
+ * already moving in the lower page's own direction rather than stopping and being
+ * replaced.
+ *
+ * MEASURED (tests/unit/spatial-route.test.ts asserts all three): the traverse leg
+ * covers 76vw x 110vh of world -- more than one viewport diagonally at 1440x900 --
+ * at a mean screen bearing of ~44 degrees, and the leg that follows it turns to
+ * ~70 degrees. It is not a bend in an existing leg; it is a third of route two.
+ *
+ * Mobile keeps x at 0 like every other mobile anchor: the same route, taken by a
+ * camera that only ever descends (§30).
  */
-export const IMPACT_WINDOW = 0.045;
-/** Break panel timing, relative to the cut. */
-export const BREAK_COVER_LEAD = 0.024;
-export const BREAK_REVEAL_TAIL = 0.026;
+export const TRAVERSE_WORLD: WorldPoint = { x: 340, y: 458 };
+export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 990 };
 
-/** Horizontal rails the break is built from. */
-export const SCENE_BREAK_BANDS = 7;
+/**
+ * V6.5 SHORTENED THE TURN, AND ONLY THE TURN: {358, 550} -> {352, 508}.
+ *
+ * §3 of the V6.5 brief keeps the diagonal journey at full length and §7 lists the
+ * diagonal route concept among the decisions to preserve, so the diagonal leg is
+ * untouched -- 76vw x 110vh, 167.6 screen units, exactly as V6.3 authored it and
+ * V6.4 kept it. What is cut is the leg AFTER it.
+ *
+ * That leg's job is to change direction: it takes the camera from a 42-degree
+ * descent to a ~70-degree one so the world hands over to the lower page already
+ * moving in the lower page's own direction. Measured, V6.4 spent 96.4 screen units
+ * and 26.7vh of the reader's scroll doing that, through world containing nothing
+ * whatsoever -- the destination surfaces had both resolved before it started.
+ *
+ * A direction change does not need 96 units. At 12vw x 50vh the leg is 53.5 units
+ * long and turns to 69.0 degrees: the same handover, 44% less empty travel. The
+ * bearing is what the leg is for, and the bearing is preserved to within 1.5
+ * degrees; the distance was only ever the cost of it.
+ */
+export const DESCENT_WORLD: WorldPoint = { x: 352, y: 508 };
+export const DESCENT_MOBILE_WORLD: WorldPoint = { x: 0, y: 1048 };
+
+/**
+ * Where route one ends and the occlusion cut happens. A camera-only
+ * coordinate, not a scene.
+ *
+ * V6.4 RETIRED THE COLLISION. Through V6.3 this was `COLLISION_WORLD`: a wall the
+ * camera ran into, stopped dead at, and rebounded off. The owner's verdict on
+ * that whole concept is that the experiment is finished -- so the wall, the
+ * rebound, the impact window, the shock and the recoil are all gone, and what
+ * survives is the part that was always wanted: the black geometric surfaces.
+ *
+ * They are now what they always looked like they were: an OCCLUSION CUT. The
+ * camera travels to this coordinate at full travelling speed, the surfaces close
+ * over it, the route is changed while the frame is genuinely opaque, and the
+ * surfaces open again on route two. Nothing is hit and nothing bounces; the view
+ * is briefly interrupted and resumes somewhere else.
+ *
+ * The coordinate itself is unchanged, because route one's geometry was never the
+ * problem.
+ */
+export const CUT_WORLD: WorldPoint = { x: 352, y: 268 };
+export const CUT_MOBILE_WORLD: WorldPoint = { x: 0, y: 470 };
+
+/**
+ * Break panel timing, relative to the cut.
+ *
+ * V6.4 widened both, and could afford to. Through V6.3 the cut sat at the far end
+ * of a 0.062-wide impact window in which the camera did not advance along the
+ * route at all, so the whole event -- approach, hold, rebound, close, dwell,
+ * open -- had to be squeezed either side of it. With the impact window gone that
+ * progress is returned to the occlusion itself, which is the only thing left in
+ * this region and therefore the thing worth giving room to.
+ *
+ * The sequence these three numbers describe, in order, is exactly the one the
+ * V6.4 brief asks for:
+ *
+ *   world visible        p < BREAK_CUT - BREAK_COVER_LEAD
+ *   surfaces close       BREAK_COVER_LEAD before the cut
+ *   full black           BREAK_DWELL either side of it
+ *   surfaces open        BREAK_REVEAL_TAIL after it
+ *   redirected world     p > BREAK_CUT + BREAK_REVEAL_TAIL
+ *
+ * The opening is deliberately longer than the closing. Closing is an
+ * interruption and should be decisive; opening is a reveal of somewhere new and
+ * is the half the reader is actually reading.
+ */
+export const BREAK_COVER_LEAD = 0.03;
+export const BREAK_REVEAL_TAIL = 0.034;
+
+/**
+ * Progress before the cover begins at which the protected window opens.
+ *
+ * Small, and smaller than V6.3's, because there is no longer an approach
+ * choreography to protect -- only the occlusion. It exists so that the guarded
+ * window starts on VISIBLE WORLD rather than on the first frame of ink: a
+ * protected event that begins already black cannot show the reader what is being
+ * occluded.
+ */
+export const BREAK_GUARD_LEAD = 0.014;
+
+/**
+ * V6.1: full, opaque cover is held for this much progress either side of the
+ * cut, and ONLY there.
+ *
+ * The V6 rails ran `(1 - t) ** speed`, whose derivative at t=0 is -speed: they
+ * moved fastest at the very start of the cover window, so measured 6% into that
+ * window there was already ~121px of solid ink on both frame edges. Black was
+ * therefore at near-full mass for the whole window, which is exactly the
+ * reported percept -- "large black rectangles entering the viewport" rather than
+ * an impact.
+ *
+ * V6.1 inverts the curve (see breakBandOffset) so the rails hang off-frame and
+ * snap shut late. That alone would leave the fully-covered state
+ * instantaneous, which is both worse to look at and untestable, so the closed
+ * state is given this explicit dwell.
+ *
+ * V6.4 raised it 0.007 -> 0.011. The brief asks for a "controlled full-black
+ * moment" as a named beat of the sequence rather than as the instant between
+ * closing and opening, and 0.007 was sized when this window was competing with an
+ * impact for the same progress. It is not competing with anything now. At the
+ * guard's fixed playback that is ~185ms of genuine full cover -- long enough to
+ * register as a held state, short enough that it never becomes a pause.
+ */
+export const BREAK_DWELL = 0.011;
+
+/**
+ * Horizontal rails the break is built from.
+ *
+ * V6.1 raised this from 7 to 11. Total ink area at full cover is identical --
+ * it is a full frame either way -- but at 7 bands each rail is ~128px tall at
+ * 900px, and a partly-closed set of 128px full-width blocks reads as exactly
+ * what the owner reported: rectangles. At 11 the same closing motion is made of
+ * ~82px structural bands, which reads as a coordinate system shuttering rather
+ * than as blocks sliding over the page.
+ *
+ * V6.4 keeps the geometry exactly. It is the one part of this region the owner
+ * asked to preserve, and with the collision gone it is no longer the secondary
+ * event standing next to a hit -- it is the whole event.
+ */
+export const SCENE_BREAK_BANDS = 11;
 
 /**
  * Reading allowance added to every segment's scroll weight, in vh-equivalent
@@ -106,31 +297,238 @@ export const SCENE_BREAK_BANDS = 7;
 export const FOCUS_ALLOWANCE = 74;
 
 /**
- * Camera speed at a scene, as a fraction of the route's average speed.
- * The brief's conceptual range is 0.12-0.30 against a normal travel of 1.0;
- * this sits inside it, and the mid-segment peak lands near 1.35x average, so
- * the whole journey moves within roughly a 5x band instead of V3's 0x-to-20x.
+ * V6.3: the same allowance for a segment with NO SCENE ON IT -- the exit
+ * traverse. Reading allowance buys time to look at something; a travel leg has
+ * nothing to look at, so paying it the full 74 would spend the page's scroll
+ * budget on empty world.
+ *
+ * The two numbers below are what make the new leg affordable. Route length is
+ * capped at 420vh by a design contract the owner set when V3's 420vh was rejected
+ * (tests/unit/spatial-route.test.ts), and the traverse adds ~262 units of world to
+ * a route that was 1137. Paid at the scene rate that is +484vh of page. Paid at
+ * the travel rate it is +418vh -- inside the cap, at the cost of route one giving
+ * up about 10% of its progress share.
+ *
+ * That trade is also the right art direction rather than only the affordable one:
+ * a travel leg SHOULD move faster than a scene. The one thing it may not do is
+ * break the world's C1 speed contract, and it does not -- every join still meets
+ * at the single shared boundary speed, which is asserted directly.
+ *
+ * V6.5 LOWERED IT 34 -> 24. The allowance is reading time, and the V6.4 exit legs
+ * were measured carrying 1560px of scroll across which the rendered frame was 2.2%
+ * ink -- there was nothing to read, so the allowance was buying nothing. It is not
+ * taken to zero: the traverse now passes two real destinations (§4), and a
+ * destination seen at distance is something to look at even though no scene stands
+ * on the leg.
  */
-export const FOCUS_SPEED_RATIO = 0.26;
+export const TRAVEL_ALLOWANCE = 24;
 
 /**
- * Total scroll driving the route, in viewport heights. Lower than V3's 420vh
- * on purpose (§24): with literal dwell removed, scroll no longer has to be
- * spent standing still, so the same reading time costs less distance.
+ * How much of a travel leg's true arc length is charged to the scroll budget.
+ * Below 1 the camera crosses it faster than it crosses a scene leg.
+ *
+ * A first pass used 0.66 with a 24 allowance, which is measurably too aggressive
+ * and the tests said so rather than the eye: the traverse peaked at 2.29x the
+ * route average (the world's band is capped at 2.2) and its speed rose so steeply
+ * out of the `handoff` join that consecutive samples 0.0005 apart differed by 10%
+ * -- not a C1 break (the one-sided join test still passed at 3%) but a curvature
+ * spike sharp enough to read as a lurch. Peak speed on a symmetric segment is
+ * ~1.5·L/width, so it is set by this ratio directly.
  */
-export const ROUTE_LENGTH_VH = 340;
+export const TRAVEL_WEIGHT_RATIO = 0.8;
+
+/**
+ * V6.7 (JOB 1): the reading allowance for the ACQUISITION DESCENT specifically --
+ * between the travel rate (24) and the scene rate (74).
+ *
+ * The beat is not a scene: nothing stands on it and there is nothing to read, so
+ * paying it FOCUS_ALLOWANCE would give the page's opening more scroll than Kivilcim
+ * gets. But it is not mid-route transit either -- it is the first thing the reader
+ * does, it carries the tail of the hero's own reading time, and at the bare travel
+ * rate its progress width is narrow enough that the camera has to ramp from reading
+ * speed to travel speed across very little scroll. Measured, that produced an 8.9%
+ * frame-to-frame speed step at p=0.001 against the world's standing 8% ceiling --
+ * i.e. a visible lurch on the very first wheel notch, caught by
+ * tests/unit/spatial-route.test.ts rather than by eye.
+ *
+ * 46 widens the segment enough for the ramp to be smooth while still costing route
+ * one about a third less than a scene leg would.
+ */
+export const ENTRY_ALLOWANCE = 46;
+
+/**
+ * Boundary speed, as a fraction of the route average, at joins that have NO SCENE
+ * on them: between the two exit legs, and at the route's terminus.
+ *
+ * Every join in the world through V6.2 ran at FOCUS_SPEED_RATIO, because every
+ * join was a scene -- slowest where there is something to look at. The exit
+ * traverse introduced the first joins where that is not true, and decelerating to
+ * reading speed at a coordinate with nothing on it is exactly the "stop/go" V4
+ * was built to remove.
+ *
+ * Above 1, so the route ENDS at speed and hands over to the lower page still
+ * travelling, which is also what §5 asks the traverse to establish. It flattens
+ * the traverse's velocity profile as a side effect: an asymmetric Hermite with a
+ * fast far end has a lower peak than a symmetric one covering the same distance.
+ */
+export const TRAVEL_SPEED_RATIO = 1.15;
+
+/**
+ * THE DECOMPRESSION INTERVAL (V6.1).
+ *
+ * V6's route two began exactly at the cut, so `reorient` -- the UNDERNEATH
+ * composition -- was *fully framed* at BREAK_CUT while the break panel was still
+ * covering it, and the panel only finished leaving 0.026 of progress later. The
+ * scene and the collision residue therefore occupied the same frames BY
+ * CONSTRUCTION. No amount of restaging the composition could fix that; the
+ * camera had to stop arriving at the scene during the transition.
+ *
+ * So route two now starts at a LEAD-IN coordinate short of `reorient`, placed
+ * back along the reorient->approach direction. The camera is thrown to that
+ * coordinate by the collision, the cover leaves while it sits in open world, and
+ * only then does it travel forward into UNDERNEATH. "Impact -> spatial release ->
+ * negative space -> route settles -> UNDERNEATH enters" becomes the literal
+ * camera path rather than a description of one.
+ *
+ * REACH is how far back along that direction the lead-in sits, as a fraction of
+ * the reorient->approach leg.
+ *
+ * The decompression leg is weighted with the ordinary FOCUS_ALLOWANCE like every
+ * other segment. An earlier V6.1 pass gave it a reduced allowance to keep the
+ * page shorter, and that broke the world's C1 continuity: with a different
+ * allowance the segment's progress width no longer satisfies the shared boundary
+ * speed, the solver clamps, and camera speed mismatched by 4.7% across the
+ * `reorient` join (caught by tests/unit/spatial-route.test.ts, not by eye).
+ * A continuous camera is worth more than 10vh of page length, and treating this
+ * segment like any other is also simply less machinery.
+ */
+export const DECOMPRESSION_REACH = 0.22;
+
+/**
+ * Camera speed at a scene, as a fraction of the route's average speed.
+ *
+ * V6 RAISED THIS FROM 0.26 TO 0.42, which is the single largest change in the
+ * V6 motion pass. The owner's remaining complaint after V5 was that the journey
+ * still felt like "not much is happening, then suddenly too much" -- and that is
+ * this number. Under arc-length parameterisation the mid-segment peak is
+ * `1.5 - 0.5·r` of average, so the whole dynamic range of the journey is
+ * `(1.5 - 0.5r) / r`:
+ *
+ *   r = 0.26  ->  peak 1.37x, band 5.3x   (V5: legible focus, uneven travel)
+ *   r = 0.42  ->  peak 1.29x, band 3.1x   (V6)
+ *
+ * A scene is still clearly the slowest point in the world -- 0.42 against a
+ * 1.29 peak is a 3x contrast, which reads as arrival -- but the stretches
+ * between scenes no longer have to sprint to make up the distance the focus
+ * zones gave away.
+ */
+export const FOCUS_SPEED_RATIO = 0.42;
+
+/**
+ * Total scroll driving the route, in viewport heights.
+ *
+ * V6.5 LOWERED IT 445 -> 430, again at zero cost to route one's pacing, and again
+ * by arithmetic rather than by taste. Shortening the turn leg and lowering the
+ * travel allowance cut route two's scroll weight, which RAISES route one's share
+ * of progress (SPLIT went 0.4728 -> 0.4898). At 445 that would have handed route
+ * one 218.0vh where V6.4 gave it 210.4 -- i.e. the fix for the empty region would
+ * have quietly slowed down the region that was already right. 430 x 0.4898 =
+ * 210.6vh puts route one back within a fifth of a viewport of V6.4, and the 15vh
+ * saved comes entirely out of the exit.
+ *
+ * V6.4 LOWERED IT 474 -> 445, at exactly zero cost to pacing, because retiring
+ * the impact window handed back the progress it was consuming.
+ *
+ * THE ARITHMETIC. Every segment's progress width is proportional to AVAILABLE
+ * (see sceneRoute.ts), which through V6.3 was `1 - IMPACT_WINDOW` = 0.938: the
+ * impact was 6.2% of the page's scroll during which the camera advanced along the
+ * route not at all. With the collision gone AVAILABLE is 1, so every segment's
+ * width grows by 1/0.938 and the camera's world-units-per-progress falls by the
+ * same factor. Multiplying the route length by 0.938 -- 474 x 0.938 = 444.6 --
+ * therefore leaves world-units-per-SCROLL-PIXEL identical everywhere. Route one
+ * keeps its 218vh, the exit traverse keeps its full length, and the page is 29vh
+ * shorter.
+ *
+ * It also halves the standing override. 420vh was rejected in V3 and V6.3 went
+ * 12.9% past it to pay for the exit traverse; V6.4 is 6.0% past it for the same
+ * traverse. The ceiling asserted in tests/unit/spatial-route.test.ts comes down
+ * from 500 to 460 to match, so the guard is tighter after this pass than before
+ * it. If the owner wants a hard 420 the alternative is still one constant, and
+ * the cost is now 5.6% of route one's reading time rather than 13%.
+ *
+ * V6.3 RAISED IT 410 -> 474, AND THAT BROKE THE STANDING GUARD.
+ *
+ * THE ARITHMETIC, because the choice is entirely arithmetic. §4 of the V6.3 brief
+ * requires a real exit traverse. That adds 266 units of world to a route that was
+ * 1137, and route one's share of progress is
+ *
+ *   SPLIT = AVAILABLE x W1 / (W1 + W2)
+ *
+ * so ANY addition to route two dilutes route one, whose scroll share falls from
+ * 0.532 to 0.460 the moment the traverse exists. At 418vh -- inside the old cap --
+ * route one gets 192vh where V6.2 gave it 218vh: a 13% faster camera across HERO,
+ * Kıvılcım, DropSpot and the run at the wall, which is below even V5's 196vh and
+ * would undo most of V6's pacing work. Those are the four scenes the V6.3 brief
+ * opens by listing as areas to preserve.
+ *
+ * 474vh restores route one to 218.1vh -- V6.2's figure to within a tenth of a
+ * viewport -- and the exit traverse is paid for by page length instead of by the
+ * portfolio's own content.
+ *
+ * WHY THE OLD CAP IS NOT SIMPLY BEING IGNORED. 420vh was rejected in V3, and the
+ * V3 measurements say what was actually wrong with it: 29 distinct camera
+ * positions across 900 frames, a median response of 0.00 camera px per scroll px,
+ * and 1276px of scrolling that moved the camera under 8px. The objection was DEAD
+ * SCROLL, not length. V4 removed dead scroll structurally (there is no zero-
+ * velocity plateau anywhere in the route now, and a unit test asserts it), so the
+ * condition the cap was protecting against no longer exists. If the owner still
+ * wants a hard 420, the alternative is one constant -- set this to 418 -- and the
+ * cost is the 13% above.
+ *
+ * V6.1 raised this again, 380vh -> 410vh, purely to pay for the decompression
+ * segment: adding a leg to route two lowers SPLIT (route one's share of
+ * progress) from 0.576 to ~0.542, and without the extra length route one would
+ * have silently lost about 20vh of the reading time V6 had just bought it. Still
+ * under V3's rejected 420vh.
+ *
+ * V6 raised this from V5's 340vh to 380vh (still under V3's 420vh). Raising
+ * FOCUS_SPEED_RATIO means the camera crosses a scene's neighbourhood faster in
+ * *progress* terms, which on its own would cost reading time at exactly the
+ * moments that need it most. Lengthening the route restores that time by
+ * lowering the absolute camera speed per scroll pixel everywhere, while leaving
+ * the flattened VARIANCE -- the thing that was actually wrong -- intact.
+ */
+export const ROUTE_LENGTH_VH = 430;
 
 /**
  * Depth planes (§12). The middle plane is the world itself and is pinned at
- * exactly 1.0 on purpose: the route rails, registration ticks and wall
- * boundary are DERIVED from the camera path, so parallaxing them would make
- * the world's own orientation system point at the wrong place. Depth is
- * therefore built around that plane -- material behind it, material in front
- * of it -- rather than by sliding it.
+ * exactly 1.0 on purpose: the route rails and registration ticks are DERIVED
+ * from the camera path, so parallaxing them would make the world's own
+ * orientation system point at the wrong place. Depth is therefore built around
+ * that plane -- material behind it, material in front of it -- rather than by
+ * sliding it.
  */
 export const PLANE_DISTANT = 0.62;
 export const PLANE_WORLD = 1;
 export const PLANE_NEAR = 1.13;
+
+/**
+ * V6.4: one plane FURTHER BACK than the travel material, added for the
+ * destination foreshadowing on the exit traverse (§4C).
+ *
+ * The brief asks for two future surfaces at two different depths -- Built for
+ * Real Life nearer, How I Build "at another spatial depth" and "not fully
+ * readable too early". Depth is the mechanism that makes that true rather than
+ * asserted: at 0.44 the deeper surface answers the camera at less than half the
+ * world's rate, so it hangs in frame far longer, drifts far less, and is
+ * legitimately still distant while the nearer one has already resolved.
+ *
+ * Adding a fourth plane rather than stacking both surfaces on PLANE_DISTANT is
+ * the difference between "two labels at different opacities" and two things
+ * genuinely at different distances. It costs one more absolutely-positioned
+ * transformed div, on desktop only.
+ */
+export const PLANE_DEEP = 0.44;
 
 /** Scale a scene resolves through as the camera arrives (§15). A few percent. */
 export const SCENE_SCALE_FAR = 0.972;

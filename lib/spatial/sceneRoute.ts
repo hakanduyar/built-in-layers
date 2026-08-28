@@ -42,20 +42,46 @@
 //      speed profile inside every ordinary segment is now symmetric -- which
 //      is the property the unit tests assert.
 //
-// The one intentional exception is the collision: the approach accelerates,
-// the camera stops dead at the wall for a short impact window, and the route
-// jumps discontinuously at the cut. That is the point of it.
+// The one intentional exception is the CUT: the route jumps discontinuously at
+// a single progress, behind a frame that is genuinely opaque at that instant.
+//
+// V6.4 RETIRED THE COLLISION MODEL AROUND THAT CUT. Through V6.3 the same
+// discontinuity was wrapped in a physical event -- an accelerating approach, a
+// wall, a 0.062-wide impact window in which the camera did not advance at all,
+// and a rectified damped rebound inside it. All of that is gone. What is left is
+// the smallest thing that can express "the route changes here": both sides of the
+// cut run at the same travelling speed, so the camera is moving when the surfaces
+// close and moving when they open, and nothing in the route model claims anything
+// was struck.
+//
+// The concrete simplification, for the record: `COLLISION_PROGRESS` and
+// `BREAK_CUT` were two constants that now have to be one, `AVAILABLE` is no longer
+// discounted by an impact window, `cameraPosition` has two branches instead of
+// three, and `reboundShape`, `collisionRebound`, `approachUnit`, `isImpact` and
+// `approachTension` no longer exist.
 
 import {
   BREAK_COVER_LEAD,
+  BREAK_DWELL,
+  BREAK_GUARD_LEAD,
   BREAK_REVEAL_TAIL,
-  COLLISION_MOBILE_WORLD,
-  COLLISION_WORLD,
+  CUT_MOBILE_WORLD,
+  CUT_WORLD,
+  DECOMPRESSION_REACH,
+  DESCENT_MOBILE_WORLD,
+  DESCENT_WORLD,
+  ENTRY_ALLOWANCE,
+  ENTRY_MOBILE_WORLD,
+  ENTRY_WORLD,
   FOCUS_ALLOWANCE,
   FOCUS_SPEED_RATIO,
-  IMPACT_WINDOW,
   ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
+  TRAVEL_ALLOWANCE,
+  TRAVEL_SPEED_RATIO,
+  TRAVEL_WEIGHT_RATIO,
+  TRAVERSE_MOBILE_WORLD,
+  TRAVERSE_WORLD,
   VW_PER_VH,
   sceneAnchor,
   screenDistance,
@@ -67,10 +93,6 @@ export type { SceneId, WorldPoint };
 
 function clamp01(value: number): number {
   return Math.min(Math.max(value, 0), 1);
-}
-
-function lerp(a: number, b: number, t: number): number {
-  return a + (b - a) * t;
 }
 
 /* ------------------------------------------------------------------ curve */
@@ -104,12 +126,31 @@ function reflect(inner: WorldPoint, outer: WorldPoint): WorldPoint {
 /* ------------------------------------------------------ arc-length lookup */
 
 /**
- * Samples per segment for the cumulative distance table. 64 is far more than
- * the geometry needs -- these are gentle curves whose chord/arc error is under
- * a tenth of a percent by ~24 samples -- and the whole thing is built once, at
- * module load, for six segments per viewport mode.
+ * Samples per segment for the cumulative distance table.
+ *
+ * V6.1 RAISED THIS FROM 64 TO 256, and it is a correctness fix rather than a
+ * refinement. The table is inverted by linear interpolation between samples
+ * (see arcParam), so its accuracy depends on how nonlinear `travelled(t)` is --
+ * i.e. on how much the curve's tangent MAGNITUDE varies along a segment. Every
+ * segment through V6 had a fairly even tangent, and 64 samples left the error
+ * far below a pixel.
+ *
+ * The decompression lead-in does not: its end tangent is 2.77x its own chord
+ * (the phantom reflection at a route start, followed immediately by a much
+ * longer leg), so `travelled(t)` is steep near t=1 and one 1/64 interval spans
+ * a large share of the segment's length. Linearly interpolating across that
+ * interval misplaced the camera enough to break the world's C1 speed contract
+ * by 4% at the `reorient` join -- analytically the profile was exact (every
+ * segment solves to the same 499.9 boundary speed), the TABLE was the thing that
+ * was wrong. Caught by tests/unit/spatial-route.test.ts, and it converged rather
+ * than shrinking with the probe's step size, which is what proved it was a real
+ * error and not a measurement artifact.
+ *
+ * Interpolation error falls as O(1/N^2), so 256 samples takes that 4% to roughly
+ * 0.25%. Cost is a one-time module-load computation of ~3.6k curve evaluations
+ * across both viewport modes.
  */
-const ARC_SAMPLES = 64;
+const ARC_SAMPLES = 256;
 
 type ArcTable = {
   /** Fraction of the segment's length reached at parameter i/ARC_SAMPLES. */
@@ -233,17 +274,99 @@ function arcTables(points: WorldPoint[]): ArcTable[] {
  * two differently-paced sequences.
  */
 function routePoints(mobile: boolean) {
-  const wall = mobile ? COLLISION_MOBILE_WORLD : COLLISION_WORLD;
-  const one = [...ROUTE_ONE_IDS.map((id) => sceneAnchor(id, mobile)), wall];
-  const two = ROUTE_TWO_IDS.map((id) => sceneAnchor(id, mobile));
+  const cut = mobile ? CUT_MOBILE_WORLD : CUT_WORLD;
+  // V6.7 (JOB 1): the acquisition descent sits between the hero and Kivilcim, so
+  // route one's points are [hero, ENTRY, ...rest, cut]. Camera-only, exactly like
+  // the cut and the exit traverse -- which is why the scene->point mapping below is
+  // explicit rather than positional.
+  const entry = mobile ? ENTRY_MOBILE_WORLD : ENTRY_WORLD;
+  const [heroAnchor, ...restOne] = ROUTE_ONE_IDS.map((id) => sceneAnchor(id, mobile));
+  const one = [heroAnchor!, entry, ...restOne, cut];
+  const scenesTwo = ROUTE_TWO_IDS.map((id) => sceneAnchor(id, mobile));
+  // V6.1: route two is led into rather than started on. See
+  // DECOMPRESSION_REACH in scenes.ts for why.
+  // V6.3: and it is led OUT of rather than stopped on -- the exit traverse
+  // (§4). Both extra coordinates are camera-only, exactly like the cut.
+  const two = [
+    decompressionAnchor(mobile),
+    ...scenesTwo,
+    mobile ? TRAVERSE_MOBILE_WORLD : TRAVERSE_WORLD,
+    mobile ? DESCENT_MOBILE_WORLD : DESCENT_WORLD,
+  ];
   return { one, two };
 }
 
-const AVAILABLE = 1 - IMPACT_WINDOW;
+/**
+ * How many segments at the END of route two carry no scene (V6.3): the exit
+ * traverse. They are weighted at the travel rate rather than the reading rate --
+ * see TRAVEL_ALLOWANCE in scenes.ts.
+ */
+export const EXIT_SEGMENTS = 2;
 
-/** Scroll weight of a run of segments: distance travelled + reading allowance. */
-function routeWeight(tables: ArcTable[]): number {
-  return tables.reduce((sum, table) => sum + table.length + FOCUS_ALLOWANCE, 0);
+/**
+ * How many segments at the START of route one carry no scene (V6.7): the acquisition
+ * descent. Weighted at the travel rate for the same reason the exit traverse is --
+ * reading allowance buys time to look at something, and there is nothing standing on
+ * this leg. It is the beat before the journey, not a stop on it.
+ */
+export const ENTRY_SEGMENTS = 1;
+
+/**
+ * The coordinate the collision throws the camera to (V6.1).
+ *
+ * Placed back along the reorient->approach direction, so travelling from it into
+ * `reorient` continues smoothly into the leg that follows -- deriving it from the
+ * route rather than authoring a point means the decompression cannot introduce a
+ * kink, and cannot describe a direction the camera does not then take.
+ *
+ * It is also, deliberately, the deepest point in the world: route one ends by
+ * running out of evidence, and the reposition drops BELOW the depth it will then
+ * climb back through. The world's lowest coordinate is where "underneath" is
+ * argued from.
+ */
+export function decompressionAnchor(mobile = false): WorldPoint {
+  const reorient = sceneAnchor("reorient", mobile);
+  const approach = sceneAnchor("approach", mobile);
+  return {
+    x: reorient.x - (approach.x - reorient.x) * DECOMPRESSION_REACH,
+    y: reorient.y - (approach.y - reorient.y) * DECOMPRESSION_REACH,
+  };
+}
+
+/**
+ * Progress available to actual route travel.
+ *
+ * V6.4: all of it. Through V6.3 this was `1 - IMPACT_WINDOW` -- 6.2% of the page's
+ * scroll was reserved for a window in which the camera did not advance along the
+ * route at all. That reservation is what made ROUTE_LENGTH_VH have to be 474 to
+ * keep route one's pacing; with it gone, 445 buys the identical camera speed.
+ */
+const AVAILABLE = 1;
+
+/**
+ * Scroll weight of ONE segment: distance travelled + reading allowance.
+ *
+ * V6.3 splits this by whether a scene stands on the segment. A travel leg is
+ * charged TRAVEL_WEIGHT_RATIO of its length plus the smaller TRAVEL_ALLOWANCE,
+ * so the camera crosses it faster; a scene leg is unchanged from V6.2.
+ */
+function segmentWeight(table: ArcTable, travel: boolean, entry = false): number {
+  if (entry) return table.length * TRAVEL_WEIGHT_RATIO + ENTRY_ALLOWANCE;
+  return travel
+    ? table.length * TRAVEL_WEIGHT_RATIO + TRAVEL_ALLOWANCE
+    : table.length + FOCUS_ALLOWANCE;
+}
+
+/** Which segments of a run are camera-only travel: the first `leadCount` and the
+ *  last `exitCount` of them. */
+function travelFlags(count: number, exitCount: number, leadCount = 0): boolean[] {
+  return Array.from({ length: count }, (_, i) => i < leadCount || i >= count - exitCount);
+}
+
+/** Scroll weight of a run of segments. */
+function routeWeight(tables: ArcTable[], exitCount = 0, leadCount = 0): number {
+  const travel = travelFlags(tables.length, exitCount, leadCount);
+  return tables.reduce((sum, table, i) => sum + segmentWeight(table, travel[i]!, i < leadCount), 0);
 }
 
 /**
@@ -258,8 +381,8 @@ function routeWeight(tables: ArcTable[]): number {
  */
 const SPLIT = (() => {
   const { one, two } = routePoints(false);
-  const oneWeight = routeWeight(arcTables(one));
-  return (AVAILABLE * oneWeight) / (oneWeight + routeWeight(arcTables(two)));
+  const oneWeight = routeWeight(arcTables(one), 0, ENTRY_SEGMENTS);
+  return (AVAILABLE * oneWeight) / (oneWeight + routeWeight(arcTables(two), EXIT_SEGMENTS));
 })();
 
 function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
@@ -267,8 +390,7 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
   const oneArcs = arcTables(onePoints);
   const twoArcs = arcTables(twoPoints);
 
-  const collision = SPLIT;
-  const cut = collision + IMPACT_WINDOW;
+  const cut = SPLIT;
   const available = AVAILABLE;
 
   const sum = (tables: ArcTable[]) => tables.reduce((s, table) => s + table.length, 0);
@@ -276,34 +398,71 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
   // One shared boundary speed for the entire world, expressed in world units
   // per unit progress.
   const focusSpeed = FOCUS_SPEED_RATIO * (totalLength / available);
+  /** Boundary speed at a join with no scene on it (V6.3). */
+  const travelSpeed = TRAVEL_SPEED_RATIO * (totalLength / available);
 
-  // Speed the camera reaches at the wall, before it is stopped dead. Higher
-  // than the route average so the approach genuinely builds.
-  const approachExitSpeed = 1.35 * (totalLength / available);
-
+  /**
+   * V6.4 -- THE CUT RUNS AT TRAVELLING SPEED ON BOTH SIDES.
+   *
+   * Through V6.3 route one's last boundary was a special case: `approachExitSpeed`,
+   * 1.35x the route average, because the camera was supposed to be building into a
+   * wall. Route two then began at reading speed, because it began on a scene's
+   * segment. So the two halves of the same instant disagreed about how fast the
+   * world was moving by more than 3x -- which is correct for a collision and wrong
+   * for an occlusion.
+   *
+   * An occlusion cut is not an event in the world; it is an event in what the
+   * reader can SEE of the world. So the world's own speed is deliberately
+   * CONTINUOUS across it even though its position is not: the camera is travelling
+   * at exactly the same rate on the last visible frame before the surfaces close
+   * and the first visible frame after they open. That is the whole difference
+   * between "the journey was interrupted" and "the journey was stopped".
+   *
+   * It also deletes a special case rather than adding one -- `lastIsApproach` is
+   * gone, and both routes now run through the same boundary-speed rule with an
+   * explicit override at the two ends that meet at the cut.
+   */
   const assemble = (
     points: WorldPoint[],
     arcs: ArcTable[],
     from: number,
     to: number,
-    lastIsApproach: boolean,
+    exitCount = 0,
+    ends: { start?: number; end?: number } = {},
+    leadCount = 0,
   ) => {
     const controls = segmentControls(points);
-    const weightTotal = routeWeight(arcs);
+    const travel = travelFlags(arcs.length, exitCount, leadCount);
+    const weightTotal = routeWeight(arcs, exitCount, leadCount);
     const span = to - from;
 
     const bounds: number[] = [from];
     let cursor = from;
-    for (const arc of arcs) {
-      cursor += (span * (arc.length + FOCUS_ALLOWANCE)) / weightTotal;
+    for (const [i, arc] of arcs.entries()) {
+      cursor += (span * segmentWeight(arc, travel[i]!, i < leadCount)) / weightTotal;
       bounds.push(cursor);
     }
     bounds[bounds.length - 1] = to; // kill float drift so the last anchor is exact
 
+    // V6.3: the speed a JOIN runs at depends on whether a scene stands on it.
+    // Boundary `i` sits before segment `i`; the ones at or past the start of the
+    // exit run have no scene, so they run at travelSpeed rather than decelerating
+    // to reading speed at a coordinate with nothing to read.
+    const sceneBoundaries = controls.length - exitCount;
+    const boundarySpeed = (index: number) => {
+      if (index === 0 && ends.start !== undefined) return ends.start;
+      if (index === controls.length && ends.end !== undefined) return ends.end;
+      // V6.7: the boundaries that CLOSE a leading travel segment carry no scene
+      // either -- the acquisition descent ends on a camera-only coordinate, so
+      // decelerating to reading speed there would park the camera at a point with
+      // nothing standing on it, which is exactly the stop/go V4 exists to remove.
+      if (index >= 1 && index <= leadCount) return travelSpeed;
+      return index > sceneBoundaries ? travelSpeed : focusSpeed;
+    };
+
     return controls.map((control, i): Segment => {
       const arc = arcs[i]!;
       const width = bounds[i + 1]! - bounds[i]!;
-      const isApproach = lastIsApproach && i === controls.length - 1;
 
       // With the curve reparameterised by arc length, camera speed is exactly
       //   speed(t) = L · e'(t) / width
@@ -318,42 +477,97 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
         arc,
         from: bounds[i]!,
         to: bounds[i + 1]!,
-        a0: solve(focusSpeed),
-        a1: solve(isApproach ? approachExitSpeed : focusSpeed),
+        a0: solve(boundarySpeed(i)),
+        a1: solve(boundarySpeed(i + 1)),
       };
     });
   };
 
-  const oneSegments = assemble(onePoints, oneArcs, 0, collision, true);
-  const twoSegments = assemble(twoPoints, twoArcs, cut, 1, false);
+  const oneSegments = assemble(onePoints, oneArcs, 0, cut, 0, { end: travelSpeed }, ENTRY_SEGMENTS);
+  const twoSegments = assemble(twoPoints, twoArcs, cut, 1, EXIT_SEGMENTS, { start: travelSpeed });
 
+  /**
+   * Where each scene is framed.
+   *
+   * V6.7 REPLACED THE UNIFORM `skip` WITH AN EXPLICIT INDEX. Both routes now
+   * interleave camera-only coordinates with scene anchors -- route one is
+   * [hero, ENTRY, ...rest, cut] and route two is [lead-in, ...scenes, traverse,
+   * descent] -- so "scene i is framed where segment i+skip begins" is no longer
+   * true of route one at all. Passing the mapping in means a future camera-only
+   * point cannot silently shift every scene's focal progress by one segment.
+   */
   const focusOf = (
     ids: readonly SceneId[],
     segments: Segment[],
+    pointIndex: (i: number) => number,
   ): Partial<Record<SceneId, number>> =>
-    Object.fromEntries(ids.map((id, i) => [id, segments[i]?.from ?? segments[i - 1]?.to ?? 0]));
+    Object.fromEntries(
+      ids.map((id, i) => {
+        const at = pointIndex(i);
+        return [id, segments[at]?.from ?? segments[at - 1]?.to ?? 0];
+      }),
+    );
 
   return {
-    one: { segments: oneSegments, focus: focusOf(ROUTE_ONE_IDS, oneSegments) },
-    two: {
-      segments: twoSegments,
-      focus: {
-        ...focusOf(ROUTE_TWO_IDS, twoSegments),
-        handoff: twoSegments[twoSegments.length - 1]?.to ?? 1,
-      },
+    // Route one: the hero is segment 0's start; every later scene sits one segment
+    // further along than its index, because the acquisition descent is between them.
+    one: {
+      segments: oneSegments,
+      focus: focusOf(ROUTE_ONE_IDS, oneSegments, (i) => (i === 0 ? 0 : i + ENTRY_SEGMENTS)),
     },
+    // V6.3: `handoff` no longer needs a special case. Through V6.2 it was route
+    // two's LAST point, so no segment began at it and its focus had to be read
+    // off the final segment's `to`; the exit traverse now starts there, so the
+    // ordinary "scene i is framed where segment i+1 begins" rule covers it -- and
+    // the route ends at a coordinate with no scene on it, which is the point.
+    two: { segments: twoSegments, focus: focusOf(ROUTE_TWO_IDS, twoSegments, (i) => i + 1) },
   };
 }
 
 const DESKTOP = buildRoutes(false);
 const MOBILE = buildRoutes(true);
 
-/** Camera reaches the wall and stops dead here. Derived, not authored. */
-export const COLLISION_PROGRESS = SPLIT;
-/** The route's discontinuity, hidden behind full cover. */
-export const BREAK_CUT = COLLISION_PROGRESS + IMPACT_WINDOW;
+/**
+ * The route's one discontinuity, hidden behind full cover. Derived, not authored.
+ *
+ * V6.4: this is now a single number where V6.3 had two. `COLLISION_PROGRESS` was
+ * where the camera hit the wall and `BREAK_CUT` was IMPACT_WINDOW later, where the
+ * route jumped. With no impact between them they are the same instant, and every
+ * consumer that used to have to know which of the two it meant now cannot get it
+ * wrong.
+ */
+export const BREAK_CUT = SPLIT;
 export const BREAK_COVER_START = BREAK_CUT - BREAK_COVER_LEAD;
 export const BREAK_REVEAL_END = BREAK_CUT + BREAK_REVEAL_TAIL;
+/** The only fully-covered window: see BREAK_DWELL in scenes.ts. */
+export const BREAK_COVER_CLOSED = BREAK_CUT - BREAK_DWELL;
+export const BREAK_REVEAL_START = BREAK_CUT + BREAK_DWELL;
+
+/**
+ * THE PROTECTED BAND -- the span of progress whose traversal is rate-limited so
+ * the occlusion cannot collapse under a fast wheel burst (see BREAK_PLAYBACK_MS
+ * in cameraFilter.ts). Kept from V6.2/V6.3, because it is the one part of this
+ * region the V6.4 brief explicitly asks to preserve.
+ *
+ * It opens BREAK_GUARD_LEAD before the surfaces begin to close, so the protected
+ * window starts on visible world rather than on the first frame of ink, and closes
+ * when the surfaces have finished opening.
+ */
+export const BREAK_GUARD_FROM = Math.max(BREAK_COVER_START - BREAK_GUARD_LEAD, 0);
+export const BREAK_GUARD_TO = BREAK_REVEAL_END;
+
+/**
+ * Where the OPENING GLIDE ZONE ends (V6.8): the end of the acquisition descent
+ * plus a 30% blend into the leg that bends toward Kivilcim, so the speed governor
+ * releases inside the bend rather than exactly at the anchor. Derived from the
+ * route's own segment bounds -- re-weight the entry and this moves with it.
+ * See GLIDE_MAX_RATE in cameraFilter.ts for what reads it and why.
+ */
+export const ENTRY_GLIDE_TO = (() => {
+  const segment = DESKTOP.one.segments[ENTRY_SEGMENTS - 1];
+  if (!segment) return 0;
+  return segment.to + (segment.to - segment.from) * 0.3;
+})();
 
 function tables(mobile: boolean) {
   return mobile ? MOBILE : DESKTOP;
@@ -393,8 +607,13 @@ function evaluate(segments: Segment[], progress: number): WorldPoint | null {
 }
 
 /**
- * Camera world-position at a given scroll progress. Continuous in position
- * and in speed everywhere except the deliberate collision hold and cut.
+ * Camera world-position at a given scroll progress. Continuous in position and
+ * in speed everywhere except at the cut, where position jumps and speed does not.
+ *
+ * V6.4 removed the middle branch. Through V6.3 there was a third case between
+ * these two -- the impact window, where the camera was pinned to the wall and
+ * displaced by a rebound function. Two branches is the honest shape of "one route,
+ * then another route".
  */
 export function cameraPosition(progress: number, mobile = false): WorldPoint {
   const p = clamp01(progress);
@@ -403,17 +622,12 @@ export function cameraPosition(progress: number, mobile = false): WorldPoint {
   if (p >= BREAK_CUT) {
     return evaluate(two.segments, p) ?? sceneAnchor("handoff", mobile);
   }
-  if (p >= COLLISION_PROGRESS) {
-    // Stopped dead at the wall: the impact, and the only stationary window.
-    return mobile ? COLLISION_MOBILE_WORLD : COLLISION_WORLD;
-  }
   return evaluate(one.segments, p) ?? sceneAnchor("hero", mobile);
 }
 
-/** Which scene currently owns the camera, or the camera-only collision event. */
-export function currentSceneId(progress: number, mobile = false): SceneId | "collision" {
+/** Which scene currently owns the camera. */
+export function currentSceneId(progress: number, mobile = false): SceneId {
   const p = clamp01(progress);
-  if (p >= COLLISION_PROGRESS && p < BREAK_CUT) return "collision";
   const ids = p >= BREAK_CUT ? ROUTE_TWO_IDS : ROUTE_ONE_IDS;
   let closest: SceneId = ids[0]!;
   let best = Number.POSITIVE_INFINITY;
@@ -425,22 +639,6 @@ export function currentSceneId(progress: number, mobile = false): SceneId | "col
     }
   }
   return closest;
-}
-
-/** True only while the camera is stopped dead at the wall. */
-export function isImpact(progress: number): boolean {
-  const p = clamp01(progress);
-  return p >= COLLISION_PROGRESS && p < BREAK_CUT;
-}
-
-/** Rising 0..1 tension across the accelerating run at the wall. */
-export function approachTension(progress: number, mobile = false): number {
-  const p = clamp01(progress);
-  const segments = tables(mobile).one.segments;
-  const last = segments[segments.length - 1]!;
-  if (p <= last.from) return 0;
-  if (p >= COLLISION_PROGRESS) return 1;
-  return (p - last.from) / (COLLISION_PROGRESS - last.from);
 }
 
 /**
@@ -485,10 +683,19 @@ export function breakWipeOffset(progress: number): number {
   const p = clamp01(progress);
   if (p <= BREAK_COVER_START) return 100;
   if (p >= BREAK_REVEAL_END) return -100;
-  if (p <= BREAK_CUT) {
-    return lerp(100, 0, (p - BREAK_COVER_START) / (BREAK_CUT - BREAK_COVER_START));
+  if (p <= BREAK_COVER_CLOSED) {
+    // The highest hang-back exponent of anything in the break: this is a
+    // full-frame solid, so it is the single largest black mass on the page and
+    // it must not be seen crossing the viewport. It arrives essentially at the
+    // last moment, purely to guarantee opacity through the dwell.
+    const t = (p - BREAK_COVER_START) / (BREAK_COVER_CLOSED - BREAK_COVER_START);
+    return 100 * (1 - t ** 6);
   }
-  return lerp(0, -100, (p - BREAK_CUT) / (BREAK_REVEAL_END - BREAK_CUT));
+  if (p <= BREAK_REVEAL_START) return 0;
+  // Leaves immediately and fast, so no residue sits over the world the camera
+  // has been thrown to (§6).
+  const t = (p - BREAK_REVEAL_START) / (BREAK_REVEAL_END - BREAK_REVEAL_START);
+  return -100 * (1 - (1 - t) ** 2.6);
 }
 
 /**
@@ -500,16 +707,208 @@ export function breakWipeOffset(progress: number): number {
 export function breakBandOffset(progress: number, index: number): number {
   const p = clamp01(progress);
   const direction = index % 2 === 0 ? 1 : -1;
-  const speed = 1.35 + ((index * 3) % 4) * 0.32;
+  // V6.1 INVERTED BOTH CURVES.
+  //
+  // V6 closed with `(1 - t) ** speed`, whose derivative at t=0 is -speed: the
+  // rail's fastest travel was its FIRST travel, so measured 6% into the cover
+  // window each rail already had ~121px of solid ink inside the frame, and the
+  // black was at near-full mass for the entire window. That is the "large black
+  // rectangles entering the viewport" percept.
+  //
+  // `1 - t ** close` is the mirror image: the rail hangs off-frame while the
+  // boundary is still the thing being looked at, then snaps home. And the reveal
+  // is `1 - (1 - t) ** leave`, which departs immediately instead of lingering
+  // over the world beyond the break.
+  const close = 3.8 + ((index * 3) % 4) * 0.55;
+  const leave = 2.4 + ((index * 5) % 3) * 0.4;
 
   if (p <= BREAK_COVER_START) return direction * 100;
   if (p >= BREAK_REVEAL_END) return -direction * 100;
-  if (p <= BREAK_CUT) {
-    const t = (p - BREAK_COVER_START) / (BREAK_CUT - BREAK_COVER_START);
-    return direction * 100 * (1 - t) ** speed;
+  if (p <= BREAK_COVER_CLOSED) {
+    const t = (p - BREAK_COVER_START) / (BREAK_COVER_CLOSED - BREAK_COVER_START);
+    return direction * 100 * (1 - t ** close);
   }
-  const t = (p - BREAK_CUT) / (BREAK_REVEAL_END - BREAK_CUT);
-  return -direction * 100 * t ** speed;
+  // The dwell: every rail is exactly home, so the cut is genuinely unwitnessed.
+  if (p <= BREAK_REVEAL_START) return 0;
+  const t = (p - BREAK_REVEAL_START) / (BREAK_REVEAL_END - BREAK_REVEAL_START);
+  return -direction * 100 * (1 - (1 - t) ** leave);
+}
+
+/**
+ * PERCEPTION (V6.1, §15-16): how strongly the system currently has something in
+ * frame. 0 in open travel, 1 with a scene exactly framed.
+ *
+ * This is the one value the environment reads to decide how much of itself to
+ * show. It exists because V6 had all the perception DATA it needed --
+ * `sceneApproach` has returned a signed acquisition state since V5 -- and spent
+ * none of it: the only consumer was SystemPOV's own frame, so the world around a
+ * scene behaved identically whether the system was looking at something or at
+ * nothing. §16's "irrelevant environmental lines may recede" and "other world
+ * noise decreases" are both just this number, negated.
+ *
+ * Deliberately NOT a new visual element. §18 caps the global density of marks;
+ * this makes the marks already present behave hierarchically instead of adding
+ * more of them.
+ */
+export function focusProximity(progress: number, mobile = false): number {
+  let best = 0;
+  for (const id of [...ROUTE_ONE_IDS, ...ROUTE_TWO_IDS]) {
+    best = Math.max(best, 1 - Math.abs(sceneApproach(id, progress, mobile)));
+  }
+  return clamp01(best);
+}
+
+/* ------------------------------------------------------- the exit traverse */
+
+/** Progress at which the exit traverse begins -- i.e. where `handoff` is framed
+ *  and the camera leaves it for the lower world. */
+export const EXIT_FROM = sceneFocusProgress("handoff");
+
+/** Progress at which the diagonal has finished turning downward. Route two's
+ *  last segment begins here; the route ends at 1. */
+export const EXIT_TURN = (() => {
+  const segments = DESKTOP.two.segments;
+  return segments[segments.length - 1]?.from ?? 1;
+})();
+
+/**
+ * 0..1 across the whole exit traverse. The lower world's own staging reads this,
+ * so "we are still travelling" and "we have arrived at the lower page" are one
+ * value rather than two effects that happen to overlap.
+ */
+export function exitTravel(progress: number): number {
+  const p = clamp01(progress);
+  if (p <= EXIT_FROM) return 0;
+  return clamp01((p - EXIT_FROM) / (1 - EXIT_FROM));
+}
+
+/**
+ * Total world travel of the exit traverse, split into its diagonal leg and the
+ * leg that turns downward, with each leg's mean screen bearing in degrees
+ * (0 = straight right, 90 = straight down).
+ *
+ * Exported because §4 of the V6.3 brief asks a question of fact -- "how far does
+ * the new right-down diagonal leg actually travel before downward descent
+ * begins?" -- and the honest way to answer it is to derive the number from the
+ * route rather than from the anchors it was authored with. Sampled along the real
+ * curve, so a bend is paid for.
+ */
+export function exitGeometry(mobile = false): {
+  diagonal: { length: number; bearing: number; vw: number; vh: number };
+  turn: { length: number; bearing: number; vw: number; vh: number };
+} {
+  const segments = tables(mobile).two.segments;
+  const measure = (segment: Segment) => {
+    let length = 0;
+    let previous = catmullRom(segment.p0, segment.p1, segment.p2, segment.p3, 0);
+    for (let i = 1; i <= 128; i += 1) {
+      const point = catmullRom(segment.p0, segment.p1, segment.p2, segment.p3, i / 128);
+      length += screenDistance(previous, point);
+      previous = point;
+    }
+    const dx = segment.p2.x - segment.p1.x;
+    const dy = segment.p2.y - segment.p1.y;
+    return {
+      length,
+      bearing: (Math.atan2(dy, dx * VW_PER_VH) * 180) / Math.PI,
+      vw: dx,
+      vh: dy,
+    };
+  };
+  return {
+    diagonal: measure(segments[segments.length - 2]!),
+    turn: measure(segments[segments.length - 1]!),
+  };
+}
+
+/* ---------------------------------------------------- the work-route branch */
+
+/**
+ * V6.4 (§4A) -- THE WORK-ROUTE JUNCTION.
+ *
+ * The `handoff` scene already says, in real copy, that Kıvılcım and DropSpot are
+ * "two stops on a larger map" and that JointLedger and Professional Systems
+ * "continue on the full Work index". Through V6.3 that was a paragraph standing in
+ * a world that drew every other relationship it had as geometry -- so the one
+ * genuinely spatial statement on the page was the one thing the space did not
+ * express.
+ *
+ * The junction is where the map stops being a metaphor. A second route leaves the
+ * main one just after `handoff` and heads somewhere the camera does not go. The
+ * main journey continues down and right into the lower world; the branch climbs
+ * away to the right and terminates at a node carrying the names of the projects
+ * that live there.
+ *
+ * WHY IT IS DERIVED RATHER THAN AUTHORED, which is the same discipline the rails,
+ * the hero's lead rule and the erosion wind have always followed: the divergence
+ * is measured off the MAIN ROUTE'S OWN BEARING at the junction. If the exit
+ * traverse is ever re-aimed, the branch re-aims with it and the angle between them
+ * stays exactly BRANCH_DIVERGENCE. A branch authored in world coordinates would
+ * silently stop diverging the first time the traverse moved.
+ *
+ * What it deliberately is not (§4A): a subway map, a HUD, a status panel, or a
+ * set of coordinates. Two legs, one node, three real names.
+ */
+
+/** Where the branch leaves the main route: just after `handoff` is framed, so the
+ *  junction is read as leaving the scene that states it rather than as a mark
+ *  standing somewhere in open travel. */
+export const WORK_BRANCH_FROM = EXIT_FROM + (EXIT_TURN - EXIT_FROM) * 0.09;
+
+/**
+ * Angle between the branch and the main route at the junction, in degrees.
+ * Negative is anticlockwise on screen: the main route descends, so the branch
+ * rises away from it.
+ *
+ * TUNED AGAINST THE FRAME, not chosen for drama. A first pass used -58, which is
+ * a far more emphatic fork and put the terminus 64vh ABOVE the camera -- with the
+ * world inset only 14vh from the top of the sticky frame, the branch's entire
+ * destination was off-screen and the junction was a line leaving the frame. -22
+ * against the ~12 degree route bearing at the junction leaves the terminus at
+ * roughly 61vw / 8vh in the frame: comfortably visible for the whole handoff
+ * dwell, which is when the copy that it illustrates is being read.
+ *
+ * The instantaneous fork is therefore modest, and the divergence that actually
+ * reads is cumulative: the main route steepens to 72 degrees across the traverse
+ * while the branch stays near horizontal, so the two are ~58 degrees apart by the
+ * terminus. Both are asserted in tests/unit/spatial-route.test.ts.
+ */
+const BRANCH_DIVERGENCE = -22;
+
+/** Screen lengths of the branch's two legs, and how much the second turns back
+ *  toward horizontal. The kink is what makes it read as a routed connector in the
+ *  world's own vocabulary rather than as a ray. */
+const BRANCH_LEGS = [60, 36] as const;
+const BRANCH_LEVEL = 16;
+
+/**
+ * The branch, as a polyline in world coordinates: junction, kink, terminus.
+ *
+ * Takes `mobile` and derives everything through `cameraPosition`, so the geometry
+ * is already correct for a mobile route with real x travel whenever one exists.
+ * It is not RENDERED on mobile in this pass (see WorldGrammar) -- that is a
+ * staging decision, not an assumption baked into the maths.
+ */
+export function workBranch(mobile = false): WorldPoint[] {
+  const start = cameraPosition(WORK_BRANCH_FROM, mobile);
+  // The main route's own bearing at the junction, measured across a short span of
+  // real travel rather than between two anchors.
+  const main = routeScreenAngle(WORK_BRANCH_FROM, WORK_BRANCH_FROM + 0.004, mobile);
+  const points = [start];
+  let bearing = main + BRANCH_DIVERGENCE;
+  let cursor = start;
+  for (const [index, length] of BRANCH_LEGS.entries()) {
+    if (index > 0) bearing += BRANCH_LEVEL;
+    const radians = (bearing * Math.PI) / 180;
+    // Back out of the screen measure into world units: x is vw, and one vw is
+    // VW_PER_VH screen units.
+    cursor = {
+      x: cursor.x + (Math.cos(radians) * length) / VW_PER_VH,
+      y: cursor.y + Math.sin(radians) * length,
+    };
+    points.push(cursor);
+  }
+  return points;
 }
 
 /** Whether the break is on screen at all. */
@@ -567,25 +966,10 @@ export function routeSlope(route: 1 | 2, mobile = false): number {
   const to =
     route === 1
       ? mobile
-        ? COLLISION_MOBILE_WORLD
-        : COLLISION_WORLD
+        ? CUT_MOBILE_WORLD
+        : CUT_WORLD
       : sceneAnchor(ids[ids.length - 1]!, mobile);
   return (to.y - from.y) / (to.x - from.x);
-}
-
-/**
- * Screen-space direction the erosion fragments travel, derived from the
- * collision-approach leg. The camera advances down-and-right into the wall,
- * so the world slides up-and-left on screen and fragments torn off the word
- * trail along the exact opposite vector.
- */
-export function travelWindVector(): WorldPoint {
-  const from = sceneAnchor("tail");
-  const to = COLLISION_WORLD;
-  const screenX = (to.x - from.x) * VW_PER_VH;
-  const screenY = to.y - from.y;
-  const length = Math.hypot(screenX, screenY) || 1;
-  return { x: screenX / length, y: screenY / length };
 }
 
 /**
@@ -627,13 +1011,33 @@ export function cameraSpeed(progress: number, mobile = false, h = 0.0005): numbe
   return screenDistance(a, b) / (Math.min(p + h, 1) - Math.max(p - h, 0));
 }
 
-/** Average camera speed across the whole route, for comparison. */
-export function averageCameraSpeed(mobile = false): number {
+/**
+ * Average camera speed across the whole route, for comparison.
+ *
+ * The exclusion window straddles the cut by one finite-difference step at each
+ * end, and that margin is load-bearing rather than defensive. `cameraSpeed` is a
+ * CENTRED difference, so a sample taken just outside the cut still reads one of
+ * its two positions from inside the other route -- and across the cut those two
+ * positions are 670 screen units apart, which divided by a 0.001 window is a speed
+ * of 670,000.
+ *
+ * V6.3 found this the hard way. Skipping exactly [COLLISION_PROGRESS, BREAK_CUT)
+ * left whether the contaminated sample was taken at all up to where the 0.002
+ * sampling grid happened to fall relative to the cut -- so it was correct through
+ * V6.2 by luck, and the moment V6.3 moved COLLISION_PROGRESS the average jumped
+ * from 1496 to 2914. That is not a cosmetic error in a diagnostic: the "narrow
+ * speed band" unit test divides by this number, so an inflated average would have
+ * reported a 1.63x peak as 0.84x and passed a genuinely lurching route.
+ *
+ * V6.4 collapsed the window to a single point (the impact it used to span is gone)
+ * but kept the margin, for exactly the reason above.
+ */
+export function averageCameraSpeed(mobile = false, h = 0.0005): number {
   let total = 0;
   let count = 0;
   for (let p = 0; p <= 1; p += 0.002) {
-    if (p >= COLLISION_PROGRESS && p < BREAK_CUT) continue;
-    total += cameraSpeed(p, mobile);
+    if (p >= BREAK_CUT - h && p <= BREAK_CUT + h) continue;
+    total += cameraSpeed(p, mobile, h);
     count += 1;
   }
   return total / Math.max(count, 1);

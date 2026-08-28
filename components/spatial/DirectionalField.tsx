@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
+import { motion } from "motion/react";
 import { PLANE_DISTANT } from "@/lib/spatial/scenes";
 import { cameraPosition, routeScreenAngle } from "@/lib/spatial/sceneRoute";
 
@@ -21,13 +21,13 @@ import { cameraPosition, routeScreenAngle } from "@/lib/spatial/sceneRoute";
 //     where the camera is actually going and cannot drift out of agreement
 //     with it;
 //   - there are exactly two fields in the whole journey (§23): one in the run
-//     at the collision, one after the reposition. Nothing behind a scene.
+//     into the cut, one after it. Nothing behind a scene.
 //
-// §24: as the collision approaches, the pre-collision field COMPRESSES -- the
-// spacing between repetitions tightens and the whole field firms up slightly.
-// It does not crash, break apart, or collide with anything; the route is
-// simply running out of room, and the architecture says so before the wall
-// does.
+// V6.4 REMOVED §24's COMPRESSION, which tightened the first field's spacing and
+// contrast as `approachTension` rose. It was a statement about a wall -- "the
+// route is running out of room" -- and there is no wall now. What is left is what
+// the field was always for: two pieces of environmental architecture that say
+// which way the space runs.
 
 type DirectionalFieldProps = {
   /** Progress the field is framed at. Placement is derived from this. */
@@ -38,8 +38,6 @@ type DirectionalFieldProps = {
   offset: { x: number; y: number };
   /** Repetitions receding away from the viewer. */
   count?: number;
-  /** Drives §24's compression. Omit for the post-reposition field. */
-  tension?: MotionValue<number>;
   /** Base opacity of the nearest repetition. */
   opacity?: number;
 };
@@ -53,7 +51,6 @@ export function DirectionalField({
   along,
   offset,
   count = 5,
-  tension,
   opacity = 0.09,
 }: DirectionalFieldProps) {
   // Same derivation as the travel material: a mark on a parallax plane does
@@ -82,7 +79,7 @@ export function DirectionalField({
       }}
     >
       {Array.from({ length: count }, (_, index) => (
-        <Chevron key={index} index={index} count={count} tension={tension} baseOpacity={opacity} />
+        <Chevron key={index} index={index} count={count} baseOpacity={opacity} />
       ))}
     </div>
   );
@@ -91,12 +88,10 @@ export function DirectionalField({
 function Chevron({
   index,
   count,
-  tension,
   baseOpacity,
 }: {
   index: number;
   count: number;
-  tension?: MotionValue<number>;
   baseOpacity: number;
 }) {
   // Perspective-like spacing: each repetition is closer to the last, smaller,
@@ -104,21 +99,13 @@ function Chevron({
   const depth = index / Math.max(count - 1, 1);
   const spacing = 26 * (1 - 0.42 * depth);
   const scale = 1 - 0.17 * depth;
-  const blur = (1 + depth * 3.4).toFixed(1);
-  const fade = baseOpacity * (1 - 0.55 * depth);
-
-  // A constant stand-in for the field that has no tension input, so the hooks
-  // below run unconditionally and both fields share one code path.
-  const still = useMotionValue(0);
-  const source = tension ?? still;
-
-  // §24. Spacing tightens and contrast firms as the route runs out of room.
-  const y = useTransform(
-    source,
-    [0, 1],
-    [`${(index * spacing).toFixed(2)}vh`, `${(index * spacing * 0.52).toFixed(2)}vh`],
-  );
-  const opacity = useTransform(source, [0, 1], [fade, fade * 1.5]);
+  // V6 softened the whole stack: blur starts at 3px rather than 1px and reaches
+  // 9px at the back. The V5 review read these as heavy -- a sharp 14px stroke
+  // at 9% is a visible band, and a visible band across the frame competes with
+  // the content it is supposed to sit behind. Blurring harder pushes them back
+  // into atmosphere while keeping the directional read.
+  const blur = (3 + depth * 6).toFixed(1);
+  const opacity = baseOpacity * (1 - 0.55 * depth);
 
   return (
     <motion.svg
@@ -128,7 +115,7 @@ function Chevron({
       style={{
         width: `${CHEVRON_W * scale}vw`,
         height: `${CHEVRON_H * scale}vh`,
-        y,
+        y: `${(index * spacing).toFixed(2)}vh`,
         opacity,
         filter: `blur(${blur}px)`,
       }}

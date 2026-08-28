@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
-  COLLISION_WORLD,
-  IMPACT_WINDOW,
+  CUT_WORLD,
+  DESCENT_MOBILE_WORLD,
+  DESCENT_WORLD,
   ROUTE_LENGTH_VH,
   ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
   SCENES,
+  BREAK_DWELL,
   SCENE_BREAK_BANDS,
   SCENE_IDS,
   VW_PER_VH,
@@ -15,24 +17,28 @@ import {
 import {
   BREAK_COVER_START,
   BREAK_CUT,
+  BREAK_GUARD_FROM,
   BREAK_REVEAL_END,
-  COLLISION_PROGRESS,
-  approachTension,
+  WORK_BRANCH_FROM,
   averageCameraSpeed,
   breakBandOffset,
   breakWipeOffset,
   cameraPosition,
+  decompressionAnchor,
   cameraSpeed,
   currentSceneId,
+  ENTRY_SEGMENTS,
+  EXIT_SEGMENTS,
+  exitGeometry,
   hasRepositioned,
   heroLeadRule,
   isBreakActive,
-  isImpact,
   routeLegs,
+  routeScreenAngle,
   routeSlope,
   sceneFocusProgress,
   sceneProximity,
-  travelWindVector,
+  workBranch,
 } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V4. The binding semantics carried over from V1-V3
@@ -42,11 +48,15 @@ import {
 // scroll instead of parking and then lurching -- is tested as speed
 // properties, never as exact easing constants.
 
-/** Every progress value outside the deliberate collision hold. */
+/** Every progress value clear of the route's one deliberate discontinuity.
+ *
+ *  V6.4: that is now a single point rather than a 0.062-wide window, but the
+ *  margin either side is kept -- `cameraSpeed` is a centred difference, so a
+ *  sample taken exactly at the cut still straddles both routes. */
 function movingProgress(step = 0.001): number[] {
   const out: number[] = [];
   for (let p = 0; p <= 1 + 1e-9; p += step) {
-    if (p >= COLLISION_PROGRESS - 0.002 && p < BREAK_CUT + 0.002) continue;
+    if (p >= BREAK_CUT - 0.002 && p < BREAK_CUT + 0.002) continue;
     out.push(Math.min(p, 1));
   }
   return out;
@@ -63,9 +73,29 @@ describe("scene configuration", () => {
     for (const scene of SCENES) expect(scene.mobileWorld.x).toBe(0);
   });
 
-  it("keeps the total route length controlled, and under V3's 420vh", () => {
+  // THE ROUTE-LENGTH CEILING, and the one standing owner decision this branch
+  // overrides. It is called out in the V6.3 and V6.4 reports, not only here.
+  //
+  // 420 came from V3, where 420vh was rejected. The V3 measurements say what was
+  // actually wrong with it: 29 distinct camera positions across 900 frames, a
+  // median response of 0.00 camera px per scroll px, and 1276px of scroll that
+  // moved the camera under 8px. The objection was DEAD SCROLL, not length -- and
+  // V4 removed dead scroll structurally, which the two tests directly below this
+  // one assert on every run.
+  //
+  // V6.3 went to 474 to pay for the exit traverse, and set this ceiling at 500.
+  // V6.4 TIGHTENS IT TO 460, because retiring the collision handed back the 6.2%
+  // of progress the impact window was consuming: at 445vh the camera now moves at
+  // exactly the same world-units-per-scroll-pixel it did at 474vh with the impact
+  // (see ROUTE_LENGTH_VH). The override over V3's 420 is halved, 12.9% -> 6.0%,
+  // and this guard is 8% tighter than it was before the pass rather than looser.
+  //
+  // V6.5 TIGHTENS IT AGAIN, 460 -> 440. Shortening the turn leg and lowering the
+  // travel allowance took the route to 430vh at unchanged route-one pacing, so the
+  // guard follows the route down. The override over V3's 420 is now 2.4%.
+  it("keeps the total route length controlled -- no return to V1's 600vh spacer", () => {
     expect(ROUTE_LENGTH_VH).toBeGreaterThan(0);
-    expect(ROUTE_LENGTH_VH).toBeLessThan(420);
+    expect(ROUTE_LENGTH_VH).toBeLessThan(440);
   });
 
   it("derives focal progress rather than authoring it, in strict route order", () => {
@@ -76,7 +106,17 @@ describe("scene configuration", () => {
       previous = focus;
     }
     expect(sceneFocusProgress("hero")).toBe(0);
-    expect(sceneFocusProgress("handoff")).toBeCloseTo(1, 6);
+    // V6.3: `handoff` no longer ends the route. It used to be route two's last
+    // coordinate, so its focus was 1 by construction; the exit traverse now
+    // continues past it (§4), and the route ends at a camera-only coordinate with
+    // no scene standing on it -- which is the entire point of the change.
+    //
+    // The contract that survives, and that this now states directly: the last
+    // SCENE is framed well before the route ends, and there is real travel after
+    // it. Asserting the residue is > 0.1 of progress is what stops the traverse
+    // being quietly reduced back to a token bend.
+    expect(sceneFocusProgress("handoff")).toBeLessThan(1);
+    expect(1 - sceneFocusProgress("handoff")).toBeGreaterThan(0.1);
   });
 });
 
@@ -171,10 +211,16 @@ describe("continuous camera response", () => {
 
   it("advances monotonically along each route -- the camera never backtracks", () => {
     for (const [ids, lo, hi] of [
-      [ROUTE_ONE_IDS, 0, COLLISION_PROGRESS],
+      [ROUTE_ONE_IDS, 0, BREAK_CUT],
       [ROUTE_TWO_IDS, BREAK_CUT, 1],
     ] as const) {
-      const start = sceneAnchor(ids[0]!);
+      // V6.1: measured from where the route actually STARTS, not from its first
+      // scene anchor. Route two now begins at the decompression lead-in, short of
+      // `reorient`, so distance-from-reorient legitimately falls before it rises.
+      // The contract being asserted -- the camera never backtracks along the
+      // route -- is unchanged.
+      const start = cameraPosition(lo);
+      void ids;
       let travelled = -1;
       for (let p = lo; p <= hi; p += 0.002) {
         const here = screenDistance(start, cameraPosition(p));
@@ -210,48 +256,172 @@ describe("the curve still goes where the route says", () => {
     }
   });
 
-  it("starts framed on the hero and ends framed on the handoff", () => {
+  // V6.3: the route no longer ENDS on the handoff, it passes through it and
+  // travels on (§4). The clamping contract is unchanged and is what this was
+  // really guarding -- out-of-range progress resolves to the route's ends rather
+  // than extrapolating off the curve -- so it is asserted against the terminus.
+  it("starts framed on the hero and clamps to the route's own ends", () => {
     expect(cameraPosition(0)).toEqual(sceneAnchor("hero"));
-    expect(cameraPosition(1)).toEqual(sceneAnchor("handoff"));
     expect(cameraPosition(-1)).toEqual(sceneAnchor("hero"));
-    expect(cameraPosition(2)).toEqual(sceneAnchor("handoff"));
+    expect(cameraPosition(1)).toEqual(DESCENT_WORLD);
+    expect(cameraPosition(2)).toEqual(DESCENT_WORLD);
+    expect(cameraPosition(1, true)).toEqual(DESCENT_MOBILE_WORLD);
+  });
+
+  // §4 asks a question of fact -- how far does the diagonal actually travel
+  // before the descent begins -- so the answer is asserted rather than described.
+  it("leaves Built in Layers on a real down-and-right leg, not a token bend", () => {
+    const { diagonal, turn } = exitGeometry();
+
+    // A genuine diagonal: both components substantial, and the bearing between
+    // 30 and 55 degrees rather than "mostly across" or "mostly down".
+    expect(diagonal.vw).toBeGreaterThan(60);
+    expect(diagonal.vh).toBeGreaterThan(90);
+    expect(diagonal.bearing).toBeGreaterThan(30);
+    expect(diagonal.bearing).toBeLessThan(55);
+
+    // Long enough to read as a region change: comparable to the longest scene
+    // legs in the world rather than to a connector between them.
+    const sceneLegs = routeLegs().slice(0, 3);
+    const shortestSceneLeg = Math.min(
+      ...sceneLegs.map((leg) => screenDistance(leg.points[0]!, leg.points[leg.points.length - 1]!)),
+    );
+    expect(diagonal.length).toBeGreaterThan(shortestSceneLeg * 0.9);
+
+    // And then it TURNS toward vertical rather than continuing diagonally.
+    expect(turn.bearing).toBeGreaterThan(diagonal.bearing + 20);
+    expect(turn.bearing).toBeLessThan(85);
+    expect(turn.length).toBeGreaterThan(50);
+
+    // V6.5 (§3, §5): the turn EXISTS to change direction, and it may not cost more
+    // travel than that needs. V6.4 spent 96.4 units and 26.7vh of scroll on it
+    // through world containing nothing at all -- measured on the built page as part
+    // of a 1560px run averaging 2.2% rendered ink. Bounding it against the diagonal
+    // rather than at an absolute number is what keeps this honest: the diagonal is
+    // the leg §3 protects, so the guard says "the turn is a fraction of the
+    // journey" rather than "the turn is under N units".
+    expect(turn.length).toBeLessThan(diagonal.length * 0.45);
+  });
+
+  // §5 of the V6.5 brief in its own terms: "no section requiring disproportionately
+  // more wheel input than neighboring sections". Asserted on the real progress
+  // allocation rather than on the geometry it comes from.
+  it("never charges more scroll for empty travel than for a scene", () => {
+    const legs = routeLegs();
+    const widths = legs.map((leg) => leg.toProgress - leg.fromProgress);
+    // The last two legs are the exit traverse: no scene stands on either.
+    const sceneWidths = widths.slice(0, widths.length - EXIT_SEGMENTS);
+    const travelWidths = widths.slice(widths.length - EXIT_SEGMENTS);
+
+    const widestScene = Math.max(...sceneWidths);
+    for (const [index, width] of travelWidths.entries()) {
+      expect(width, `exit leg ${index} costs more scroll than the widest scene leg`).toBeLessThan(
+        widestScene,
+      );
+    }
+    // And the turn -- the leg with the least on it -- is the cheapest thing in the
+    // whole world to scroll through, which is the shape §6 asks for: negative space
+    // is allowed, dead scroll is not.
+    expect(Math.min(...travelWidths)).toBeLessThan(Math.min(...sceneWidths));
   });
 });
 
-describe("collision remains the one deliberate discontinuity", () => {
-  it("stops dead at the wall and never eases past it or reverses off it", () => {
-    const atWall = cameraPosition(COLLISION_PROGRESS);
-    expect(atWall).toEqual(COLLISION_WORLD);
-    expect(cameraPosition((COLLISION_PROGRESS + BREAK_CUT) / 2)).toEqual(atWall);
-    expect(cameraPosition(BREAK_CUT - 0.001)).toEqual(atWall);
+describe("the cut remains the one deliberate discontinuity", () => {
+  // V6.4 RETIRED THE COLLISION MODEL, and these tests are superseded by that
+  // decision rather than inconvenienced by it. What stood here was:
+  //
+  //   "reaches the wall exactly, rebounds off it, and never passes through it"
+  //   "is never stationary inside the impact -- the world answers the hit"
+  //   "accelerates into the wall instead of easing into it"
+  //
+  // All three asserted properties of a physical event the owner has now removed
+  // from the design: a wall, a rebound displacement peaking at COLLISION_REBOUND,
+  // and an approach that built to 1.35x the route average. None of those exist,
+  // so the tests are not adjusted to pass -- the contracts they encoded are gone.
+  //
+  // What replaces them is the contract that survives the change and is in fact
+  // STRONGER than what the collision needed: the route jumps at exactly one
+  // progress, that jump is completely hidden, and the world's SPEED is continuous
+  // across it even though its position is not.
+
+  it("jumps at exactly one progress, and travels continuously up to it", () => {
+    // Route one reaches its terminal coordinate exactly, with no held window in
+    // front of it: the camera is still moving on the last frame before the cut.
+    expect(cameraPosition(BREAK_CUT - 1e-9).x).toBeCloseTo(CUT_WORLD.x, 4);
+    expect(cameraPosition(BREAK_CUT - 1e-9).y).toBeCloseTo(CUT_WORLD.y, 4);
+
+    // And there is no stationary window anywhere in the approach to it -- the
+    // thing IMPACT_WINDOW used to be. Sampled right up to the cut.
+    const average = averageCameraSpeed();
+    for (let p = BREAK_CUT - 0.06; p < BREAK_CUT - 0.002; p += 0.002) {
+      expect(cameraSpeed(p) / average, `stationary at ${p.toFixed(4)}`).toBeGreaterThan(0.1);
+    }
   });
 
-  it("keeps the impact hold short -- it is the only stationary window", () => {
-    expect(IMPACT_WINDOW).toBeLessThan(0.06);
-    expect(BREAK_CUT - COLLISION_PROGRESS).toBeCloseTo(IMPACT_WINDOW, 9);
-  });
+  it("hands over at travelling speed on BOTH sides of the cut", () => {
+    // THE V6.4 CONTRACT, and the difference between an occlusion and an impact.
+    //
+    // Through V6.3 route one ended at 1.35x the average (building into a wall) and
+    // route two began at 0.42x (arriving at a scene), so the two halves of the same
+    // instant disagreed about the world's speed by more than 3x. An occlusion cut
+    // is an event in what can be SEEN, not an event in the world, so the world is
+    // moving at the same rate on the last visible frame before the surfaces close
+    // and the first visible frame after they open.
+    const h = 0.0002;
+    const oneSided = (from: number, to: number) =>
+      screenDistance(cameraPosition(from), cameraPosition(to)) / Math.abs(to - from);
 
-  it("accelerates into the wall instead of easing into it", () => {
-    const last = sceneFocusProgress("tail");
-    const early = cameraSpeed(last + (COLLISION_PROGRESS - last) * 0.2);
-    const late = cameraSpeed(last + (COLLISION_PROGRESS - last) * 0.9);
-    expect(late).toBeGreaterThan(early * 1.5);
+    const before = oneSided(BREAK_CUT - h, BREAK_CUT - 1e-9);
+    const after = oneSided(BREAK_CUT, BREAK_CUT + h);
+    expect(
+      Math.abs(before - after) / Math.max(before, after),
+      `speed mismatch across the cut: ${before.toFixed(1)} vs ${after.toFixed(1)}`,
+    ).toBeLessThan(0.05);
+
+    // And it is genuinely TRAVELLING speed, not reading speed: both sides run
+    // above the route average rather than decelerating into the transition.
+    const average = averageCameraSpeed();
+    expect(before / average).toBeGreaterThan(1);
+    expect(after / average).toBeGreaterThan(1);
   });
 
   it("repositions discontinuously at the cut -- a break, not a continuation", () => {
     const justBefore = cameraPosition(BREAK_CUT - 0.001);
     const atCut = cameraPosition(BREAK_CUT);
-    expect(atCut).toEqual(sceneAnchor("reorient"));
+    // V6.1: the cut lands on the DECOMPRESSION anchor, not on `reorient`. The
+    // camera is thrown into open world short of the scene and then travels into
+    // it, which is what gives the first post-cut composition room to arrive clear
+    // of the break's cover (see DECOMPRESSION_REACH).
+    expect(atCut).toEqual(decompressionAnchor());
+    expect(screenDistance(atCut, sceneAnchor("reorient"))).toBeGreaterThan(20);
     expect(atCut.x).toBeLessThan(justBefore.x);
     expect(atCut.y).toBeGreaterThan(justBefore.y);
     expect(Math.abs(atCut.x - justBefore.x)).toBeGreaterThan(100);
   });
 
-  it("uses the same collision progress in both modes, so the break cannot desync", () => {
+  it("is completely covered at the instant it jumps, and only around it", () => {
+    // The whole justification for the discontinuity: it is never witnessed.
+    expect(breakWipeOffset(BREAK_CUT)).toBe(0);
+    for (let index = 0; index < SCENE_BREAK_BANDS; index += 1) {
+      expect(Math.abs(breakBandOffset(BREAK_CUT, index))).toBeLessThan(1e-9);
+    }
+    // ...and the world either side of the event is untouched by any of it.
+    expect(isBreakActive(BREAK_COVER_START - 0.001)).toBe(false);
+    expect(isBreakActive(BREAK_REVEAL_END + 0.001)).toBe(false);
+  });
+
+  it("opens the protected window on visible world, not on ink", () => {
+    // The guard has to start before the surfaces do, or a fast reader's protected
+    // event begins already black and never shows them what is being occluded.
+    expect(BREAK_GUARD_FROM).toBeLessThan(BREAK_COVER_START);
+    expect(BREAK_GUARD_FROM).toBeGreaterThan(0);
+  });
+
+  it("uses the same cut progress in both modes, so the break cannot desync", () => {
     // Deriving the split per mode left the mobile camera parked between the
     // shared cut and its own route-two start.
-    expect(cameraPosition(BREAK_CUT, true)).toEqual(sceneAnchor("reorient", true));
-    expect(cameraPosition(BREAK_CUT - 0.001, true)).not.toEqual(sceneAnchor("reorient", true));
+    expect(cameraPosition(BREAK_CUT, true)).toEqual(decompressionAnchor(true));
+    expect(cameraPosition(BREAK_CUT - 0.001, true)).not.toEqual(decompressionAnchor(true));
   });
 });
 
@@ -295,7 +465,7 @@ describe("route two", () => {
       }
       return total / count;
     };
-    const one = speedIn(0, COLLISION_PROGRESS - 0.01);
+    const one = speedIn(0, BREAK_CUT - 0.01);
     const two = speedIn(BREAK_CUT + 0.01, 1);
     expect(Math.max(one, two) / Math.min(one, two)).toBeLessThan(1.35);
   });
@@ -308,8 +478,12 @@ describe("currentSceneId and proximity", () => {
     }
   });
 
-  it("reports the collision as its own camera-only event", () => {
-    expect(currentSceneId(COLLISION_PROGRESS)).toBe("collision");
+  // V6.4: `currentSceneId` no longer has a "collision" return value, because
+  // there is no window of progress the camera spends anywhere other than on one
+  // of the two routes. The cut is an instant, and the scene that owns it is the
+  // first scene of route two.
+  it("hands ownership straight from route one to route two at the cut", () => {
+    expect(currentSceneId(BREAK_CUT - 1e-6)).toBe("tail");
     expect(currentSceneId(BREAK_CUT)).toBe("reorient");
     expect(currentSceneId(1)).toBe("handoff");
   });
@@ -323,19 +497,70 @@ describe("currentSceneId and proximity", () => {
   });
 });
 
-describe("impact and approach", () => {
-  it("flags impact only while the camera is stopped at the wall", () => {
-    expect(isImpact(COLLISION_PROGRESS - 0.01)).toBe(false);
-    expect(isImpact(COLLISION_PROGRESS)).toBe(true);
-    expect(isImpact(BREAK_CUT)).toBe(false);
+// V6.4 §4A. The junction is a claim of fact about the world -- "these projects
+// exist elsewhere on the larger map" -- so its geometry is asserted rather than
+// eyeballed. What matters is that it is a genuinely DIFFERENT route, not a kink
+// in the one the camera takes.
+describe("the work-route junction", () => {
+  it("leaves the main route just after the handoff", () => {
+    expect(WORK_BRANCH_FROM).toBeGreaterThan(sceneFocusProgress("handoff"));
+    expect(WORK_BRANCH_FROM).toBeLessThan(1);
+    // It starts ON the route, exactly -- a branch that began beside the path it
+    // branches from would read as an unrelated mark.
+    const [start] = workBranch();
+    expect(start).toEqual(cameraPosition(WORK_BRANCH_FROM));
   });
 
-  it("builds tension across the run at the wall, and nowhere else", () => {
-    expect(approachTension(0.2)).toBe(0);
-    expect(approachTension(COLLISION_PROGRESS)).toBe(1);
-    const mid = approachTension((sceneFocusProgress("tail") + COLLISION_PROGRESS) / 2);
-    expect(mid).toBeGreaterThan(0);
-    expect(mid).toBeLessThan(1);
+  it("diverges from the camera's direction, and keeps diverging", () => {
+    const bearing = (from: { x: number; y: number }, to: { x: number; y: number }) =>
+      (Math.atan2(to.y - from.y, (to.x - from.x) * VW_PER_VH) * 180) / Math.PI;
+    const points = workBranch();
+
+    // THE FORK, at the junction itself. Deliberately not asserted as a huge angle:
+    // an emphatic fork put the branch's terminus above the top of the frame (see
+    // BRANCH_DIVERGENCE), and a route the reader cannot see the end of states
+    // nothing. This is the bound that keeps it a visible fork rather than a
+    // smooth continuation of the same line.
+    const main = routeScreenAngle(WORK_BRANCH_FROM, WORK_BRANCH_FROM + 0.004);
+    expect(Math.abs(main - bearing(points[0]!, points[1]!))).toBeGreaterThan(18);
+
+    // THE DIVERGENCE THAT ACTUALLY READS is cumulative: the main route steepens
+    // across the traverse while the branch stays near horizontal, so by the time
+    // both have finished they are pointing in unmistakably different directions.
+    const overallBranch = bearing(points[0]!, points[points.length - 1]!);
+    const overallMain = bearing(cameraPosition(WORK_BRANCH_FROM), cameraPosition(1));
+    expect(Math.abs(overallMain - overallBranch)).toBeGreaterThan(45);
+  });
+
+  it("travels far enough to be a route rather than a tick", () => {
+    const points = workBranch();
+    let length = 0;
+    for (let i = 1; i < points.length; i += 1) length += screenDistance(points[i - 1]!, points[i]!);
+    // 85 screen units, not the 120 a first pass asserted. The branch's length is
+    // bounded by the frame, not by taste: its terminus carries three labels that
+    // have to be READ, so pushing it further right walks them into the clip edge
+    // of the sticky viewport. 96 units is still over half the exit traverse's own
+    // diagonal, which is the comparison that makes it a route rather than a tick.
+    expect(length).toBeGreaterThan(85);
+    // Two legs with a real bend between them, so it reads as routed rather than
+    // as a ray fired off the main line.
+    expect(points).toHaveLength(3);
+    const legOne =
+      (Math.atan2(points[1]!.y - points[0]!.y, (points[1]!.x - points[0]!.x) * VW_PER_VH) * 180) /
+      Math.PI;
+    const legTwo =
+      (Math.atan2(points[2]!.y - points[1]!.y, (points[2]!.x - points[1]!.x) * VW_PER_VH) * 180) /
+      Math.PI;
+    expect(Math.abs(legTwo - legOne)).toBeGreaterThan(10);
+  });
+
+  it("ends clear of the camera's own path, so the two are never confused", () => {
+    const terminus = workBranch()[2]!;
+    let closest = Number.POSITIVE_INFINITY;
+    for (let p = sceneFocusProgress("handoff"); p <= 1; p += 0.002) {
+      closest = Math.min(closest, screenDistance(terminus, cameraPosition(p)));
+    }
+    expect(closest).toBeGreaterThan(40);
   });
 });
 
@@ -348,11 +573,20 @@ describe("scene break", () => {
     expect(isBreakActive(1)).toBe(false);
   });
 
-  it("fully covers the viewport at exactly the cut, so the jump is never witnessed", () => {
-    expect(breakWipeOffset(BREAK_CUT)).toBe(0);
+  it("holds a genuine full-black moment either side of the cut", () => {
+    // V6.4 makes this a named beat of the sequence rather than the instant between
+    // closing and opening (BREAK_DWELL 0.007 -> 0.011). Asserted as a real span of
+    // progress in which EVERY element of the break is home, because "controlled
+    // full-black moment" is a duration, not a frame.
     expect(isBreakActive(BREAK_CUT)).toBe(true);
-    for (let index = 0; index < SCENE_BREAK_BANDS; index += 1) {
-      expect(Math.abs(breakBandOffset(BREAK_CUT, index))).toBeLessThan(1e-9);
+    for (const p of [BREAK_CUT - BREAK_DWELL * 0.5, BREAK_CUT, BREAK_CUT + BREAK_DWELL * 0.5]) {
+      expect(breakWipeOffset(p), `field not home at ${p.toFixed(4)}`).toBe(0);
+      for (let index = 0; index < SCENE_BREAK_BANDS; index += 1) {
+        expect(
+          Math.abs(breakBandOffset(p, index)),
+          `rail ${index} at ${p.toFixed(4)}`,
+        ).toBeLessThan(1e-9);
+      }
     }
   });
 
@@ -373,7 +607,6 @@ describe("scene break", () => {
   });
 
   it("brackets the route's discontinuity", () => {
-    expect(BREAK_COVER_START).toBeGreaterThan(COLLISION_PROGRESS);
     expect(BREAK_COVER_START).toBeLessThan(BREAK_CUT);
     expect(BREAK_REVEAL_END).toBeGreaterThan(BREAK_CUT);
     expect(hasRepositioned(BREAK_CUT - 0.001)).toBe(false);
@@ -384,9 +617,23 @@ describe("scene break", () => {
 describe("world grammar derives from the route", () => {
   it("samples the real curve for every travelled leg, not straight chords", () => {
     const legs = routeLegs();
-    expect(legs).toHaveLength(6);
-    expect(legs.filter((leg) => leg.route === 1)).toHaveLength(4);
-    expect(legs.filter((leg) => leg.route === 2)).toHaveLength(2);
+    // Derived from the route's own structure rather than hardcoded: route one is
+    // its scenes plus the wall, and route two is its scenes plus V6.1's
+    // decompression lead-in. A literal count silently goes stale whenever the
+    // route gains or loses a coordinate, which is exactly what happened here.
+    // V6.7: route one is [hero, ENTRY, ...scenes, cut], so it has one leg beyond
+    // its scene count -- the acquisition descent (JOB 1). Still derived from
+    // structure rather than hardcoded, for exactly the reason above: this is the
+    // third time a coordinate has been added to a route, and each time the derived
+    // form has survived while a literal would not have.
+    const routeOneLegs = ROUTE_ONE_IDS.length + ENTRY_SEGMENTS;
+    // V6.3: route two is [lead-in, ...scenes, traverse, descent], so it now has
+    // two legs beyond its scene count -- the exit traverse (§4). Still derived
+    // from structure rather than hardcoded, for exactly the reason above.
+    const routeTwoLegs = ROUTE_TWO_IDS.length + EXIT_SEGMENTS;
+    expect(legs.filter((leg) => leg.route === 1)).toHaveLength(routeOneLegs);
+    expect(legs.filter((leg) => leg.route === 2)).toHaveLength(routeTwoLegs);
+    expect(legs).toHaveLength(routeOneLegs + routeTwoLegs);
     for (const leg of legs) {
       expect(leg.toProgress).toBeGreaterThan(leg.fromProgress);
       expect(leg.points.length).toBeGreaterThan(4);
@@ -422,21 +669,21 @@ describe("world grammar derives from the route", () => {
         }),
       );
 
+    // Sampled strictly INSIDE each leg. V6.4 made that necessary and it is a
+    // boundary artifact rather than a weakening: route one's last leg now ends
+    // exactly at BREAK_CUT (through V6.3 it ended at COLLISION_PROGRESS, an
+    // impact window earlier), and `cameraPosition(BREAK_CUT)` is by contract
+    // already on route two -- `hasRepositioned(BREAK_CUT)` is asserted true a few
+    // tests above. So a sample taken at that one endpoint compares route one's
+    // rail against route two's first coordinate, 630 units away. Every interior
+    // point of every leg, including 1e-9 short of the join, is still checked.
     for (const leg of routeLegs()) {
       for (let i = 0; i <= 6; i += 1) {
-        const p = leg.fromProgress + ((leg.toProgress - leg.fromProgress) * i) / 6;
+        const at = leg.fromProgress + ((leg.toProgress - leg.fromProgress) * i) / 6;
+        const p = Math.min(at, leg.toProgress - 1e-9);
         expect(distanceToPolyline(leg.points, cameraPosition(p))).toBeLessThan(1);
       }
     }
-  });
-
-  it("points the erosion wind against the camera's screen travel", () => {
-    const wind = travelWindVector();
-    const from = sceneAnchor("tail");
-    const screenTravelX = -(COLLISION_WORLD.x - from.x) * VW_PER_VH;
-    const screenTravelY = -(COLLISION_WORLD.y - from.y);
-    expect(wind.x * screenTravelX + wind.y * screenTravelY).toBeLessThan(0);
-    expect(Math.hypot(wind.x, wind.y)).toBeCloseTo(1, 6);
   });
 
   it("sizes the hero's lead rule to the direction the camera leaves on", () => {

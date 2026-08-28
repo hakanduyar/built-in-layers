@@ -28,7 +28,7 @@ export function TextLink({ href, children, external = false, className }: TextLi
         className={cn(baseClassName, className)}
       >
         {children}
-        <span aria-hidden="true"> ↗</span>
+        <span aria-hidden="true">{" \u2197\uFE0E"}</span>
         <span className="sr-only"> (opens in new tab)</span>
       </a>
     );

@@ -124,3 +124,22 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Spatial Portfolio V6.2 (feature/spatial-portfolio-v5, not merged --
+ * docs/DESIGN_SYSTEM.md §22). Footer blast radius.
+ *
+ * The finale CTA composition is scoped to pages that actually contain the
+ * spatial journey. V6.1 applied its three-quarter-viewport treatment globally,
+ * and on a short content page (/work, /notes) a CTA that tall reads as a page
+ * that ran out of content rather than as a resolution -- the composition needs a
+ * journey behind it to be resolving anything.
+ *
+ * `:has()` rather than a prop because SiteFooter is rendered by the root layout,
+ * which has no route context; threading one through would mean either a client
+ * component or duplicating the CTA per page. This keeps exactly one CTA in the
+ * document on every page and changes only how much room it claims.
+ */
+body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+  min-height: 76vh;
+}

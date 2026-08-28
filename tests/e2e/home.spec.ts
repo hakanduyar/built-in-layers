@@ -58,7 +58,7 @@ test.describe("Home: field notes", () => {
   test("shows the honest pending copy and links to Medium and /notes", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Field notes" })).toBeVisible();
-    await expect(page.locator("body")).toContainText("Selected writing will be linked here soon");
+    await expect(page.locator("body")).toContainText("Writing currently lives externally");
 
     const mediumLink = page.getByRole("link", { name: /hakanduyar\.medium\.com/ });
     await expect(mediumLink).toHaveAttribute("href", "https://hakanduyar.medium.com/");
@@ -76,7 +76,7 @@ test.describe("Home: about preview and CTA destinations", () => {
 
   test("about preview links to the full About page", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: "Read the full introduction" }).click();
+    await page.getByRole("link", { name: "Visit the About page" }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
   });
 
