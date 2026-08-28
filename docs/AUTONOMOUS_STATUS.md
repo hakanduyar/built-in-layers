@@ -11,14 +11,14 @@ _Last updated: 2026-08-28_
 
 | Field | Value |
 |---|---|
-| **Status** | **BLOCKED — LATEST SOURCE MUST BE RECOVERED FROM UBUNTU** |
+| **Status** | **SOURCE RECOVERY: COMPLETE** — V6.8 recovered from Ubuntu, committed, reconciled and validated (2026-08-28) |
 | Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `d7013f8719623f256bebd185a90e88ef703939e6` (pre-checkpoint) |
-| Latest origin commit | `d7013f8` on `feature/spatial-portfolio-v5`; `16d3ec0` on `main` |
+| Current HEAD | `682d54e` (merge of `d7bcebc` V6.8 checkpoint + `dc81393` docs) |
+| Latest origin commit | `dc81393` on `feature/spatial-portfolio-v5` at the time of recovery; `16d3ec0` on `main` |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean apart from this documentation pass |
-| Current phase | **Phase 1 — Recovery + durable checkpoint (HALTED at the source-of-truth gate)** |
-| Source state | **STATE D** — see `docs/AUTONOMOUS_RECOVERY_STATUS.md` |
+| Current phase | **Phase 1 — Recovery + durable checkpoint: COMPLETE locally; awaiting push to origin** |
+| Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | **none** — no gate opened, no design tokens spent |
 | Current visual artifacts | `C:\Users\hakan\spatial-v5-review\` (V5-era, 2026-08-17: 19 stills at 1440×900, one 375×812 mobile still, `spatial-v5-natural-scroll-1440x900.webm`) |
@@ -116,3 +116,5 @@ None are open. No handoff exists in `.ai/handoffs/`.
 | 2026-08-17 | `5645e79` | test: prove spatial v5 browser behavior |
 | 2026-08-17 | `d7013f8` | docs: update spatial v5 verification status |
 | 2026-08-28 | _this pass_ | docs: record STATE D recovery blocker (documentation only) |
+| 2026-08-28 | `d7bcebc` | feat: checkpoint recovered spatial portfolio v6.8 (Ubuntu source, 33M/5A/1D) |
+| 2026-08-28 | `682d54e` | merge: reconcile Ubuntu V6.8 source with Windows recovery documentation |

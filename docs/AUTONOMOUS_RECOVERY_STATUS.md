@@ -1,9 +1,88 @@
 # AUTONOMOUS RECOVERY STATUS
 
-**Status: BLOCKED — LATEST SOURCE MUST BE RECOVERED FROM UBUNTU**
+**Status: SOURCE RECOVERY: COMPLETE** (2026-08-28, on the Ubuntu machine)
+
+> The blocker recorded below was resolved: the Ubuntu machine held the complete
+> uncommitted V6.8+ working tree, it was backed up, committed, reconciled with this
+> document's own commit (`dc81393`), validated and is now the branch's authoritative
+> state. See section 0 for the recovery record. The STATE D analysis that follows is
+> preserved verbatim as the historical record of the blocked Windows session.
 
 Determined: 2026-08-28, on the Windows machine, by the autonomous engineering supervisor.
 No source code was modified. No V6.8 work was recreated, reconstructed, or approximated.
+
+---
+
+## 0. SOURCE RECOVERY: COMPLETE
+
+Performed 2026-08-28 on the **Ubuntu** machine (`/home/hakan/GitHub/portfolio`), which did
+hold the only complete copy of the V6.8+ source. Nothing was recreated or approximated; the
+existing working tree was preserved as-is.
+
+### Original Ubuntu state (before any action)
+
+| Field | Value |
+|---|---|
+| Branch | `feature/spatial-portfolio-v5` |
+| HEAD | `d7013f8719623f256bebd185a90e88ef703939e6` |
+| Tracking | `origin/feature/spatial-portfolio-v5`, in sync at capture |
+| Working tree | **33 modified, 1 deleted, 5 untracked — all uncommitted** |
+| Index | clean (`git diff --cached` empty) |
+
+The deleted file was `components/spatial/ErosionWord.tsx` (superseded). The five untracked
+files were the new V6.8 components: `ProjectPlane`, `SystemNode`, `SystemsWord`,
+`DestinationSurface`, `SystemField`.
+
+### External recovery snapshot
+
+`/home/hakan/portfolio-v68-ubuntu-recovery-20260828/`
+
+Contains a full working-tree copy (minus `node_modules`/`.next`/`.git`), a binary-capable
+`git diff` patch, the empty cached diff, byte copies of all untracked files, the deleted-file
+inventory, branch/HEAD/status/remote state, and a manifest.
+
+Verified **mechanically**, not asserted:
+
+- `git apply --check` of the patch against a fresh `d7013f8` checkout: clean;
+- patch applied for real, then all 33 modified paths byte-compared with `cmp`: identical;
+- the `ErosionWord.tsx` deletion reproduced; 5 untracked files byte-identical;
+- full-tree `diff -rq` of the restored clone against the live tree: identical;
+- independent second path — `diff -rq` of the snapshot's `tree/` copy against live: identical.
+
+### Checkpoint and reconciliation
+
+| Step | SHA |
+|---|---|
+| Common ancestor | `d7013f8` |
+| Ubuntu V6.8 checkpoint | `d7bcebcc37a9a3e4a4408e96f9c3aa549f988b25` |
+| Windows documentation checkpoint | `dc8139381d0f6e7a4976e91468126d775ed1db34` |
+| Merge commit (both preserved) | `682d54e` |
+
+`dc81393` was inspected rather than assumed: it adds 6 files / 510 insertions / 0 deletions,
+all documentation (`.ai/handoffs`, `.ai/reviews`, `docs/AUTONOMOUS_*`, `docs/CONTENT_GAPS`),
+and touches **no** application source. The two branches' file sets were computed and proved
+**disjoint**, so the `--no-ff` merge was conflict-free by construction — no pre-V6.8 source
+could overwrite V6.8. A safety branch `safety/v68-ubuntu-base-d7013f8` pins the old base.
+
+### Validation of the merged tree
+
+typecheck clean · lint clean · prettier clean · unit **491/491** · production build 14/14
+routes · Chromium e2e **208/208**.
+
+V6.8 preserved in `HEAD` (verified with `git cat-file`/`git show` against the commit, not the
+worktree): all five new components present, `ErosionWord.tsx` absent, `glideStep` +
+`ENTRY_GLIDE_TO` opening glide, DropSpot remediation (scene-unit plane `{0.21,0.22} 0.85x0.45`
+and the two-shot evidence group), Kıvılcım plane `{0,0.0839} 0.7078`, the bidirectional black
+transition state machine, UNDERNEATH, the lower-page sections and the CTA finale, plus
+`DESIGN_SYSTEM` sections 28-30.
+
+### Remaining known visual work (not started — out of scope for this recovery)
+
+- WebKit e2e is timing-sensitive on a loaded machine; failures there reproduce on the
+  pre-remediation tree and pass serially at low load. Not a source-recovery issue.
+- Software Factory and the JointLedger / Professional Systems scenes remain unstaged
+  (content-expansion pass).
+- Mobile spatial routing and the wide-viewport re-stage remain deferred.
 
 ---
 
