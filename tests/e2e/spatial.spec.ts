@@ -311,10 +311,17 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
     }
   });
 
+  // V8: this test is settle-bound, not assertion-bound -- it sweeps 17 samples
+  // across the cut and waits at each for the camera's two-stage lag filter to
+  // arrive, which the V6.6 and V7 notes above already record as taking seconds
+  // from a cold jump. It has been inside the default 30s budget only by margin,
+  // and V8's shorter route (ROUTE_LENGTH_VH 640 -> 600) moved BREAK_CUT, which
+  // moved every sample. The budget is raised; not one assertion is touched.
   test("every break rail closes onto the frame at the cut, so no gap exposes the jump", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
+    test.setTimeout(120_000);
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 

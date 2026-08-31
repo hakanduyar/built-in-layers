@@ -5,16 +5,11 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
-  selectedSystemsHeading,
-  selectedSystemsSubheading,
   heroPrimaryLine,
   homePositioning,
   homeWordmark,
-  howIBuildHeading,
-  howIBuildPrinciples,
   layerDefinitions,
   positioningStatement,
-  sectionIndex,
   workIndexLabel,
 } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
@@ -73,45 +68,27 @@ const DEPTH_RAIL_TOP = -48;
 const DEPTH_MARKS = [-34, -21, -8];
 
 /**
- * V6.4 (§4B, §4C) -- WHAT THE EXIT TRAVERSE NOW PASSES.
+ * V8 (§1-§3) -- THE TWO EARLY DUPLICATES ARE GONE.
  *
- * Two destinations that genuinely exist further down this same page, assembled
- * ENTIRELY from the copy module the real sections render from: the same index, the
- * same heading, and one or two of the section's own lines. Nothing here is written
- * for the preview, so the surfaces cannot say anything the page does not.
+ * V6.4 staged two "destination surfaces" along the exit traverse: sparse plates
+ * carrying the INDEX, HEADING and one-to-three lines of Selected Systems and How
+ * I Build, seen from across the world minutes before the reader reached the real
+ * sections. They were built honestly -- every word was loaded from the same copy
+ * module the real sections render from -- and the owner's verdict on them is
+ * still decisive: the page showed each of those two sections twice, the first
+ * time almost empty, and no amount of depth staging makes a preview stop being a
+ * preview.
  *
- * They are the answer to §4's actual complaint. The V6.3 traverse was long and
- * empty; §4 rules out filling it with marks and asks for destinations instead.
- * These are destinations in the literal sense -- the reader sees them from across
- * the map and then arrives at them.
+ * So the previews are deleted rather than restyled, renamed, compressed or
+ * hidden at one breakpoint, and the LATER, content-rich instances in the lower
+ * page (components/sections/SelectedSystems.tsx and HowIBuild.tsx) are now the
+ * single authoritative versions of both.
  *
- * Deliberately only these two. §"DO NOT FORESHADOW EVERYTHING" keeps Field Notes,
- * About and the CTA as later discoveries, so the journey stays a progressive
- * reveal rather than a table of contents.
+ * What went with them, because it existed only to serve them: the
+ * DestinationSurface component, the PLANE_DEEP depth plane, and -- this is the
+ * §3 requirement, not a bonus -- the 167-unit empty diagonal they were invented
+ * to fill. See TURN_WORLD in lib/spatial/scenes.ts.
  */
-const NEAR_DESTINATION = {
-  // V7: the near destination now foreshadows the section that actually stands
-  // there — the Selected Systems index that replaced the dormant register.
-  index: sectionIndex.selectedSystems,
-  title: selectedSystemsHeading,
-  lines: [selectedSystemsSubheading],
-} as const;
-
-const DEEP_DESTINATION = {
-  index: sectionIndex.howIBuild,
-  title: howIBuildHeading,
-  // The first three principles, numbered exactly as the section numbers them.
-  //
-  // V6.5 took this from two lines to three. This surface is now the composition the
-  // route TERMINATES on rather than something glimpsed mid-traverse (see
-  // DestinationSurface), so it has to hold the last frame of the world -- and the
-  // only honest way to give it more presence is to show more of the destination it
-  // is previewing, not to invent anything for it.
-  lines: howIBuildPrinciples
-    .slice(0, 3)
-    .map((principle, index) => `${String(index + 1).padStart(2, "0")} — ${principle.title}`),
-} as const;
-
 export function SpatialExperience() {
   const featured = getProjectsByTier("featured");
   const softwareFactory = featured.find((project) => project.slug === TOUR_SLUGS[0]);
@@ -140,8 +117,6 @@ export function SpatialExperience() {
         // the sentence can never name different things -- plus the site's own term
         // for where they live.
         branchDestinations={[...beyondTour.map((project) => project.title), workIndexLabel]}
-        nearDestination={NEAR_DESTINATION}
-        deepDestination={DEEP_DESTINATION}
         // Travel material (§21). The distant plane carries oversized cropped
         // fragments of the REAL titles of the scenes the camera is heading
         // toward -- material derived from the world's own content, never
@@ -213,6 +188,7 @@ export function SpatialExperience() {
                 so it adds no screen-reader content. */}
             <span
               aria-hidden="true"
+              data-decorative="depth"
               className="pointer-events-none absolute -top-[26vh] left-[6%] hidden select-none overflow-hidden font-display text-[22vw] leading-none tracking-[-0.05em] uppercase text-ink opacity-[0.055] lg:block"
             >
               Surface

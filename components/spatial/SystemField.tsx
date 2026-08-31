@@ -2,6 +2,7 @@
 
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { focusProximity, routeScreenAngle } from "@/lib/spatial/sceneRoute";
+import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V6 (feature/spatial-portfolio-v5 branch, not merged --
 // see docs/DESIGN_SYSTEM.md §20).
@@ -89,8 +90,8 @@ const MARKS = Array.from({ length: MARK_COUNT }, (_, i) => {
 export function SystemField({ progress, routeOne, routeTwo }: SystemFieldProps) {
   // Strictly linear in raw progress. This is the whole point: it cannot have a
   // dead zone, because it has no easing, no focus profile and no spline.
-  const x = useTransform(progress, [0, 1], ["0vw", `${-FIELD_DRIFT_VW}vw`]);
-  const y = useTransform(progress, [0, 1], ["0vh", `${-FIELD_DRIFT_VH}vh`]);
+  const x = useTransform(progress, [0, 1], [worldX(0), worldX(-FIELD_DRIFT_VW)]);
+  const y = useTransform(progress, [0, 1], [worldY(0), worldY(-FIELD_DRIFT_VH)]);
 
   // V6.1 PERCEPTION (§16). The field RECEDES when the system has something in
   // frame, and is at full presence in open travel. Nothing is added: the same 26
@@ -119,7 +120,7 @@ export function SystemField({ progress, routeOne, routeTwo }: SystemFieldProps) 
           // that a child added later cannot silently reach the a11y tree.
           aria-hidden="true"
           className="absolute block text-ink opacity-[0.07]"
-          style={{ left: `${mark.x}vw`, top: `${mark.y}vh` }}
+          style={{ left: worldX(mark.x), top: worldY(mark.y) }}
         >
           <span
             className="absolute block bg-ink"
@@ -178,9 +179,9 @@ function RouteVector({
       aria-hidden="true"
       className="absolute block"
       style={{
-        left: `${left}vw`,
-        top: `${top}vh`,
-        width: `${length}vw`,
+        left: worldX(left),
+        top: worldY(top),
+        width: worldX(length),
         transform: `rotate(${angle.toFixed(2)}deg)`,
         transformOrigin: "0 50%",
       }}

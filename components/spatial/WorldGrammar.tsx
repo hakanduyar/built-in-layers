@@ -16,6 +16,7 @@ import {
   sceneProximity,
   workBranch,
 } from "@/lib/spatial/sceneRoute";
+import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §19).
@@ -141,7 +142,7 @@ function RouteRail({
     return (
       <motion.div
         className={`absolute w-px ${leg.route === 1 ? "bg-ink" : "bg-signal"}`}
-        style={{ left: `${left}vw`, top: `${top}vh`, height: `${height}vh`, opacity }}
+        style={{ left: worldX(left), top: worldY(top), height: worldY(height), opacity }}
       />
     );
   }
@@ -156,10 +157,10 @@ function RouteRail({
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       style={{
-        left: `${left}vw`,
-        top: `${top}vh`,
-        width: `${width}vw`,
-        height: `${height}vh`,
+        left: worldX(left),
+        top: worldY(top),
+        width: worldX(width),
+        height: worldY(height),
         opacity,
       }}
     >
@@ -219,7 +220,7 @@ function RegistrationTick({
   return (
     <motion.div
       className="absolute"
-      style={{ left: `${at.x - 1.6}vw`, top: `${at.y - 4.5}vh`, opacity }}
+      style={{ left: worldX(at.x - 1.6), top: worldY(at.y - 4.5), opacity }}
     >
       <span className={`absolute left-0 top-0 block h-px ${arm} bg-ink`} />
       <span className={`absolute left-0 top-0 block w-px ${drop} bg-ink`} />
@@ -300,10 +301,10 @@ function WorkBranch({
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         style={{
-          left: `${left}vw`,
-          top: `${top}vh`,
-          width: `${width}vw`,
-          height: `${height}vh`,
+          left: worldX(left),
+          top: worldY(top),
+          width: worldX(width),
+          height: worldY(height),
           // V6.6 (§2/JOB 2): 0.42 -> 0.52. The branch was reading as an annotation
           // rather than as a route the journey declines to take. Everything in this
           // component moves in the same direction by roughly the same amount --
@@ -328,7 +329,7 @@ function WorkBranch({
       <span
         aria-hidden="true"
         className="absolute block h-2 w-2 rounded-full border border-ink opacity-[0.62]"
-        style={{ left: `${junction.x}vw`, top: `${junction.y}vh`, marginLeft: -4, marginTop: -4 }}
+        style={{ left: worldX(junction.x), top: worldY(junction.y), marginLeft: -4, marginTop: -4 }}
       />
 
       {/* The terminus: a closed corner -- the world's resolved registration form,
@@ -339,7 +340,7 @@ function WorkBranch({
       <span
         aria-hidden="true"
         className="absolute block"
-        style={{ left: `${terminus.x}vw`, top: `${terminus.y}vh` }}
+        style={{ left: worldX(terminus.x), top: worldY(terminus.y) }}
       >
         <span className="absolute left-0 top-0 block h-px w-10 bg-ink opacity-[0.66]" />
         <span className="absolute left-0 top-0 block h-10 w-px bg-ink opacity-[0.66]" />

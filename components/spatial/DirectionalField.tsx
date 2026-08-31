@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { PLANE_DISTANT } from "@/lib/spatial/scenes";
 import { cameraPosition, routeScreenAngle } from "@/lib/spatial/sceneRoute";
+import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §19). Directional architecture (§22-24).
@@ -71,9 +72,9 @@ export function DirectionalField({
       aria-hidden="true"
       className="pointer-events-none absolute"
       style={{
-        left: `${left}vw`,
-        top: `${top}vh`,
-        width: `${CHEVRON_W}vw`,
+        left: worldX(left),
+        top: worldY(top),
+        width: worldX(CHEVRON_W),
         transform: `rotate(${angle.toFixed(2)}deg)`,
         transformOrigin: "50% 0",
       }}
@@ -113,9 +114,9 @@ function Chevron({
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       style={{
-        width: `${CHEVRON_W * scale}vw`,
-        height: `${CHEVRON_H * scale}vh`,
-        y: `${(index * spacing).toFixed(2)}vh`,
+        width: worldX(CHEVRON_W * scale),
+        height: worldY(CHEVRON_H * scale),
+        y: worldY(index * spacing),
         opacity,
         filter: `blur(${blur}px)`,
       }}

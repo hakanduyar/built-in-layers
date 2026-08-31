@@ -9,6 +9,7 @@ import {
   sceneFocusProgress,
   sceneProximity,
 } from "@/lib/spatial/sceneRoute";
+import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V6.8 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §28). THE PROJECT FIELD PLANES.
@@ -102,11 +103,11 @@ export function ProjectPlane({
   const direction = sceneTravelDirection(scene, mobile);
   const choreographyX = useTransform(progress, (value) => {
     const shift = planeShift(sceneApproach(scene, value, mobile), direction);
-    return `${shift.xVw}vw`;
+    return worldX(shift.xVw);
   });
   const choreographyY = useTransform(progress, (value) => {
     const shift = planeShift(sceneApproach(scene, value, mobile), direction);
-    return `${shift.yVh}vh`;
+    return worldY(shift.yVh);
   });
 
   // The field registers as the system acquires its scene: faint on approach,
@@ -138,8 +139,8 @@ export function ProjectPlane({
       data-project-plane={scene}
       className="absolute block bg-soft-paper"
       style={{
-        left: `calc(${camera.x * rate}vw + ${offset.x} * ${SCENE_UNIT})`,
-        top: `calc(${camera.y * rate}vh + ${offset.y} * ${SCENE_UNIT})`,
+        left: `calc(${worldX(camera.x * rate)} + ${offset.x} * ${SCENE_UNIT})`,
+        top: `calc(${worldY(camera.y * rate)} + ${offset.y} * ${SCENE_UNIT})`,
         width: `calc(${width} * ${SCENE_UNIT})`,
         height: `calc(${height} * ${SCENE_UNIT})`,
         opacity: presence,

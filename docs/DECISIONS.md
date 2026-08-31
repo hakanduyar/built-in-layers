@@ -326,3 +326,62 @@ Binding conditions attached to this approval — all already true of the current
   6. **"Built for real life" (dormant, zero entries) is replaced by the Selected Systems index** — loader-fed rows for every published system. Chosen over an "Operational Model" section because How I Build already carries the method; what the lower page lacked was a dense, navigable account of the systems just toured.
 - **Trade-offs recorded:** the route grew (640vh; ~64vh per segment, still far under V1's per-scene cost); the exit traverse's progress share fell below the old 10% guard (geometry unchanged, guard re-derived); two e2e settle-helpers needed longer proven-stable runs because arrival is now paced.
 - **Approval:** Hakan's explicit V7 brief; implemented as directed.
+
+## D-022 — The world fits the viewport it is in, on both axes (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decision:** The spatial world is composed against a reference viewport (1440 × 1040) and fitted
+  into the real one by a single scale on the one transformed parent every depth plane already shares:
+  `worldFit(w, h) = clamp(min(h / 1040, w / 1280), 0.74, 1)`. Separately, world POSITION is expressed
+  in the world's own unit — `min(1vw, 14.4px)` / `min(1vh, 10.4px)` — so scene separation stops
+  growing with the frame above the reference viewport.
+- **Reason:** measured, not inferred. Every input to a scene's size was width-derived or absolute, so
+  above ~1405px of viewport width the composition became a fixed 793px tall while its frame stayed
+  `100vh`. That is not a preference: at 1366×768 the flagship scene was 145px taller than the
+  viewport and clipped, at 1918×864 it lost 53px, and at the 1440×900 design viewport DropSpot lost
+  38px. Every one of those viewports reported **zero horizontal overflow**, so the standing overflow
+  matrix could never have found it. After the fit, zero scenes are clipped anywhere in the matrix.
+- **Binding conditions:** the fit never scales **up**, so 1920×1080 and 2560×1440 are pixel-untouched
+  and the approved large-display look is preserved exactly; the floor (0.74) exists so the world
+  cannot scale itself below legibility; the world unit governs position only, never content size,
+  because shrinking compositions to reveal their neighbours is the miniaturisation the brief rules
+  out; mobile is excluded from both — it is a deliberate vertical interpretation, not a compressed
+  desktop (§30), and has no width-derived height demand to correct.
+- **Rejected:** per-component media queries and font reductions (treats the symptom in N places and
+  leaves the compositions unrelated to each other); an aspect-ratio-only correction (measured wrong —
+  at a constant 1.778 aspect the frame share still ranged 0.719 to 1.092, because the binding
+  variable is absolute height, not aspect); folding viewport width into the fit at the design width
+  of 1440 (double-counts an axis the content already responds to); scaling content down on large
+  displays to bring neighbours into frame (explicitly ruled out by the brief).
+- **Trade-off:** the spatial world at 1440×900 now renders at 0.94 rather than 1.0, so the long-
+  standing "the approved 1440 frames are pixel-untouched" property of earlier passes no longer holds
+  at that viewport specifically. That is deliberate: 1440×900 is itself a short frame by this
+  measure, and it was one of the viewports measured as clipping content. Large displays are
+  unchanged.
+- **Approval:** Hakan's explicit V8 brief ("This is a world-fit problem, not a few media queries";
+  "large desktop retains the approved visual scale"); implemented as directed.
+
+## D-023 — One authoritative instance of each lower-page section (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decision:** The two `DestinationSurface` plates that previewed **Selected Systems** and **How I
+  Build** from the exit traverse are deleted, along with the component, the `PLANE_DEEP` depth plane
+  and the 167.2-unit empty diagonal that existed to carry them. The later, content-rich sections are
+  the single authoritative instances of both, and both were developed further rather than merely
+  retained. Supersedes **D-021 item 6**'s staging only — the Selected Systems index itself stands.
+- **Reason:** the homepage stated each of those two sections twice, the first time almost empty. The
+  previews were honest (loader-fed, `aria-hidden`, no invented copy) and that did not stop them being
+  previews. Removing them without removing their leg would have left 46vh of scroll through empty
+  world, which is the dead scroll the route-length cap exists to prevent.
+- **Binding conditions:** the concepts are not removed globally — only the early sparse instances;
+  the exit still hands over on a real bearing change rather than stopping dead (`TURN_WORLD`, 95.3
+  units at 59.5°); route one's pacing is held constant by lowering `ROUTE_LENGTH_VH` 640 → 600, so
+  removing dead scroll does not silently slow the four project scenes; the standing contract in
+  `tests/e2e/spatial-v5.spec.ts` tests component and route-stop **identity**, never heading-text
+  counts, because the two headings legitimately appear in more than one place in the markup.
+- **Rejected:** restyling, renaming, compressing or hiding the previews at one breakpoint (all
+  explicitly ruled out); replacing each removed preview with a new section (the brief asks for a
+  tighter journey, not a one-for-one swap); keeping the diagonal (an empty leg is the thing the
+  previews were invented to fix, so it cannot outlive them).
+- **Approval:** Hakan's explicit V8 brief and its follow-up correction distinguishing the early
+  sparse duplicates from the later full versions; implemented as directed.

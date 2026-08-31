@@ -1601,3 +1601,173 @@ Deliberate upgrades, not a shrink: ground slabs behind all four scenes (the plan
 ### 32.7 Verification state
 
 typecheck / lint / prettier clean · unit 500/500 · build 14/14 (15 routes incl. `/work/software-factory`) · Chromium e2e 208/208 · WebKit: see PROGRESS (parallelism-sensitive machine; single-worker run is the engine verdict) · console clean in both motion modes · overflow 0 at 1440 and 390 · governor and rail-closure geometry verified by direct settled measurement.
+
+## 33. Spatial Portfolio V8 — the early duplicates removed, the world given a height axis (2026-09-01)
+
+`feature/spatial-portfolio-v5` only. Not merged to `main`. Owner brief, two objectives.
+
+### 33.1 The two early duplicates are gone
+
+Through V7 the homepage stated **Selected Systems** and **How I Build** twice each. The first
+statement of both was a `DestinationSurface` plate — index, heading, one to three lines — staged
+on the exit traverse and seen from across the world minutes before the reader reached the real
+section. They were built honestly (every word was loaded from the same copy module the sections
+render from) and the owner's verdict was still decisive: the page previewed each section, almost
+empty, shortly before delivering it in full.
+
+Deleted, not restyled, renamed, compressed or hidden at one breakpoint:
+
+- `components/spatial/DestinationSurface.tsx`
+- the `nearDestination` / `deepDestination` props and both render sites
+- `PLANE_DEEP` (0.44) — a depth plane added in V6.4 for exactly one of those plates
+- `TRAVERSE_WORLD` — the 76vw × 110vh diagonal they were invented to fill
+
+The **later, content-rich instances are now the single authoritative versions of both**, and both
+were developed further (§33.6). `tests/e2e/spatial-v5.spec.ts` carries the standing contract, and
+it tests component and route-stop **identity**, never heading-text counts.
+
+### 33.2 No dead scroll left behind
+
+Removing the previews left their leg carrying nothing. Measured, that leg was 167.2 screen units
+and 46vh of the reader's scroll through empty world — precisely the dead scroll the brief forbids
+leaving behind, and the V3 objection the route-length cap exists to protect against.
+
+So the exit collapses from two legs to one. What survives is the job that was never about the
+previews: the world must hand over **already moving in the lower page's direction** rather than
+stopping and being replaced. `TURN_WORLD` does that alone.
+
+| | V7 | V8 |
+|---|---|---|
+| Exit legs | 2 | 1 |
+| Exit world travel | 222.1 units | 95.3 units |
+| Exit scroll | 61.4vh | 30.6vh |
+| Exit bearing | 42.1° then 69.0° | 59.5° |
+| `ROUTE_LENGTH_VH` | 640 | 600 |
+| Route one scroll | 378.6vh | 372.8vh |
+
+The turn's length is **not** a taste decision: route two climbs and the exit descends, so a leg
+shorter than ~85 units makes the camera's distance from the route's own start decrease mid-curve
+— the spline loops, and the monotonicity contract in `tests/unit/spatial-route.test.ts` fails.
+95.3 units is the shortest measured candidate that turns steeply, stays monotonic, and clears the
+world's 8% frame-to-frame speed ceiling. `EXIT_ALLOWANCE` (38) exists for the same reason
+`ENTRY_ALLOWANCE` does: a short travel leg paid at the bare travel rate has to change speed across
+too little scroll, and measured a 9.0% step at the `handoff` join.
+
+### 33.3 The world had no height axis — the measured root cause
+
+The owner's report was that the site looks strong on the large work display and "excessively
+large" on a 1918×864 laptop. Measured across the whole matrix on the built page, the cause is not
+aspect ratio, not typography, and not any one component: **every input to a scene's size is
+width-derived or absolute.** `SCENE_WIDTH` is `min(84vw, 1180px)`; every display size is a
+`clamp(rem, vw, rem)`. Above ~1405px of width the block saturates at its px cap and the whole
+composition becomes a fixed number of pixels tall — Software Factory measured **793px at 1440,
+1536, 1600 and 1920, identical to the pixel**. The frame it must fit is `100vh`, and nothing in
+the system knew.
+
+| Viewport | SF frame share | Clipped below the fold |
+|---|---|---|
+| 2560×1440 | 0.719 | 0px |
+| 1920×1080 | 0.734 | 0px |
+| 1600×900 | 0.881 | 26px |
+| 1440×900 | 0.881 | 11px |
+| 1918×864 | 0.919 | **53px** |
+| 1536×864 | 0.919 | **48px** |
+| 1366×768 | **1.092** | **145px** |
+
+The last rows are not a matter of taste — the flagship scene was taller than the viewport and
+being cut off, with DropSpot losing 129px. **Every one of those viewports reported zero horizontal
+overflow**, which is exactly why an overflow matrix never found it.
+
+### 33.4 The fit — one number, applied once
+
+`lib/spatial/worldFit.ts`. The whole world already hangs off one shared transformed parent (the
+depth planes need one), so the missing axis is supplied there as a scale, and every plane, scene,
+rule, plate and piece of typography stays as relational to every other as it was authored.
+
+```
+worldFit(w, h) = clamp(min(h / 1040, w / 1280), 0.74, 1)
+```
+
+- **Reference height 1040** is measured, not inherited: the frame height at which the
+  composition's own 793–839px demand sits at the proportion the owner approved on the large
+  display. Anchoring at 900 would have declared the already-tight 1440×900 rendering correct.
+- **Width reference 1280 is deliberately below the design width.** The content already has a width
+  response, so folding viewport width in at 1440 would count the same axis twice. At 1280 the
+  width term is inert across the owner's whole matrix and binds only in a genuinely narrow window.
+- **`min()` of two ratios is the aspect response** without naming aspect ratio: whichever axis the
+  viewport is shorter in governs. A wide-but-short laptop is governed by its height and is not
+  treated as a large desktop because its width is high.
+- **It never scales up.** 1920×1080 and 2560×1440 are pixel-untouched — the approved look is
+  preserved exactly.
+- **Floor 0.74** so the world cannot scale itself into illegibility; it binds only below ~770px of
+  viewport height.
+
+Result: **zero clipped scenes across the entire matrix**, frame share 0.533–0.791 (was
+0.533–1.092), horizontal overflow 0 and console errors 0 everywhere.
+
+One complement, because the fit alone left 34px on the tallest composition at the shortest
+viewport: the widest plate on the route drops from 76% to 66% of its block below 800px of viewport
+height. A plate's height is its width over the asset's aspect ratio, so the only way to give
+height back is to take width — and the rule is stated where the cause is, not as a second scale
+factor on top of the world's.
+
+### 33.5 The world's own unit — zoom-out reveals more world
+
+A second, separate complaint: zooming out does not feel like the world shrinking into view, it
+feels like only the active scene exists. That has a precise cause. Above the reference viewport
+the world's **content** is already px-fixed, but its **geometry** was not — scene anchors were
+placed in `vw`/`vh`, so the distance between two scenes grew exactly in step with the frame. Widen
+the window and the neighbours retreat as fast as the room to see them arrives.
+
+So the world gets its own unit, `--world-vw` / `--world-vh` = `min(1vw, 14.4px)` /
+`min(1vh, 10.4px)`. Below the reference it is exactly the viewport unit and nothing changes; above
+it the world holds its composed metrics and the extra viewport becomes more world. Pure CSS
+`min()`, so it re-resolves on resize, on browser zoom and on a DPR change with no listener and no
+hydration risk. It governs **position only** — shrinking compositions to reveal their neighbours
+would be the miniaturisation the brief rules out. Everything placed in world coordinates consumes
+it: the camera planes, the scene frames, the travel material, the world grammar, the project
+planes, the system field and the directional fields.
+
+Measured on one build, same page, world unit vs raw viewport unit — max scenes in frame:
+
+| Viewport | viewport-unit world | world-unit |
+|---|---|---|
+| 1440×900 | 2 | 2 |
+| 1920×1080 | 2 | 2 |
+| 2560×1440 | 2 | 2 |
+| 5120×2880 (deep zoom-out) | 2 | **8** |
+
+Honest reading: the change delivers the asked-for behaviour decisively under real zoom-out, and
+makes no measurable difference at the common desktop sizes, where the frame is not yet much larger
+than the composed world.
+
+### 33.6 The two authoritative sections, developed
+
+**Selected Systems** was carrying three facts per system. The validated frontmatter already held
+more, and the missing fields were the ones an index exists to answer. It now carries five for
+every entry — **provenance** (a required field, shown for all systems rather than only for forks:
+CLAUDE.md §11's distinction is the classification itself, not a footnote about forks), **phase**
+(only where a real value exists, D-018), **access** (what the reader can actually open, derived
+from each project's own declared link visibility), **record** (`verificationStatus`), and
+**stack**. All loader-fed; no slug→copy table; nothing written per project; a system with no phase
+simply has no phase row. Deliberately not a second project gallery: no imagery, no cards, one link
+per row into the case study that already exists.
+
+**How I Build** was reading as four isolated text rows. Both halves of the requested
+principle → consequence relation already existed in approved copy — the title is the commitment,
+the body is what it forces on the build — and what was missing was any mark saying the second
+follows from the first. A rule leaving the title's column and one relation label now carry it.
+**No copy was written**: no invented consequences, no evidence claims, no restated project text.
+
+### 33.7 Scroll governor
+
+Unchanged. `ROUTE_MAX_RATE`, `useRouteGovernor`, the glide ceiling and the break event's fixed
+playback are all byte-identical to V7. The brief requires responsive geometry to be fixed first
+and pacing reassessed against new evidence afterwards; that evidence is
+`docs/review/v8-responsive/recordings/`.
+
+### 33.8 Evidence
+
+`docs/review/v8-responsive/` — open `index.html`. Comparison sheets for ten route stops across
+five viewports, the before/after measurement tables above, the zoom and mobile matrices, and three
+natural-scroll recordings driven with real wheel events at 1536×864, 1920×1080 and 390px.

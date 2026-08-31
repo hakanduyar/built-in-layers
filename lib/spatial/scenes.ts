@@ -144,7 +144,7 @@ export const ROUTE_TWO_IDS = ["reorient", "approach", "handoff"] as const;
  * V6.7 (JOB 1) -- THE ACQUISITION DESCENT.
  *
  * A camera-only coordinate directly below the hero, in exactly the sense CUT_WORLD
- * and TRAVERSE_WORLD are camera-only: the route passes through it, no scene stands
+ * and TURN_WORLD are camera-only: the route passes through it, no scene stands
  * at it.
  *
  * THE PROBLEM. Through V6.6 the route left the hero on the hero->Kivilcim bearing
@@ -203,8 +203,16 @@ export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
  * Mobile keeps x at 0 like every other mobile anchor: the same route, taken by a
  * camera that only ever descends (§30).
  */
-export const TRAVERSE_WORLD: WorldPoint = { x: 340, y: 458 };
-export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 1118 };
+// V8 (§3) DELETED `TRAVERSE_WORLD`, the 76vw x 110vh diagonal that stood here.
+// Everything above is the reason it existed and the reason it no longer can:
+// the leg was long, and the ONLY things on it were the two destination surfaces
+// previewing Selected Systems and How I Build. With those previews removed as
+// the owner's rejected early duplicates, the leg carried 167.2 screen units of
+// world and 46vh of the reader's scroll containing nothing at all -- which is
+// precisely the dead scroll §3 forbids leaving behind. Deleting the previews and
+// keeping their diagonal would have been the worst of both.
+//
+// What survives is the leg that was doing a job independent of them: the TURN.
 
 /**
  * V6.5 SHORTENED THE TURN, AND ONLY THE TURN: {358, 550} -> {352, 508}.
@@ -225,8 +233,36 @@ export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 1118 };
  * bearing is what the leg is for, and the bearing is preserved to within 1.5
  * degrees; the distance was only ever the cost of it.
  */
-export const DESCENT_WORLD: WorldPoint = { x: 352, y: 508 };
-export const DESCENT_MOBILE_WORLD: WorldPoint = { x: 0, y: 1176 };
+/**
+ * THE HANDOVER TURN -- the whole of the exit, since V8.
+ *
+ * One camera-only coordinate after `handoff`, in the same sense CUT_WORLD is
+ * camera-only: the route passes through it, no scene stands at it.
+ *
+ * ITS JOB, which is the one thing the old two-leg exit did that had nothing to
+ * do with the deleted previews: the world must not stop and be replaced by the
+ * lower page, it must hand over ALREADY MOVING IN THE LOWER PAGE'S OWN
+ * DIRECTION. Route two climbs (its handoff leg runs at ~16 degrees); the lower
+ * page descends. Something has to turn the camera through that, and a bend in an
+ * existing leg cannot -- route two's last leg is the one that frames `handoff`,
+ * and re-aiming it would drag the scene's own framing with it.
+ *
+ * SIZED AS A BEARING CHANGE, NOT AS A JOURNEY. V6.5 already established that a
+ * direction change costs about 55 screen units, when it cut the old turn leg
+ * from 96.4 to 55.0 for exactly that reason and lost 1.5 degrees of bearing
+ * doing it. That measurement is what this leg is built on: at +14vw / +52vh it
+ * runs 57.4 units at a mean screen bearing of ~66.7 degrees -- the same handover
+ * the two-leg exit performed, with the 167 empty units in front of it gone.
+ *
+ * Net: the exit falls from 222.1 screen units to 57.4, and the reader's scroll
+ * through it falls from 61.4vh to ~16vh. The journey is tighter by exactly the
+ * amount that had nothing in it.
+ */
+export const TURN_WORLD: WorldPoint = { x: 292, y: 424 };
+/** Mobile has no bearing to turn -- its route is vertical throughout (§30) --
+ *  so this is purely the handover run, cut in the same proportion as the desktop
+ *  exit: 176vh of travel behind two deleted previews becomes 58vh. */
+export const TURN_MOBILE_WORLD: WorldPoint = { x: 0, y: 1058 };
 
 /**
  * Where route one ends and the occlusion cut happens. A camera-only
@@ -398,6 +434,27 @@ export const TRAVEL_WEIGHT_RATIO = 0.8;
 export const ENTRY_ALLOWANCE = 46;
 
 /**
+ * V8 (§3): the same treatment for the EXIT, and for exactly the reason V6.7
+ * introduced ENTRY_ALLOWANCE -- a short travel segment paid at the bare travel
+ * rate has to ramp between speeds across too little scroll.
+ *
+ * Collapsing the two-leg exit into the handover turn alone took it from 222.1
+ * screen units to 95.3. At TRAVEL_ALLOWANCE the remaining leg's progress width
+ * fell to 0.045, and the camera then had to change speed steeply enough across
+ * the `handoff` join to produce a 9.0% frame-to-frame step against the world's
+ * standing 8% ceiling -- caught by tests/unit/spatial-route.test.ts, not by eye,
+ * and the same failure signature the entry beat produced at p=0.001.
+ *
+ * The value is deliberately BELOW the entry's 46. Reading allowance buys time to
+ * look at something; the entry beat carries the tail of the hero's own reading
+ * time, and this leg carries nothing at all now that the destination previews
+ * are gone. It is sized as the smallest allowance that keeps the join inside the
+ * world's continuity contract, and no larger -- which is the whole point of
+ * removing the previews rather than restyling them.
+ */
+export const EXIT_ALLOWANCE = 38;
+
+/**
  * Boundary speed, as a fraction of the route average, at joins that have NO SCENE
  * on them: between the two exit legs, and at the route's terminus.
  *
@@ -539,7 +596,20 @@ export const FOCUS_SPEED_RATIO = 0.42;
  * lowering the absolute camera speed per scroll pixel everywhere, while leaving
  * the flattened VARIANCE -- the thing that was actually wrong -- intact.
  */
-export const ROUTE_LENGTH_VH = 640;
+/**
+ * V8 (§3) LOWERED IT 640 -> 600, and the arithmetic is the same one V6.4 and
+ * V6.5 used: route one's pacing is the quantity being held constant, and the
+ * total is whatever holds it.
+ *
+ * Deleting the exit's empty diagonal removed 167.2 screen units from route two,
+ * which RAISES route one's share of progress (SPLIT 0.5916 -> 0.6317) exactly as
+ * V6.5 predicted the mechanism would. Left at 640 that would have handed route
+ * one 404.3vh where V7 gave it 378.6 -- i.e. removing dead scroll from the exit
+ * would have quietly slowed the four project scenes by 7%, which is the opposite
+ * of a tighter journey. 600 x 0.6317 = 379.0vh puts route one back within half a
+ * viewport-height of V7, and the whole 40vh saved comes out of the exit.
+ */
+export const ROUTE_LENGTH_VH = 600;
 
 /**
  * Depth planes (§12). The middle plane is the world itself and is pinned at
@@ -553,23 +623,11 @@ export const PLANE_DISTANT = 0.62;
 export const PLANE_WORLD = 1;
 export const PLANE_NEAR = 1.13;
 
-/**
- * V6.4: one plane FURTHER BACK than the travel material, added for the
- * destination foreshadowing on the exit traverse (§4C).
- *
- * The brief asks for two future surfaces at two different depths -- Built for
- * Real Life nearer, How I Build "at another spatial depth" and "not fully
- * readable too early". Depth is the mechanism that makes that true rather than
- * asserted: at 0.44 the deeper surface answers the camera at less than half the
- * world's rate, so it hangs in frame far longer, drifts far less, and is
- * legitimately still distant while the nearer one has already resolved.
- *
- * Adding a fourth plane rather than stacking both surfaces on PLANE_DISTANT is
- * the difference between "two labels at different opacities" and two things
- * genuinely at different distances. It costs one more absolutely-positioned
- * transformed div, on desktop only.
- */
-export const PLANE_DEEP = 0.44;
+// V8 (§3) DELETED `PLANE_DEEP` (0.44). It was added in V6.4 for exactly one
+// object -- the deeper of the two destination surfaces -- and with that surface
+// removed as a rejected early duplicate, the plane had nothing at any depth to
+// hold. A fourth transformed layer costing a paint on every frame to carry
+// nothing is not depth, it is overhead.
 
 /** Scale a scene resolves through as the camera arrives (§15). A few percent. */
 export const SCENE_SCALE_FAR = 0.972;

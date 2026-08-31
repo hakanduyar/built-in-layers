@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -11,10 +11,6 @@ import {
   type MotionStyle,
   type MotionValue,
 } from "motion/react";
-import {
-  DestinationSurface,
-  type DestinationPreview,
-} from "@/components/spatial/DestinationSurface";
 import { DirectionalField } from "@/components/spatial/DirectionalField";
 import { ProjectPlane } from "@/components/spatial/ProjectPlane";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
@@ -33,7 +29,6 @@ import {
 import {
   CAMERA_INSET,
   CAMERA_INSET_MOBILE,
-  PLANE_DEEP,
   PLANE_DISTANT,
   PLANE_NEAR,
   ROUTE_LENGTH_VH,
@@ -61,6 +56,7 @@ import {
   sceneFocusProgress,
 } from "@/lib/spatial/sceneRoute";
 import type { SystemAnnotation } from "@/lib/spatial/systemPov";
+import { WORLD_UNIT, worldFit, worldX, worldY } from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
 /** Composed scenes. `tail` is the near-empty beat before the cut, and its
@@ -74,18 +70,6 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
   /** Distant/near travel material, rendered on their own depth planes. */
   distantMaterial?: ReactNode;
   nearMaterial?: ReactNode;
-  /**
-   * V6.4 (§4B-C): the two destinations foreshadowed along the exit traverse, as
-   * DATA rather than as nodes.
-   *
-   * They have to be constructed in here because they read the filtered progress
-   * value, which only exists on the client -- but every word in them comes from
-   * the server component's own copy module, so this file still names no section
-   * and invents no line. Placement lives in DestinationSurface with the rest of
-   * the art direction.
-   */
-  nearDestination?: DestinationPreview;
-  deepDestination?: DestinationPreview;
   /**
    * V6.4 (§4A): the real project names the work-route branch points at. Passed in
    * rather than imported, because only the server component has the content
@@ -754,8 +738,6 @@ export function SpatialCamera({
   systemsWord,
   distantMaterial,
   nearMaterial,
-  nearDestination,
-  deepDestination,
   branchDestinations = [],
   annotations = {},
   ...scenes
@@ -765,6 +747,12 @@ export function SpatialCamera({
   const isDesktop = useIsDesktop();
   const enhanced = mounted && !reduceMotion;
   const mobile = !isDesktop;
+  // V8: the world scales to fit the frame it is actually in. Desktop only --
+  // mobile is a deliberate vertical interpretation rather than a compressed
+  // desktop (§30), its scene block is 92vw of a narrow frame rather than a
+  // px-capped composition, and so it has none of the width-derived height demand
+  // the fit exists to correct.
+  const fit = useWorldFit(mounted && isDesktop);
 
   const spacerRef = useRef<HTMLDivElement>(null);
   // The target is supplied only while the enhanced tree is actually rendered.
@@ -838,10 +826,15 @@ export function SpatialCamera({
   // filtered value like every other visual, eases with the square of exit
   // progress so departure begins imperceptibly, and lives only on the
   // enhanced tree — reduced motion never sees a scaling world.
+  // V8: the departure zoom is now MULTIPLIED BY THE WORLD'S FIT (see
+  // lib/spatial/worldFit.ts). One transform carries both, because they are the
+  // same kind of statement about the same thing -- how large this world is in
+  // this frame -- and putting them on two nested transformed layers would cost a
+  // second compositing layer to express a product.
   const worldScale = useTransform(progress, (value) => {
-    if (value <= EXIT_FROM) return 1;
+    if (value <= EXIT_FROM) return fit;
     const exit = Math.min((value - EXIT_FROM) / (1 - EXIT_FROM), 1);
-    return 1 - 0.08 * exit * exit;
+    return fit * (1 - 0.08 * exit * exit);
   });
 
   function scrollToProgress(target: number) {
@@ -902,7 +895,21 @@ export function SpatialCamera({
           still a programmatically scrollable container, so focusing a link the
           camera had not reached made the browser scroll THIS box internally
           and shift the whole world off its camera position. */}
-      <div className="sticky top-0 h-screen w-full overflow-clip bg-paper">
+      <div
+        className="sticky top-0 h-screen w-full overflow-clip bg-paper"
+        // V8: the world's own unit, declared once at the top of the world and
+        // read by everything positioned inside it. Pure CSS `min()`, so it
+        // re-resolves on resize, on browser zoom and on a DPR change with no
+        // listener and no re-render. On mobile it is pinned to the viewport unit:
+        // the vertical route is composed against the phone's frame directly, and
+        // capping it there would shrink a world that has no excess room.
+        style={
+          {
+            "--world-vw": isDesktop ? WORLD_UNIT.x : "1vw",
+            "--world-vh": isDesktop ? WORLD_UNIT.y : "1vh",
+          } as CSSProperties
+        }
+      >
         {/* V6.4 REMOVED THE RECOIL that this wrapper used to carry: a 1.5% scale
             compression, 0.55deg of tilt and a residual x/y jitter, fired by the
             latched impact pulse. It was the last piece of the world "answering a
@@ -929,15 +936,14 @@ export function SpatialCamera({
             />
           )}
 
-          {/* V6.4 (§4C): the deepest plane, carrying the destination foreshadowed
-              furthest ahead. Behind the travel material, so the two future
-              surfaces are genuinely at different distances rather than at two
-              opacities on one plane. */}
-          {isDesktop && deepDestination && (
-            <CameraPlane progress={progress} rate={PLANE_DEEP} inset={inset} mobile={mobile}>
-              <DestinationSurface slot="deep" preview={deepDestination} progress={progress} />
-            </CameraPlane>
-          )}
+          {/* V8 (§1-§3) REMOVED THE DEEPEST PLANE ENTIRELY. It existed for one
+              reason -- to carry the deeper of the two destination surfaces that
+              previewed Selected Systems and How I Build from across the exit
+              traverse. Those previews are the early sparse duplicates the owner
+              rejected, so the plane they were invented for goes with them rather
+              than staying as an empty transformed layer the camera still pays for
+              on every frame. PLANE_DEEP is deleted from the token set for the same
+              reason: a depth with nothing at it is not a depth. */}
 
           {/* Depth planes (§12). Mobile keeps the world plane only: parallax
               at 375px buys little and risks motion sickness (§30). */}
@@ -1004,9 +1010,6 @@ export function SpatialCamera({
                 progress={progress}
               />
               {distantMaterial}
-              {nearDestination && (
-                <DestinationSurface slot="near" preview={nearDestination} progress={progress} />
-              )}
               {/* Directional architecture (§22-23). Exactly two fields in the
                   whole journey: one in the run into the cut and one on the far
                   side of it, re-aimed along the new route. Not behind any scene,
@@ -1115,8 +1118,13 @@ function CameraPlane({
   mobile: boolean;
   children: ReactNode;
 } & Record<`data-${string}`, string | undefined>) {
-  const x = useTransform(progress, (value) => `${-cameraPosition(value, mobile).x * rate}vw`);
-  const y = useTransform(progress, (value) => `${-cameraPosition(value, mobile).y * rate}vh`);
+  // V8: the camera travels in the WORLD'S unit, not the viewport's. Below the
+  // reference viewport these are identical; above it the world stops spreading
+  // out in step with the frame, which is what lets a wider window or a zoomed-out
+  // page show more of the same world instead of the same scene, larger. See
+  // WORLD_UNIT in lib/spatial/worldFit.ts.
+  const x = useTransform(progress, (value) => worldX(-cameraPosition(value, mobile).x * rate));
+  const y = useTransform(progress, (value) => worldY(-cameraPosition(value, mobile).y * rate));
   return (
     <motion.div className="absolute" style={{ x, y, ...inset }} {...rest}>
       {children}
@@ -1163,13 +1171,22 @@ function SceneFrame({
       // clipped by the sticky box's overflow, never removed from the
       // accessibility tree or from Tab order.
       onFocus={onFocus}
+      // Scene IDENTITY in the DOM. A route stop is otherwise indistinguishable
+      // from outside this module, which forced both the responsive probe and
+      // the duplicate-instance contract (V8 §20) to fall back on matching
+      // heading strings -- exactly the naive test the brief rules out.
+      // Presentational value: none.
+      data-scene={id}
       className="absolute left-0 top-0 flex items-center"
       style={
         {
           width: isDesktop ? SCENE_WIDTH : SCENE_WIDTH_MOBILE,
           minHeight: SCENE_MIN_HEIGHT,
-          translateX: `${point.x}vw`,
-          translateY: `${point.y}vh`,
+          // V8: placed in the world's own unit, exactly like the camera that
+          // travels to it -- if the two disagreed the camera would arrive
+          // somewhere the scene is not.
+          translateX: worldX(point.x),
+          translateY: worldY(point.y),
           scale,
           "--depth-resolve": resolve,
           // Lets a scene's evidence break its own alignment edge. Only set
@@ -1202,4 +1219,39 @@ function useIsDesktop(): boolean {
     return () => query.removeEventListener("change", handler);
   }, []);
   return desktop;
+}
+
+/**
+ * V8 -- THE WORLD'S FIT SCALE (see lib/spatial/worldFit.ts for the measurement
+ * this exists to fix).
+ *
+ * Starts at 1 rather than at a measured value, so the server-rendered markup and
+ * the first client render agree and the world can never hydrate at one scale and
+ * jump to another. The real value lands on the first effect, before paint.
+ *
+ * `visualViewport` is listened to as well as `resize`, and it is not redundant:
+ * on a pinch-zoom, and on the browser-zoom levels §11 asks to be checked, the
+ * layout viewport can stay put while the visual viewport is what actually
+ * changed. Both handlers read `window.innerWidth/innerHeight` -- the CSS
+ * viewport truth every other unit in this world is expressed against -- so the
+ * two events are two triggers for one measurement, not two measurements.
+ */
+function useWorldFit(active: boolean): number {
+  const [fit, setFit] = useState(1);
+  useEffect(() => {
+    // Nothing to reset when inactive: the return below already reports 1, so
+    // writing state here would only cost a cascading render to say the same
+    // thing.
+    if (!active) return;
+    const measure = () => setFit(worldFit(window.innerWidth, window.innerHeight));
+    measure();
+    window.addEventListener("resize", measure);
+    const visual = window.visualViewport;
+    visual?.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      visual?.removeEventListener("resize", measure);
+    };
+  }, [active]);
+  return active ? fit : 1;
 }

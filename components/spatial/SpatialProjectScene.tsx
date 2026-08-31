@@ -239,7 +239,24 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         </div>
         {plate && (
           <div className="relative mt-7 w-full" style={resolveDown}>
-            <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%]">{plate}</div>
+            {/* V8 -- THE ONE PIECE OF EVIDENCE THAT ALSO NEEDS A HEIGHT BUDGET.
+                The world-fit scale (lib/spatial/worldFit.ts) brought every scene
+                in the owner's matrix inside its frame except this one: Software
+                Factory is the tallest composition on the route, and at 1366x768
+                its plate still overhung by 34px -- the diagram itself fit, the
+                figure's caption and border did not, which is a D-019 asset-
+                honesty label being cut off rather than a cosmetic overhang.
+
+                A plate's height is its width divided by the asset's aspect
+                ratio, so the only way to give height back is to take width. The
+                rule is therefore stated where the cause is -- "on a frame this
+                short, the widest plate on the route is not 76% of the block" --
+                rather than as another scale factor on top of the world's. It
+                binds below 800px of viewport height and nowhere else, so every
+                frame the owner approved is untouched. */}
+            <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%] lg:[@media(max-height:800px)]:w-[66%]">
+              {plate}
+            </div>
           </div>
         )}
       </div>

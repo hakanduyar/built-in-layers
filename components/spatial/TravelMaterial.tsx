@@ -1,5 +1,6 @@
 import { PLANE_DISTANT, PLANE_NEAR, type SceneId, type WorldPoint } from "@/lib/spatial/scenes";
 import { cameraPosition, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
+import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -116,9 +117,11 @@ export function TravelMaterial({ words, plane }: TravelMaterialProps) {
               key={index}
               className={`absolute block bg-ink opacity-[0.13] ${rule.vertical ? "w-px" : "h-px"}`}
               style={{
-                left: `${at.x}vw`,
-                top: `${at.y}vh`,
-                ...(rule.vertical ? { height: `${rule.length}vh` } : { width: `${rule.length}vw` }),
+                left: worldX(at.x),
+                top: worldY(at.y),
+                ...(rule.vertical
+                  ? { height: worldY(rule.length) }
+                  : { width: worldX(rule.length) }),
               }}
             />
           );
@@ -146,8 +149,8 @@ export function TravelMaterial({ words, plane }: TravelMaterialProps) {
             // above it the material keeps its 1440 physical scale, which is
             // what "distant material" means -- it does not grow with the frame.
             style={{
-              left: `${at.x}vw`,
-              top: `${at.y}vh`,
+              left: worldX(at.x),
+              top: worldY(at.y),
               width: "min(52vw, 780px)",
               height: "min(17vh, 165px)",
             }}
@@ -155,7 +158,10 @@ export function TravelMaterial({ words, plane }: TravelMaterialProps) {
             {/* Pushed up out of its own clip box so only the lower third of
                 the letterforms shows. Legible as shape, not as a word --
                 which is the difference between material and a label. */}
-            <span className="block -translate-y-[58%] whitespace-nowrap font-display text-[min(15vw,220px)] leading-none tracking-[-0.04em] uppercase text-ink opacity-[0.06]">
+            <span
+              data-decorative="depth"
+              className="block -translate-y-[58%] whitespace-nowrap font-display text-[min(15vw,220px)] leading-none tracking-[-0.04em] uppercase text-ink opacity-[0.06]"
+            >
               {word}
             </span>
           </div>

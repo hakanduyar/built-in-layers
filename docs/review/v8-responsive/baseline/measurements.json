@@ -1,0 +1,800 @@
+[
+  {
+    "viewport": "1366x768",
+    "truth": {
+      "innerWidth": 1366,
+      "innerHeight": 768,
+      "dpr": 1,
+      "vvWidth": 1366,
+      "vvHeight": 768,
+      "vvScale": 1,
+      "aspect": 1.779
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1147,
+        "h": 553,
+        "heightFrac": 0.72,
+        "widthFrac": 0.84,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.2639,
+        "w": 1143,
+        "h": 839,
+        "heightFrac": 1.092,
+        "widthFrac": 0.837,
+        "clippedTop": 0,
+        "clippedBottom": 145
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3611,
+        "w": 1147,
+        "h": 553,
+        "heightFrac": 0.72,
+        "widthFrac": 0.84,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4722,
+        "w": 1146,
+        "h": 552,
+        "heightFrac": 0.719,
+        "widthFrac": 0.839,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.6111,
+        "w": 1146,
+        "h": 804,
+        "heightFrac": 1.047,
+        "widthFrac": 0.839,
+        "clippedTop": 0,
+        "clippedBottom": 129
+      },
+      {
+        "id": "tail",
+        "p": 0.7083,
+        "w": 1145,
+        "h": 552,
+        "heightFrac": 0.719,
+        "widthFrac": 0.838,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8333,
+        "w": 1143,
+        "h": 551,
+        "heightFrac": 0.717,
+        "widthFrac": 0.837,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9861,
+        "w": 1146,
+        "h": 552,
+        "heightFrac": 0.719,
+        "widthFrac": 0.839,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1115,
+        "h": 537,
+        "heightFrac": 0.699,
+        "widthFrac": 0.816,
+        "clippedTop": 124,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 999,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 12.3
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "1440x900",
+    "truth": {
+      "innerWidth": 1440,
+      "innerHeight": 900,
+      "dpr": 1,
+      "vvWidth": 1440,
+      "vvHeight": 900,
+      "vvScale": 1,
+      "aspect": 1.6
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 648,
+        "heightFrac": 0.72,
+        "widthFrac": 0.819,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.25,
+        "w": 1179,
+        "h": 793,
+        "heightFrac": 0.881,
+        "widthFrac": 0.819,
+        "clippedTop": 0,
+        "clippedBottom": 11
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3472,
+        "w": 1178,
+        "h": 647,
+        "heightFrac": 0.719,
+        "widthFrac": 0.818,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4722,
+        "w": 1178,
+        "h": 647,
+        "heightFrac": 0.719,
+        "widthFrac": 0.818,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.6111,
+        "w": 1179,
+        "h": 821,
+        "heightFrac": 0.912,
+        "widthFrac": 0.819,
+        "clippedTop": 0,
+        "clippedBottom": 38
+      },
+      {
+        "id": "tail",
+        "p": 0.7083,
+        "w": 1178,
+        "h": 647,
+        "heightFrac": 0.719,
+        "widthFrac": 0.818,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8333,
+        "w": 1178,
+        "h": 647,
+        "heightFrac": 0.719,
+        "widthFrac": 0.818,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9861,
+        "w": 1180,
+        "h": 648,
+        "heightFrac": 0.72,
+        "widthFrac": 0.819,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1147,
+        "h": 630,
+        "heightFrac": 0.7,
+        "widthFrac": 0.797,
+        "clippedTop": 191,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 11.5
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "1536x864",
+    "truth": {
+      "innerWidth": 1536,
+      "innerHeight": 864,
+      "dpr": 1,
+      "vvWidth": 1536,
+      "vvHeight": 864,
+      "vvScale": 1,
+      "aspect": 1.778
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 622,
+        "heightFrac": 0.72,
+        "widthFrac": 0.768,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.25,
+        "w": 1179,
+        "h": 794,
+        "heightFrac": 0.919,
+        "widthFrac": 0.768,
+        "clippedTop": 0,
+        "clippedBottom": 48
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3472,
+        "w": 1177,
+        "h": 620,
+        "heightFrac": 0.718,
+        "widthFrac": 0.766,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4583,
+        "w": 1179,
+        "h": 622,
+        "heightFrac": 0.72,
+        "widthFrac": 0.768,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.5972,
+        "w": 1179,
+        "h": 821,
+        "heightFrac": 0.95,
+        "widthFrac": 0.768,
+        "clippedTop": 0,
+        "clippedBottom": 69
+      },
+      {
+        "id": "tail",
+        "p": 0.6944,
+        "w": 1179,
+        "h": 621,
+        "heightFrac": 0.719,
+        "widthFrac": 0.768,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8194,
+        "w": 1172,
+        "h": 618,
+        "heightFrac": 0.715,
+        "widthFrac": 0.763,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9583,
+        "w": 1178,
+        "h": 621,
+        "heightFrac": 0.719,
+        "widthFrac": 0.767,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1147,
+        "h": 605,
+        "heightFrac": 0.7,
+        "widthFrac": 0.747,
+        "clippedTop": 142,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 11.7
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "1600x900",
+    "truth": {
+      "innerWidth": 1600,
+      "innerHeight": 900,
+      "dpr": 1,
+      "vvWidth": 1600,
+      "vvHeight": 900,
+      "vvScale": 1,
+      "aspect": 1.778
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 648,
+        "heightFrac": 0.72,
+        "widthFrac": 0.738,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.25,
+        "w": 1179,
+        "h": 793,
+        "heightFrac": 0.881,
+        "widthFrac": 0.737,
+        "clippedTop": 0,
+        "clippedBottom": 26
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3611,
+        "w": 1179,
+        "h": 648,
+        "heightFrac": 0.72,
+        "widthFrac": 0.737,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4861,
+        "w": 1178,
+        "h": 647,
+        "heightFrac": 0.719,
+        "widthFrac": 0.736,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.625,
+        "w": 1179,
+        "h": 821,
+        "heightFrac": 0.912,
+        "widthFrac": 0.737,
+        "clippedTop": 0,
+        "clippedBottom": 41
+      },
+      {
+        "id": "tail",
+        "p": 0.7222,
+        "w": 1177,
+        "h": 646,
+        "heightFrac": 0.718,
+        "widthFrac": 0.736,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8472,
+        "w": 1172,
+        "h": 644,
+        "heightFrac": 0.716,
+        "widthFrac": 0.733,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9722,
+        "w": 1180,
+        "h": 648,
+        "heightFrac": 0.72,
+        "widthFrac": 0.738,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1147,
+        "h": 630,
+        "heightFrac": 0.7,
+        "widthFrac": 0.717,
+        "clippedTop": 118,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 11.5
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "1918x864",
+    "truth": {
+      "innerWidth": 1918,
+      "innerHeight": 864,
+      "dpr": 1,
+      "vvWidth": 1918,
+      "vvHeight": 864,
+      "vvScale": 1,
+      "aspect": 2.22
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 622,
+        "heightFrac": 0.72,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.2361,
+        "w": 1180,
+        "h": 794,
+        "heightFrac": 0.919,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 53
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3472,
+        "w": 1179,
+        "h": 621,
+        "heightFrac": 0.719,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4583,
+        "w": 1177,
+        "h": 621,
+        "heightFrac": 0.719,
+        "widthFrac": 0.614,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.5972,
+        "w": 1180,
+        "h": 822,
+        "heightFrac": 0.951,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 78
+      },
+      {
+        "id": "tail",
+        "p": 0.6944,
+        "w": 1180,
+        "h": 622,
+        "heightFrac": 0.72,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8194,
+        "w": 1178,
+        "h": 621,
+        "heightFrac": 0.719,
+        "widthFrac": 0.614,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9444,
+        "w": 1177,
+        "h": 620,
+        "heightFrac": 0.718,
+        "widthFrac": 0.614,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1147,
+        "h": 605,
+        "heightFrac": 0.7,
+        "widthFrac": 0.598,
+        "clippedTop": 53,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 11.7
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "1920x1080",
+    "truth": {
+      "innerWidth": 1920,
+      "innerHeight": 1080,
+      "dpr": 1,
+      "vvWidth": 1920,
+      "vvHeight": 1080,
+      "vvScale": 1,
+      "aspect": 1.778
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 778,
+        "heightFrac": 0.72,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.2361,
+        "w": 1178,
+        "h": 793,
+        "heightFrac": 0.734,
+        "widthFrac": 0.614,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3472,
+        "w": 1177,
+        "h": 775,
+        "heightFrac": 0.718,
+        "widthFrac": 0.613,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4722,
+        "w": 1180,
+        "h": 777,
+        "heightFrac": 0.719,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "dropspot",
+        "p": 0.6111,
+        "w": 1179,
+        "h": 821,
+        "heightFrac": 0.76,
+        "widthFrac": 0.614,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "tail",
+        "p": 0.7083,
+        "w": 1175,
+        "h": 774,
+        "heightFrac": 0.717,
+        "widthFrac": 0.612,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.8194,
+        "w": 1173,
+        "h": 773,
+        "heightFrac": 0.716,
+        "widthFrac": 0.611,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 0.9583,
+        "w": 1180,
+        "h": 778,
+        "heightFrac": 0.72,
+        "widthFrac": 0.615,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 1,
+        "w": 1147,
+        "h": 756,
+        "heightFrac": 0.7,
+        "widthFrac": 0.597,
+        "clippedTop": 108,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 10.8
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  },
+  {
+    "viewport": "2560x1440",
+    "truth": {
+      "innerWidth": 2560,
+      "innerHeight": 1440,
+      "dpr": 1,
+      "vvWidth": 2560,
+      "vvHeight": 1440,
+      "vvScale": 1,
+      "aspect": 1.778
+    },
+    "stops": [
+      {
+        "id": "hero",
+        "p": 0,
+        "w": 1180,
+        "h": 1037,
+        "heightFrac": 0.72,
+        "widthFrac": 0.461,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "software-factory",
+        "p": 0.2361,
+        "w": 1178,
+        "h": 1035,
+        "heightFrac": 0.719,
+        "widthFrac": 0.46,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "kivilcim",
+        "p": 0.3611,
+        "w": 1180,
+        "h": 1037,
+        "heightFrac": 0.72,
+        "widthFrac": 0.461,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "jointledger",
+        "p": 0.4722,
+        "w": 1178,
+        "h": 1035,
+        "heightFrac": 0.719,
+        "widthFrac": 0.46,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "handoff",
+        "p": 0.5556,
+        "w": 1147,
+        "h": 1008,
+        "heightFrac": 0.7,
+        "widthFrac": 0.448,
+        "clippedTop": 0,
+        "clippedBottom": 1489
+      },
+      {
+        "id": "dropspot",
+        "p": 0.625,
+        "w": 1180,
+        "h": 1036,
+        "heightFrac": 0.719,
+        "widthFrac": 0.461,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "tail",
+        "p": 0.7222,
+        "w": 1177,
+        "h": 1034,
+        "heightFrac": 0.718,
+        "widthFrac": 0.46,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "reorient",
+        "p": 0.875,
+        "w": 1180,
+        "h": 1037,
+        "heightFrac": 0.72,
+        "widthFrac": 0.461,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      },
+      {
+        "id": "approach",
+        "p": 1,
+        "w": 1172,
+        "h": 1030,
+        "heightFrac": 0.715,
+        "widthFrac": 0.458,
+        "clippedTop": 0,
+        "clippedBottom": 0
+      }
+    ],
+    "late": {
+      "selected-systems": 980,
+      "how-i-build": 713,
+      "field-notes": 313,
+      "about": 227,
+      "docOverflow": 0,
+      "docHeightVh": 10
+    },
+    "maxOverflow": 0,
+    "consoleErrors": []
+  }
+]

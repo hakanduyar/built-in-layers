@@ -79,9 +79,29 @@ export function HowIBuild() {
                   <h3 className="font-display text-heading-l tracking-heading-l text-ink">
                     {principle.title}
                   </h3>
-                  <p className="mt-3 max-w-[36rem] font-display text-body text-ink-muted lg:mt-1.5">
-                    {principle.body}
-                  </p>
+                  {/* V8 (§5) -- THE CONSEQUENCE IS NOW DRAWN, NOT IMPLIED.
+                      The owner's reading of V7 was that this was four isolated
+                      text rows, and the requested direction is
+                      principle -> engineering consequence. Both halves of that
+                      already existed in the approved copy: the title is the
+                      commitment, the body is what it forces on the build. What
+                      was missing was any mark saying the second follows from the
+                      first, so the eye read them as a heading and a caption.
+                      A short rule leaving the title's own column and a single
+                      relation label now carry that, and NOTHING is written here:
+                      no third column of invented consequences, no evidence
+                      claims, no restated project copy. The structure states the
+                      relationship; the words are still only the owner's. */}
+                  <div className="relative mt-3 max-w-[36rem] lg:mt-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-8 top-[0.72em] hidden h-px w-5 bg-ink opacity-30 lg:block"
+                    />
+                    <p className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+                      So
+                    </p>
+                    <p className="mt-1.5 font-display text-body text-ink-muted">{principle.body}</p>
+                  </div>
                 </div>
               </li>
             ))}

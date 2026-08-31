@@ -406,7 +406,18 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
         // crawl for seconds after a cold jump, and a starved WebKit rAF can
         // repeat a mid-crawl value across two 120ms polls. Require a longer
         // proven-stable run before trusting a sample; assertions unchanged.
-        if (stable >= 4 && attempt >= 6) break;
+        //
+        // V8 RAISES BOTH BOUNDS, because the V7 pair was still not enough and the
+        // failure it produced was measured rather than guessed at: WebKit renders
+        // in software on this machine and achieves ~14fps against Chromium's ~45,
+        // so a governed jump takes ~10s to arrive and a 120ms poll can straddle
+        // one or two frames. Four repeats is then reachable mid-crawl, and the
+        // final sample was read at 783px -- a value from the middle of the
+        // journey, reported as if the surface had failed to open. Six proven-
+        // stable repeats after at least ten polls makes a false settle require
+        // six consecutive starved frames. Chromium passes this test either way;
+        // the assertions are untouched.
+        if (stable >= 6 && attempt >= 10) break;
       }
       // V6.6 CONTRACT: the opening is a transform, not a clip and not a filter.
       // V6.5 animated a clip-path string, which cost 274.9ms of style recalculation
@@ -505,5 +516,57 @@ test.describe("Spatial V5: reduced motion disables motion, not design (D-020)", 
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow).toBeLessThanOrEqual(0);
+  });
+});
+
+// V8 (§20) -- THE DUPLICATE-INSTANCE CONTRACT.
+//
+// Through V7 the homepage rendered Selected Systems and How I Build TWICE each:
+// once as a sparse "destination surface" plate previewing the section from
+// across the spatial world's exit traverse -- index, heading, one to three lines
+// -- and once as the real, content-rich section further down. The owner rejected
+// the previews. This is the guard that stops either of them coming back.
+//
+// IT DELIBERATELY DOES NOT COUNT HEADING TEXT, which is what §20 rules out and
+// what would have been the easy wrong test. The two headings legitimately appear
+// in more than one place in the markup -- a section's own <h2>, the drift
+// block's registered label, the accessible name of its node -- so a string count
+// would have been both fragile and meaningless. What is tested instead is
+// IDENTITY: how many rendered instances of each section's own component exist,
+// and whether any spatial ROUTE STOP is a preview of a lower-page section.
+test.describe("Spatial V8: each lower-page section exists exactly once (§20)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
+  });
+
+  for (const id of ["selected-systems", "how-i-build"] as const) {
+    test(`${id} is rendered exactly once, in the lower page`, async ({ page }) => {
+      // One drift block carries it, and it is a real section with a real
+      // heading -- not a plate with a heading painted on it.
+      await expect(page.locator(`[data-drift-block="${id}"]`)).toHaveCount(1);
+      await expect(page.locator(`[data-drift-block="${id}"] h2`)).toHaveCount(1);
+    });
+  }
+
+  test("no destination-preview surface exists anywhere in the world", async ({ page }) => {
+    // The previews rendered with this attribute. Asserting on the attribute
+    // rather than on the component name is what makes this a contract about the
+    // PAGE rather than about the current file layout: any future object that
+    // re-adopts the mechanism is caught by the same line.
+    await expect(page.locator("[data-destination-surface]")).toHaveCount(0);
+  });
+
+  test("every route stop is a scene, not a preview of a later section", async ({ page }) => {
+    // The route's stops are identified by their own attribute, so this reads the
+    // real journey rather than guessing from markup. The nine stops are the
+    // hero, four projects, the SYSTEMS beat, and route two's three scenes --
+    // and none of them is named for a lower-page section.
+    const stops = await page
+      .locator("[data-scene]")
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("data-scene")));
+    expect(stops).toHaveLength(9);
+    expect(stops).not.toContain("selected-systems");
+    expect(stops).not.toContain("how-i-build");
   });
 });

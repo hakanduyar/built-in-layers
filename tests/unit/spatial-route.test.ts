@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   CUT_WORLD,
-  DESCENT_MOBILE_WORLD,
-  DESCENT_WORLD,
   ROUTE_LENGTH_VH,
   ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
@@ -10,6 +8,8 @@ import {
   BREAK_DWELL,
   SCENE_BREAK_BANDS,
   SCENE_IDS,
+  TURN_MOBILE_WORLD,
+  TURN_WORLD,
   VW_PER_VH,
   sceneAnchor,
   screenDistance,
@@ -28,6 +28,7 @@ import {
   cameraSpeed,
   currentSceneId,
   ENTRY_SEGMENTS,
+  EXIT_FROM,
   EXIT_SEGMENTS,
   exitGeometry,
   hasRepositioned,
@@ -121,11 +122,14 @@ describe("scene configuration", () => {
     // it. Asserting the residue is > 0.1 of progress is what stops the traverse
     // being quietly reduced back to a token bend.
     expect(sceneFocusProgress("handoff")).toBeLessThan(1);
-    // V7: route one extended for the four-scene chain, so the traverse's SHARE
-    // of total progress shrank — its physical geometry did not (the 76vw x
-    // 110vh leg is asserted verbatim elsewhere in this file). The guard drops
-    // to 0.07 of progress: still a real leg, still not a token bend.
-    expect(1 - sceneFocusProgress("handoff")).toBeGreaterThan(0.07);
+    // V8 (§3): the exit is now the handover turn alone -- the diagonal in front
+    // of it existed only to carry the two rejected destination previews. So the
+    // guard changes meaning as well as value: it no longer defends a JOURNEY
+    // after the last scene, it defends the fact that the route does not simply
+    // stop on `handoff` and get replaced by the lower page. Real travel after
+    // the last scene, and deliberately not much of it.
+    expect(1 - sceneFocusProgress("handoff")).toBeGreaterThan(0.02);
+    expect(1 - sceneFocusProgress("handoff")).toBeLessThan(0.07);
   });
 });
 
@@ -272,44 +276,47 @@ describe("the curve still goes where the route says", () => {
   it("starts framed on the hero and clamps to the route's own ends", () => {
     expect(cameraPosition(0)).toEqual(sceneAnchor("hero"));
     expect(cameraPosition(-1)).toEqual(sceneAnchor("hero"));
-    expect(cameraPosition(1)).toEqual(DESCENT_WORLD);
-    expect(cameraPosition(2)).toEqual(DESCENT_WORLD);
-    expect(cameraPosition(1, true)).toEqual(DESCENT_MOBILE_WORLD);
+    expect(cameraPosition(1)).toEqual(TURN_WORLD);
+    expect(cameraPosition(2)).toEqual(TURN_WORLD);
+    expect(cameraPosition(1, true)).toEqual(TURN_MOBILE_WORLD);
   });
 
-  // §4 asks a question of fact -- how far does the diagonal actually travel
-  // before the descent begins -- so the answer is asserted rather than described.
-  it("leaves Built in Layers on a real down-and-right leg, not a token bend", () => {
-    const { diagonal, turn } = exitGeometry();
+  // V8 (§3) REPLACED THIS TEST'S SUBJECT, and the replacement is the stronger
+  // guard.
+  //
+  // Through V7 this asserted that the exit opened on a long down-and-right
+  // DIAGONAL -- deliberately "comparable to the longest scene legs in the world"
+  // -- because that leg carried the two destination surfaces previewing Selected
+  // Systems and How I Build. The owner has rejected those previews as early
+  // sparse duplicates, so the leg lost its only content, and §3 requires that no
+  // dead scroll be left where they stood.
+  //
+  // So the contract inverts: the exit must now be a BEARING CHANGE and nothing
+  // more. It still has to do the one job that was never about the previews --
+  // hand the reader over already moving in the lower page's direction rather
+  // than stopping and being replaced -- and it must do it without a journey in
+  // front of it.
+  it("hands over on a bearing change, not on a journey through empty world", () => {
+    const { turn } = exitGeometry();
 
-    // A genuine diagonal: both components substantial, and the bearing between
-    // 30 and 55 degrees rather than "mostly across" or "mostly down".
-    expect(diagonal.vw).toBeGreaterThan(60);
-    expect(diagonal.vh).toBeGreaterThan(90);
-    expect(diagonal.bearing).toBeGreaterThan(30);
-    expect(diagonal.bearing).toBeLessThan(55);
-
-    // Long enough to read as a region change: comparable to the longest scene
-    // legs in the world rather than to a connector between them.
-    const sceneLegs = routeLegs().slice(0, 3);
-    const shortestSceneLeg = Math.min(
-      ...sceneLegs.map((leg) => screenDistance(leg.points[0]!, leg.points[leg.points.length - 1]!)),
-    );
-    expect(diagonal.length).toBeGreaterThan(shortestSceneLeg * 0.9);
-
-    // And then it TURNS toward vertical rather than continuing diagonally.
-    expect(turn.bearing).toBeGreaterThan(diagonal.bearing + 20);
+    // It genuinely turns: route two arrives at `handoff` climbing shallowly, and
+    // the exit leaves steeply downward, which is the lower page's direction.
+    const arrival = routeScreenAngle(EXIT_FROM - 0.02, EXIT_FROM);
+    expect(turn.bearing).toBeGreaterThan(arrival + 30);
+    expect(turn.bearing).toBeGreaterThan(55);
     expect(turn.bearing).toBeLessThan(85);
-    expect(turn.length).toBeGreaterThan(50);
 
-    // V6.5 (§3, §5): the turn EXISTS to change direction, and it may not cost more
-    // travel than that needs. V6.4 spent 96.4 units and 26.7vh of scroll on it
-    // through world containing nothing at all -- measured on the built page as part
-    // of a 1560px run averaging 2.2% rendered ink. Bounding it against the diagonal
-    // rather than at an absolute number is what keeps this honest: the diagonal is
-    // the leg §3 protects, so the guard says "the turn is a fraction of the
-    // journey" rather than "the turn is under N units".
-    expect(turn.length).toBeLessThan(diagonal.length * 0.45);
+    // And it costs only what a bearing change costs. Bounded against a real
+    // scene-to-scene leg rather than at a bare number, which is what makes "there
+    // is no empty journey left here" a measured claim instead of a taste: the
+    // exit must be a fraction of the distance between two consecutive projects.
+    const sceneLeg = screenDistance(sceneAnchor("software-factory"), sceneAnchor("kivilcim"));
+    expect(turn.length).toBeGreaterThan(40);
+    expect(turn.length).toBeLessThan(sceneLeg * 0.6);
+
+    // The exit is ONE leg. If a second is ever added back, it has to be argued
+    // for on the record rather than reappearing quietly.
+    expect(EXIT_SEGMENTS).toBe(1);
   });
 
   // §5 of the V6.5 brief in its own terms: "no section requiring disproportionately
@@ -318,8 +325,15 @@ describe("the curve still goes where the route says", () => {
   it("never charges more scroll for empty travel than for a scene", () => {
     const legs = routeLegs();
     const widths = legs.map((leg) => leg.toProgress - leg.fromProgress);
-    // The last two legs are the exit traverse: no scene stands on either.
-    const sceneWidths = widths.slice(0, widths.length - EXIT_SEGMENTS);
+    // V8 FIXED A MISCATEGORISATION HERE, and it is the reason this test failed
+    // the pass rather than the pass failing the test. `sceneWidths` began at
+    // index 0, which is the ACQUISITION DESCENT -- a camera-only travel beat
+    // with nothing standing on it, added in V6.7 and paid at ENTRY_ALLOWANCE.
+    // Calling it a scene leg made the closing assertion read "the exit must be
+    // cheaper than the cheapest EMPTY leg in the world", which is a claim about
+    // two travel legs rather than the one this test is named for. The exit is
+    // now compared against legs that actually carry a scene, at both ends.
+    const sceneWidths = widths.slice(ENTRY_SEGMENTS, widths.length - EXIT_SEGMENTS);
     const travelWidths = widths.slice(widths.length - EXIT_SEGMENTS);
 
     const widestScene = Math.max(...sceneWidths);

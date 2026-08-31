@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-08-31 (V7)_
+_Last updated: 2026-09-01 (V8)_
 
 ---
 
@@ -11,25 +11,36 @@ _Last updated: 2026-08-31 (V7)_
 
 | Field | Value |
 |---|---|
-| **Status** | V7 SYSTEMS PASS IMPLEMENTED — full validation closing; awaiting owner visual review |
+| **Status** | V8 RESPONSIVE WORLD PASS COMPLETE — validated, committed and pushed; awaiting owner visual review |
 | Current branch | `feature/spatial-portfolio-v5` |
 | Current HEAD | `682d54e` (merge of `d7bcebc` V6.8 checkpoint + `dc81393` docs) |
 | Latest origin commit | `dc81393` on `feature/spatial-portfolio-v5` at the time of recovery; `16d3ec0` on `main` |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean apart from this documentation pass |
-| Current phase | V7 (owner brief): reorder + Software Factory/JointLedger scenes + plane grammar + governed scroll + Selected Systems + mobile upgrades |
+| Current phase | V8 (owner brief): early duplicate removal + true responsive world fit + late-page development |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
-| Current visual artifacts | `C:\Users\hakan\spatial-v5-review\` (V5-era, 2026-08-17: 19 stills at 1440×900, one 375×812 mobile still, `spatial-v5-natural-scroll-1440x900.webm`) |
+| Current visual artifacts | `docs/review/v8-responsive/index.html` (2026-09-01: 76 stills across 7 desktop viewports plus 6 mobile widths, before/after measurement tables, zoom + mobile matrices, 3 natural-scroll recordings). Superseded: `C:\Users\hakan\spatial-v5-review\` (V5-era, 2026-08-17) |
 
 ## Next action
 
-**Owner action required on the Ubuntu machine** — commit and push (or bundle) the uncommitted
-V6.8 working tree. Exact commands are in `docs/AUTONOMOUS_RECOVERY_STATUS.md §6`.
+**Owner visual review of V8.** Open `docs/review/v8-responsive/index.html` — comparison sheets for
+ten route stops across five viewports, the before/after measurement tables, and three
+natural-scroll recordings (1536×864, 1920×1080, 390px).
 
-Once that lands, the supervisor resumes autonomously: fetch → verify → snapshot → baseline
-validation → checkpoint commit → Phase 2 (console/runtime triage).
+Two things are worth the owner's judgement rather than another engineering pass:
+
+1. **The 1440×900 change.** The world now renders at 0.94 there rather than 1.0. That viewport was
+   measured as clipping DropSpot by 38px, so it was not a correct reference — but it is the
+   viewport most earlier passes were composed against, and the difference is visible.
+2. **Scroll pacing.** The governor is deliberately unchanged (D-021 item 5 intact), and the brief
+   asks for pacing to be reassessed against new evidence once the geometry is right. That evidence
+   now exists in `recordings/`. If the journey reads slow or fast at the corrected scale, that is a
+   separate, deliberate retune — not a bug.
+
+The historical V6.8 recovery item below is closed: the source state has been `RESOLVED` since
+`682d54e`.
 
 ---
 
@@ -49,29 +60,58 @@ Do not restart or redesign these without evidence of an actual regression in cur
 
 ## Validation state
 
-Last full validation was the V5 authoritative runtime proof on 2026-08-17 at `d7013f8`
-(Node 22.23.2 / pnpm 11.17.0). **It describes V5, not the unrecovered V6.8 tree.**
+Last full validation: **V8 responsive world pass, 2026-09-01** (Node 22.23.2 / pnpm 11.17.0),
+against the tree committed in this pass.
 
-| Gate | Last known result (V5 @ `d7013f8`) |
+| Gate | Result |
 |---|---|
 | typecheck | pass |
-| lint | pass |
-| `git diff --check` | clean |
-| unit tests | 484 / 484, 20 files |
-| production build | pass — 14/14 pages |
-| Chromium E2E | 205 / 205 |
-| WebKit E2E | 202 / 205 |
+| lint | pass — 0 errors, 0 warnings |
+| prettier | pass on every file changed in this pass |
+| unit tests | **500 / 500**, 20 files |
+| production build | pass — 15/15 pages |
+| Chromium E2E | **213 / 213** |
+| WebKit E2E | 211 / 213 at `--workers=2`; both remaining pass in isolation — see below |
+| Responsive matrix | 7 desktop viewports: **0 clipped scenes, 0 horizontal overflow, 0 console errors** |
+| Mobile matrix | 320 / 360 / 375 / 390 / 430 / 768: 0 overflow, 0 console errors |
+| Browser zoom | 90% / 100% / 110% / 125% at 1920×1080, plus 2560×1440 at 100% and 50%: 0 overflow, 0 console errors |
 
-Re-validation is required against the recovered V6.8 tree before any of the above may be relied on.
+**WebKit, stated precisely.** WebKit has no GPU process on this machine and renders in software,
+achieving ~14fps against Chromium's ~45 on the same build. Several spatial tests wait for the
+camera to *arrive* after a scripted scroll, and arrival is governed by a bounded per-frame budget
+(D-021 item 5) — so wall-clock settle time is a function of frame rate: measured, the same 3000px
+jump settles in 5.3s on Chromium and 10.0s on WebKit. The project's per-test budget was therefore
+raised to 120s. Not one assertion or threshold was relaxed.
+
+Two failures remain at `--workers=2`, and the failing set *varies between runs*, which is the
+contention signature rather than a contract signature:
+
+- `shell.spec.ts` skip-link — **pre-existing**, unrelated to this pass.
+- `spatial.spec.ts` break-rail sweep — passes in isolation in 24.9s; it is a 17-sample settle
+  sweep and is the most contention-sensitive test in the suite.
+
+At full parallelism (5 workers) WebKit reports 6 failures; every one of them passes serially. The
+honest reading is that WebKit results on this machine are only trustworthy at `--workers=2` or
+lower.
+
+One assertion helper was strengthened, not relaxed: the SYSTEMS surface-opening test required four
+proven-stable polls before trusting a sample, and at 14fps four repeats are reachable *mid-crawl* —
+it read a value from the middle of the journey (783px) and reported it as a surface that had failed
+to open. Six repeats after at least ten polls now makes a false settle require six consecutive
+starved frames. Chromium passed that test either way.
 
 ---
 
 ## Open defects
 
-1. **Two WebKit-only E2E failures**, both in specs predating V5, both reproduce in isolation,
-   neither traced to a V5 change, neither weakened or skipped:
+1. **One WebKit-only E2E failure that reproduces in isolation**, in a spec predating V5, not traced
+   to any V5–V8 change, and neither weakened nor skipped:
    - `shell.spec.ts` — skip-link Tab-focus assertion.
-   - `spatial.spec.ts` — break-rail gap measures 163px against an 80px bound.
+
+   The former second entry here (`spatial.spec.ts` break-rail gap) is **resolved as of V8**: it now
+   passes in isolation in 24.9s. It was never a geometry failure — the 30s default budget was
+   expiring partway through a 17-sample governed settle sweep, which the raised WebKit budget
+   covers.
 2. **`format:check` reports ~146 files** purely because this machine has `core.autocrlf=true`
    while Prettier expects LF. Committed content is correct LF and git reports no change;
    `prettier --check . --end-of-line crlf` passes repo-wide. Environmental, not a repo defect.
@@ -81,9 +121,15 @@ Re-validation is required against the recovered V6.8 tree before any of the abov
 4. **`engines.node` inconsistency** — `package.json` declares `>=22.0.0` while the pinned
    `pnpm@11.17.0` requires `>=22.13`. Recommendation is `>=22.13.0`; **not changed**, awaiting
    owner approval.
-5. **DropSpot visual acceptance is outstanding** (evidence height too short, supporting plane
-   arbitrarily aligned vs Kıvılcım's). Cannot be assessed until V6.8 is recovered — the
-   complaints may already be addressed there.
+5. **DropSpot visual acceptance is outstanding.** The V6.8-era complaints (evidence height too
+   short, supporting plane arbitrarily aligned against Kıvılcım's) were addressed in V7 and
+   DropSpot now measures 0.79 of the frame with zero clipping at every viewport in the V8 matrix,
+   but the owner has not signed it off visually. Evidence: `docs/review/v8-responsive/index.html`.
+6. **The V8 evidence bundle is ~18MB of binaries** (76 PNGs, three `.webm` recordings) committed
+   under `docs/review/v8-responsive/`, against a `.git` that was 4MB before it. Committed because
+   the brief asked for the recordings and sheets as deliverables; flagged because it is a permanent
+   5× to repository size and moving it to a release artifact or a separate branch is the owner's
+   call, not the supervisor's.
 
 ---
 

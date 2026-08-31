@@ -68,11 +68,10 @@ import {
   CUT_MOBILE_WORLD,
   CUT_WORLD,
   DECOMPRESSION_REACH,
-  DESCENT_MOBILE_WORLD,
-  DESCENT_WORLD,
   ENTRY_ALLOWANCE,
   ENTRY_MOBILE_WORLD,
   ENTRY_WORLD,
+  EXIT_ALLOWANCE,
   FOCUS_ALLOWANCE,
   FOCUS_SPEED_RATIO,
   ROUTE_ONE_IDS,
@@ -80,8 +79,8 @@ import {
   TRAVEL_ALLOWANCE,
   TRAVEL_SPEED_RATIO,
   TRAVEL_WEIGHT_RATIO,
-  TRAVERSE_MOBILE_WORLD,
-  TRAVERSE_WORLD,
+  TURN_MOBILE_WORLD,
+  TURN_WORLD,
   VW_PER_VH,
   sceneAnchor,
   screenDistance,
@@ -285,23 +284,22 @@ function routePoints(mobile: boolean) {
   const scenesTwo = ROUTE_TWO_IDS.map((id) => sceneAnchor(id, mobile));
   // V6.1: route two is led into rather than started on. See
   // DECOMPRESSION_REACH in scenes.ts for why.
-  // V6.3: and it is led OUT of rather than stopped on -- the exit traverse
-  // (§4). Both extra coordinates are camera-only, exactly like the cut.
-  const two = [
-    decompressionAnchor(mobile),
-    ...scenesTwo,
-    mobile ? TRAVERSE_MOBILE_WORLD : TRAVERSE_WORLD,
-    mobile ? DESCENT_MOBILE_WORLD : DESCENT_WORLD,
-  ];
+  // V6.3: and it is led OUT of rather than stopped on -- the exit.
+  // V8 (§3): that exit is now ONE camera-only coordinate rather than two. The
+  // diagonal that used to sit between `handoff` and the turn existed to carry
+  // the two destination-surface previews, and went with them.
+  const two = [decompressionAnchor(mobile), ...scenesTwo, mobile ? TURN_MOBILE_WORLD : TURN_WORLD];
   return { one, two };
 }
 
 /**
- * How many segments at the END of route two carry no scene (V6.3): the exit
- * traverse. They are weighted at the travel rate rather than the reading rate --
- * see TRAVEL_ALLOWANCE in scenes.ts.
+ * How many segments at the END of route two carry no scene (V6.3): the exit.
+ * They are weighted at the travel rate rather than the reading rate -- see
+ * TRAVEL_ALLOWANCE in scenes.ts.
+ *
+ * V8 (§3): 2 -> 1. The exit is now the handover turn alone.
  */
-export const EXIT_SEGMENTS = 2;
+export const EXIT_SEGMENTS = 1;
 
 /**
  * How many segments at the START of route one carry no scene (V6.7): the acquisition
@@ -350,23 +348,28 @@ const AVAILABLE = 1;
  * charged TRAVEL_WEIGHT_RATIO of its length plus the smaller TRAVEL_ALLOWANCE,
  * so the camera crosses it faster; a scene leg is unchanged from V6.2.
  */
-function segmentWeight(table: ArcTable, travel: boolean, entry = false): number {
-  if (entry) return table.length * TRAVEL_WEIGHT_RATIO + ENTRY_ALLOWANCE;
-  return travel
+function segmentWeight(table: ArcTable, kind: SegmentKind): number {
+  if (kind === "entry") return table.length * TRAVEL_WEIGHT_RATIO + ENTRY_ALLOWANCE;
+  if (kind === "exit") return table.length * TRAVEL_WEIGHT_RATIO + EXIT_ALLOWANCE;
+  return kind === "travel"
     ? table.length * TRAVEL_WEIGHT_RATIO + TRAVEL_ALLOWANCE
     : table.length + FOCUS_ALLOWANCE;
 }
 
-/** Which segments of a run are camera-only travel: the first `leadCount` and the
- *  last `exitCount` of them. */
-function travelFlags(count: number, exitCount: number, leadCount = 0): boolean[] {
-  return Array.from({ length: count }, (_, i) => i < leadCount || i >= count - exitCount);
+type SegmentKind = "scene" | "travel" | "entry" | "exit";
+
+/** What each segment of a run is: the first `leadCount` are the entry beat, the
+ *  last `exitCount` are the exit, everything between carries a scene. */
+function segmentKinds(count: number, exitCount: number, leadCount = 0): SegmentKind[] {
+  return Array.from({ length: count }, (_, i) =>
+    i < leadCount ? "entry" : i >= count - exitCount ? "exit" : "scene",
+  );
 }
 
 /** Scroll weight of a run of segments. */
 function routeWeight(tables: ArcTable[], exitCount = 0, leadCount = 0): number {
-  const travel = travelFlags(tables.length, exitCount, leadCount);
-  return tables.reduce((sum, table, i) => sum + segmentWeight(table, travel[i]!, i < leadCount), 0);
+  const kinds = segmentKinds(tables.length, exitCount, leadCount);
+  return tables.reduce((sum, table, i) => sum + segmentWeight(table, kinds[i]!), 0);
 }
 
 /**
@@ -432,14 +435,14 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
     leadCount = 0,
   ) => {
     const controls = segmentControls(points);
-    const travel = travelFlags(arcs.length, exitCount, leadCount);
+    const kinds = segmentKinds(arcs.length, exitCount, leadCount);
     const weightTotal = routeWeight(arcs, exitCount, leadCount);
     const span = to - from;
 
     const bounds: number[] = [from];
     let cursor = from;
     for (const [i, arc] of arcs.entries()) {
-      cursor += (span * segmentWeight(arc, travel[i]!, i < leadCount)) / weightTotal;
+      cursor += (span * segmentWeight(arc, kinds[i]!)) / weightTotal;
       bounds.push(cursor);
     }
     bounds[bounds.length - 1] = to; // kill float drift so the last anchor is exact
@@ -774,8 +777,14 @@ export function focusProximity(progress: number, mobile = false): number {
  *  and the camera leaves it for the lower world. */
 export const EXIT_FROM = sceneFocusProgress("handoff");
 
-/** Progress at which the diagonal has finished turning downward. Route two's
- *  last segment begins here; the route ends at 1. */
+/** Where the handover turn begins. Route two's last segment starts here; the
+ *  route ends at 1.
+ *
+ *  V8: with the exit reduced to that single turn, this is now equal to
+ *  EXIT_FROM by construction. It is kept as its own name -- derived, not
+ *  aliased -- because the work-route branch and the lower page both read "where
+ *  the exit's last leg starts", and that stops being the same coordinate the
+ *  moment anything is ever added back to the exit. */
 export const EXIT_TURN = (() => {
   const segments = DESKTOP.two.segments;
   return segments[segments.length - 1]?.from ?? 1;
@@ -793,18 +802,19 @@ export function exitTravel(progress: number): number {
 }
 
 /**
- * Total world travel of the exit traverse, split into its diagonal leg and the
- * leg that turns downward, with each leg's mean screen bearing in degrees
- * (0 = straight right, 90 = straight down).
+ * The exit's world travel and its mean screen bearing in degrees (0 = straight
+ * right, 90 = straight down).
  *
- * Exported because §4 of the V6.3 brief asks a question of fact -- "how far does
- * the new right-down diagonal leg actually travel before downward descent
- * begins?" -- and the honest way to answer it is to derive the number from the
- * route rather than from the anchors it was authored with. Sampled along the real
- * curve, so a bend is paid for.
+ * Exported because the exit's length is a question of fact the owner has now
+ * asked twice -- V6.3 §4 asked how far the diagonal travelled, V8 §3 asks that
+ * no dead scroll be left behind after the previews are removed -- and the honest
+ * way to answer it is to derive the number from the route rather than from the
+ * anchors it was authored with. Sampled along the real curve, so a bend is paid
+ * for.
+ *
+ * V8: `diagonal` is gone with the leg it measured; `turn` is the whole exit.
  */
 export function exitGeometry(mobile = false): {
-  diagonal: { length: number; bearing: number; vw: number; vh: number };
   turn: { length: number; bearing: number; vw: number; vh: number };
 } {
   const segments = tables(mobile).two.segments;
@@ -825,10 +835,7 @@ export function exitGeometry(mobile = false): {
       vh: dy,
     };
   };
-  return {
-    diagonal: measure(segments[segments.length - 2]!),
-    turn: measure(segments[segments.length - 1]!),
-  };
+  return { turn: measure(segments[segments.length - 1]!) };
 }
 
 /* ---------------------------------------------------- the work-route branch */
@@ -863,7 +870,11 @@ export function exitGeometry(mobile = false): {
 /** Where the branch leaves the main route: just after `handoff` is framed, so the
  *  junction is read as leaving the scene that states it rather than as a mark
  *  standing somewhere in open travel. */
-export const WORK_BRANCH_FROM = EXIT_FROM + (EXIT_TURN - EXIT_FROM) * 0.09;
+// V8: measured against the WHOLE exit rather than against the distance to its
+// last leg. With the exit reduced to one leg those were the same span until this
+// pass and are now `0`, which would have silently pinned the junction exactly on
+// `handoff`'s focus instead of just after it.
+export const WORK_BRANCH_FROM = EXIT_FROM + (1 - EXIT_FROM) * 0.09;
 
 /**
  * Angle between the branch and the main route at the junction, in degrees.
