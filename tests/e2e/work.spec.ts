@@ -1,18 +1,19 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Work: listing", () => {
-  test("lists exactly the published previews under their tier heading, in D-016 order", async ({
+  test("lists exactly the published previews under their tier heading, in owner order (D-021)", async ({
     page,
   }) => {
     await page.goto("/work");
     await expect(page.getByText("Featured systems")).toBeVisible();
 
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(4);
-    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
-    await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links).toHaveCount(5);
+    await expect(links.nth(0)).toHaveAttribute("href", "/work/software-factory");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
-    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links.nth(4)).toHaveAttribute("href", "/work/professional-systems");
   });
 
   test("omits empty tier headings", async ({ page }) => {

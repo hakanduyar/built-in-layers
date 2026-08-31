@@ -36,14 +36,16 @@ describe("JointLedger real content — schema", () => {
     expect(parsed.success).toBe(true);
   });
 
-  it("is published and verified, depth short, ordered third per D-016 (order: 3)", () => {
+  // V7 (owner reorder, supersedes D-016's order — D-021): JointLedger now stands
+  // between Kıvılcım and DropSpot.
+  it("is published and verified, depth short, ordered third per the owner reorder (order: 2)", () => {
     if (!parsed.success) return;
     expect(parsed.data.status).toBe("published");
     expect(parsed.data.verificationStatus).toBe("verified");
     expect(parsed.data.factsCheckedAgainstRepo).toBe(true);
     expect(parsed.data.tier).toBe("featured");
     expect(parsed.data.depth).toBe("short");
-    expect(parsed.data.order).toBe(3);
+    expect(parsed.data.order).toBe(2);
   });
 
   it("provenance is 'fork' with a real, non-empty upstream disclosure", () => {

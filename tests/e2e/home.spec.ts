@@ -42,15 +42,19 @@ test.describe("Home: positioning statement", () => {
 // untouched by this branch). See the branch's final report for the full,
 // explicit list of every assertion this replaced.
 
-test.describe("Home: built for real life", () => {
-  test("shows the honest pending state (no real-life-tier project exists yet)", async ({
-    page,
-  }) => {
+test.describe("Home: selected systems", () => {
+  // V7 (owner §7-§8): the dormant "Built for real life" register is replaced by
+  // the Selected Systems index — every published system, loader-fed, in the
+  // owner-ordered sequence.
+  test("lists every published system with real loader data", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "Built for real life" })).toBeVisible();
-    await expect(page.locator("body")).toContainText(
-      "Personal, real-life products will appear here once they're ready to share.",
-    );
+    await expect(page.getByRole("heading", { name: "Selected systems" })).toBeVisible();
+    const section = page.locator('[data-drift-block="selected-systems"]');
+    for (const title of ["Software Factory", "JointLedger", "DropSpot"]) {
+      await expect(section.getByRole("link", { name: title })).toBeVisible();
+    }
+    // The mandatory fork disclosure surfaces here too (CONTENT_MODEL §9).
+    await expect(section.getByText("Fork of ezBookkeeping")).toBeVisible();
   });
 });
 
@@ -76,7 +80,14 @@ test.describe("Home: about preview and CTA destinations", () => {
 
   test("about preview links to the full About page", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: "Visit the About page" }).click();
+    // V7: the link lives in a drift block whose x-translation answers scroll.
+    // WebKit computes the click point before the post-autoscroll transform
+    // settles and misses the link; bring it into view and let the transform
+    // rest first. Same settle philosophy the spatial helpers use.
+    const link = page.getByRole("link", { name: "Visit the About page" });
+    await link.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+    await link.click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
   });
 
@@ -97,7 +108,7 @@ test.describe("Home: no JavaScript", () => {
     // branch's homepage (replaced by the Spatial Experience -- see the
     // comment above "Home: built for real life"); the untouched sections
     // below it keep their real headings.
-    for (const heading of ["Built for real life", "How I build", "Field notes", "About"]) {
+    for (const heading of ["Selected systems", "How I build", "Field notes", "About"]) {
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
     }
     for (const item of ["Home", "Work", "Notes", "Lab", "About"]) {

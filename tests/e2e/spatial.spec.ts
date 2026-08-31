@@ -174,9 +174,9 @@ test.describe("Spatial V4: scenes are composed from real loader data, not cards"
     ).toBeAttached();
     // Real loader-fed tech lists, not retyped copy.
     await expect(tour.getByText(/Dexie/)).toBeAttached();
-    await expect(tour.getByText(/PostgreSQL/)).toBeAttached();
+    await expect(tour.getByText(/PostgreSQL/).first()).toBeAttached();
     // D-019 honesty: the diagram scene must still say it is not a screenshot.
-    await expect(tour.getByText(/Verified architecture diagram/i)).toBeAttached();
+    await expect(tour.getByText(/Verified architecture diagram/i).first()).toBeAttached();
   });
 
   test("Kıvılcım keeps its Turkish orthography -- never CSS-uppercased into KIVILCIM", async ({
@@ -230,7 +230,9 @@ test.describe("Spatial V4: scene framing owns real viewport territory", () => {
     // tests/unit/spatial-route.test.ts and in the V6.3 report; it is called out
     // rather than quietly widened. 5.2 still fails well before V1's 600vh spacer,
     // which is the thing this bound exists to prevent returning.
-    expect(spacerHeight).toBeLessThan(900 * 5.2);
+    // V7: four project scenes + SYSTEMS (was two projects). 640vh over ten
+    // segments is ~64vh/segment — still a third of V1's per-scene cost.
+    expect(spacerHeight).toBeLessThan(900 * 6.6);
   });
 });
 
@@ -365,7 +367,11 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
         const next = await readWorst();
         stable = Math.abs(next - worst) < 0.5 ? stable + 1 : 0;
         worst = next;
-        if (stable >= 2) break;
+        // V7: the route-wide progression ceiling means arrival can take a few
+        // seconds from a cold jump, and near-arrival rail motion can dip under
+        // the threshold briefly; require a longer proven-stable run before
+        // trusting a sample. Assertion unchanged.
+        if (stable >= 5 && attempt >= 8) break;
       }
       best = Math.min(best, worst);
     }
@@ -514,12 +520,12 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     await expect(tour.getByText("Back on the surface")).toBeAttached();
 
     // ...and the ordinary homepage still begins only after the tour ends.
-    await expect(page.getByRole("heading", { name: "Built for real life" })).toBeAttached();
+    await expect(page.getByRole("heading", { name: "Selected systems" })).toBeAttached();
     const tourBottom = await tour.evaluate(
       (el) => el.getBoundingClientRect().bottom + window.scrollY,
     );
     const nextSectionTop = await page
-      .getByRole("heading", { name: "Built for real life" })
+      .getByRole("heading", { name: "Selected systems" })
       .evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
     expect(nextSectionTop).toBeGreaterThan(tourBottom - 1);
   });
@@ -689,7 +695,7 @@ test.describe("Spatial V4: reduced motion", () => {
     // Still a composed scene, not a stripped dump: the evidence plates and
     // their honest captions survive.
     expect(await tour.locator("img").count()).toBeGreaterThanOrEqual(2);
-    await expect(tour.getByText(/Verified architecture diagram/i)).toBeVisible();
+    await expect(tour.getByText(/Verified architecture diagram/i).first()).toBeVisible();
   });
 
   test("no horizontal overflow at 320/375/768/1024/1440px under reduced motion", async ({
@@ -799,16 +805,22 @@ test.describe("Spatial V4: existing project routes are unaffected", () => {
     });
   }
 
-  test("the Work index still lists all four projects in D-016 order", async ({ page }) => {
+  test("the Work index lists all five projects in owner order (D-021)", async ({ page }) => {
     await page.goto("/");
+    // V7: with the route-wide progression ceiling, let the camera actually
+    // arrive at the handoff before clicking — the link's on-screen position is
+    // a function of the governed visual value now.
+    const { end } = await measureRoute(page, 900);
+    await worldTranslateAt(page, end);
     await page.locator(TOUR).getByRole("link", { name: "See every system" }).click();
     await expect(page).toHaveURL(/\/work$/);
     const links = page.locator("main li a[href^='/work/']");
-    await expect(links).toHaveCount(4);
-    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
-    await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links).toHaveCount(5);
+    await expect(links.nth(0)).toHaveAttribute("href", "/work/software-factory");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
-    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links.nth(4)).toHaveAttribute("href", "/work/professional-systems");
   });
 });
 

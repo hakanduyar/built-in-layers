@@ -14,9 +14,15 @@ import { getProjectsByTier } from "@/lib/content/work";
 describe("ProjectCard — representative images, real content and real loader", () => {
   const projects = getProjectsByTier("featured");
 
-  it("returns exactly the four published featured projects, in D-016 order, no duplicates", () => {
+  it("returns exactly the five published featured projects, in owner order, no duplicates", () => {
     const slugs = projects.map((p) => p.slug);
-    expect(slugs).toEqual(["kivilcim", "dropspot", "jointledger", "professional-systems"]);
+    expect(slugs).toEqual([
+      "software-factory",
+      "kivilcim",
+      "jointledger",
+      "dropspot",
+      "professional-systems",
+    ]);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
@@ -27,6 +33,7 @@ describe("ProjectCard — representative images, real content and real loader", 
   });
 
   const EXPECTED: Record<string, { file: string; assetType: string }> = {
+    "software-factory": { file: "factory-loop-diagram.svg", assetType: "verified-diagram" },
     kivilcim: { file: "product-areas-map.svg", assetType: "provisional-illustration" },
     dropspot: { file: "browse-drops.webp", assetType: "real-screenshot" },
     jointledger: { file: "upstream-extension-map.svg", assetType: "verified-diagram" },

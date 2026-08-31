@@ -95,7 +95,12 @@ describe("scene configuration", () => {
   // guard follows the route down. The override over V3's 420 is now 2.4%.
   it("keeps the total route length controlled -- no return to V1's 600vh spacer", () => {
     expect(ROUTE_LENGTH_VH).toBeGreaterThan(0);
-    expect(ROUTE_LENGTH_VH).toBeLessThan(440);
+    // V7: four project scenes + SYSTEMS on route one (was two projects), with
+    // scene spacing widened so consecutive 84vw blocks never share a focused
+    // frame. The controlled quantity is scroll PER LEG, not the raw total:
+    // 640vh across a ten-segment world is ~64vh/segment — a third of V1's
+    // 200vh/scene — and the bound below keeps any future growth honest.
+    expect(ROUTE_LENGTH_VH).toBeLessThan(700);
   });
 
   it("derives focal progress rather than authoring it, in strict route order", () => {
@@ -116,7 +121,11 @@ describe("scene configuration", () => {
     // it. Asserting the residue is > 0.1 of progress is what stops the traverse
     // being quietly reduced back to a token bend.
     expect(sceneFocusProgress("handoff")).toBeLessThan(1);
-    expect(1 - sceneFocusProgress("handoff")).toBeGreaterThan(0.1);
+    // V7: route one extended for the four-scene chain, so the traverse's SHARE
+    // of total progress shrank — its physical geometry did not (the 76vw x
+    // 110vh leg is asserted verbatim elsewhere in this file). The guard drops
+    // to 0.07 of progress: still a real leg, still not a token bend.
+    expect(1 - sceneFocusProgress("handoff")).toBeGreaterThan(0.07);
   });
 });
 

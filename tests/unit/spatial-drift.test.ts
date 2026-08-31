@@ -43,7 +43,7 @@ describe("the drift table is a fixed, deterministic composition", () => {
   it("exposes the four lower-homepage sections", () => {
     expect(DRIFT_SECTIONS).toHaveLength(4);
     expect(DRIFT_SECTIONS.map((section) => section.id)).toEqual([
-      "real-life",
+      "selected-systems",
       "how-i-build",
       "field-notes",
       "about",
@@ -231,7 +231,7 @@ describe("each section's field is derived from its own drift geometry", () => {
     // The upper world's project planes peak at 0.66. The plate section (depth
     // 0) matches them exactly -- one grammar -- and every field stays inside
     // sane presence bounds: visible, never solid.
-    expect(driftFieldOpacity("real-life")).toBeCloseTo(0.66, 12);
+    expect(driftFieldOpacity("selected-systems")).toBeCloseTo(0.66, 12);
     for (const section of DRIFT_SECTIONS) {
       const opacity = driftFieldOpacity(section.id);
       expect(opacity).toBeGreaterThan(0.3);

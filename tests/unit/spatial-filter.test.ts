@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ROUTE_MAX_RATE,
   SPEED_RELEASE_MS,
   SPEED_SETTLED,
   SPEED_TIGHT,
@@ -258,9 +259,20 @@ describe("glideStep bounds the opening departure", () => {
     expect(next).toBeLessThan(0.03);
   });
 
-  it("passes movement through untouched past the release band", () => {
+  it("V7: holds the route-wide ceiling past the release band — never uncapped", () => {
+    // The owner's §10 is absolute: progression may be slower than the designed
+    // ceiling anywhere, faster nowhere. The old contract released to uncapped
+    // past the band, which still allowed a fling to jump the rest of the route
+    // in one frame; the band now ramps INTO ROUTE_MAX_RATE and stays there.
     const past = ZONE * (1 + 2);
-    expect(glideStep(past, past + 0.3, 16.7, ZONE)).toBe(past + 0.3);
+    const step = glideStep(past, past + 0.3, 16.7, ZONE) - past;
+    expect(step).toBeCloseTo(ROUTE_MAX_RATE * (16.7 / 1000), 6);
+    // Small movements inside the budget still pass through exactly.
+    const tiny = ROUTE_MAX_RATE * (16.7 / 1000) * 0.5;
+    expect(glideStep(past, past + tiny, 16.7, ZONE)).toBe(past + tiny);
+    // And the ceiling binds in reverse, symmetrically.
+    const back = glideStep(past, past - 0.3, 16.7, ZONE) - past;
+    expect(back).toBeCloseTo(-ROUTE_MAX_RATE * (16.7 / 1000), 6);
   });
 
   it("releases gradually: the band's cap grows but stays a cap", () => {

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { BREAK_COVER_START, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V5 browser contracts (docs/DESIGN_SYSTEM.md §19).
 //
@@ -19,7 +20,7 @@ import { expect, test } from "@playwright/test";
 // Deliberately NOT tested here: art direction. No screenshot-coordinate
 // assertions, no "looks right" thresholds -- only behavioural contracts.
 
-const DRIFT_IDS = ["real-life", "how-i-build", "field-notes", "about"] as const;
+const DRIFT_IDS = ["selected-systems", "how-i-build", "field-notes", "about"] as const;
 
 /** Scroll offsets bounding the spatial tour's own progress 0..1 (V6.4). Measured
  *  from the spacer rather than assumed, so the SYSTEMS samples below land at real
@@ -367,8 +368,14 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
     // Counting integer steps removes the accumulation, and the sweep now ends at
     // 0.4648 -- past the opening's completion, and just below the protected guard
     // band at 0.4654, so it still measures geometry and never the state machine.
+    // V7: the sweep is DERIVED from the route (the file's own V6.7 note records
+    // exactly this failure mode: hardcoded windows go stale when the route
+    // moves). It runs from just before the SYSTEMS word's focus to just below
+    // the protected guard band before the cover.
+    const sweepFrom = sceneFocusProgress("tail") - 0.045;
+    const sweepTo = BREAK_COVER_START - 0.016;
     for (let i = 0; i <= 12; i += 1) {
-      const p = 0.34 + i * 0.0104;
+      const p = sweepFrom + (i / 12) * (sweepTo - sweepFrom);
       await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
       // POLL UNTIL THE VALUE SETTLES, rather than waiting a fixed time. The opening
       // is a function of FILTERED progress, and the two-stage camera filter settles
@@ -395,7 +402,11 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
         const next = await read();
         stable = next.transform === state.transform ? stable + 1 : 0;
         state = next;
-        if (stable >= 2) break;
+        // V7: the route-wide progression ceiling means the visual value can
+        // crawl for seconds after a cold jump, and a starved WebKit rAF can
+        // repeat a mid-crawl value across two 120ms polls. Require a longer
+        // proven-stable run before trusting a sample; assertions unchanged.
+        if (stable >= 4 && attempt >= 6) break;
       }
       // V6.6 CONTRACT: the opening is a transform, not a clip and not a filter.
       // V6.5 animated a clip-path string, which cost 274.9ms of style recalculation
