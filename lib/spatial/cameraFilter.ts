@@ -189,6 +189,21 @@ export const GLIDE_RELEASE_SPAN = 1.5;
 export const GLIDE_RELEASE_GAIN = 8;
 
 /**
+ * V7 — THE ROUTE-WIDE CEILING (owner §10). The designed maximum for visual
+ * progression ANYWHERE on the route, in progress/second. The entry glide stays
+ * tighter (GLIDE_MAX_RATE) and its release band now ramps INTO this ceiling
+ * instead of into "uncapped": scrolling may be as slow as the reader likes,
+ * but the world can never be played faster than this, in either direction.
+ *
+ * Sized against the route, not against feel-words: at 0.155/s the six-scene
+ * evidence route plus the full second route cannot be traversed in under ~6.5
+ * seconds, one scene leg costs a fling ~0.8s instead of a single frame, and
+ * the occlusion's own fixed playback (BREAK_PLAYBACK_MS over its band) remains
+ * the slowest beat — the ceiling never competes with the cut's choreography.
+ */
+export const ROUTE_MAX_RATE = 0.155;
+
+/**
  * One governor step. Returns `proposed` untouched when the movement is entirely
  * past the release band or already inside the rate budget; otherwise advances
  * from `previous` at the capped rate for where the camera currently is, in
@@ -202,13 +217,19 @@ export function glideStep(
   glideUntil: number,
 ): number {
   if (glideUntil <= 0) return proposed;
+  // Rate budget at the camera's CURRENT position: x1 in the entry zone,
+  // ramping across the release band — and then, V7, holding at the route-wide
+  // ceiling for the REST of the journey instead of releasing to uncapped.
+  // The owner's §10 is absolute ("may be slower, never faster"), and the
+  // measured failure the old release note records — a fling jumping 2,183px
+  // in the frame after the governor let go — is exactly what "uncapped past
+  // the band" still permitted everywhere below the opening.
   const releaseEnd = glideUntil * (1 + GLIDE_RELEASE_SPAN);
-  if (previous >= releaseEnd && proposed >= releaseEnd) return proposed;
-  // Rate budget at the camera's CURRENT position: x1 in the zone, ramping to
-  // xGLIDE_RELEASE_GAIN across the release band.
-  const over = Math.max(0, previous - glideUntil) / (releaseEnd - glideUntil);
+  const over =
+    previous >= releaseEnd ? 1 : Math.max(0, previous - glideUntil) / (releaseEnd - glideUntil);
   const gain = 1 + (GLIDE_RELEASE_GAIN - 1) * over * over;
-  const maxStep = GLIDE_MAX_RATE * gain * (Math.max(dtMs, 0) / 1000);
+  const rate = Math.min(GLIDE_MAX_RATE * gain, ROUTE_MAX_RATE);
+  const maxStep = rate * (Math.max(dtMs, 0) / 1000);
   const step = proposed - previous;
   if (Math.abs(step) <= maxStep) return proposed;
   return previous + Math.sign(step) * maxStep;

@@ -25,6 +25,7 @@ import { WorldGrammar } from "@/components/spatial/WorldGrammar";
 import {
   BREAK_ABORT_PX,
   BREAK_PLAYBACK_MS,
+  ROUTE_MAX_RATE,
   advanceFilter,
   glideStep,
   type FilterState,
@@ -53,7 +54,8 @@ import {
   BREAK_GUARD_FROM,
   BREAK_GUARD_TO,
   BREAK_REVEAL_START,
-  ENTRY_GLIDE_TO,
+  EXIT_FROM,
+  entryGlideTo,
   cameraPosition,
   sceneApproach,
   sceneFocusProgress,
@@ -161,6 +163,10 @@ function useSceneBreakEvent(
   spacerRef: React.RefObject<HTMLDivElement | null>,
   enabled: boolean,
   resyncRef: FilterResyncRef,
+  // V7: the route governor yields while the occlusion owns scroll. This ref is
+  // the only coordination between the two — the event sets it, the governor
+  // reads it, and neither knows anything else about the other.
+  playingRef?: React.RefObject<boolean>,
 ): void {
   const state = useRef<{
     phase: "idle" | "playing" | "spent";
@@ -349,6 +355,7 @@ function useSceneBreakEvent(
      */
     const play = (dir: 1 | -1) => {
       st.phase = "playing";
+      if (playingRef) playingRef.current = true;
       st.dir = dir;
       st.startedAt = now;
       const from = dir === 1 ? yStart : yEnd;
@@ -366,6 +373,7 @@ function useSceneBreakEvent(
       // limit is what makes this a protected window rather than a trap.
       if (elapsed >= BREAK_PLAYBACK_MS) {
         st.phase = "spent";
+        if (playingRef) playingRef.current = false;
         return;
       }
 
@@ -379,6 +387,7 @@ function useSceneBreakEvent(
       const against = st.dir === 1 ? target - y : y - target;
       if (against > BREAK_ABORT_PX) {
         st.phase = "spent";
+        if (playingRef) playingRef.current = false;
         return;
       }
 
@@ -410,6 +419,7 @@ function useSceneBreakEvent(
       // not a signature moment. The stall resolver below still applies, so a
       // restore landing in solid black does not stay there.
       if (y >= yStart && y < yEnd) st.phase = "spent";
+      if (playingRef) playingRef.current = false;
       return;
     }
 
@@ -539,6 +549,7 @@ function useFilteredProgress(
   source: MotionValue<number>,
   enabled: boolean,
   resyncRef: FilterResyncRef,
+  glideUntil: number,
 ): MotionValue<number> {
   const filtered = useMotionValue(source.get());
   const state = useRef<FilterState>({
@@ -581,13 +592,162 @@ function useFilteredProgress(
     // governed, whatever the wheel does -- see GLIDE_MAX_RATE for the
     // measurements. Both stages are re-seated to the governed value so leaving
     // the zone hands over to the ordinary filter dynamics without a lurch.
-    const glided = glideStep(previous.stage2, next.stage2, Math.min(delta, 50), ENTRY_GLIDE_TO);
+    const glided = glideStep(previous.stage2, next.stage2, Math.min(delta, 50), glideUntil);
     state.current =
       glided === next.stage2 ? next : { stage1: glided, stage2: glided, speed: next.speed };
     filtered.set(state.current.stage2);
   });
 
   return enabled ? filtered : source;
+}
+
+/**
+ * V7 — THE ROUTE GOVERNOR (owner §10): raw wheel input is INTENT, the system
+ * decides progression. Inside the spatial route, wheel deltas no longer move
+ * the page directly; they move a target, and the page travels toward that
+ * target at no more than ROUTE_MAX_RATE — the same designed ceiling the
+ * visual glide enforces — in BOTH directions. A hard fling therefore buys
+ * distance, never speed: the journey plays at its own pace, and no wheel
+ * gesture can blast the camera through a beat.
+ *
+ * WHY THIS IS NOT GENERAL SCROLL-JACKING, in the same terms the break event
+ * established:
+ *
+ *   - WHEEL ONLY. Keyboard paging, the scrollbar, skip links, anchors, scroll
+ *     restoration and programmatic scrolls are untouched — and if any of them
+ *     moves the page, the governor ADOPTS the new position instead of
+ *     fighting it. The escape hatches all still work at native speed.
+ *   - Ctrl+wheel (pinch zoom) passes straight through.
+ *   - AT THE ROUTE'S EDGES IT HANDS BACK. A wheel gesture that would leave
+ *     the region is not captured, so entering and leaving the world feel
+ *     exactly like the rest of the page.
+ *   - It yields entirely to the occlusion event, which keeps sole ownership
+ *     of its own band (via playingRef — one bit of shared state).
+ *   - Desktop, enhanced tree only. Reduced motion never sees it; touch
+ *     scrolling stays native (the visual ceiling still paces the camera).
+ *
+ * preventDefault on wheel inside the region is precisely the owner's model —
+ * "raw wheel input = intent only" — and it also removes the compositor fight
+ * the break absorber documents: the browser never starts a fling animation,
+ * so there is nothing to overwrite our writes.
+ */
+function useRouteGovernor(
+  spacerRef: React.RefObject<HTMLDivElement | null>,
+  active: boolean,
+  breakPlayingRef: React.RefObject<boolean>,
+): void {
+  useEffect(() => {
+    if (!active) return;
+
+    let intent: number | null = null;
+    let lastWrite = -1;
+    let raf = 0;
+    let prevT = 0;
+
+    const box = () => {
+      const spacer = spacerRef.current;
+      if (!spacer) return null;
+      const top = spacer.getBoundingClientRect().top + window.scrollY;
+      return { top, end: top + spacer.offsetHeight - window.innerHeight };
+    };
+
+    const tick = (t: number) => {
+      raf = 0;
+      if (intent === null) {
+        prevT = 0;
+        return;
+      }
+      if (breakPlayingRef.current) {
+        // The occlusion owns scroll for its fixed playback; drop the intent so
+        // control returns cleanly when it releases.
+        intent = null;
+        prevT = 0;
+        return;
+      }
+      const bounds = box();
+      if (!bounds) {
+        intent = null;
+        return;
+      }
+      // Budget is paid per FRAME, never per elapsed time: a dropped frame's
+      // budget is forfeited, not carried, so no single write can exceed one
+      // frame's worth of travel. Slower is always allowed; faster never is.
+      const dt = prevT ? Math.min(t - prevT, 17) : 16.7;
+      prevT = t;
+      const y = window.scrollY;
+      // Someone else moved the page (keyboard, scrollbar, a test, the break's
+      // own ramp): adopt their position rather than dragging it back.
+      if (lastWrite >= 0 && Math.abs(y - lastWrite) > 24) {
+        intent = y;
+        lastWrite = -1;
+        prevT = 0;
+        return;
+      }
+      const span = Math.max(bounds.end - bounds.top, 1);
+      const maxStep = ROUTE_MAX_RATE * span * (dt / 1000);
+      const step = intent - y;
+      const move = Math.abs(step) <= maxStep ? step : Math.sign(step) * maxStep;
+      const next = Math.round(y + move);
+      window.scrollTo(0, next);
+      lastWrite = next;
+      if (Math.abs(intent - next) > 0.5) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        intent = null;
+        prevT = 0;
+      }
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) return;
+      if (breakPlayingRef.current) {
+        // The occlusion is playing. Passing wheel through here was measured to
+        // start a native compositor fling that OUTLIVED the band and ran the
+        // route at ~2-3.5x the ceiling once the event released — so the
+        // governor keeps ownership instead. Forward intent is absorbed exactly
+        // as the break's own absorber absorbs it; backward intent is applied
+        // DIRECTLY (one bounded manual step), which preserves the break's
+        // one-gesture escape: the event sees scroll move back and aborts.
+        event.preventDefault();
+        if (event.deltaY < 0) {
+          window.scrollBy(0, Math.max(event.deltaY, -140));
+        }
+        intent = null;
+        return;
+      }
+      const bounds = box();
+      if (!bounds) return;
+      const y = window.scrollY;
+      // Half a viewport of margin below the exit: an upward fling begun just
+      // past the world is captured BEFORE its momentum carries into the
+      // route. Above the top no margin is needed — the route starts the page.
+      if (y < bounds.top - 2 || y > bounds.end + window.innerHeight * 0.5) {
+        intent = null;
+        return;
+      }
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
+      const delta = event.deltaY * unit;
+      const from = intent ?? y;
+      const next = Math.min(Math.max(from + delta, bounds.top), bounds.end);
+      // A gesture that would leave the region is handed back to the browser.
+      if (
+        (delta < 0 && next <= bounds.top && y <= bounds.top + 1) ||
+        (delta > 0 && next >= bounds.end && y >= bounds.end - 1)
+      ) {
+        intent = null;
+        return;
+      }
+      event.preventDefault();
+      intent = next;
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [spacerRef, active, breakPlayingRef]);
 }
 
 export function SpatialCamera({
@@ -629,11 +789,21 @@ export function SpatialCamera({
   // from the filtered value -- camera, break, inspection, depth, system
   // annotations.
   const filterResyncRef = useRef<((value: number) => void) | null>(null);
-  const progress = useFilteredProgress(scrollYProgress, !reduceMotion, filterResyncRef);
+  const progress = useFilteredProgress(
+    scrollYProgress,
+    !reduceMotion,
+    filterResyncRef,
+    entryGlideTo(mobile),
+  );
   // Plays the occlusion across a fixed window once scroll triggers it, so the
   // event cannot be compressed or skipped by scroll velocity. See
   // useSceneBreakEvent.
-  useSceneBreakEvent(spacerRef, enhanced, filterResyncRef);
+  const breakPlayingRef = useRef(false);
+  useSceneBreakEvent(spacerRef, enhanced, filterResyncRef, breakPlayingRef);
+  // V7 (owner §10): wheel becomes intent inside the route; progression is
+  // capped at ROUTE_MAX_RATE in both directions. Desktop only — touch stays
+  // native and the visual glide ceiling paces the camera there.
+  useRouteGovernor(spacerRef, enhanced && isDesktop, breakPlayingRef);
 
   // 0..1 across the SYSTEMS opening (V6.5).
   //
@@ -658,6 +828,20 @@ export function SpatialCamera({
   const systemsActive = useTransform(progress, (value): number => {
     const [from] = openingWindow(mobile);
     return value > from - 0.03 && value < BREAK_CUT ? 1 : 0;
+  });
+
+  // V7 — THE DEPARTURE ZOOM (owner §11). As the camera runs the exit traverse
+  // the WHOLE world scales down together — every depth plane shares this one
+  // transformed parent — so leaving reads as the composition receding into
+  // view rather than as one more section sliding by. Deliberately small
+  // (1 → 0.92): the world is stepping back, not flying away. It runs on the
+  // filtered value like every other visual, eases with the square of exit
+  // progress so departure begins imperceptibly, and lives only on the
+  // enhanced tree — reduced motion never sees a scaling world.
+  const worldScale = useTransform(progress, (value) => {
+    if (value <= EXIT_FROM) return 1;
+    const exit = Math.min((value - EXIT_FROM) / (1 - EXIT_FROM), 1);
+    return 1 - 0.08 * exit * exit;
   });
 
   function scrollToProgress(target: number) {
@@ -727,7 +911,11 @@ export function SpatialCamera({
 
             The element stays because the depth planes need one shared transformed
             parent, but it is now a plain container with no animation on it. */}
-        <div className="absolute inset-0">
+        {/* V7: it carries one animation again — the departure zoom above. */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ scale: worldScale, transformOrigin: "50% 44%" }}
+        >
           {/* V6 (§20.1): the world's pulse, behind every depth plane. Driven by
               RAW progress rather than by the camera, so scroll always produces
               visible response even inside a focus zone where the camera has
@@ -758,101 +946,61 @@ export function SpatialCamera({
               {/* V6.8 (§28): each project's field plane -- the second depth surface
                   its composition is read against. On this plane, not the world
                   plane, so the project slides across it as the camera travels. */}
+              {/* V7 — four planes, ONE grammar. Every project field plane now runs
+                  the shared choreography model (lib/spatial/planeChoreography.ts):
+                  enters slightly before its foreground, registers exactly at
+                  focus, trails progressively on exit. Registration decisions
+                  below hold at the focus beat, where displacement is zero.
+                  Presence still decays to exactly 0 outside each scene's own
+                  window, so no plane can intrude on another scene's frame. */}
+              <ProjectPlane
+                scene="software-factory"
+                // The foundational field. Right edge registers on the scene
+                // block's right edge (x + w == 1.00); the diagram plate
+                // (0..0.76 of the block) crosses its left edge, and its top
+                // tucks under the identity row -- media breaks two bounds,
+                // never nests.
+                offset={{ x: 0.3, y: 0.18 }}
+                width={0.7}
+                height={0.5}
+                progress={progress}
+              />
               <ProjectPlane
                 scene="kivilcim"
-                // Review: anchor the plane's left edge to the identity column's own
-                // margin (x offset 0 = the camera inset the text sits on) and give
-                // the top a legible stagger below the media's top rule instead of
-                // an 8px near-miss.
-                // Final remediation: converted from vw/vh ({0,11} 58x60) to scene
-                // fractions chosen to render IDENTICALLY at 1440x900 (0.0839 x 1180
-                // = 99px = the old 11vh, 0.7078 x 1180 = 835px = the old 58vw), so
-                // the approved composition is untouched -- verified by pixel diff
-                // against the approved artifact. What changes is every OTHER
-                // viewport: the plane now holds its registration to the px-capped
-                // scene instead of inflating with the frame.
+                // OWNER V7: slightly larger than the long-approved 0.7078 x
+                // 0.4576, growing DOWN-RIGHT from the same registered top-left
+                // (x 0 = the identity column's own margin; y unchanged), so
+                // every alignment the composition was tuned against still
+                // holds and the ground simply carries more of the scene.
                 offset={{ x: 0, y: 0.0839 }}
-                width={0.7078}
-                height={0.4576}
+                width={0.75}
+                height={0.49}
+                progress={progress}
+              />
+              <ProjectPlane
+                scene="jointledger"
+                // The mirror of Kıvılcım's field, for the mirrored (counter)
+                // composition: right edge registers on the block's right edge
+                // (x + w == 1.00), same top stagger and near-same mass as
+                // Kıvılcım -- one grammar, opposite hand. The left-leading
+                // evidence plate crosses its left edge.
+                offset={{ x: 0.26, y: 0.0839 }}
+                width={0.74}
+                height={0.48}
                 progress={progress}
               />
               <ProjectPlane
                 scene="dropspot"
-                // DROPSPOT REMEDIATION: the review-build plane ({26,-6} 52x58)
-                // framed as a band ABOVE the media, and the media's arrival buried
-                // it -- at focus it survived as a pale strip behind the summary,
-                // which is exactly the "rectangle behind content" the plane exists
-                // to not be. It is now the GROUND the evidence stands on, offset
-                // down-right of it -- the direction the camera is travelling. At
-                // focus (1440x900) the media overhangs the plane's top and left
-                // edges, so the two can never read as a frame and its picture,
-                // and the plane's RIGHT EDGE REGISTERS EXACTLY ON THE SCENE
-                // BLOCK'S RIGHT EDGE -- offset.x + width == 1.00 scene units, so
-                // the registration holds at every viewport by construction, not
-                // by arithmetic that happens to work at one width.
-                //
-                // This corrects a real regression. The comment here used to claim
-                // the right edge landed on "91vw", arithmetic left over from when
-                // these offsets were authored in vw; after the conversion to scene
-                // fractions the claim was measurably false in the shipped build --
-                // 91vw at 1440 is 1310px and the plane's edge sat at 1367, 57px
-                // adrift, registering to nothing. That is the "badly / arbitrarily
-                // aligned" plane the review reported, and it was a stale number
-                // rather than an unmade decision. The 0.62-rate lag walks it down-right
-                // across the whole composition as the camera passes -- arriving
-                // ahead of the evidence, separating from it on departure, which is
-                // what makes the exit read as the camera leaving a place.
-                //
-                // The geometry closed three earlier review-panel findings and the
-                // final remediation converted it to scene fractions (see
-                // ProjectPlane) and retuned it around the two-shot evidence group:
-                //   - the offset keeps the plane's corner out of the frozen
-                //     Kivilcim focus frame (verified by pixel diff);
-                //   - the media crosses the plane's left edge from the entry beat
-                //     on -- never "a card on a mat";
-                //   - the plane's top stays clear of the media's top rule at the
-                //     mid beat, where an earlier value landed the two within 2px
-                //     and read as a shared bound.
-                // (The centring behaviour that shaped the old y: at viewports
-                // taller than the scene's 72vh min-height the SceneFrame centres
-                // the block, shifting scene content down while the plane stays
-                // camera-anchored -- so any top stagger chosen at 900 shrinks by
-                // ~60px at 1200. The gate values below account for that spread.)
-                // FABLE GATE 1 (Q2): every plane edge now registers to a line the
-                // COMPOSITION ITSELF DRAWS, or states the one relationship the
-                // benchmark plane already established. The old x 0.21 / y 0.22 were
-                // collision-avoidance and viewport-averaging constants -- exactly
-                // the "no derivable anchor" the gate named. The rule applied:
-                //
-                //   LEFT  x 0.511: the description column's own left edge (grid
-                //         col-start-7 of the identity row = 116 + 6 cols = ~719px
-                //         at 1440). Kıvılcım's plane registers its left edge on
-                //         that scene's identity column; this scene's second real
-                //         alignment line is the description column, and the plane
-                //         now stands under the words that describe the system.
-                //   RIGHT x + w == 1.00 scene units, unchanged: exact register on
-                //         the scene block's right edge (the earlier fix, kept).
-                //   TOP   y 0.247: the media overhangs the plane's top by ~100px
-                //         at 1440x900 AND ~40px at 2552x1200. The old 0.22 gave
-                //         7.8px at 2552 -- a near-flush misregistration of the
-                //         same class the review flagged. The stagger must be
-                //         legible at BOTH gate viewports, and the centring shift
-                //         between them is 60px, so the 1440 stagger carries it.
-                //   BOTTOM h 0.455: the GROUND reading, chosen over "surface it
-                //         hangs in front of" -- the plane extends ~55px below the
-                //         media's bottom at 2552 (a visible ground margin inside
-                //         the frame) and runs off the frame's lower edge at
-                //         1440x900, the way ground legitimately leaves a frame.
-                //         Kıvılcım's slab floats contained; DropSpot's evidence
-                //         STANDS on ground that continues beneath the camera --
-                //         two scenes, one grammar, mirrored weights.
-                //
-                // Kıvılcım-frame intrusion is structurally impossible now: at that
-                // scene's focus this plane's left edge sits ~2130px off-frame at
-                // 1440 (measured), and its presence is exactly 0 out of window.
-                offset={{ x: 0.511, y: 0.247 }}
-                width={0.489}
-                height={0.455}
+                // OWNER V7: with the crop reverted and the two-shot group
+                // restored, the ground returns to running under the whole
+                // group -- and, per the owner, reads a step LARGER AND WIDER
+                // than Kıvılcım's, because the evidence above it is larger and
+                // wider. Right edge stays exactly on the scene block's right
+                // edge (x + w == 1.00); the primary shot (0..0.84) crosses its
+                // left edge; the group's lower-right quarter stands on it.
+                offset={{ x: 0.14, y: 0.2 }}
+                width={0.86}
+                height={0.53}
                 progress={progress}
               />
               {distantMaterial}
@@ -890,6 +1038,24 @@ export function SpatialCamera({
             mobile={mobile}
             data-camera-plane="world"
           >
+            {/* V7 — MOBILE GROUNDS. The desktop parallax stack does not exist below
+                1024px, but the supporting-plane grammar still does: each project scene
+                stands on one ground slab riding the world plane itself, running the
+                same enter-before / register-at-focus / trail-on-exit choreography off
+                the mobile route. One registration for all four — mobile's restraint —
+                with the scene column overhanging the slab's top and left. */}
+            {!isDesktop &&
+              (["software-factory", "kivilcim", "jointledger", "dropspot"] as const).map((id) => (
+                <ProjectPlane
+                  key={id}
+                  scene={id}
+                  offset={{ x: 0.08, y: 0.24 }}
+                  width={0.92}
+                  height={0.52}
+                  progress={progress}
+                  mobile
+                />
+              ))}
             <WorldGrammar
               progress={progress}
               mobile={mobile}
@@ -920,7 +1086,7 @@ export function SpatialCamera({
               {nearMaterial}
             </CameraPlane>
           )}
-        </div>
+        </motion.div>
 
         <SceneBreak progress={progress} />
       </div>
@@ -990,8 +1156,6 @@ function SceneFrame({
   const approach = useTransform(progress, (value) => sceneApproach(id, value, mobile));
   const resolve = useTransform(approach, (value) => 1 - Math.abs(value));
   const scale = useTransform(resolve, [0, 1], [SCENE_SCALE_FAR, SCENE_SCALE_FOCUS]);
-  // Mobile keeps scenes at full size: depth treatment is reduced there (§30).
-  const flat = useMotionValue(1);
 
   return (
     <motion.div
@@ -1006,8 +1170,8 @@ function SceneFrame({
           minHeight: SCENE_MIN_HEIGHT,
           translateX: `${point.x}vw`,
           translateY: `${point.y}vh`,
-          scale: isDesktop ? scale : flat,
-          "--depth-resolve": isDesktop ? resolve : flat,
+          scale,
+          "--depth-resolve": resolve,
           // Lets a scene's evidence break its own alignment edge. Only set
           // here, where the camera frame can clip the result.
           "--scene-overhang": isDesktop ? "-9%" : "0px",

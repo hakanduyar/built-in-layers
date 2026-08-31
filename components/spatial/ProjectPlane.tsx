@@ -1,8 +1,14 @@
 "use client";
 
 import { motion, useTransform, type MotionValue } from "motion/react";
+import { planeShift, sceneTravelDirection } from "@/lib/spatial/planeChoreography";
 import { PLANE_DISTANT, type SceneId, type WorldPoint } from "@/lib/spatial/scenes";
-import { cameraPosition, sceneFocusProgress, sceneProximity } from "@/lib/spatial/sceneRoute";
+import {
+  cameraPosition,
+  sceneApproach,
+  sceneFocusProgress,
+  sceneProximity,
+} from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V6.8 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §28). THE PROJECT FIELD PLANES.
@@ -67,21 +73,48 @@ type ProjectPlaneProps = {
   width: number;
   height: number;
   progress: MotionValue<number>;
+  /** V7: the plane exists on the mobile world plane too (rate 1); the
+   *  choreography and proximity must then read the mobile route. */
+  mobile?: boolean;
 };
 
-export function ProjectPlane({ scene, offset, width, height, progress }: ProjectPlaneProps) {
-  // Same derivation as every parallax mark: place it where the DISTANT plane's
+export function ProjectPlane({
+  scene,
+  offset,
+  width,
+  height,
+  progress,
+  mobile = false,
+}: ProjectPlaneProps) {
+  // Same derivation as every parallax mark: place it where this plane's
   // coordinate space puts the scene's focal frame, plus the authored offset --
   // the camera term stays in the plane's own vw/vh space, the offset is in the
-  // scene's px-capped space.
-  const camera = cameraPosition(sceneFocusProgress(scene));
+  // scene's px-capped space. On mobile the plane rides the world plane (rate
+  // 1) and the mobile route supplies the camera term.
+  const rate = mobile ? 1 : PLANE_DISTANT;
+  const camera = cameraPosition(sceneFocusProgress(scene, mobile), mobile);
+
+  // V7 — THE SUPPORTING-PLANE GRAMMAR (see lib/spatial/planeChoreography.ts).
+  // One signed displacement along the route's own local bearing: the plane
+  // enters slightly before its foreground, registers exactly at focus, and
+  // trails progressively on exit. The direction is derived from the curve at
+  // this scene's focus, so the grammar follows the route wherever it bends.
+  const direction = sceneTravelDirection(scene, mobile);
+  const choreographyX = useTransform(progress, (value) => {
+    const shift = planeShift(sceneApproach(scene, value, mobile), direction);
+    return `${shift.xVw}vw`;
+  });
+  const choreographyY = useTransform(progress, (value) => {
+    const shift = planeShift(sceneApproach(scene, value, mobile), direction);
+    return `${shift.yVh}vh`;
+  });
 
   // The field registers as the system acquires its scene: faint on approach,
   // fullest exactly at focus, quiet again once passed. Derived from the same
   // proximity signal the registration ticks use, so the whole scene's grammar
   // agrees about when it is being looked at.
   const presence = useTransform(progress, (value) => {
-    const near = sceneProximity(scene, value, false);
+    const near = sceneProximity(scene, value, mobile);
     // The presence decays to ZERO outside the scene's own proximity window.
     //
     // It used to floor at 0.14 ("a whisper, not an orphaned rectangle"), and that
@@ -105,11 +138,13 @@ export function ProjectPlane({ scene, offset, width, height, progress }: Project
       data-project-plane={scene}
       className="absolute block bg-soft-paper"
       style={{
-        left: `calc(${camera.x * PLANE_DISTANT}vw + ${offset.x} * ${SCENE_UNIT})`,
-        top: `calc(${camera.y * PLANE_DISTANT}vh + ${offset.y} * ${SCENE_UNIT})`,
+        left: `calc(${camera.x * rate}vw + ${offset.x} * ${SCENE_UNIT})`,
+        top: `calc(${camera.y * rate}vh + ${offset.y} * ${SCENE_UNIT})`,
         width: `calc(${width} * ${SCENE_UNIT})`,
         height: `calc(${height} * ${SCENE_UNIT})`,
         opacity: presence,
+        x: choreographyX,
+        y: choreographyY,
       }}
     />
   );
