@@ -132,7 +132,15 @@ export function driftMarkOpacity(id: DriftSectionId): number {
  */
 /** V6.8: the plate VISUAL was deleted (see DriftBlock); what survives is the
  *  approach interval before each section, which was always the meaningful half. */
-export type DriftPlate = { gapVh: number };
+/** FABLE GATE 1 (Q3) added `seamRem`: where the section's field (driftField)
+ *  opens beneath the section's display typography, in rem from the top of the
+ *  block. Authored per section but registered to measurement, the same class
+ *  of value as gapVh: three sections set their display line's bottom at an
+ *  identical measured 246px, so 16rem (256px) puts the seam ~10px into the
+ *  whitespace under it; About's two-line display name reaches 333px, so its
+ *  seam sits at 21.5rem for the same ~11px clearance. The seam must never
+ *  cross a line of text — that is the rule the numbers serve. */
+export type DriftPlate = { gapVh: number; seamRem: number };
 
 const PLATES: Record<DriftSectionId, DriftPlate> = {
   // The first stable surface after the transition: shows its full edge, square on.
@@ -157,9 +165,9 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   //
   // 12vh, not 6: it is still the arrival, and it is still where the spine runs on
   // alone. §5 asks for the excess removed, not for the negative space eliminated.
-  "real-life": { gapVh: 5 },
+  "real-life": { gapVh: 5, seamRem: 16 },
   // A broader plane the route runs alongside.
-  "how-i-build": { gapVh: 22 },
+  "how-i-build": { gapVh: 22, seamRem: 16 },
   // Set back and further away: the least of its surface visible.
   //
   // V6.5: 34vh -> 20vh. This was the SECOND-largest dead run on the measured page
@@ -174,13 +182,77 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   // a redesign of either section. Judgement, and it is worth stating plainly: the
   // frames here are SPARSE, not empty. Field Notes is a short section by design
   // and the metric's ink threshold does not distinguish the two.
-  "field-notes": { gapVh: 14 },
+  "field-notes": { gapVh: 14, seamRem: 16 },
   // Returning toward the foreground as the journey resolves.
-  about: { gapVh: 14 },
+  about: { gapVh: 14, seamRem: 21.5 },
 };
 
 export function driftPlate(id: DriftSectionId): DriftPlate {
   return PLATES[id];
+}
+
+/* ------------------------------------------------------- section fields */
+
+/**
+ * FABLE GATE 1 (Q3). THE SECTION'S GROUND.
+ *
+ * The gate's question was what makes the lower page belong to the same system
+ * as the top, through structure and behaviour. The answer chosen: the same
+ * thing that makes the top read as a world — no composition up there is a
+ * single surface. Evidence stands on a project plane; the expressive word
+ * opens over its trace; the route runs through fields. The lower sections were
+ * the only compositions in the whole journey drawn on bare paper, and that —
+ * not a missing mark — is why they read as weaker: they are FLAT in a site
+ * whose identity is depth.
+ *
+ * So each drift section now stands in its own field: one soft-paper surface,
+ * the exact material and presence language of `ProjectPlane`. Nothing is drawn
+ * on it, and its geometry is DERIVED from the section's own entry/exit table,
+ * not authored per section.
+ *
+ * The field is the section's sweep envelope — from the leftmost position the
+ * block's own entry/exit table ever gives it to the rightmost, plus the
+ * block's measure: the strip of track this section actually travels, made
+ * visible as the ground it travels across. The block slides visibly along its
+ * field as it passes through the viewport — the same enacted (not asserted)
+ * depth the project planes carry. A section that drifts far owns a wide
+ * ground; a quiet one, a narrow ground.
+ *
+ * De-nesting happens on the VERTICAL axis, and where it happens was iterated
+ * against real frames, not reasoned into: an envelope CONTAINS the block at
+ * every scroll position, so with a naive top edge the section sat inside a
+ * pale rectangle — the frame-and-picture nesting the plane grammar forbids.
+ * A horizontal near-edge cut was tried next and rejected on sight: it ran the
+ * field's edge straight through the running text of every section's body
+ * column. The seam the fields settled on is typographic: the field's top edge
+ * sits in the whitespace just below the display heading's baseline (every
+ * section places that baseline at the same internal offset, measured), so the
+ * register and the heading — the section's structure — overhang the ground,
+ * the body stands on it, and the edge never crosses a line of text. The same
+ * relationship the world's evidence has to its plane: structure breaks the
+ * top bound, ground runs on below the bottom. Distinct from the V6.7-deleted
+ * density rectangles for exactly the reason ProjectPlane is: it belongs to a
+ * section, registers to that section's real geometry, and its behaviour
+ * states the relationship.
+ */
+export function driftField(id: DriftSectionId): { left: number; span: number } {
+  const section = driftSection(id);
+  return {
+    left: Math.min(section.entry, section.exit),
+    span: Math.abs(section.exit - section.entry),
+  };
+}
+
+/**
+ * Field presence, from the section's depth. The world's project planes peak at
+ * 0.66; the plate section (depth 0) matches them exactly — one grammar — and
+ * the others state their distance through the same channel the marks and
+ * measures already use. Forward of the world plane means nearer, so more
+ * present, never less.
+ */
+export function driftFieldOpacity(id: DriftSectionId): number {
+  const { depth } = driftSection(id);
+  return +(0.66 + depth * 0.15).toFixed(3);
 }
 
 /** Where the track comes to rest before handing off to the footer CTA. */

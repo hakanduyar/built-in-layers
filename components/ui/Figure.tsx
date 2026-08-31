@@ -5,12 +5,42 @@ type FigureProps = {
   alt: string;
   caption?: string;
   index?: number;
+  /**
+   * FABLE GATE 1 (Q1a): opt-in frame ratio. When set, the media is presented in
+   * a fixed-aspect frame and `object-fit: cover` crops the overflow -- the
+   * mechanism the gate chose to give a wide, shallow screenshot real vertical
+   * presence without distortion and without widening past the accepted width.
+   *
+   * Strictly additive: when absent (every existing call site, including the
+   * frozen Kıvılcım figure), the rendered markup and behaviour are byte-for-byte
+   * what they were before this prop existed. The frame reserves its box via
+   * `aspect-ratio`, so the TASK-008 CLS guarantee holds in this branch too.
+   */
+  frameRatio?: number;
+  /**
+   * Which part of the media the frame keeps, as a CSS object-position value.
+   * Only read when `frameRatio` is set. The choice of window is an editorial
+   * decision made per call site -- it decides what the caption's claim shows.
+   */
+  framePosition?: string;
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
 // 3, aria-hidden, decorative only), radius-1, mono-meta "FIG NN — caption".
-export function Figure({ src, alt, caption, index }: FigureProps) {
+export function Figure({ src, alt, caption, index, frameRatio, framePosition }: FigureProps) {
   const dimensions = readIntrinsicDimensions(src);
+  const image = (
+    /* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */
+    <img
+      src={src}
+      alt={alt}
+      fetchPriority="low"
+      decoding="async"
+      className={frameRatio ? "block h-full w-full object-cover" : "block h-auto w-full"}
+      style={frameRatio && framePosition ? { objectPosition: framePosition } : undefined}
+      {...dimensions}
+    />
+  );
   return (
     <figure className="relative border border-line bg-soft-paper p-1 rounded-1">
       <span
@@ -52,15 +82,13 @@ export function Figure({ src, alt, caption, index }: FigureProps) {
           aspect ratio; dimensions is null (attributes omitted) only for a
           format readIntrinsicDimensions doesn't recognize -- unchanged
           prior behavior, not a regression. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */}
-      <img
-        src={src}
-        alt={alt}
-        fetchPriority="low"
-        decoding="async"
-        className="block h-auto w-full"
-        {...dimensions}
-      />
+      {frameRatio ? (
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: `${frameRatio}` }}>
+          {image}
+        </div>
+      ) : (
+        image
+      )}
       {caption && (
         <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
           {index ? `FIG ${String(index).padStart(2, "0")} — ${caption}` : caption}

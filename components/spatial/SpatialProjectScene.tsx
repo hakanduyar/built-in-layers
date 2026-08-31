@@ -46,23 +46,18 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   const asset = representativeAsset(project);
   const stacked = variant === "stacked";
 
-  // FINAL REMEDIATION -- THE SECOND SHOT. The stacked scene's evidence is a
-  // 2.2:1 surface screenshot: at any viewport it is a wide, shallow strip, and
-  // the owner's review of the V6.8 build named its vertical presence as the
-  // scene's remaining weakness ("width is okay; height is insufficient").
-  // Every real asset this project has is equally wide, so no crop or swap can
-  // buy height honestly. What CAN is a second real screenshot: the next
-  // real-screenshot the frontmatter registers after the representative one,
-  // overlapped onto the primary's lower-right quarter. The pair adds ~30%
-  // vertical extent from genuine distinct content (the browse surface plus the
-  // product's core moment), and the overlap is the same depth grammar the
-  // world plane uses -- evidence stacked in space, not a gallery. Selection is
-  // data-driven; no slug is special-cased.
-  const secondary = stacked
-    ? (project.images.find(
-        (image) => image.assetType === "real-screenshot" && image.src !== asset?.src,
-      ) ?? null)
-    : null;
+  // FABLE GATE 1 (Q1) RETIRED THE SECOND SHOT. The pair existed as height
+  // compensation -- its own comment said so: "no crop or swap can buy height
+  // honestly. What CAN is a second real screenshot." That premise was wrong on
+  // one point: a crop CAN buy height honestly when the frame window is chosen
+  // so the caption's claim stays fully visible, and the gate chose exactly
+  // that (see STACKED_FRAME_RATIO below). With the real fix in place the
+  // second shot stopped being composition and became double-counting: two
+  // near-identical light product surfaces stacked to bulk the group out --
+  // "assembled, not architected", and precisely the filler the gate's own
+  // acceptance criteria forbid. One dominant plate now carries the scene, and
+  // the depth pairing the overlap used to gesture at is done by the thing that
+  // actually has depth: the scene's world plane, at a different parallax rate.
 
   // The evidence type, and only that. V5 moves the route index into the
   // system's acquisition frame (§9): indexing scenes is the observing
@@ -117,12 +112,35 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     </div>
   );
 
+  // FABLE GATE 1 (Q1a): the stacked plate's frame ratio. The number is derived,
+  // not felt: at the accepted 76% plate width both scenes' media are fixed
+  // fractions of the same px-capped scene measure, so ONE ratio makes the
+  // stacked plate render exactly as tall as the approved Kıvılcım plate at
+  // every viewport -- 886.7px wide / 520.6px tall at 1440x900, benchmark
+  // height to the pixel. The price, accepted deliberately: 22.5% of the
+  // screenshot's width leaves the frame. The window is anchored to the LEFT
+  // edge because everything the caption claims -- "browsing drops with
+  // waitlist status visible" -- lives there: the heading, all four status
+  // filter tabs, and both cards carrying "In Waitlist" badges sit in the kept
+  // region, and the third card running off the right edge is an ordinary
+  // editorial crop, not a truncated claim. Applied only to the stacked
+  // variant; the split (Kıvılcım) plate is frozen and takes no frame.
+  const STACKED_FRAME_RATIO = 1.703;
+
   // The evidence plate. `Figure` is reused deliberately -- it is a ui
   // primitive, not the rejected card: it carries the approved mat/border/
   // corner-tick vocabulary, renders the asset's honest D-019 caption, and
   // keeps TASK-008's explicit-intrinsic-dimensions CLS fix. Only its scale
   // changes here.
-  const plate = asset ? <Figure src={asset.src} alt={asset.alt} caption={asset.caption} /> : null;
+  const plate = asset ? (
+    <Figure
+      src={asset.src}
+      alt={asset.alt}
+      caption={asset.caption}
+      frameRatio={stacked ? STACKED_FRAME_RATIO : undefined}
+      framePosition={stacked ? "left center" : undefined}
+    />
+  ) : null;
 
   // The `split` layout lets the evidence plate break the text column's
   // alignment edge (§16): it overhangs the block's right edge, so the scene
@@ -193,21 +211,6 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         {plate && (
           <div className="relative mt-7 w-full" style={resolveDown}>
             <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[60%]">{plate}</div>
-            {secondary && (
-              // The pair's geometry, in the scene's own fractions so it holds at
-              // every viewport: the detail shot takes the right half-measure,
-              // registers its right edge on the scene block's right edge, and
-              // overlaps the primary's lower-right quarter -- nearer evidence in
-              // front of farther evidence, extending the group downward. Desktop
-              // only: the mobile scene keeps the single plate (§30 keeps mobile
-              // depth treatment reduced, and its vertical budget is fixed).
-              <div className="absolute left-[48%] top-[42%] hidden w-[48%] lg:block">
-                <Figure src={secondary.src} alt={secondary.alt} caption={secondary.caption} />
-              </div>
-            )}
-            {/* Reserves the pair's downward extension in the block's own box, so
-                the scene's vertical centre accounts for the full group. */}
-            {secondary && <div aria-hidden="true" className="hidden lg:block lg:pb-[10%]" />}
           </div>
         )}
       </div>

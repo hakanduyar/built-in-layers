@@ -4,6 +4,8 @@ import { useRef, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
 import {
   DRIFT_SETTLE,
+  driftField,
+  driftFieldOpacity,
   driftMeasure,
   driftPlate,
   driftRouteRuns,
@@ -194,8 +196,36 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
   // The drift MOTION, the spine, its stops and the terminus all remain: they are
   // the route the blocks actually take.
 
+  // FABLE GATE 1 (Q3): the section's ground — see driftField() for the full
+  // rationale, including the two rejected geometries. Horizontally the sweep
+  // envelope: the strip of track the block's own entry/exit table makes it
+  // travel, plus its measure; the block slides visibly along its ground as it
+  // passes — the ProjectPlane behaviour carried into the lower page.
+  // Vertically the typographic seam: `16rem` is 128px of measured internal
+  // block offset (identical in all four sections) plus 128px to the
+  // whitespace just below the display heading's baseline (each section's
+  // heading bottom sits at +118px, measured), so the register and heading
+  // overhang the ground, the body stands on it, and the edge never crosses a
+  // line of text. The field runs on below the content's bottom edge as ground
+  // does. Desktop only, like the spine: on a phone the blocks barely drift,
+  // so a field would describe territory that is not really there.
+  const field = driftField(id);
+  const measure = driftMeasure(id);
+
   return (
-    <div ref={ref} className="w-full" style={{ paddingTop: `${plate.gapVh}vh` }}>
+    <div ref={ref} className="relative w-full" style={{ paddingTop: `${plate.gapVh}vh` }}>
+      <span
+        aria-hidden="true"
+        data-drift-field={id}
+        className="pointer-events-none absolute hidden bg-soft-paper lg:block"
+        style={{
+          left: trackX(field.left),
+          width: `calc(${field.span.toFixed(4)} * (100vw - 2 * var(--drift-pad) - var(--drift-w)) + ${measure.toFixed(4)} * var(--drift-w))`,
+          top: `calc(${plate.gapVh}vh + ${plate.seamRem}rem)`,
+          bottom: "-3rem",
+          opacity: driftFieldOpacity(id),
+        }}
+      />
       <motion.div
         data-drift-block={id}
         data-drift-plane={section.plane}

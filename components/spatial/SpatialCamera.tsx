@@ -813,22 +813,46 @@ export function SpatialCamera({
                 //   - the plane's top stays clear of the media's top rule at the
                 //     mid beat, where an earlier value landed the two within 2px
                 //     and read as a shared bound.
-                // y 0.22 / h 0.45 (not 0.20/0.44): at viewports taller than the
-                // scene's 72vh min-height the SceneFrame centres the block, which
-                // shifts the scene content down (+34px at 1200) while the plane
-                // stays camera-anchored -- 0.20 put the plane's top a 10px sliver
-                // ABOVE the media there, a near-flush misregistration (review
-                // finding). 0.22 keeps the media overhanging the plane's top at
-                // 900 and 1200 alike.
-                // x 0.21 / w 0.85 (not 0.14/0.92 -- same right edge): at 0.14 the
-                // plane's whisper corner re-entered the frozen Kivilcim focus
-                // frame at 1440 (x = 115 + 0.14*1180 + 0.62*122vw = 1369), the
-                // exact regression class the earlier pass fixed; 0.21 puts the
-                // corner at 1452 (off-frame) and past 2552's frame as well, at
-                // the cost of 82px of the ground's lower-left reveal.
-                offset={{ x: 0.21, y: 0.22 }}
-                width={0.79}
-                height={0.45}
+                // (The centring behaviour that shaped the old y: at viewports
+                // taller than the scene's 72vh min-height the SceneFrame centres
+                // the block, shifting scene content down while the plane stays
+                // camera-anchored -- so any top stagger chosen at 900 shrinks by
+                // ~60px at 1200. The gate values below account for that spread.)
+                // FABLE GATE 1 (Q2): every plane edge now registers to a line the
+                // COMPOSITION ITSELF DRAWS, or states the one relationship the
+                // benchmark plane already established. The old x 0.21 / y 0.22 were
+                // collision-avoidance and viewport-averaging constants -- exactly
+                // the "no derivable anchor" the gate named. The rule applied:
+                //
+                //   LEFT  x 0.511: the description column's own left edge (grid
+                //         col-start-7 of the identity row = 116 + 6 cols = ~719px
+                //         at 1440). Kıvılcım's plane registers its left edge on
+                //         that scene's identity column; this scene's second real
+                //         alignment line is the description column, and the plane
+                //         now stands under the words that describe the system.
+                //   RIGHT x + w == 1.00 scene units, unchanged: exact register on
+                //         the scene block's right edge (the earlier fix, kept).
+                //   TOP   y 0.247: the media overhangs the plane's top by ~100px
+                //         at 1440x900 AND ~40px at 2552x1200. The old 0.22 gave
+                //         7.8px at 2552 -- a near-flush misregistration of the
+                //         same class the review flagged. The stagger must be
+                //         legible at BOTH gate viewports, and the centring shift
+                //         between them is 60px, so the 1440 stagger carries it.
+                //   BOTTOM h 0.455: the GROUND reading, chosen over "surface it
+                //         hangs in front of" -- the plane extends ~55px below the
+                //         media's bottom at 2552 (a visible ground margin inside
+                //         the frame) and runs off the frame's lower edge at
+                //         1440x900, the way ground legitimately leaves a frame.
+                //         Kıvılcım's slab floats contained; DropSpot's evidence
+                //         STANDS on ground that continues beneath the camera --
+                //         two scenes, one grammar, mirrored weights.
+                //
+                // Kıvılcım-frame intrusion is structurally impossible now: at that
+                // scene's focus this plane's left edge sits ~2130px off-frame at
+                // 1440 (measured), and its presence is exactly 0 out of window.
+                offset={{ x: 0.511, y: 0.247 }}
+                width={0.489}
+                height={0.455}
                 progress={progress}
               />
               {distantMaterial}
