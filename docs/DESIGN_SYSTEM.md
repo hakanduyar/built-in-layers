@@ -1533,3 +1533,39 @@ four route bearings read as an event, not scratches; one true system register �
   would be its own pass.
 - Software Factory and the JointLedger/Professional Systems scenes remain
   unstaged (content-expansion pass; see PROGRESS).
+
+## 31. FABLE GATE 1 — desktop final art direction (2026-08-31)
+
+Executed by Opus 5 at the owner's direction (in place of a model switch); the decisions are
+recorded as this pass's art direction. Full reasoning, measurements and prices in
+`.ai/handoffs/OPUS-RETURN.md`; the gate brief itself is `.ai/handoffs/FABLE-GATE.md`.
+
+**Q1 — DropSpot evidence height: option (a), and the second shot retired.** `Figure` gained an
+opt-in `frameRatio`/`framePosition`; the stacked plate frames its screenshot at **1.703**,
+`object-fit: cover`, window anchored left so the caption's claim ("browsing drops with waitlist
+status visible") stays fully inside the kept region. Measured settled at focus: **886.7×520.7**
+against the benchmark's 832.9×**520.6** — height matched to the pixel at the accepted width, at
+1440×900 and 2552×1200 alike. Price accepted: 22.5% of the screenshot's width (the third card
+runs off-frame as an ordinary editorial crop). The V6.8 second-shot pair — height compensation by
+its own comment — was removed as double-counting once the real fix existed.
+
+**Q2 — the plane is GROUND, with every edge on a real line.** Left = the description column's own
+left edge (0.511); right = the scene block's right edge (exact, kept); top = tucked below the
+media's top rule with a stagger legible at both gate viewports (~100px / ~40px — the old value
+measured 7.8px at 2552, a near-flush bound); bottom = ground running ~56px below the media at
+2552 and off the frame's lower edge at 1440. Kıvılcım's slab floats contained; DropSpot's
+evidence stands on ground that continues beneath the camera. Two scenes, one grammar.
+
+**Q3 — the lower sections got their ground.** Diagnosis: they were the only single-surface
+compositions in the journey — flat in a site whose identity is depth. Each drift section now
+stands in a **field**: one soft-paper surface, ProjectPlane's material and presence language
+(plate section = the planes' exact 0.66), geometry derived from the section's own table —
+horizontally its sweep envelope (the block visibly slides along its ground), vertically a
+typographic seam just below the display line (16rem shared by the three sections whose display
+baseline measures an identical 246px; 21.5rem for About's two-line name). The seam never crosses
+text; register and heading overhang the ground; the body stands on it. Two rejected geometries
+(nesting envelope, text-crossing near-edge bite) are documented in `driftField()`.
+
+**Frozen areas held, proven:** Kıvılcım's 1440 focus frame diffs at 0 pixels >2/255 against the
+pre-gate build (2552: byte-identical). SYSTEMS / black transition / UNDERNEATH / route / opening
+glide untouched.

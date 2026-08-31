@@ -1230,3 +1230,14 @@ parked off-content). Recovery snapshot at
 before any edit.
 
 **Left uncommitted in the working tree for review.**
+
+### 2026-08-31 — FABLE GATE 1 executed: DropSpot final composition, plane registration rule, lower-page grounds
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction in place of a model switch.** Gate brief: `.ai/handoffs/FABLE-GATE.md`; full decisions, prices and measurements: `.ai/handoffs/OPUS-RETURN.md`; design record: `docs/DESIGN_SYSTEM.md §31`.
+
+- **Q1 (evidence height): option (a).** `Figure` gained opt-in `frameRatio`/`framePosition`; DropSpot's plate frames at 1.703, left-anchored, and renders **886.7×520.7 at focus — the Kıvılcım benchmark height (520.6) to the pixel** at the accepted width, at 1440×900 and 2552×1200 alike. Price accepted: 22.5% of the screenshot's width, cropped from the side that holds nothing the caption claims. The V6.8 second-shot pair (height compensation by its own comment) was retired as double-counting.
+- **Q2 (plane): ground, every edge on a real line.** Left = description column's left edge (0.511, measured landing 719.2 vs target ~719); right = scene block's right edge (kept exact); top = below the media's top rule with a stagger legible at both viewports (~100px/~40px; the old value measured 7.8px at 2552); bottom = ground, ~56px below the media at 2552 and off-frame at 1440.
+- **Q3 (lower half): every drift section now stands in its own field** — soft-paper ground, ProjectPlane's material and presence (plate section = 0.66 exactly), geometry derived from each section's own drift table (sweep envelope × typographic seam). Two rejected geometries documented in `driftField()`.
+- **Frozen areas proven held:** Kıvılcım 1440 focus frame — **0 pixels differ >2/255** vs pre-gate (2552 byte-identical). SYSTEMS/transition/UNDERNEATH/route/glide untouched.
+- **Validation:** typecheck ✓ lint ✓ prettier ✓ diff-check ✓ unit **496/496** (+5 new field-contract tests) ✓ build 14/14 ✓ Chromium **208/208** ✓ WebKit **206/208** — both failures reproduced in isolation **on the unmodified `aa9fe44` baseline** (skip-link Tab focus; Work-index click navigation), i.e. pre-existing, not introduced by this gate; recorded as open items.
+- **Artifacts:** `C:\Users\hakan\spatial-gate1-evidence\` — before/, iter1–5/ (including both rejected field geometries), after/, and `spatial-gate1-natural-scroll.webm` (production, real incremental wheel input).

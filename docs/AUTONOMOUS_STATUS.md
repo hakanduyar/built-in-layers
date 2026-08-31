@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-08-28_
+_Last updated: 2026-08-31_
 
 ---
 
@@ -11,16 +11,16 @@ _Last updated: 2026-08-28_
 
 | Field | Value |
 |---|---|
-| **Status** | **SOURCE RECOVERY: COMPLETE** — V6.8 recovered from Ubuntu, committed, reconciled and validated (2026-08-28) |
+| **Status** | FABLE GATE 1 EXECUTED — awaiting owner review of the gate decisions |
 | Current branch | `feature/spatial-portfolio-v5` |
 | Current HEAD | `682d54e` (merge of `d7bcebc` V6.8 checkpoint + `dc81393` docs) |
 | Latest origin commit | `dc81393` on `feature/spatial-portfolio-v5` at the time of recovery; `16d3ec0` on `main` |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean apart from this documentation pass |
-| Current phase | **Phase 1 — Recovery + durable checkpoint: COMPLETE locally; awaiting push to origin** |
+| Current phase | Phase 3 complete (Fable Gate 1 executed by Opus at owner direction); next: owner review, then Phase 4 (project architecture / content expansion) |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
-| Pending Fable gate | **none** — no gate opened, no design tokens spent |
+| Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
 | Current visual artifacts | `C:\Users\hakan\spatial-v5-review\` (V5-era, 2026-08-17: 19 stills at 1440×900, one 375×812 mobile still, `spatial-v5-natural-scroll-1440x900.webm`) |
 
 ## Next action
