@@ -13,10 +13,10 @@ _Last updated: 2026-09-01 (V8)_
 |---|---|
 | **Status** | V8 RESPONSIVE WORLD PASS COMPLETE — validated, committed and pushed; awaiting owner visual review |
 | Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `682d54e` (merge of `d7bcebc` V6.8 checkpoint + `dc81393` docs) |
-| Latest origin commit | `dc81393` on `feature/spatial-portfolio-v5` at the time of recovery; `16d3ec0` on `main` |
+| Current HEAD | `44e0924` (V8 responsive world pass) |
+| Latest origin commit | `44e0924` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
-| Working tree | clean apart from this documentation pass |
+| Working tree | clean |
 | Current phase | V8 (owner brief): early duplicate removal + true responsive world fit + late-page development |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
@@ -161,6 +161,8 @@ None are open. No handoff exists in `.ai/handoffs/`.
 | 2026-08-16 | `996c7b7` | docs: record spatial v5 system direction |
 | 2026-08-17 | `5645e79` | test: prove spatial v5 browser behavior |
 | 2026-08-17 | `d7013f8` | docs: update spatial v5 verification status |
-| 2026-08-28 | _this pass_ | docs: record STATE D recovery blocker (documentation only) |
+| 2026-08-28 | `dc81393` | docs: record STATE D recovery blocker (documentation only) |
+| 2026-08-31 | `a54244c` | docs: record the v7 systems pass |
+| 2026-09-01 | `44e0924` | feat: remove the early duplicates and give the world a height axis (V8) |
 | 2026-08-28 | `d7bcebc` | feat: checkpoint recovered spatial portfolio v6.8 (Ubuntu source, 33M/5A/1D) |
 | 2026-08-28 | `682d54e` | merge: reconcile Ubuntu V6.8 source with Windows recovery documentation |
