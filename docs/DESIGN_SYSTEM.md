@@ -1569,3 +1569,35 @@ text; register and heading overhang the ground; the body stands on it. Two rejec
 **Frozen areas held, proven:** Kıvılcım's 1440 focus frame diffs at 0 pixels >2/255 against the
 pre-gate build (2552: byte-identical). SYSTEMS / black transition / UNDERNEATH / route / opening
 glide untouched.
+
+## 32. Spatial Portfolio V7 — the four-system world, one plane grammar, governed progression (2026-08-31)
+
+Owner-directed systems + art-direction pass, executed by Opus 5 at the owner's direction. Branch-only, not approved for `main`. Decision record: D-021.
+
+### 32.1 The four-scene evidence route
+
+Route one now tours **Software Factory → Kıvılcım → JointLedger → DropSpot**, each a first-class scene with its own composition variant — `foundation` (the systemic layer: one identity line over the tallest single plate on the route, the verified delivery-loop diagram), `split` (Kıvılcım, unchanged in kind), `counter` (JointLedger: split mirrored, evidence leading from the left), `stacked` (DropSpot: identity row over the restored two-shot group). Anchors were re-spaced so consecutive 84vw scene blocks never share a focused frame (~176 screen units per leg); route one extends to (468, 330) and the cut keeps its exact tail-relative offset — **route two's entire choreography is byte-identical**, the longer reposition being crossed inside the occlusion where distance is invisible. Route length 640vh (~64vh per segment; V1 spent 200vh per scene).
+
+### 32.2 One supporting-plane grammar
+
+Every project plane runs the same three-beat choreography (`lib/spatial/planeChoreography.ts`): **enters slightly before its foreground** (displaced back along the route's local bearing, easing home), **registers exactly at focus** (every edge decision holds where the scene is read), **trails progressively on exit** (superlinear lag — the foreground leads, the ground follows). Kıvılcım's plane grew slightly (0.75×0.49 from its long-approved registration), DropSpot's reads wider and larger than Kıvılcım's under its restored evidence group, and the two new scenes register right-edge-exact with media breaking their left/top bounds. On mobile the same grammar runs on world-plane ground slabs — the first depth surface mobile has ever had.
+
+### 32.3 Governed progression (owner §10)
+
+Inside the spatial route, **wheel input is intent**: the governor prevents default, accumulates a target, and advances scroll at no more than `ROUTE_MAX_RATE` (0.155 progress/s, ≈6.5s minimum for the full journey) in either direction — paired with the same ceiling on the visual glide, which now holds route-wide instead of releasing to uncapped after the opening. Budget is paid per frame and never carried, so no single write can exceed one frame's travel: slower is always allowed, faster never. Escapes preserved: keyboard, scrollbar and programmatic scrolls pass at native speed and are adopted rather than fought; ctrl+wheel zoom passes; touch stays native; the occlusion event keeps sole ownership of its band; reduced motion sees none of it. Measured under 26-notch hard flings: ≤0.174 progress/s over any 80ms window, both directions, against the 0.155 design ceiling.
+
+### 32.4 The departure zoom (owner §11)
+
+The exit traverse now scales the **whole world** — one transform on the shared plane parent, 1 → 0.92 with the square of exit progress — so leaving reads as the composition receding, not as a section sliding by.
+
+### 32.5 The lower page (owner §7–9)
+
+**Selected Systems replaces the dormant "Built for real life" register** at IA 05: a loader-fed index of every published system (index, linked title, category, phase, fork provenance, stack) on the page's own bounded-spine register grammar, standing in its drift ground field. The near destination surface foreshadows it; How I Build keeps the method; nothing states the same thing twice. Chosen over an "Operational Model" section for exactly that reason.
+
+### 32.6 Mobile (owner §12)
+
+Deliberate upgrades, not a shrink: ground slabs behind all four scenes (the plane grammar on the world plane), scene arrival resolution enabled (scale + `--depth-resolve`), two metadata rows in the compact system frame, a compact-frame inset that no longer clips labels at 390px, and the opening glide boundary derived from the mobile route table instead of the desktop's. Touch scrolling stays native; the visual ceiling paces the camera.
+
+### 32.7 Verification state
+
+typecheck / lint / prettier clean · unit 500/500 · build 14/14 (15 routes incl. `/work/software-factory`) · Chromium e2e 208/208 · WebKit: see PROGRESS (parallelism-sensitive machine; single-worker run is the engine verdict) · console clean in both motion modes · overflow 0 at 1440 and 390 · governor and rail-closure geometry verified by direct settled measurement.

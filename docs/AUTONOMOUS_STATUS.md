@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-08-31_
+_Last updated: 2026-08-31 (V7)_
 
 ---
 
@@ -11,13 +11,13 @@ _Last updated: 2026-08-31_
 
 | Field | Value |
 |---|---|
-| **Status** | FABLE GATE 1 EXECUTED — awaiting owner review of the gate decisions |
+| **Status** | V7 SYSTEMS PASS IMPLEMENTED — full validation closing; awaiting owner visual review |
 | Current branch | `feature/spatial-portfolio-v5` |
 | Current HEAD | `682d54e` (merge of `d7bcebc` V6.8 checkpoint + `dc81393` docs) |
 | Latest origin commit | `dc81393` on `feature/spatial-portfolio-v5` at the time of recovery; `16d3ec0` on `main` |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean apart from this documentation pass |
-| Current phase | Phase 3 complete (Fable Gate 1 executed by Opus at owner direction); next: owner review, then Phase 4 (project architecture / content expansion) |
+| Current phase | V7 (owner brief): reorder + Software Factory/JointLedger scenes + plane grammar + governed scroll + Selected Systems + mobile upgrades |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
