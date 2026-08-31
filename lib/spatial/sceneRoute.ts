@@ -569,6 +569,16 @@ export const ENTRY_GLIDE_TO = (() => {
   return segment.to + (segment.to - segment.from) * 0.3;
 })();
 
+/** V7 (mobile audit fix): the glide boundary derived from the route table the
+ *  camera is actually running. The old constant was desktop-only, so mobile's
+ *  opening glide released at a progress value from a geometry it never runs. */
+export function entryGlideTo(mobile = false): number {
+  if (!mobile) return ENTRY_GLIDE_TO;
+  const segment = MOBILE.one.segments[ENTRY_SEGMENTS - 1];
+  if (!segment) return 0;
+  return segment.to + (segment.to - segment.from) * 0.3;
+}
+
 function tables(mobile: boolean) {
   return mobile ? MOBILE : DESKTOP;
 }

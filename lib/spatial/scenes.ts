@@ -17,7 +17,15 @@
 // still passes exactly through every one of them.
 
 export type SceneId =
-  "hero" | "kivilcim" | "dropspot" | "tail" | "reorient" | "approach" | "handoff";
+  | "hero"
+  | "software-factory"
+  | "kivilcim"
+  | "jointledger"
+  | "dropspot"
+  | "tail"
+  | "reorient"
+  | "approach"
+  | "handoff";
 
 export type WorldPoint = { x: number; y: number };
 
@@ -84,19 +92,52 @@ export const VW_PER_VH = 1.6;
  * Unchanged from V3: the route was reviewed as correct, and §6 of the V4
  * brief requires the curve to still travel through these scenes.
  */
+/**
+ * V7 (OWNER REORDER) — route one carries FOUR project scenes in the
+ * owner-required sequence: Software Factory → Kıvılcım → JointLedger →
+ * DropSpot. Three rules governed the new anchors:
+ *
+ *   1. CONSECUTIVE SCENES DO NOT SHARE FRAME REAL ESTATE AT FOCUS. A first
+ *      pass divided the old hero→tail diagonal among four scenes; at that
+ *      spacing the 84vw scene blocks physically overlapped, and Kıvılcım's
+ *      departing plate sat across JointLedger's acquisition frame. The legs
+ *      are now ~176 screen units — enough that a focused scene owns its
+ *      frame while its neighbours read as world, not as intrusion.
+ *   2. Route one therefore EXTENDS (tail moves from 322,244 to 468,330) and
+ *      the cut keeps its exact tail-relative offset (+30,+24) — while ROUTE
+ *      TWO DOES NOT MOVE AT ALL: every reorient/approach/handoff/traverse/
+ *      descent coordinate, bearing and leg length is byte-identical to the
+ *      long-tuned V6.x choreography. The reposition crosses a longer gap,
+ *      and that gap is crossed inside the occlusion, where distance is
+ *      invisible by design. Depth narrative holds: reorient (y 452) is still
+ *      the world's lowest point, below the deepened tail (y 330).
+ *   3. The bearing stays the approved diagonal (~34° screen) the whole way.
+ *
+ * Mobile keeps the vertical route with the same two extra stops: 130vh per
+ * scene, cut at tail+78 exactly as before, route two below it untouched.
+ */
 export const SCENES: readonly SceneConfig[] = [
   { id: "hero", world: { x: 0, y: 0 }, mobileWorld: { x: 0, y: 0 } },
-  { id: "kivilcim", world: { x: 120, y: 86 }, mobileWorld: { x: 0, y: 128 } },
-  { id: "dropspot", world: { x: 242, y: 162 }, mobileWorld: { x: 0, y: 268 } },
-  { id: "tail", world: { x: 322, y: 244 }, mobileWorld: { x: 0, y: 392 } },
-  { id: "reorient", world: { x: -14, y: 452 }, mobileWorld: { x: 0, y: 620 } },
-  { id: "approach", world: { x: 132, y: 386 }, mobileWorld: { x: 0, y: 748 } },
-  { id: "handoff", world: { x: 264, y: 348 }, mobileWorld: { x: 0, y: 872 } },
+  { id: "software-factory", world: { x: 96, y: 66 }, mobileWorld: { x: 0, y: 130 } },
+  { id: "kivilcim", world: { x: 192, y: 132 }, mobileWorld: { x: 0, y: 260 } },
+  { id: "jointledger", world: { x: 288, y: 198 }, mobileWorld: { x: 0, y: 390 } },
+  { id: "dropspot", world: { x: 384, y: 264 }, mobileWorld: { x: 0, y: 520 } },
+  { id: "tail", world: { x: 468, y: 330 }, mobileWorld: { x: 0, y: 650 } },
+  { id: "reorient", world: { x: -14, y: 452 }, mobileWorld: { x: 0, y: 748 } },
+  { id: "approach", world: { x: 132, y: 386 }, mobileWorld: { x: 0, y: 876 } },
+  { id: "handoff", world: { x: 264, y: 348 }, mobileWorld: { x: 0, y: 1000 } },
 ] as const;
 
 export const SCENE_IDS: readonly SceneId[] = SCENES.map((scene) => scene.id);
 
-export const ROUTE_ONE_IDS = ["hero", "kivilcim", "dropspot", "tail"] as const;
+export const ROUTE_ONE_IDS = [
+  "hero",
+  "software-factory",
+  "kivilcim",
+  "jointledger",
+  "dropspot",
+  "tail",
+] as const;
 export const ROUTE_TWO_IDS = ["reorient", "approach", "handoff"] as const;
 
 /**
@@ -163,7 +204,7 @@ export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
  * camera that only ever descends (§30).
  */
 export const TRAVERSE_WORLD: WorldPoint = { x: 340, y: 458 };
-export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 990 };
+export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 1118 };
 
 /**
  * V6.5 SHORTENED THE TURN, AND ONLY THE TURN: {358, 550} -> {352, 508}.
@@ -185,7 +226,7 @@ export const TRAVERSE_MOBILE_WORLD: WorldPoint = { x: 0, y: 990 };
  * degrees; the distance was only ever the cost of it.
  */
 export const DESCENT_WORLD: WorldPoint = { x: 352, y: 508 };
-export const DESCENT_MOBILE_WORLD: WorldPoint = { x: 0, y: 1048 };
+export const DESCENT_MOBILE_WORLD: WorldPoint = { x: 0, y: 1176 };
 
 /**
  * Where route one ends and the occlusion cut happens. A camera-only
@@ -206,8 +247,8 @@ export const DESCENT_MOBILE_WORLD: WorldPoint = { x: 0, y: 1048 };
  * The coordinate itself is unchanged, because route one's geometry was never the
  * problem.
  */
-export const CUT_WORLD: WorldPoint = { x: 352, y: 268 };
-export const CUT_MOBILE_WORLD: WorldPoint = { x: 0, y: 470 };
+export const CUT_WORLD: WorldPoint = { x: 498, y: 354 };
+export const CUT_MOBILE_WORLD: WorldPoint = { x: 0, y: 728 };
 
 /**
  * Break panel timing, relative to the cut.
@@ -498,7 +539,7 @@ export const FOCUS_SPEED_RATIO = 0.42;
  * lowering the absolute camera speed per scroll pixel everywhere, while leaving
  * the flattened VARIANCE -- the thing that was actually wrong -- intact.
  */
-export const ROUTE_LENGTH_VH = 430;
+export const ROUTE_LENGTH_VH = 640;
 
 /**
  * Depth planes (§12). The middle plane is the world itself and is pinned at

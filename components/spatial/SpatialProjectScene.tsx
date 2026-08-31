@@ -24,12 +24,21 @@ import { representativeAsset } from "@/lib/spatial/systemPov";
 type SpatialProjectSceneProps = {
   project: ProjectFrontmatter;
   /**
-   * `split` puts the evidence plate beside the text; `stacked` leads with a
-   * dominant full-width plate. Two genuinely different editorial
-   * compositions, so the two project scenes never read as one repeated
-   * template -- which is also what DESIGN_SYSTEM §17 criterion 4 asks for.
+   * Four genuinely different editorial compositions, so the four project
+   * scenes never read as one repeated template (DESIGN_SYSTEM §17 crit. 4):
+   *
+   *   `foundation`  the systemic/meta layer — one identity line, then the
+   *                 widest plate on the route. Used by Software Factory: the
+   *                 diagram IS the argument, so it takes the room.
+   *   `split`       evidence beside the text, plate right (Kıvılcım).
+   *   `counter`     the mirror of split — plate LEFT, identity right. The
+   *                 route has bent past its midpoint by JointLedger, and the
+   *                 composition answers by leading with evidence from the
+   *                 other side.
+   *   `stacked`     identity row over a dominant full-width evidence group
+   *                 (DropSpot).
    */
-  variant: "split" | "stacked";
+  variant: "foundation" | "split" | "counter" | "stacked";
 };
 
 const EVIDENCE_LABEL: Record<ProjectImageAssetType, string> = {
@@ -46,18 +55,18 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   const asset = representativeAsset(project);
   const stacked = variant === "stacked";
 
-  // FABLE GATE 1 (Q1) RETIRED THE SECOND SHOT. The pair existed as height
-  // compensation -- its own comment said so: "no crop or swap can buy height
-  // honestly. What CAN is a second real screenshot." That premise was wrong on
-  // one point: a crop CAN buy height honestly when the frame window is chosen
-  // so the caption's claim stays fully visible, and the gate chose exactly
-  // that (see STACKED_FRAME_RATIO below). With the real fix in place the
-  // second shot stopped being composition and became double-counting: two
-  // near-identical light product surfaces stacked to bulk the group out --
-  // "assembled, not architected", and precisely the filler the gate's own
-  // acceptance criteria forbid. One dominant plate now carries the scene, and
-  // the depth pairing the overlap used to gesture at is done by the thing that
-  // actually has depth: the scene's world plane, at a different parallax rate.
+  // V7 (OWNER DECISION) RESTORED THE SECOND SHOT AND RETIRED THE CROP. Gate 1
+  // had cropped the stacked plate to the benchmark ratio and removed the pair;
+  // the owner's review reversed both: the evidence should carry its earlier
+  // taller, longer presence — the full uncropped surface plus the second real
+  // screenshot extending the group downward — and the crop's 22.5% loss was
+  // not an acceptable price. Selection stays data-driven: the next registered
+  // real-screenshot after the representative one, no slug special-cased.
+  const secondary = stacked
+    ? (project.images.find(
+        (image) => image.assetType === "real-screenshot" && image.src !== asset?.src,
+      ) ?? null)
+    : null;
 
   // The evidence type, and only that. V5 moves the route index into the
   // system's acquisition frame (§9): indexing scenes is the observing
@@ -94,7 +103,7 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   );
 
   const detail = (
-    <div className={stacked ? "" : "mt-8"}>
+    <div className={stacked || variant === "foundation" ? "" : "mt-8"}>
       <p className="max-w-[34rem] font-display text-heading-m text-ink">{project.description}</p>
       {project.upstream && (
         // CONTENT_MODEL §9: upstream disclosure is mandatory in any rendering
@@ -112,35 +121,13 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     </div>
   );
 
-  // FABLE GATE 1 (Q1a): the stacked plate's frame ratio. The number is derived,
-  // not felt: at the accepted 76% plate width both scenes' media are fixed
-  // fractions of the same px-capped scene measure, so ONE ratio makes the
-  // stacked plate render exactly as tall as the approved Kıvılcım plate at
-  // every viewport -- 886.7px wide / 520.6px tall at 1440x900, benchmark
-  // height to the pixel. The price, accepted deliberately: 22.5% of the
-  // screenshot's width leaves the frame. The window is anchored to the LEFT
-  // edge because everything the caption claims -- "browsing drops with
-  // waitlist status visible" -- lives there: the heading, all four status
-  // filter tabs, and both cards carrying "In Waitlist" badges sit in the kept
-  // region, and the third card running off the right edge is an ordinary
-  // editorial crop, not a truncated claim. Applied only to the stacked
-  // variant; the split (Kıvılcım) plate is frozen and takes no frame.
-  const STACKED_FRAME_RATIO = 1.703;
-
   // The evidence plate. `Figure` is reused deliberately -- it is a ui
   // primitive, not the rejected card: it carries the approved mat/border/
   // corner-tick vocabulary, renders the asset's honest D-019 caption, and
   // keeps TASK-008's explicit-intrinsic-dimensions CLS fix. Only its scale
-  // changes here.
-  const plate = asset ? (
-    <Figure
-      src={asset.src}
-      alt={asset.alt}
-      caption={asset.caption}
-      frameRatio={stacked ? STACKED_FRAME_RATIO : undefined}
-      framePosition={stacked ? "left center" : undefined}
-    />
-  ) : null;
+  // changes here. V7: no frame ratio anywhere — the owner reversed the Gate 1
+  // crop, so every plate shows its full uncropped asset.
+  const plate = asset ? <Figure src={asset.src} alt={asset.alt} caption={asset.caption} /> : null;
 
   // The `split` layout lets the evidence plate break the text column's
   // alignment edge (§16): it overhangs the block's right edge, so the scene
@@ -210,9 +197,76 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         </div>
         {plate && (
           <div className="relative mt-7 w-full" style={resolveDown}>
-            <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[60%]">{plate}</div>
+            {/* V7: 76% -> 84%. The owner reversed the crop, so height comes
+                from the honest source again — width. At 84% of the px-capped
+                block the uncropped 2.2:1 surface renders ~449px tall at
+                1440x900 (was 403 at 76%), and the group below extends it. */}
+            <div className="w-full lg:w-[84%] lg:[&_figcaption]:max-w-[56%]">{plate}</div>
+            {secondary && (
+              // The pair's geometry, in the scene's own fractions so it holds
+              // at every viewport: the detail shot registers its right edge on
+              // the scene block's right edge and overlaps the primary's
+              // lower-right quarter -- nearer evidence in front of farther
+              // evidence, extending the group downward. V7 sizes it up with
+              // the primary (44% -> 52%) so the pair reads as two real
+              // surfaces, not a stamp on a plate. Desktop only: the mobile
+              // scene keeps the single plate (§30), and its vertical budget
+              // is fixed.
+              <div className="absolute left-[48%] top-[46%] hidden w-[52%] lg:block">
+                <Figure src={secondary.src} alt={secondary.alt} caption={secondary.caption} />
+              </div>
+            )}
+            {/* Reserves the pair's downward extension in the block's own box,
+                so the scene's vertical centre accounts for the full group. */}
+            {secondary && <div aria-hidden="true" className="hidden lg:block lg:pb-[13%]" />}
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (variant === "foundation") {
+    // V7 — SOFTWARE FACTORY. The systemic layer the rest of the journey stands
+    // on, and the composition says so structurally rather than with any badge:
+    // one full-measure identity line, then the WIDEST plate on the route — the
+    // delivery-loop diagram at 92% of the block, wider than any evidence that
+    // follows it. Nothing else competes in the frame; the system is the hero.
+    return (
+      <div className="w-full">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pt-7">
+          <div className="lg:col-span-5">{identity}</div>
+          <div className="lg:col-span-6 lg:col-start-7">{detail}</div>
+        </div>
+        {plate && (
+          <div className="relative mt-7 w-full" style={resolveDown}>
+            <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%]">{plate}</div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (variant === "counter") {
+    // V7 — JOINTLEDGER. The mirror of `split`: evidence leads from the LEFT,
+    // identity stands to the right. By this point the route has crossed its
+    // midpoint; the fourth composition answering from the other side is what
+    // keeps four project scenes from reading as one template stamped four
+    // times. The plate overhangs the block's LEFT edge — the same spatial
+    // device as split's right overhang, clipped by the same camera frame.
+    return (
+      <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
+        {plate && (
+          <div
+            className="order-2 lg:order-1 lg:col-span-8"
+            style={{ ...resolveDown, marginLeft: "var(--scene-overhang, 0px)" }}
+          >
+            {plate}
+          </div>
+        )}
+        <div className="order-1 lg:order-2 lg:col-span-4">
+          {identity}
+          {detail}
+        </div>
       </div>
     );
   }

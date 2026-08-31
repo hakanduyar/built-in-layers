@@ -5,8 +5,8 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
-  builtForRealLifeHeading,
-  builtForRealLifeSubheading,
+  selectedSystemsHeading,
+  selectedSystemsSubheading,
   heroPrimaryLine,
   homePositioning,
   homeWordmark,
@@ -43,8 +43,10 @@ import { systemAnnotation } from "@/lib/spatial/systemPov";
 // and even the "what's beyond this tour" line names the remaining projects
 // from loader data rather than hard-coding them.
 
-/** The two projects this vertical slice stages as full scenes. */
-const TOUR_SLUGS = ["kivilcim", "dropspot"] as const;
+/** V7 (OWNER REORDER): the four projects the tour stages as full scenes, in
+ *  the owner-required sequence — Software Factory first as the foundational
+ *  system layer, then Kıvılcım, JointLedger, DropSpot. */
+const TOUR_SLUGS = ["software-factory", "kivilcim", "jointledger", "dropspot"] as const;
 
 // Both expressive words are the two halves of the approved primary line in
 // data/copy.ts ("Interfaces on the surface. Systems underneath.") -- the
@@ -88,9 +90,11 @@ const DEPTH_MARKS = [-34, -21, -8];
  * reveal rather than a table of contents.
  */
 const NEAR_DESTINATION = {
-  index: sectionIndex.builtForRealLife,
-  title: builtForRealLifeHeading,
-  lines: [builtForRealLifeSubheading],
+  // V7: the near destination now foreshadows the section that actually stands
+  // there — the Selected Systems index that replaced the dormant register.
+  index: sectionIndex.selectedSystems,
+  title: selectedSystemsHeading,
+  lines: [selectedSystemsSubheading],
 } as const;
 
 const DEEP_DESTINATION = {
@@ -110,18 +114,20 @@ const DEEP_DESTINATION = {
 
 export function SpatialExperience() {
   const featured = getProjectsByTier("featured");
-  const kivilcim = featured.find((project) => project.slug === TOUR_SLUGS[0]);
-  const dropspot = featured.find((project) => project.slug === TOUR_SLUGS[1]);
+  const softwareFactory = featured.find((project) => project.slug === TOUR_SLUGS[0]);
+  const kivilcim = featured.find((project) => project.slug === TOUR_SLUGS[1]);
+  const jointledger = featured.find((project) => project.slug === TOUR_SLUGS[2]);
+  const dropspot = featured.find((project) => project.slug === TOUR_SLUGS[3]);
   const beyondTour = featured.filter(
     (project) => !TOUR_SLUGS.some((slug) => slug === project.slug),
   );
 
-  if (!kivilcim || !dropspot) {
-    // Both are currently always-published (D-016); this only trips if
-    // publication status changes without updating this prototype -- fail
-    // loudly rather than silently render a broken tour.
+  if (!softwareFactory || !kivilcim || !jointledger || !dropspot) {
+    // All four are published; this only trips if publication status changes
+    // without updating this prototype -- fail loudly rather than silently
+    // render a broken tour.
     throw new Error(
-      "SpatialExperience requires kivilcim and dropspot to be published — check content/work/*/index.mdx status",
+      "SpatialExperience requires software-factory, kivilcim, jointledger and dropspot to be published — check content/work/*/index.mdx status",
     );
   }
 
@@ -145,7 +151,13 @@ export function SpatialExperience() {
           <TravelMaterial
             plane="distant"
             words={[
+              // V7: the two NEW stops announce themselves; Kıvılcım and
+              // DropSpot keep their existing fragments. Four route-one words
+              // across a six-leg route is the same density the two-scene
+              // route carried.
+              { word: softwareFactory.title, before: "software-factory" },
               { word: kivilcim.title, before: "kivilcim" },
+              { word: jointledger.title, before: "jointledger" },
               { word: dropspot.title, before: "dropspot" },
               // Route two's material names a project the tour does NOT stage
               // but the handoff does mention, so the second route carries its
@@ -173,8 +185,10 @@ export function SpatialExperience() {
         // validated frontmatter -- there is no slug->copy table here and no
         // field this file invents.
         annotations={{
-          kivilcim: systemAnnotation(kivilcim, "01"),
-          dropspot: systemAnnotation(dropspot, "02"),
+          "software-factory": systemAnnotation(softwareFactory, "01"),
+          kivilcim: systemAnnotation(kivilcim, "02"),
+          jointledger: systemAnnotation(jointledger, "03"),
+          dropspot: systemAnnotation(dropspot, "04"),
         }}
         hero={
           // Scroll position 0. Still calm and still readable as a premium
@@ -229,7 +243,10 @@ export function SpatialExperience() {
                   h3. Visually hidden because the spatial composition has no
                   room for a literal section label, but the document outline
                   and axe's heading-order rule both need it. */}
-              <h2 className="sr-only">Selected systems</h2>
+              {/* V7: renamed from "Selected systems" — that heading now belongs to the
+                  lower page's real systems index, and two identical headings were a
+                  strict-mode/AT ambiguity. */}
+              <h2 className="sr-only">Featured systems</h2>
             </div>
 
             <div
@@ -261,7 +278,9 @@ export function SpatialExperience() {
             </div>
           </div>
         }
+        software-factory={<SpatialProjectScene project={softwareFactory} variant="foundation" />}
         kivilcim={<SpatialProjectScene project={kivilcim} variant="split" />}
+        jointledger={<SpatialProjectScene project={jointledger} variant="counter" />}
         dropspot={<SpatialProjectScene project={dropspot} variant="stacked" />}
         reorient={
           // The reposition target. The giant word is no longer an isolated

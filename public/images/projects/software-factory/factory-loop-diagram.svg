@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="sfl-title sfl-desc">
+  <title id="sfl-title">Software Factory delivery loop diagram</title>
+  <desc id="sfl-desc">A diagram of the Software Factory's documented delivery loop: plan, ticket, implementation, automated test, independent review, human approval, then merge and release, with evidence recorded from every stage. Below the loop, the repository's own integration mandate is summarized: autonomous completion is permitted only while every one of its conditions holds, including frozen acceptance criteria, deterministic verification, an independent reviewer pass, and an unchanged repository fingerprint — with production deployment and release reserved for humans. This is a verified diagram traced to the repository's own documents, not a product screenshot.</desc>
+
+  <rect width="1600" height="1000" fill="#f1efe8" />
+
+  <text x="64" y="72" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="22" letter-spacing="2" fill="#504e48">VERIFIED SYSTEM DIAGRAM</text>
+  <line x1="64" y1="96" x2="1536" y2="96" stroke="#b8b5ac" stroke-width="1" />
+
+  <text x="64" y="176" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="52" font-weight="600" fill="#161616">The delivery loop</text>
+  <text x="64" y="220" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" fill="#504e48">Every change travels the same gated path; evidence is recorded at each stage</text>
+
+  <defs>
+    <marker id="sfah" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="none" stroke="#161616" stroke-width="1.6" />
+    </marker>
+  </defs>
+
+  <!-- Row 1: the loop, 4 + 4 stages over two rows -->
+  <!-- Stage boxes: 320 wide, 96 tall, gap 48 -->
+  <g font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif">
+    <!-- Plan -->
+    <rect x="64" y="290" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="88" y="330" font-size="24" font-weight="600" fill="#161616">1. Plan</text>
+    <text x="88" y="360" font-size="16" fill="#504e48">roadmap → approved task</text>
+
+    <path d="M 384 338 L 428 338" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Ticket -->
+    <rect x="432" y="290" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="456" y="330" font-size="24" font-weight="600" fill="#161616">2. Ticket</text>
+    <text x="456" y="360" font-size="16" fill="#504e48">frozen acceptance criteria</text>
+
+    <path d="M 752 338 L 796 338" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Implementation -->
+    <rect x="800" y="290" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="824" y="330" font-size="24" font-weight="600" fill="#161616">3. Implementation</text>
+    <text x="824" y="360" font-size="16" fill="#504e48">routed to the right worker</text>
+
+    <path d="M 1120 338 L 1164 338" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Automated test -->
+    <rect x="1168" y="290" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="1192" y="330" font-size="24" font-weight="600" fill="#161616">4. Automated test</text>
+    <text x="1192" y="360" font-size="16" fill="#504e48">deterministic verification</text>
+
+    <!-- down + back row -->
+    <path d="M 1328 386 L 1328 442" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Independent review (gate: signal-ui) -->
+    <rect x="1168" y="446" width="320" height="96" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="1192" y="486" font-size="24" font-weight="600" fill="#161616">5. Independent review</text>
+    <text x="1192" y="516" font-size="16" fill="#504e48">separate reviewer; PASS required</text>
+
+    <path d="M 1164 494 L 1124 494" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Human approval (gate: signal-ui) -->
+    <rect x="800" y="446" width="320" height="96" fill="none" stroke="#e04413" stroke-width="2" />
+    <text x="824" y="486" font-size="24" font-weight="600" fill="#161616">6. Human approval</text>
+    <text x="824" y="516" font-size="16" fill="#504e48">release and deploy stay human-only</text>
+
+    <path d="M 796 494 L 756 494" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Merge / release -->
+    <rect x="432" y="446" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="456" y="486" font-size="24" font-weight="600" fill="#161616">7. Merge / release</text>
+    <text x="456" y="516" font-size="16" fill="#504e48">only while every gate holds</text>
+
+    <path d="M 428 494 L 388 494" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+
+    <!-- Evidence -->
+    <rect x="64" y="446" width="320" height="96" fill="none" stroke="#b8b5ac" stroke-width="1" />
+    <text x="88" y="486" font-size="24" font-weight="600" fill="#161616">8. Evidence</text>
+    <text x="88" y="516" font-size="16" fill="#504e48">recorded from every stage</text>
+
+    <!-- loop back up to Plan -->
+    <path d="M 224 446 L 224 386" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
+  </g>
+
+  <!-- The mandate block -->
+  <rect x="64" y="614" width="1472" height="286" fill="none" stroke="#161616" stroke-width="2" />
+  <text x="88" y="652" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="18" letter-spacing="2" fill="#161616">INTEGRATION MANDATE — AUTONOMY ONLY WHILE EVERY CONDITION HOLDS</text>
+
+  <g font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">
+    <text x="104" y="700">— acceptance criteria frozen before implementation begins</text>
+    <text x="104" y="734">— verification is deterministic and automated</text>
+    <text x="104" y="768">— an independent reviewer returns PASS with zero critical findings</text>
+    <text x="104" y="802">— reviewer independence is preserved end to end</text>
+    <text x="800" y="700">— repository fingerprint unchanged across the review</text>
+    <text x="800" y="734">— regressions pass; trees are equivalent</text>
+    <text x="800" y="768">— no human-only boundary is crossed</text>
+    <text x="800" y="802">— production deployment and public release stay human decisions</text>
+  </g>
+  <text x="104" y="862" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="15" fill="#504e48">SOURCE: THE REPOSITORY'S OWN CONSTITUTION AND ADR-0002 — SUMMARIZED, NOT INVENTED</text>
+
+  <text x="64" y="956" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">VERIFIED AGAINST github.com/hakanduyar/software-factory — NOT A PRODUCT SCREENSHOT</text>
+</svg>
