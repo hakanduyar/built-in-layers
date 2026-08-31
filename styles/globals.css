@@ -123,6 +123,33 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /*
+   * THE EDITORIAL DRIFT BLOCKS PARK HERE, IN CSS, ON PURPOSE.
+   *
+   * D-020's contract is "reduced motion disables motion, not design": each block
+   * keeps its asymmetric placement but stops travelling. That used to be decided
+   * in JS -- `x: reduceMotion ? parked : motionValue` -- which is only correct
+   * while `useReducedMotion()` is true on the very FIRST render. It was, and that
+   * is exactly why it also produced a hydration failure: the server cannot know
+   * the preference, so it served the travelling position and the client hydrated
+   * the parked one, and React regenerated the whole lower page for precisely the
+   * audience least able to absorb it.
+   *
+   * Deciding it in JS after hydration fixes the mismatch but opens a window: for
+   * the frames between hydration and the preference settling, the block is still
+   * bound to the scroll. Under parallel test load that window was wide enough for
+   * `tests/e2e/spatial-v5.spec.ts` to measure 91px of travel.
+   *
+   * The browser has no such problem. The server emits identical markup for
+   * everyone -- including `--drift-parked`, a per-block constant -- and the media
+   * query parks the block with zero JavaScript, zero timing window and zero
+   * mismatch. `!important` is load-bearing: Motion writes `transform` inline, and
+   * an important stylesheet declaration is the one thing that outranks it.
+   */
+  [data-drift-block] {
+    transform: translateX(var(--drift-parked)) !important;
+  }
 }
 
 /*

@@ -82,9 +82,21 @@ export function ProjectPlane({ scene, offset, width, height, progress }: Project
   // agrees about when it is being looked at.
   const presence = useTransform(progress, (value) => {
     const near = sceneProximity(scene, value, false);
-    // V6.8 review: floor lowered 0.26 -> 0.14 so a plane whose scene has left the
-    // frame is a whisper, not an orphaned rectangle standing alone in travel space.
-    return 0.14 + 0.52 * Math.max(0, near);
+    // The presence decays to ZERO outside the scene's own proximity window.
+    //
+    // It used to floor at 0.14 ("a whisper, not an orphaned rectangle"), and that
+    // floor was never free: `sceneProximity` returns exactly 0 once the camera is
+    // past a scene's reach, so a floored plane stayed faintly painted through the
+    // ENTIRE journey -- including inside the frozen Kivilcim frame, where the
+    // DropSpot plane was measured still on at 0.140. The DropSpot plane's x offset
+    // was then pushed 0.14 -> 0.21 specifically to dodge that intrusion, at the
+    // cost of 82px of its own ground; i.e. one plane's placement was being decided
+    // by another plane's leak rather than by its own composition.
+    //
+    // Removing the floor is strictly safer and changes nothing where it matters:
+    // at focus `near` is 1, so 0.66 * 1 == the old 0.14 + 0.52 * 1 == 0.66, exactly
+    // as before. Only the out-of-window tail changes, and it changes to nothing.
+    return 0.66 * Math.max(0, near);
   });
 
   return (

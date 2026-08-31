@@ -607,7 +607,23 @@ export function SpatialCamera({
   const mobile = !isDesktop;
 
   const spacerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: spacerRef, offset: ["start start", "end end"] });
+  // The target is supplied only while the enhanced tree is actually rendered.
+  // The spacer exists ONLY in that tree (see the early return below), so on the
+  // first render and for every reduced-motion visitor `spacerRef.current` is
+  // null -- and Motion's useScroll asserts exactly that case:
+  //   Error: Target ref is defined but not hydrated.
+  // Dev-only (the invariant is stripped from the production bundle, confirmed by
+  // loading the production build with reducedMotion: "reduce"), but it is real
+  // noise in the owner's console and the tracker it warns about is one nobody
+  // reads: in the non-enhanced tree the filtered progress value is never
+  // consumed. Omitting the target leaves useScroll tracking the viewport
+  // harmlessly until `enhanced` flips true, at which point Motion re-initialises
+  // against the spacer that now exists.
+  const { scrollYProgress } = useScroll(
+    enhanced
+      ? { target: spacerRef, offset: ["start start", "end end"] }
+      : { offset: ["start start", "end end"] },
+  );
 
   // Raw scroll drives a filtered "visual progress"; EVERYTHING visual reads
   // from the filtered value -- camera, break, inspection, depth, system
@@ -770,10 +786,19 @@ export function SpatialCamera({
                 // down-right of it -- the direction the camera is travelling. At
                 // focus (1440x900) the media overhangs the plane's top and left
                 // edges, so the two can never read as a frame and its picture,
-                // and the plane's right edge lands exactly on the viewport
-                // bracket's vertical (17 + 8 + 66 = 91vw): at the one beat the
-                // system has fully acquired the scene, the world plane registers
-                // with the frame's own grid. The 0.62-rate lag walks it down-right
+                // and the plane's RIGHT EDGE REGISTERS EXACTLY ON THE SCENE
+                // BLOCK'S RIGHT EDGE -- offset.x + width == 1.00 scene units, so
+                // the registration holds at every viewport by construction, not
+                // by arithmetic that happens to work at one width.
+                //
+                // This corrects a real regression. The comment here used to claim
+                // the right edge landed on "91vw", arithmetic left over from when
+                // these offsets were authored in vw; after the conversion to scene
+                // fractions the claim was measurably false in the shipped build --
+                // 91vw at 1440 is 1310px and the plane's edge sat at 1367, 57px
+                // adrift, registering to nothing. That is the "badly / arbitrarily
+                // aligned" plane the review reported, and it was a stale number
+                // rather than an unmade decision. The 0.62-rate lag walks it down-right
                 // across the whole composition as the camera passes -- arriving
                 // ahead of the evidence, separating from it on departure, which is
                 // what makes the exit read as the camera leaving a place.
@@ -802,7 +827,7 @@ export function SpatialCamera({
                 // corner at 1452 (off-frame) and past 2552's frame as well, at
                 // the cost of 82px of the ground's lower-left reveal.
                 offset={{ x: 0.21, y: 0.22 }}
-                width={0.85}
+                width={0.79}
                 height={0.45}
                 progress={progress}
               />

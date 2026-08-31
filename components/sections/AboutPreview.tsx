@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { TextLink } from "@/components/ui/TextLink";
 import { Reveal } from "@/components/ui/motion/Reveal";
@@ -33,7 +34,7 @@ import { contactUrl } from "@/data/site";
 export function AboutPreview() {
   const [givenName = "Hakan", familyName = "Duyar"] = homeWordmark.split(" ");
   const ref = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useSettledReducedMotion();
   // V6.8 (§10): IDENTITY RESOLUTION AS BEHAVIOUR. The name does not fade in --
   // it FOCUSES: letterspacing narrows from dispersed to set as the section
   // crosses the viewport, the same "resolves as the system closes on it" motion

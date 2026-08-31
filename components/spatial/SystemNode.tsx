@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 
 // Spatial Portfolio V6.7 completion pass (feature/spatial-portfolio-v5, not merged
 // to main -- see docs/DESIGN_SYSTEM.md §27).
@@ -62,7 +63,7 @@ const STATE: string[] = ["Detected", "Acquired", "Resolved"];
 
 export function SystemNode({ index, label, children, align = "left" }: SystemNodeProps) {
   const ref = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useSettledReducedMotion();
   // The section's own passage through the viewport -- the same signal DriftBlock
   // uses, so the node and the plate it sits on can never disagree about where the
   // section is.

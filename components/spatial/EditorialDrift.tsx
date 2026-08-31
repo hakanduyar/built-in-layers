@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
 import {
   DRIFT_SETTLE,
   driftMeasure,
@@ -157,11 +157,22 @@ function trackX(fraction: number): string {
 export function DriftBlock({ id, children }: { id: DriftSectionId; children: ReactNode }) {
   const section = driftSection(id);
   const plate = driftPlate(id);
-  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   // Entry -> exit across the block's own passage through the viewport, so the
   // block reaches its mid position exactly when it is centred and being read.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  // The travelling position. There is NO reduced-motion branch here: the block
+  // always binds this value, so server and client always agree, and the parked
+  // state is applied by a `prefers-reduced-motion` rule in styles/globals.css
+  // against the `--drift-parked` constant published below.
+  //
+  // It used to be `x: reduceMotion ? parked : x`, which is only correct while
+  // `useReducedMotion()` is already true on the FIRST render -- and that is exactly
+  // what produced a hydration failure, since the server cannot know the preference.
+  // Settling the preference after hydration fixed the mismatch but opened a timing
+  // window in which the block was still bound to the scroll; under parallel test
+  // load tests/e2e/spatial-v5.spec.ts measured 91.44px of travel through it. CSS
+  // has neither problem.
   const x = useTransform(scrollYProgress, [0, 1], [trackX(section.entry), trackX(section.exit)]);
 
   // V6.8 (JOB 3) DELETED TWO MARKS THAT STOOD HERE, and the test was the brief's
@@ -188,22 +199,27 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
       <motion.div
         data-drift-block={id}
         data-drift-plane={section.plane}
-        style={{
-          // V6.1 (§21): each section holds its own measure, derived from its
-          // depth. The four blocks are no longer one width with four offsets.
-          //
-          // The `min()` is load-bearing, not defensive styling: a multiplier above
-          // 1 (the `near` plane) applied to a block already at 92vw would push
-          // past the viewport on a phone, where the track's free space is only a
-          // few pixels. Bounding it against the padded viewport makes overflow
-          // impossible at every width by construction -- the same discipline the
-          // free-space fraction uses for x.
-          width: `min(calc(var(--drift-w) * ${driftMeasure(id)}), calc(100vw - 2 * var(--drift-pad)))`,
-          // Reduced motion keeps the composition and drops the movement (§37):
-          // the block simply rests at its mid position, which is still an
-          // asymmetric, designed placement rather than a centred column.
-          x: reduceMotion ? trackX((section.entry + section.exit) / 2) : x,
-        }}
+        style={
+          {
+            // V6.1 (§21): each section holds its own measure, derived from its
+            // depth. The four blocks are no longer one width with four offsets.
+            //
+            // The `min()` is load-bearing, not defensive styling: a multiplier above
+            // 1 (the `near` plane) applied to a block already at 92vw would push
+            // past the viewport on a phone, where the track's free space is only a
+            // few pixels. Bounding it against the padded viewport makes overflow
+            // impossible at every width by construction -- the same discipline the
+            // free-space fraction uses for x.
+            width: `min(calc(var(--drift-w) * ${driftMeasure(id)}), calc(100vw - 2 * var(--drift-pad)))`,
+            // Reduced motion keeps the composition and drops the movement (§37):
+            // the block rests at its mid position -- still an asymmetric, designed
+            // placement rather than a centred column. Read only by the media query in
+            // styles/globals.css; identical on server and client, so it can never
+            // cause a mismatch.
+            "--drift-parked": trackX((section.entry + section.exit) / 2),
+            x,
+          } as MotionStyle
+        }
       >
         {children}
       </motion.div>

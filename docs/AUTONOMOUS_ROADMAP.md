@@ -25,11 +25,11 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 
 | # | Phase | Owner | State |
 |---|---|---|---|
-| 1 | Recovery + durable checkpoint | Opus | **HALTED — STATE D**, see `AUTONOMOUS_RECOVERY_STATUS.md` |
-| 2 | Technical baseline / console triage | Opus | blocked on Phase 1 |
-| 3 | DropSpot final engineering prep (mechanical diagnosis first) | Opus | blocked on Phase 1 |
-| — | **Fable Gate 1** — desktop final art direction | Fable | only if unresolved judgement remains after Phase 3 |
-| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | blocked on Phase 1 |
+| 1 | Recovery + durable checkpoint | Opus | **COMPLETE** — V6.8 recovered from Ubuntu, merged with `dc81393`, pushed (`dc0fef6`) |
+| 2 | Technical baseline / console triage | Opus | **COMPLETE** — see `§ Phase 2 result` |
+| 3 | DropSpot final engineering prep (mechanical diagnosis first) | Opus | **COMPLETE** — measured; residue is compositional, see `.ai/handoffs/FABLE-GATE.md` |
+| — | **Fable Gate 1** — desktop final art direction | Fable | **READY** — `.ai/handoffs/FABLE-GATE.md` |
+| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | after Gate 1 |
 | — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | after Phase 4 |
 | 5 | Apply the approved case-study system to remaining projects | Opus | after Gate 2 |
 | — | **Fable Gate 3** — Software Factory flagship | Fable | after real architecture is extracted by Opus |
@@ -48,9 +48,32 @@ Classify the machine into exactly one state before any code change:
 - **STATE C** — latest source in another local branch / worktree / snapshot / patch / copy
 - **STATE D** — Windows and `origin` hold only `d7013f8`-era source; the Ubuntu work is unavailable
 
-**Result: STATE D.** Under STATE D the rule is a hard stop — do not recreate V6.8, do not rebuild
-it from reports, do not start new development on the old source, do not let a design gate
-redesign from screenshots, and do not create a competing implementation history.
+**Result at the time of writing: STATE D.** Resolved on 2026-08-28 — the Ubuntu machine held the
+complete V6.8 tree; it was snapshotted, committed (`d7bcebc`), merged with the Windows
+documentation checkpoint (`682d54e`) and pushed. The branch tip is `dc0fef6`.
+
+---
+
+## Phase 2 result — technical baseline / console triage (2026-08-31)
+
+Audited the recovered V6.8 production build with an instrumented browser (console, page errors,
+failed requests, listener/rAF lifecycle across scroll + resize + client-side navigation, keyboard
+focus, reduced motion).
+
+| Finding | Class | Outcome |
+|---|---|---|
+| Reduced-motion hydration mismatch (React #418) in `DriftBlock` — server served `translateX(…0.04…)`, client hydrated `…0.22…`, whole lower page regenerated | **ERROR** | **FIXED**. `AboutPreview` and `SystemNode` use the new `useSettledReducedMotion()` (reports the preference only after hydration commits). `DriftBlock` needed more: settling in JS fixed the mismatch but left a window in which the block was still bound to the scroll, and the D-020 e2e caught 91.44px of travel through it. Its parked state is now a `prefers-reduced-motion` rule in `styles/globals.css` against a server-rendered `--drift-parked` constant — no JS branch, no window, no mismatch. |
+| `Target ref is defined but not hydrated` — `useScroll` targeted `spacerRef`, which exists only in the enhanced tree | **DEV-ONLY** (stripped in prod) | **FIXED** — the target is supplied only while `enhanced` |
+| React "unique key" warning attributed to `SpatialCamera`/`SpatialExperience` | **DEV-ONLY / framework** | Not fixed. Every authored JSX list was scanned programmatically and all are keyed; the payload arrives as an RSC lazy reference at the server→client prop boundary. Absent from the production build. Documented, not suppressed. |
+| Motion "You have Reduced Motion enabled" notice | **THIRD-PARTY** | Expected |
+| Production console errors / warnings / failed requests / missing assets | — | **none** |
+| rAF still running after client-side navigation away | — | **0 ticks** — clean teardown |
+| Net window/document listeners after navigation | **EXPECTED** | React root-delegated listeners; persist by design |
+| Keyboard focus reaching off-viewport scene links | **EXPECTED** | The camera recenters them in 600–800 ms and focus is retained — an initial 90 ms probe was the measurement artifact, not a defect |
+| Reduced-motion overflow / document height | — | 0 px overflow, static tree correct |
+
+Validation after the fixes: typecheck, lint, prettier clean; unit **491/491**; production build
+14/14 routes; Chromium E2E **208/208**; production and reduced-motion consoles both clean.
 
 ---
 
