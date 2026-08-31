@@ -21,7 +21,7 @@
 // different sign of travel -- a fixed table, testable and stable across
 // visits, history and screenshots.
 
-export type DriftSectionId = "real-life" | "how-i-build" | "field-notes" | "about";
+export type DriftSectionId = "selected-systems" | "how-i-build" | "field-notes" | "about";
 
 /**
  * V6.1 (§21): each section's own spatial relationship to the route, not just its
@@ -89,7 +89,7 @@ export type DriftSection = {
  * abandoning it.
  */
 export const DRIFT_SECTIONS: readonly DriftSection[] = [
-  { id: "real-life", entry: 0.04, exit: 0.4, plane: "plate", depth: 0 },
+  { id: "selected-systems", entry: 0.04, exit: 0.4, plane: "plate", depth: 0 },
   { id: "how-i-build", entry: 0.78, exit: 0.18, plane: "wide", depth: -0.25 },
   { id: "field-notes", entry: 0.26, exit: 0.68, plane: "distant", depth: -0.7 },
   { id: "about", entry: 0.58, exit: 0.42, plane: "near", depth: 0.55 },
@@ -165,7 +165,7 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   //
   // 12vh, not 6: it is still the arrival, and it is still where the spine runs on
   // alone. §5 asks for the excess removed, not for the negative space eliminated.
-  "real-life": { gapVh: 5, seamRem: 16 },
+  "selected-systems": { gapVh: 5, seamRem: 16 },
   // A broader plane the route runs alongside.
   "how-i-build": { gapVh: 22, seamRem: 16 },
   // Set back and further away: the least of its surface visible.

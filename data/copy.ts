@@ -21,6 +21,7 @@ export const layerDefinitions = [
 ] as const;
 
 // PROJECT_SPEC.md §11 "Selected work heading" seed, verbatim.
+export const selectedSystemsHeading = "Selected systems";
 export const selectedSystemsSubheading = "Not just what they look like — how they actually work.";
 
 // V6.3: the heading itself, promoted out of the section component so the spatial
@@ -45,7 +46,10 @@ export const howIBuildHeading = "How I build";
  * listed; the rest keep their literals until something else needs them.
  */
 export const sectionIndex = {
-  builtForRealLife: "05",
+  // V7: "Built for real life" (a dormant zero-entry register) is replaced at
+  // IA position 05 by the Selected Systems index. The old copy exports remain
+  // below for the retired component, which is kept unused for revert paths.
+  selectedSystems: "05",
   howIBuild: "06",
 } as const;
 

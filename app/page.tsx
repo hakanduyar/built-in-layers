@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { AboutPreview } from "@/components/sections/AboutPreview";
-import { BuiltForRealLife } from "@/components/sections/BuiltForRealLife";
+import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { FieldNotes } from "@/components/sections/FieldNotes";
 import { HowIBuild } from "@/components/sections/HowIBuild";
 import { DriftBlock, EditorialDrift } from "@/components/spatial/EditorialDrift";
 import { SpatialExperience } from "@/components/spatial/SpatialExperience";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
-import { getProjectsByTier } from "@/lib/content/work";
+import { getPublishedProjects } from "@/lib/content/work";
 import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
@@ -41,7 +41,9 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function Home() {
-  const realLifeProjects = getProjectsByTier("real-life");
+  // V7: the Selected Systems index lists every published system, in the
+  // owner-ordered sequence the frontmatter's own `order` field records.
+  const publishedSystems = getPublishedProjects();
 
   return (
     <>
@@ -60,8 +62,8 @@ export default function Home() {
       <div className="pb-16 pt-8">
         <JsonLd data={buildPersonJsonLd()} />
         <EditorialDrift>
-          <DriftBlock id="real-life">
-            <BuiltForRealLife projects={realLifeProjects} />
+          <DriftBlock id="selected-systems">
+            <SelectedSystems projects={publishedSystems} />
           </DriftBlock>
           <DriftBlock id="how-i-build">
             <HowIBuild />

@@ -1,12 +1,7 @@
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import {
-  builtForRealLifeHeading,
-  builtForRealLifeSubheading,
-  pendingCopy,
-  sectionIndex,
-} from "@/data/copy";
+import { builtForRealLifeHeading, builtForRealLifeSubheading, pendingCopy } from "@/data/copy";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
 
 type BuiltForRealLifeProps = {
@@ -39,7 +34,7 @@ type BuiltForRealLifeProps = {
 // published, the honest content is that there is not one yet.
 export function BuiltForRealLife({ projects }: BuiltForRealLifeProps) {
   return (
-    <SystemNode index={sectionIndex.builtForRealLife} label={builtForRealLifeHeading}>
+    <SystemNode index="05" label={builtForRealLifeHeading}>
       <h2 className="mt-5 font-display text-display-l uppercase text-ink">
         {builtForRealLifeHeading}
       </h2>
