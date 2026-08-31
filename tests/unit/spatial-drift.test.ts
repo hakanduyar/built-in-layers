@@ -4,6 +4,9 @@ import { describe, expect, it } from "vitest";
 import {
   DRIFT_SECTIONS,
   DRIFT_SETTLE,
+  driftField,
+  driftFieldOpacity,
+  driftPlate,
   driftSection,
   driftSpread,
   type DriftSectionId,
@@ -191,5 +194,63 @@ describe("semantic document order is untouched by the drift", () => {
     for (const [, id] of page.matchAll(/<DriftBlock\s+id="([a-z-]+)"/g)) {
       expect(() => driftSection(id as DriftSectionId)).not.toThrow();
     }
+  });
+});
+
+// FABLE GATE 1 (Q3): the section fields. These lock the geometry CONTRACTS the
+// ground was built on -- not its tuning. See driftField() for the two rejected
+// geometries; what must survive re-tuning is that a field stays derivable from
+// its section's own table, never collapses to nothing, and never out-shouts
+// the world it echoes.
+describe("each section's field is derived from its own drift geometry", () => {
+  it("spans exactly the section's sweep, from its leftmost extreme", () => {
+    for (const section of DRIFT_SECTIONS) {
+      const field = driftField(section.id);
+      expect(field.left).toBeCloseTo(Math.min(section.entry, section.exit), 12);
+      expect(field.span).toBeCloseTo(Math.abs(section.exit - section.entry), 12);
+    }
+  });
+
+  it("keeps every field inside the track's free space", () => {
+    // left and left+span are free-space fractions; [0,1] is what makes
+    // overflow impossible by construction, the same rule the blocks follow.
+    for (const section of DRIFT_SECTIONS) {
+      const field = driftField(section.id);
+      expect(field.left).toBeGreaterThanOrEqual(0);
+      expect(field.left + field.span).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("gives every section a real ground -- no field collapses to a sliver", () => {
+    for (const section of DRIFT_SECTIONS) {
+      expect(driftField(section.id).span).toBeGreaterThan(0.05);
+    }
+  });
+
+  it("derives presence from depth and never out-shouts the world's planes", () => {
+    // The upper world's project planes peak at 0.66. The plate section (depth
+    // 0) matches them exactly -- one grammar -- and every field stays inside
+    // sane presence bounds: visible, never solid.
+    expect(driftFieldOpacity("real-life")).toBeCloseTo(0.66, 12);
+    for (const section of DRIFT_SECTIONS) {
+      const opacity = driftFieldOpacity(section.id);
+      expect(opacity).toBeGreaterThan(0.3);
+      expect(opacity).toBeLessThan(0.8);
+      // Forward of the world plane means nearer, so more present -- the sign
+      // of the relationship is part of the contract, not just its bounds.
+      if (section.depth > 0) expect(opacity).toBeGreaterThan(0.66);
+      if (section.depth < 0) expect(opacity).toBeLessThan(0.66);
+    }
+  });
+
+  it("opens its seam below the section's display typography", () => {
+    // The seam values are authored-but-measured (see DriftPlate): what the
+    // contract fixes is that every section HAS one, that it clears the shared
+    // 246px display baseline, and that About -- the two-line name -- sits
+    // deeper than the single-line sections.
+    for (const section of DRIFT_SECTIONS) {
+      expect(driftPlate(section.id).seamRem).toBeGreaterThanOrEqual(16);
+    }
+    expect(driftPlate("about").seamRem).toBeGreaterThan(driftPlate("how-i-build").seamRem);
   });
 });
