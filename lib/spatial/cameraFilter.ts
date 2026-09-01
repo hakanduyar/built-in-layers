@@ -204,6 +204,25 @@ export const GLIDE_RELEASE_GAIN = 8;
 export const ROUTE_MAX_RATE = 0.155;
 
 /**
+ * V10 (§H3-H5): how far the wheel's intent target may lead the page's real
+ * scroll position, in viewport heights, in either direction.
+ *
+ * WHAT IT FIXES, measured. The governor capped the RATE but nothing capped the
+ * DISTANCE, so intent accumulated without limit: 30 wheel notches of 400px at
+ * 16ms, then all input stopped, and the page kept travelling by itself for
+ * 2827px -- 3.27 viewport heights -- over 5.6 seconds. That is the queued
+ * autonomous movement §H3 rules out, and it is what made hard input feel like it
+ * blasted through the journey.
+ *
+ * 0.6 is chosen against the ceiling rather than by taste: at ROUTE_MAX_RATE the
+ * governor covers a viewport in ~1.29s, so 0.6vh of lead is ~0.77s of coast --
+ * long enough that a fast reader never feels the cap engage during continuous
+ * scrolling, short enough that stopping brings the world to rest inside one
+ * beat rather than five seconds later, most of a screen further on.
+ */
+export const INTENT_LEAD_VH = 0.6;
+
+/**
  * One governor step. Returns `proposed` untouched when the movement is entirely
  * past the release band or already inside the rate budget; otherwise advances
  * from `previous` at the capped rate for where the camera currently is, in

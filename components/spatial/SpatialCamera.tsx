@@ -21,6 +21,7 @@ import { WorldGrammar } from "@/components/spatial/WorldGrammar";
 import {
   BREAK_ABORT_PX,
   BREAK_PLAYBACK_MS,
+  INTENT_LEAD_VH,
   ROUTE_MAX_RATE,
   advanceFilter,
   glideStep,
@@ -636,11 +637,34 @@ function useRouteGovernor(
     let raf = 0;
     let prevT = 0;
 
+    /**
+     * V10 (§G) -- ONE MODEL FOR THE WHOLE PAGE.
+     *
+     * The governor used to bind to the spatial spacer alone: `top` was the
+     * spacer's offset and `end` was where the route finished. Everything below
+     * that -- Selected Systems, How I Build, Field Notes, About, the CTA -- was
+     * plain native scroll. So the page genuinely ran TWO scroll implementations,
+     * and the owner's report that "the lower vertical route feels like a
+     * separate scroll implementation" was not a percept to be tuned away: it was
+     * a literal description of the code.
+     *
+     * The bounds are now the whole document. The RATE, however, stays anchored
+     * to the route's own span -- `ROUTE_MAX_RATE * routeSpan` is the same
+     * absolute px/second it has always been (measured: 727-760px/s peak over any
+     * 100ms window at 1536x864) -- so the ceiling inside the spatial world is
+     * byte-for-byte what it was, and the lower page simply comes under the same
+     * ceiling instead of having none. Deriving the rate from the DOCUMENT span
+     * instead would have silently raised the ceiling by the ratio of the two,
+     * which is the opposite of what §G asks for.
+     *
+     * Slower is still always allowed everywhere. Only the maximum is held.
+     */
     const box = () => {
       const spacer = spacerRef.current;
       if (!spacer) return null;
-      const top = spacer.getBoundingClientRect().top + window.scrollY;
-      return { top, end: top + spacer.offsetHeight - window.innerHeight };
+      const routeSpan = Math.max(spacer.offsetHeight - window.innerHeight, 1);
+      const end = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+      return { top: 0, end, routeSpan };
     };
 
     const tick = (t: number) => {
@@ -675,8 +699,8 @@ function useRouteGovernor(
         prevT = 0;
         return;
       }
-      const span = Math.max(bounds.end - bounds.top, 1);
-      const maxStep = ROUTE_MAX_RATE * span * (dt / 1000);
+      // The ceiling is the ROUTE's, applied everywhere -- see box().
+      const maxStep = ROUTE_MAX_RATE * bounds.routeSpan * (dt / 1000);
       const step = intent - y;
       const move = Math.abs(step) <= maxStep ? step : Math.sign(step) * maxStep;
       const next = Math.round(y + move);
@@ -710,17 +734,56 @@ function useRouteGovernor(
       const bounds = box();
       if (!bounds) return;
       const y = window.scrollY;
-      // Half a viewport of margin below the exit: an upward fling begun just
-      // past the world is captured BEFORE its momentum carries into the
-      // route. Above the top no margin is needed — the route starts the page.
-      if (y < bounds.top - 2 || y > bounds.end + window.innerHeight * 0.5) {
+      // V10 (§G): the region is now the whole document, so the only hand-back
+      // is at its real ends -- below, the browser owns overscroll.
+      if (y < bounds.top - 2 || y > bounds.end + 2) {
         intent = null;
         return;
       }
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
       const delta = event.deltaY * unit;
-      const from = intent ?? y;
-      const next = Math.min(Math.max(from + delta, bounds.top), bounds.end);
+      /**
+       * V10 (§H3-H5) -- BOUNDED INTENT, AND REVERSE THAT ACTUALLY REVERSES.
+       *
+       * This was the one real defect in the scroll model, and it was measured
+       * rather than felt. `from` was unconditionally `intent ?? y`, and the only
+       * clamp was to the route's own ends -- so wheel debt accumulated without
+       * limit. Driving 30 notches of 400px at 16ms and then STOPPING all input,
+       * the page continued travelling on its own for 2827px -- 3.27 viewport
+       * heights -- over 5.6 seconds, and came to rest exactly on the route's
+       * end. That is precisely the "queued autonomous movement" §H3 forbids, and
+       * it is why aggressive input felt like it blasted through the journey: the
+       * ceiling was holding the RATE, but nothing was holding the DISTANCE.
+       *
+       * It also made reverse feel broken, for the same reason. A backward notch
+       * only subtracted from a large forward debt, so the page kept moving
+       * FORWARD while the reader scrolled back -- measured at 7 notches, ~1100ms
+       * and 484-506px of wrong-way travel before the direction visibly changed.
+       *
+       * Two rules fix both, and neither touches the rate ceiling:
+       *
+       *   SIGN COLLAPSE  a gesture that opposes the pending lead discards that
+       *                  lead and starts from where the page actually is. The
+       *                  first backward notch therefore produces backward motion
+       *                  on the very next frame.
+       *   LEAD CAP       intent may never lead the real scroll position by more
+       *                  than INTENT_LEAD_VH of a viewport, in either direction.
+       *                  At the measured ceiling that bounds the autonomous
+       *                  coast to well under a second, so no amount of spinning
+       *                  can buy more than a fraction of a screen the reader did
+       *                  not ask for while still moving.
+       *
+       * Slower is still always allowed: the cap bounds how far AHEAD the target
+       * may run, never how slowly the reader may go.
+       */
+      const lead = intent === null ? 0 : intent - y;
+      const opposes = lead !== 0 && Math.sign(delta) !== Math.sign(lead);
+      const from = intent === null || opposes ? y : intent;
+      const cap = window.innerHeight * INTENT_LEAD_VH;
+      const next = Math.min(
+        Math.max(from + delta, Math.max(bounds.top, y - cap)),
+        Math.min(bounds.end, y + cap),
+      );
       // A gesture that would leave the region is handed back to the browser.
       if (
         (delta < 0 && next <= bounds.top && y <= bounds.top + 1) ||
@@ -1253,7 +1316,34 @@ function SceneFrame({
       // heading strings -- exactly the naive test the brief rules out.
       // Presentational value: none.
       data-scene={id}
-      className="absolute left-0 top-0 flex items-center"
+      /**
+       * V10 (§C) -- THE PLANE'S REGISTRATION IS NOW VIEWPORT-INVARIANT.
+       *
+       * MEASURED DEFECT. A project's supporting plane is placed at a px-capped
+       * offset from its WORLD ANCHOR, while its composition was centred inside a
+       * `minHeight: 72vh` box by `items-center`. Those two are in different
+       * units, so the gap between them tracked viewport height: measured,
+       * Kıvılcım's and JointLedger's plane-to-content registration drifts 207.3
+       * world px between 1536x864 and 2560x1440 and FLIPS SIGN -- Kıvılcım's
+       * plane bottom sits 87.6px below its composition at 1536 and 119.5px above
+       * it at 2560, and DropSpot's secondary plate loses its ground entirely at
+       * 2560. A ground that is only under its project at some viewports is not a
+       * ground, and it breaks the grammar's own FOCUS promise ("the plane
+       * registers with the project").
+       *
+       * `items-start` is the smallest fix that removes the variable. Below
+       * ~1080px of viewport height every project composition is already TALLER
+       * than 72vh, so the box equals its content, centring was already a no-op,
+       * and nothing moves at all -- the approved 1366/1440/1536/1920 frames are
+       * pixel-identical. Only at tall viewports, where the box was padding the
+       * composition downward away from its own ground, does the composition now
+       * sit at the box's top where its plane actually is.
+       *
+       * The box KEEPS its 72vh minimum, so every scene's world footprint, the
+       * route geometry and every standing route contract are untouched. This
+       * changes where content sits INSIDE a box, never the box.
+       */
+      className="absolute left-0 top-0 flex items-start"
       style={
         {
           width: isDesktop ? SCENE_WIDTH : SCENE_WIDTH_MOBILE,
@@ -1271,15 +1361,27 @@ function SceneFrame({
         } as MotionStyle
       }
     >
-      {children}
-      {annotation && (
-        <SystemPOV
-          annotation={annotation}
-          approach={approach}
-          compact={mobile}
-          resolved={ROUTE_TWO_IDS.some((routeTwoId) => routeTwoId === id)}
-        />
-      )}
+      {/* V10 (§K) -- THE ACQUISITION FRAME BRACKETS THE COMPOSITION, NOT THE BOX.
+          SystemPOV insets itself to its positioning parent. That parent used to
+          be the scene FRAME, whose height is `minHeight: 72vh` -- so the
+          annotation was the one object in the entire world whose rendered size
+          tracked the viewport: measured 1022.8px at 1920x1080 and 1583.2px at
+          3840x2160, +54.8%, while every other piece of world content stayed
+          px-identical. Zooming out therefore did not read as "more of the same
+          world"; one element visibly re-scaled while the rest did not.
+          This wrapper shrink-wraps the composition, so the brackets now measure
+          what they are bracketing at every viewport and every zoom level. */}
+      <div className="relative w-full">
+        {children}
+        {annotation && (
+          <SystemPOV
+            annotation={annotation}
+            approach={approach}
+            compact={mobile}
+            resolved={ROUTE_TWO_IDS.some((routeTwoId) => routeTwoId === id)}
+          />
+        )}
+      </div>
     </motion.div>
   );
 }

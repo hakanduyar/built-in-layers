@@ -1915,3 +1915,158 @@ nowhere left to go. There is no dead scroll at the CTA, and nothing was changed 
   marker moved into the frame. It now selects `[data-camera-plane]` — and because that would have
   made the assertion pass on an empty set if a plane ever lost its label, every plane is now labelled
   and a second test asserts the population the first one depends on.
+
+## 35. Spatial Portfolio V10 — the scroll model, the plane's registration, the seam (2026-09-01)
+
+`feature/spatial-portfolio-v5` only. Not merged to `main`. Owner brief: repair the spatial system
+itself rather than patch its surface.
+
+### 35.0 How this pass decided what to change
+
+Seven dimensions were measured in a real browser by independent investigators, and **every one of
+their findings was then adversarially refuted by a second investigator who re-measured the headline
+numbers**. All seven came back `refuted: true` — not as "wrong", but as *overstated*, with a
+narrower correction. That is the most useful thing this pass produced, and it is why the change set
+is small: four of the seven proposed rearchitectures would have regressed something that currently
+works, and two of the seven "defects" turned out to be systems already operating as designed.
+
+What survived scrutiny, and what did not:
+
+| Dimension | Claimed | After refutation |
+|---|---|---|
+| A spacing | no viewport term at all; needs a world-spread system | fit-invariance is *by design*; the acute defect is **one mirrored overhang pair** |
+| B plane grammar | phase-shift is a lie | **already exact** — lead:lag 17/8, focus displacement 0.02–0.09px. No change |
+| C plane bounds | three planes wrong by 124–190px | width claim is an arithmetic identity; **the real defect is viewport-dependent vertical registration** |
+| E route emptiness | route geometry is still too long | **not route geometry** — sticky-release plus a stack of section offsets |
+| G/H/I scroll | three defects incl. wrong units | **one defect: unbounded intent lead**; plus the genuinely-two-models finding |
+| K zoom | reveal cancelled, scene deforms | **working as designed**; one real defect — the annotation frame tracks the viewport |
+| D/L lower world | delete the motif, add line work | **keep the motif**; the objectively broken part is the seam |
+
+### 35.1 The scroll model — one governor, bounded intent
+
+Two things were true at once, and only one of them was the owner's percept.
+
+**The page ran two scroll implementations.** `useRouteGovernor` bound to the spatial spacer's own
+bounds, so everything below it scrolled natively and uncapped. "The lower vertical route feels like
+a separate scroll implementation" was not a percept to tune away — it was a description of the
+code. The bounds are now the whole document, while the RATE stays anchored to the route's span, so
+the ceiling inside the world is unchanged and the lower page simply comes under it.
+
+**Intent had a rate cap but no distance cap.** Measured: 30 wheel notches of 400px at 16ms, then
+*all input stopped*, and the page kept travelling by itself for **2827px — 3.27 viewport heights —
+over 5.6 seconds**, coming to rest exactly on the route's end. Reverse was broken by the same
+mechanism: a backward notch only subtracted from a large forward debt, so the page kept moving
+**forward** for 7 notches, ~1100ms and 484–506px before the direction visibly changed.
+
+Two rules, neither touching the ceiling: a gesture that opposes the pending lead discards it
+(`sign collapse`), and intent may never lead real scroll by more than `INTENT_LEAD_VH` (0.6) of a
+viewport in either direction.
+
+| | before | after |
+|---|---|---|
+| gentle, route / lower | — | 451 / 462 px/s (natural, under the cap) |
+| aggressive, route | 727–760 px/s | 728 px/s |
+| aggressive, lower page | **uncapped (native)** | 767 px/s — same ceiling |
+| coast after input stops | **2827px / 3.27vh / 5.6s** | **496px / 0.57vh / 0.6s** |
+| reverse | 7 notches, 484–506px wrong-way, ~1100ms | **1 notch, 0px wrong-way, 106ms** |
+
+On §I: the route is *already* arc-length reparameterised, so a scroll unit already buys equal
+travel through diagonal, turn and vertical. What it could not do was govern a region it was not
+bound to. Re-expressing the ceiling in world units was **rejected** — camera speed varies at scenes
+by design (`FOCUS_SPEED_RATIO` 0.42), and a constant world-speed cap would delete focus-slowness,
+which is a frozen long-tuned property.
+
+### 35.2 The supporting plane — grammar verified, registration fixed
+
+The grammar itself needed no work, and this is worth recording because it was nearly "fixed":
+measured, the plane leads before focus, sits at **exactly 0px displacement at focus**, and trails
+progressively after, with `trail > lead` at all four projects and every tested viewport.
+
+| project | lead | focus | trail |
+|---|---|---|---|
+| software-factory | 70.4px | **0px** | 102.4px |
+| kivilcim | 55.2px | **0px** | 95.8px |
+| jointledger | 53.8px | **0px** | 95.6px |
+| dropspot | 57.3px | **0px** | 95.6px |
+
+What *was* broken is where the ground sat relative to what it grounds. A plane is placed at a
+px-capped offset from its world anchor, while its composition was centred by `items-center` inside a
+`minHeight: 72vh` box — two different units, so the gap tracked viewport height. Measured, the
+registration drifted **207px between 1536×864 and 2560×1440 and flipped sign**: Kıvılcım's plane
+bottom sat 87.6px below its composition at 1536 and 119.5px *above* it at 2560, and DropSpot's
+secondary plate lost its ground entirely. `items-start` removes the variable. Below ~1080px of
+viewport height every project composition is already taller than 72vh, so the approved
+1366/1440/1536/1920 frames are pixel-identical; only tall viewports change, and they change to
+having their ground under them. Registration at 1920 and 2560 is now identical.
+
+DropSpot is **uncropped** — verified against the rendered image, not the comment: `frameRatio` and
+`framePosition` have zero call sites outside `Figure.tsx`.
+
+### 35.3 Project clearance — one pair, not a system
+
+Fit cancels out of the spacing/size ratio *by design* (both the world step and the scene block are
+multiplied by it), so the world-fit system cannot alter project clearance — and that is correct, not
+a bug. The acute defect was local: Kıvılcım's `split` plate overhangs its block's RIGHT edge and
+JointLedger's mirrored plate overhung the LEFT, so on the route those two bleeds pointed **at each
+other**. Measured worst clear gap: 34.5px at 1366×768 against 82px for every other pair.
+
+Zeroing that one inward overhang:
+
+| viewport | worst pair, before | after |
+|---|---|---|
+| 1366×768 | 34.5px | **73px** |
+| 1536×864 | 67.9px | **113px** |
+| 2560×1440 | 81.7px | **136px** |
+
+The mirror is intact — evidence still leads from the left, identity still answers from the right.
+Only the bleed past the block edge goes, from the one scene where it collided.
+
+### 35.4 Zoom — the one object that was not part of the world
+
+Zoom-out geometry is working as designed: the world unit pins scene spacing at 1398.9px identically
+at 1920 and 3840, and the world window grows 4.00× in area from 100% to 50%. The defect was that
+`SystemPOV` inset itself to the scene FRAME, whose height is `72vh` — making the acquisition
+annotation the single object in the world whose rendered size tracked the viewport, measured
+1022.8px → 1583.2px (+54.8%). It now brackets a wrapper that shrink-wraps the composition:
+composition + 28px of bracket overhang, **identical at 1920×1080 and 2560×1440**.
+
+### 35.5 The lower world — the seam, and grounds that were all overhang
+
+The pale surfaces are `bg-soft-paper`, the same token `ProjectPlane` uses, and the diagnosis that
+they read as the project motif copied into editorial sections is correct. The remedy is not to
+delete them: the objectively broken part is that the seam is a per-section CONSTANT which assumed
+every section's display heading bottom sits at the same offset, and two sections do not.
+
+- `about`'s constant was registered to a heading that is `sr-only` — a 1.0px box — so it was placed
+  against nothing and cut straight through the introduction.
+- `field-notes` is the V9 empty-state bridge; its constant landed 128px into a 141.6px block, so
+  48 of its 61.6px of "ground" hung below the block's last content.
+
+The seam now starts from the authored constant and is **overridden only where it is demonstrably
+wrong** — pushed below any text leaf it lands inside, iterated to a fixed point — and a field whose
+remaining body is under `FIELD_MIN_BODY_PX` is not drawn, because a surface that is entirely
+overhang is not a ground.
+
+| section | seam cuts text, before | after |
+|---|---|---|
+| selected-systems | "Software Factory" + its description | **none** (seam 256 → 289) |
+| how-i-build | none | **none** (unchanged — the working case is preserved) |
+| field-notes | 48px of pure overhang | **field suppressed** |
+| about | the honesty paragraph | **field suppressed** |
+
+Two of four lower sections now carry a ground, and both are genuine grounds. That is also §D's
+answer: fewer surfaces, each of which is doing something.
+
+### 35.6 What was deliberately NOT done
+
+- **No world-spread spacing system.** Refuted: it would have bought less clearance than the one
+  overhang fix, at the cost of route geometry, page length, world unit and hydration.
+- **No re-derivation of plane bounds from content.** The width claim behind it was an arithmetic
+  identity; acting on it would have deleted the measured `x + w == 1.00` block registration on two
+  planes and rebound two more edges to MDX text-wrap positions.
+- **No change to `planeShift()`.** Verified exact.
+- **No `SCENE_MIN_HEIGHT` change.** Measured to gain zero visible content at 50% zoom while costing
+  46% of the hero composition there.
+- **No route-geometry change for §E.** The vacuum is one viewport of sticky-release, which
+  `position: sticky` makes unavoidable, plus section offsets — of which the two safe ones were taken
+  (`pb-16 pt-8` → `pb-16`, and Selected Systems' `gapVh` 5 → 0).

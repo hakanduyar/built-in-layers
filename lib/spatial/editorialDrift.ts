@@ -165,7 +165,17 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   //
   // 12vh, not 6: it is still the arrival, and it is still where the spine runs on
   // alone. §5 asks for the excess removed, not for the negative space eliminated.
-  "selected-systems": { gapVh: 5, seamRem: 16 },
+  // V10 (§E): 5 -> 0. The vacuum the owner reports around the diagonal-to-
+  // vertical turn was measured and is NOT route geometry -- it is one full
+  // viewport of invariant sticky-release (the frame scrolling away after the
+  // camera has finished, which position:sticky makes unavoidable) plus a
+  // ~203px stack of section offsets on top of it. Measured at 1536x864, the
+  // first lower-page ink was at y=4640 while the world went dark at y=4400: a
+  // 220px band with nothing from either side. This constant is the largest
+  // safe term in that stack. The arrival interval it used to buy is now bought
+  // by the surface-return marker standing in the terminus frame (V9), which is
+  // real content rather than distance.
+  "selected-systems": { gapVh: 0, seamRem: 16 },
   // A broader plane the route runs alongside.
   "how-i-build": { gapVh: 22, seamRem: 16 },
   // Set back and further away: the least of its surface visible.
@@ -349,3 +359,20 @@ export function driftRouteRuns(): { foreground: boolean; stops: DriftRouteStop[]
   }
   return runs.filter((run) => run.stops.length > 1);
 }
+
+/**
+ * V10 (§D/L): clearance between a section's first display line and the top edge
+ * of its ground. 10px is not chosen — it is what the two sections whose seam was
+ * already landing correctly were measured to have, at both 1536x864 and
+ * 1920x1080. The measured seam simply gives the other two the same relationship.
+ */
+export const SEAM_CLEARANCE_PX = 10;
+
+/**
+ * The least body a ground must have under its seam to be worth drawing, in px.
+ * A field is `bottom: -3rem`, so below 48px of body it is entirely overhang —
+ * a pale bar hanging in the gap after a section rather than a surface the
+ * section stands on. Field Notes' empty state measured 61.6px tall with 48 of
+ * those below its last content, which is what this exists to stop.
+ */
+export const FIELD_MIN_BODY_PX = 56;

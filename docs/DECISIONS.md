@@ -421,3 +421,37 @@ Binding conditions attached to this approval — all already true of the current
   world" behaviour D-022 was asked for); changing end geometry for the CTA's apparent hold, which
   was measured and is not dead scroll.
 - **Approval:** Hakan's explicit V9 homepage-finalization brief; implemented as directed.
+
+## D-025 — One governed scroll model, bounded intent, and a ground that registers (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **The scroll governor bounds the whole document**, not just the spatial spacer, while its RATE
+     stays anchored to the route's span. The lower page was previously native and uncapped — two
+     scroll implementations on one page.
+  2. **Wheel intent is bounded in distance, not only in rate.** A gesture opposing the pending lead
+     discards it; intent may never lead real scroll by more than `INTENT_LEAD_VH` (0.6) of a
+     viewport. Measured, this took the post-input coast from 2827px/3.27vh/5.6s to 496px/0.57vh/0.6s
+     and reverse from 7 notches and 484–506px of wrong-way travel to 1 notch and 0px.
+  3. **Scene compositions align to the top of their box** (`items-start`), so a project's ground
+     registers against it at every viewport instead of drifting 207px and flipping sign.
+  4. **The acquisition annotation brackets the composition**, not the `72vh` frame, so it stops
+     being the one object in the world whose size tracks the viewport.
+  5. **The mirrored plate's inward overhang is removed** on the `counter` variant only.
+  6. **The drift seam is measured where the constant is demonstrably wrong**, and a field with no
+     body beneath its seam is not drawn.
+- **Reason:** all six are measured defects with reproduced numbers, recorded in DESIGN_SYSTEM §35.
+  Every one of the seven investigations that produced them was adversarially refuted first, and the
+  scope here is what survived that refutation.
+- **Binding conditions:** the rate ceiling is unchanged (`ROUTE_MAX_RATE` untouched) — only the
+  region it governs and the distance intent may lead; focus-slowness (`FOCUS_SPEED_RATIO`) is
+  untouched, so a constant world-speed cap was rejected; `planeShift()` is untouched, having been
+  verified exact (lead:lag 17/8, 0px at focus); no route geometry, anchor, `ROUTE_LENGTH_VH` or
+  `SCENE_MIN_HEIGHT` change, so every contract in `tests/unit/spatial-route.test.ts` holds unmodified.
+- **Rejected, with the measurement that rejected it:** a world-spread spacing system (buys less
+  clearance than the single overhang fix, at the cost of route geometry and page length);
+  re-deriving plane bounds from content (its width claim was an arithmetic identity; it would delete
+  the measured `x + w == 1.00` registration on two planes); `SCENE_MIN_HEIGHT` in world units (zero
+  visible gain at 50% zoom, −46% of the hero composition there); deleting the lower-page field motif
+  and replacing it with line work (the motif is not the defect; the seam was).
+- **Approval:** Hakan's explicit V10 brief; implemented as directed.

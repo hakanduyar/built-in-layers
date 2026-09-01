@@ -59,7 +59,7 @@ export default function Home() {
           closing surface-line and the first real section, and it was buying
           nothing that the drift track's own approach interval (driftPlate.gapVh)
           was not already buying more deliberately. The bottom is untouched. */}
-      <div className="pb-16 pt-8">
+      <div className="pb-16">
         <JsonLd data={buildPersonJsonLd()} />
         <EditorialDrift>
           <DriftBlock id="selected-systems">

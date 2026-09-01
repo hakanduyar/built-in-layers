@@ -31,7 +31,8 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 | — | **Fable Gate 1** — desktop final art direction | Fable | **COMPLETE** — executed 2026-08-31; `.ai/handoffs/OPUS-RETURN.md` |
 | V7 | Owner reorder, plane grammar, governed scroll, Selected Systems | Opus | **COMPLETE** — D-021, DESIGN_SYSTEM §32 |
 | V8 | Early duplicate removal + responsive world fit + late-page development | Opus | **COMPLETE** — D-022/D-023, DESIGN_SYSTEM §33 |
-| V9 | Homepage release candidate: stale facts, dead run, pacing, affordance, About/Field Notes, CTA | Opus | **COMPLETE** — D-024, DESIGN_SYSTEM §34; homepage recommended for FREEZE |
+| V9 | Homepage release candidate: stale facts, dead run, pacing, affordance, About/Field Notes, CTA | Opus | **COMPLETE** — D-024, DESIGN_SYSTEM §34 |
+| V10 | Route/plane/scroll rearchitecture: one governed scroll model, bounded intent, plane registration, seam | Opus | **COMPLETE** — D-025, DESIGN_SYSTEM §35 |
 | 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | after Gate 1 |
 | — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | after Phase 4 |
 | 5 | Apply the approved case-study system to remaining projects | Opus | after Gate 2 |

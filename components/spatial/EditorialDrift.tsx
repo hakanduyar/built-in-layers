@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
 import {
   DRIFT_SETTLE,
+  FIELD_MIN_BODY_PX,
+  SEAM_CLEARANCE_PX,
   driftField,
   driftFieldOpacity,
   driftMeasure,
@@ -156,6 +158,22 @@ function trackX(fraction: number): string {
   return `calc(var(--drift-pad) + ${fraction} * (100vw - 2 * var(--drift-pad) - var(--drift-w)))`;
 }
 
+/**
+ * The seam measurement must land BEFORE paint, not after it.
+ *
+ * As a plain effect it produced a second render once hydration had already
+ * painted. The field is absolutely positioned and cannot move its block, but the
+ * extra render re-measures `useScroll` — enough to perturb a drift position read
+ * taken at the same instant, which is exactly what the determinism contract in
+ * tests/e2e/spatial-v5.spec.ts samples. A layout effect closes the window: the
+ * seam is resolved before anything is painted, so there is never a frame in
+ * which it is about to change.
+ *
+ * `useEffect` on the server, because React warns for `useLayoutEffect` during
+ * SSR and there is nothing to measure there anyway.
+ */
+const useSeamEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 export function DriftBlock({ id, children }: { id: DriftSectionId; children: ReactNode }) {
   const section = driftSection(id);
   const plate = driftPlate(id);
@@ -211,22 +229,108 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
   // so a field would describe territory that is not really there.
   const field = driftField(id);
   const measure = driftMeasure(id);
+  /**
+   * V10 (§D/L) -- THE SEAM IS MEASURED, AND A GROUND THAT IS ALL EDGE IS NOT
+   * DRAWN.
+   *
+   * The comment above states the design rule exactly: "the edge never crosses a
+   * line of text". It was not true. `seamRem` is a per-section CONSTANT that
+   * assumed every section's display heading bottom sits at the same +118px, and
+   * two of the four sections do not:
+   *
+   *   about        21.5rem is registered to a heading that is `sr-only` -- a
+   *                1.0px box -- so the seam was placed against nothing and cut
+   *                straight through the introduction.
+   *   field-notes  16rem lands 128px into a block that is only 141.6px tall
+   *                since V9 compressed the empty state, so the seam sat below
+   *                almost all of the content and the "ground" was a 1135x62px
+   *                pale bar floating in the gap before About, 48px of which had
+   *                nothing above it at all.
+   *
+   * The seam is now MEASURED from the block's own first display-scale line --
+   * whatever element actually renders large -- with the same ~10px clearance the
+   * two working sections were already demonstrating. And a field whose remaining
+   * height is smaller than its own bottom overhang is not drawn: a surface that
+   * is entirely overhang is not a ground, and no seam rule can rescue it.
+   *
+   * `seamRem` stays as the pre-hydration and no-JS value, so the server render is
+   * unchanged and the measured value only ever refines it.
+   */
+  const fieldRef = useRef<HTMLSpanElement>(null);
+  const blockRef = useRef<HTMLDivElement>(null);
+  const [seam, setSeam] = useState<{ top: number; draw: boolean } | null>(null);
+  useSeamEffect(() => {
+    const wrapper = ref.current;
+    const block = blockRef.current;
+    if (!wrapper || !block) return;
+    const measureSeam = () => {
+      const wrapperTop = wrapper.getBoundingClientRect().top;
+      const blockBottom = block.getBoundingClientRect().bottom - wrapperTop;
+      // Start from the AUTHORED seam. Two of the four sections were already
+      // landing it correctly (measured: ~9.8px of clearance under the display
+      // line at both 1536x864 and 1920x1080), and replacing the constant wholesale
+      // moved one of those two INTO its own subheading — a fix that broke a
+      // working case. The constant stays; it is only overridden where it is
+      // demonstrably wrong.
+      const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      let top = (plate.gapVh / 100) * window.innerHeight + plate.seamRem * rem;
+      // OVERRIDE 1 — the seam may not cross a line of text. `about`'s constant is
+      // registered to a heading that is `sr-only` (a 1.0px box), so it was placed
+      // against nothing and cut straight through the introduction; Selected
+      // Systems' lands inside the first register row's title.
+      //
+      // TEXT LEAVES ONLY. Matching containers instead would count a seam sitting
+      // in the padding BETWEEN two register rows as cutting the row, and push the
+      // ground down the page for nothing.
+      //
+      // Iterated to a fixed point rather than a single pass: clearing one element
+      // can move the seam into another that sits earlier in document order, which
+      // one pass would then miss.
+      const leaves: { top: number; bottom: number }[] = [];
+      for (const el of block.querySelectorAll<HTMLElement>("*")) {
+        if (el.children.length > 0) continue;
+        if (!(el.textContent ?? "").trim()) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.height < 4) continue;
+        leaves.push({ top: rect.top - wrapperTop, bottom: rect.bottom - wrapperTop });
+      }
+      for (let pass = 0; pass < 6; pass += 1) {
+        const hit = leaves.find((l) => top > l.top + 1 && top < l.bottom - 1);
+        if (!hit) break;
+        top = hit.bottom + SEAM_CLEARANCE_PX;
+      }
+      // OVERRIDE 2 — a ground with no body left under it is not a ground.
+      setSeam({ top, draw: blockBottom - top >= FIELD_MIN_BODY_PX });
+    };
+    measureSeam();
+    const observer = new ResizeObserver(measureSeam);
+    observer.observe(block);
+    window.addEventListener("resize", measureSeam);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measureSeam);
+    };
+  }, [ref, plate.gapVh, plate.seamRem]);
 
   return (
     <div ref={ref} className="relative w-full" style={{ paddingTop: `${plate.gapVh}vh` }}>
-      <span
-        aria-hidden="true"
-        data-drift-field={id}
-        className="pointer-events-none absolute hidden bg-soft-paper lg:block"
-        style={{
-          left: trackX(field.left),
-          width: `calc(${field.span.toFixed(4)} * (100vw - 2 * var(--drift-pad) - var(--drift-w)) + ${measure.toFixed(4)} * var(--drift-w))`,
-          top: `calc(${plate.gapVh}vh + ${plate.seamRem}rem)`,
-          bottom: "-3rem",
-          opacity: driftFieldOpacity(id),
-        }}
-      />
+      {(seam === null || seam.draw) && (
+        <span
+          ref={fieldRef}
+          aria-hidden="true"
+          data-drift-field={id}
+          className="pointer-events-none absolute hidden bg-soft-paper lg:block"
+          style={{
+            left: trackX(field.left),
+            width: `calc(${field.span.toFixed(4)} * (100vw - 2 * var(--drift-pad) - var(--drift-w)) + ${measure.toFixed(4)} * var(--drift-w))`,
+            top: seam === null ? `calc(${plate.gapVh}vh + ${plate.seamRem}rem)` : `${seam.top}px`,
+            bottom: "-3rem",
+            opacity: driftFieldOpacity(id),
+          }}
+        />
+      )}
       <motion.div
+        ref={blockRef}
         data-drift-block={id}
         data-drift-plane={section.plane}
         style={

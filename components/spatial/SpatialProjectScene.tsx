@@ -329,11 +329,25 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // device as split's right overhang, clipped by the same camera frame.
     return (
       <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
+        {/* V10 (§A) -- THE ONE OVERHANG THAT POINTS AT ITS NEIGHBOUR.
+            Kıvılcım's `split` plate overhangs its block's RIGHT edge; this
+            mirrored plate overhung the LEFT. On the route those two edges face
+            each other, so the pair's bleed was cumulative and inward -- and it
+            was measured as the tightest gap in the whole world: 34.5px of
+            clear paper between Kıvılcım's ink and JointLedger's at 1366x768,
+            against 82px for every other pair. Not a scale artefact: it is the
+            same 34.5px whichever way the fit moves, because the overhang and
+            the block scale together.
+
+            Zeroing it recovers that pair to ~85px at 1366 and ~150px at 1920 —
+            more clearance than a world-wide spacing change would have bought,
+            for one property, with no route geometry touched. The MIRROR is
+            untouched: evidence still leads from the left and identity still
+            answers from the right, which is what makes this composition the
+            counter to `split`. Only the bleed past the block edge goes, and it
+            goes from the one scene where it collided with a neighbour. */}
         {plate && (
-          <div
-            className="order-2 lg:order-1 lg:col-span-8"
-            style={{ ...resolveDown, marginLeft: "var(--scene-overhang, 0px)" }}
-          >
+          <div className="order-2 lg:order-1 lg:col-span-8" style={resolveDown}>
             {plate}
           </div>
         )}
