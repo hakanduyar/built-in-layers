@@ -13,8 +13,8 @@ _Last updated: 2026-09-01 (V9)_
 |---|---|
 | **Status** | V9 HOMEPAGE RELEASE CANDIDATE — validated, committed and pushed. Homepage recommended for FREEZE; next workstream is the case-study system |
 | Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `44e0924` (V8 responsive world pass) |
-| Latest origin commit | `44e0924` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
+| Current HEAD | `5bbd391` (V9 homepage release candidate) |
+| Latest origin commit | `5bbd391` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean |
 | Current phase | V9 (owner brief): homepage finalization — stale facts, dead run, pacing, affordance, About/Field Notes, CTA |
@@ -182,5 +182,6 @@ None are open. No handoff exists in `.ai/handoffs/`.
 | 2026-08-28 | `dc81393` | docs: record STATE D recovery blocker (documentation only) |
 | 2026-08-31 | `a54244c` | docs: record the v7 systems pass |
 | 2026-09-01 | `44e0924` | feat: remove the early duplicates and give the world a height axis (V8) |
+| 2026-09-01 | `5bbd391` | feat: close the homepage defects for a release candidate (V9) |
 | 2026-08-28 | `d7bcebc` | feat: checkpoint recovered spatial portfolio v6.8 (Ubuntu source, 33M/5A/1D) |
 | 2026-08-28 | `682d54e` | merge: reconcile Ubuntu V6.8 source with Windows recovery documentation |
