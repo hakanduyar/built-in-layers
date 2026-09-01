@@ -3,7 +3,7 @@
 Execution order for the autonomous engineering supervisor. Live state is in
 `docs/AUTONOMOUS_STATUS.md`; this file is the plan, not the status.
 
-_Last updated: 2026-09-01_
+_Last updated: 2026-09-01 (V9)_
 
 ---
 
@@ -30,7 +30,8 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 | 3 | DropSpot final engineering prep (mechanical diagnosis first) | Opus | **COMPLETE** — measured; residue is compositional, see `.ai/handoffs/FABLE-GATE.md` |
 | — | **Fable Gate 1** — desktop final art direction | Fable | **COMPLETE** — executed 2026-08-31; `.ai/handoffs/OPUS-RETURN.md` |
 | V7 | Owner reorder, plane grammar, governed scroll, Selected Systems | Opus | **COMPLETE** — D-021, DESIGN_SYSTEM §32 |
-| V8 | Early duplicate removal + responsive world fit + late-page development | Opus | **COMPLETE** — D-022/D-023, DESIGN_SYSTEM §33; awaiting owner visual review |
+| V8 | Early duplicate removal + responsive world fit + late-page development | Opus | **COMPLETE** — D-022/D-023, DESIGN_SYSTEM §33 |
+| V9 | Homepage release candidate: stale facts, dead run, pacing, affordance, About/Field Notes, CTA | Opus | **COMPLETE** — D-024, DESIGN_SYSTEM §34; homepage recommended for FREEZE |
 | 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | after Gate 1 |
 | — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | after Phase 4 |
 | 5 | Apply the approved case-study system to remaining projects | Opus | after Gate 2 |

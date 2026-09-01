@@ -620,10 +620,19 @@ test.describe("Spatial V4: the route continues after the collision", () => {
 
     // Every plane that is NOT the world plane exists purely for depth, so
     // all of its content must be out of the accessibility tree.
+    //
+    // V9 SELECTS PLANES BY THEIR OWN ATTRIBUTE. This used to reach them
+    // positionally, as `.sticky > div > div`, which assumed every element at
+    // that depth in the frame was a camera plane. That stopped being true the
+    // moment anything else was rendered inside the sticky frame -- the
+    // surface-return marker is page grammar, deliberately outside the world
+    // layer -- and the test then failed for an element it was never about.
+    // Matching `[data-camera-plane]` tests the actual contract and is stricter:
+    // it now also catches a depth plane nested anywhere else in the frame.
     const exposed = await page.evaluate((selector) => {
-      const planes = [...document.querySelectorAll(`${selector} .sticky > div > div`)].filter(
-        (plane) => plane.getAttribute("data-camera-plane") !== "world",
-      );
+      const planes = [
+        ...document.querySelectorAll(`${selector} .sticky [data-camera-plane]`),
+      ].filter((plane) => plane.getAttribute("data-camera-plane") !== "world");
       return planes
         .flatMap((plane) => [...plane.children])
         .filter((child) => child.getAttribute("aria-hidden") !== "true").length;

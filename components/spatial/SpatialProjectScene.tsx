@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { Figure } from "@/components/ui/Figure";
 import { MonoLabel } from "@/components/ui/MonoLabel";
-import { TextLink } from "@/components/ui/TextLink";
 import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/schemas";
 import { representativeAsset } from "@/lib/spatial/systemPov";
+import { cn } from "@/lib/utils/cn";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -86,19 +87,75 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     transform: "translate3d(0, calc((1 - var(--depth-resolve, 1)) * 22px), 0)",
   } as const;
 
+  /**
+   * V9 (§16) -- THE CASE-STUDY AFFORDANCE, AND WHY IT IS INSIDE THE TITLE'S OWN
+   * LINK RATHER THAN BESIDE IT.
+   *
+   * The scene's title has always been a link to the project's route, but a
+   * linked heading does not answer the question the brief actually asks -- "how
+   * do I open this project?" -- because nothing on screen says the title is an
+   * action. So the action is now STATED, as a register line under the title.
+   *
+   * It is rendered INSIDE the same anchor, `aria-hidden`, rather than as a
+   * second link. That is a deliberate accessibility decision, not a shortcut:
+   * a second link to the same destination would add a duplicate tab stop and a
+   * second entry to every screen-reader link list for one project. One link, one
+   * tab stop, one accessible name (the project's title), and a visible cue that
+   * belongs to it. Keyboard and touch both get the whole composition as one
+   * target, and `SceneFrame`'s focus handler already brings the camera to a
+   * scene when that link is tabbed to.
+   *
+   * THE LABEL IS DERIVED FROM CONTENT DEPTH, so it can never overclaim. A
+   * `full` or `short` entry has layers and decisions -- a real case study -- and
+   * says so. A `preview` entry has a real published route but no case study yet,
+   * and says "Open system" instead. Nothing links to a destination that does not
+   * exist: every one of these routes is generated from published content.
+   */
+  const affordanceLabel =
+    project.depth === "full" || project.depth === "short" ? "Open case study" : "Open system";
+
   const identity = (
     <div style={resolveUp}>
-      {marker && <MonoLabel className="text-ink-muted">{marker}</MonoLabel>}
+      {/* V9 (§5, §16): evidence type and classification now share one register
+          line above the title, so the block reads identity -> classification ->
+          action instead of interleaving the two. */}
+      <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+        {marker && <MonoLabel className="text-ink-muted">{marker}</MonoLabel>}
+        <span className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+          {project.categoryLabel}
+        </span>
+      </div>
       {/* Deliberately NOT uppercased: CSS `text-transform: uppercase` turns
           "Kıvılcım" into "KIVILCIM", destroying the dotless-ı orthography
           that D-017 fixes as the project's primary display name. Display
           scale carries the emphasis instead of case. */}
-      <h3 className="mt-3 font-display text-display-l tracking-display-l text-ink">
-        <TextLink href={`/work/${project.slug}`}>{project.title}</TextLink>
+      {/* The display scale lives on the HEADING, not on a span inside it. An
+          earlier pass put it on the inner span and the `h3` itself computed to
+          the inherited 16px — which the "titles are not microtext" contract
+          caught immediately, because that is exactly the element it measures. */}
+      <h3
+        className={cn(
+          "mt-4 font-display tracking-display-l text-ink",
+          // V9 (§5): the flagship's title is the one place hierarchy is carried
+          // by scale. Only the foundation variant gets it.
+          variant === "foundation" ? "text-display-xl" : "text-display-l",
+        )}
+      >
+        <Link href={`/work/${project.slug}`} className="group/open block max-w-fit">
+          <span className="block underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text group-hover/open:decoration-2">
+            {project.title}
+          </span>
+          <span
+            aria-hidden="true"
+            className="mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text"
+          >
+            {/* The world's own register mark, extending on hover: the route
+                reaching toward the destination rather than a button. */}
+            <span className="block h-px w-6 bg-ink opacity-50 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10" />
+            {affordanceLabel}
+          </span>
+        </Link>
       </h3>
-      <p className="mt-3 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
-        {project.categoryLabel}
-      </p>
     </div>
   );
 

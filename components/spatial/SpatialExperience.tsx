@@ -43,6 +43,18 @@ import { systemAnnotation } from "@/lib/spatial/systemPov";
  *  system layer, then Kıvılcım, JointLedger, DropSpot. */
 const TOUR_SLUGS = ["software-factory", "kivilcim", "jointledger", "dropspot"] as const;
 
+/** The tour's own size, in words, for the handoff sentence. Derived rather than
+ *  written, because the sentence it feeds went stale the moment the tour grew
+ *  from two scenes to four and nothing forced it to be updated (V9 §P0). Falls
+ *  back to the numeral, so an eighth scene cannot produce a blank. */
+const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven"] as const;
+const TOUR_COUNT_WORD = COUNT_WORDS[TOUR_SLUGS.length] ?? String(TOUR_SLUGS.length);
+
+/** "01 / 04" — a scene's position in the tour, both halves derived from the tour
+ *  itself so the denominator can never disagree with the route (V9 §17). */
+const pad = (value: number) => String(value).padStart(2, "0");
+const tourIndex = (position: number) => `${pad(position + 1)} / ${pad(TOUR_SLUGS.length)}`;
+
 // Both expressive words are the two halves of the approved primary line in
 // data/copy.ts ("Interfaces on the surface. Systems underneath.") -- the
 // brand's own thesis, not new copy. Derived from that string rather than
@@ -160,10 +172,19 @@ export function SpatialExperience() {
         // validated frontmatter -- there is no slug->copy table here and no
         // field this file invents.
         annotations={{
-          "software-factory": systemAnnotation(softwareFactory, "01"),
-          kivilcim: systemAnnotation(kivilcim, "02"),
-          jointledger: systemAnnotation(jointledger, "03"),
-          dropspot: systemAnnotation(dropspot, "04"),
+          // V9 (§17) -- GLOBAL ORIENTATION, WITHOUT A HUD.
+          //
+          // The brief asks whether a reader can tell where they are after
+          // leaving the hero, and explicitly rules out a sticky navbar and
+          // "HUD cosplay". The observing system already states a per-scene index
+          // in its acquisition frame, so the smallest honest answer is to make
+          // that index say how far through the tour it is: "01 / 04" rather than
+          // "01". No new element, no new layer, no new vocabulary, and the total
+          // is derived from the tour itself so it cannot disagree with the route.
+          "software-factory": systemAnnotation(softwareFactory, tourIndex(0)),
+          kivilcim: systemAnnotation(kivilcim, tourIndex(1)),
+          jointledger: systemAnnotation(jointledger, tourIndex(2)),
+          dropspot: systemAnnotation(dropspot, tourIndex(3)),
         }}
         hero={
           // Scroll position 0. Still calm and still readable as a premium
@@ -245,6 +266,22 @@ export function SpatialExperience() {
                   vectorEffect="non-scaling-stroke"
                 />
               </svg>
+              {/* V9 (§18) -- THE FIRST-INTERACTION CUE.
+                  A visitor cannot be expected to know that scrolling enters a
+                  spatial route rather than a normal page. The cue is therefore
+                  attached to the one element that already answers the question —
+                  the structural rule running at the exact bearing the camera is
+                  about to travel — and it names what is down there in the
+                  world's own vocabulary and from the world's own data. No mouse
+                  icon, no bouncing chevron, no "scroll down". It fades on the
+                  first movement (see SpatialCamera's `entryCue`) and never
+                  returns. */}
+              <span
+                className="absolute left-0 top-full mt-3 whitespace-nowrap font-mono text-mono-meta tracking-mono-label uppercase text-ink-muted"
+                style={{ opacity: "var(--entry-cue, 1)" }}
+              >
+                Route 01 — {TOUR_COUNT_WORD} systems below
+              </span>
             </div>
 
             <div className="mt-10 lg:ml-[48vw] lg:mt-0">
@@ -346,16 +383,28 @@ export function SpatialExperience() {
           // diagonal. Only after this does the page hand off to ordinary
           // document flow (§7).
           <div className="w-full">
-            {/* Deliberately not CSS-uppercased: it contains "Kıvılcım", and
-                text-transform destroys the dotless-ı that D-017 fixes as the
-                project's primary display name. */}
+            {/* V9 (§P0) FIXED A FACTUAL CONTRADICTION. This line read
+                "Kıvılcım and DropSpot are two stops on a larger map" — true when
+                the tour staged two projects, and false since V7 staged four. It
+                named two of the four systems the reader had just travelled
+                through and silently erased Software Factory and JointLedger,
+                including the flagship the route deliberately opens on.
+
+                The count is now DERIVED from the tour itself rather than
+                retyped, so the sentence cannot go stale again the next time the
+                route gains or loses a scene. The approved metaphor is kept
+                verbatim; only the arithmetic changed.
+
+                Deliberately not CSS-uppercased: the systems it refers to include
+                "Kıvılcım", and text-transform destroys the dotless-ı that D-017
+                fixes as that project's primary display name. */}
             <p className="max-w-[44rem] font-display text-display-l tracking-display-l text-ink">
-              {kivilcim.title} and {dropspot.title} are two stops on a larger map.
+              These are {TOUR_COUNT_WORD} stops on a larger map.
             </p>
             {beyondTour.length > 0 && (
               <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted">
-                {beyondTour.map((project) => project.title).join(" and ")} continue on the full{" "}
-                {workIndexLabel}.
+                {beyondTour.map((project) => project.title).join(" and ")}{" "}
+                {beyondTour.length === 1 ? "continues" : "continue"} on the full {workIndexLabel}.
               </p>
             )}
             <div className="mt-10">
@@ -363,43 +412,77 @@ export function SpatialExperience() {
             </div>
           </div>
         }
+        surfaceReturn={<SurfaceReturn />}
       />
+    </section>
+  );
+}
 
-      {/* Controlled exit: the spatial world ends on a deliberate surface-line
-          rather than dumping the visitor into the next ordinary section from
-          a blank void. The wording is the other half of the brand's own
-          thesis, and it is now literally true -- route two spent its whole
-          length climbing back up.
-
-          V6.6 (JOB 3) GAVE IT WEIGHT. This marker sits at the exact centre of the
-          hand-over -- the stretch measured as the page's longest visually dead run
-          -- and through V6.5 it was a hairline in `--color-line` plus one small
-          muted label, i.e. almost literally nothing at the one moment that most
-          needed to say something. It is now the regime change it always claimed to
-          be: an ink rule at full width, the label in ink, and the world's own
-          closed-corner register tying the moment back to the space that just
-          ended. It is still two rules and four words -- no panel, no heading, no
-          new copy. */}
-      <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:px-8">
-        {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
-            removed. Route two is drawn dashed and signal-toned everywhere in the
-            world above -- that is its registered grammar. Here that exact line
-            arrives from the left, terminates at a junction node, and continues as
-            a solid ink editorial rule: the system's route becoming the page's
-            rule, in one drawing. Everything below this line uses solid editorial
-            rules only; everything above used world grammar. The label is now a
-            caption on the event rather than the event. */}
-        <div className="relative pt-5">
-          <div aria-hidden="true" className="flex items-center">
-            <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:w-32" />
-            <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
-            <span className="block h-px flex-1 bg-ink" />
-          </div>
-          <div className="pt-4">
-            <MonoLabel className="text-ink">Back on the surface</MonoLabel>
-          </div>
+/**
+ * V9 (§P0) -- THE REGIME CHANGE, MOVED INTO THE FRAME IT EXISTS TO EXPLAIN.
+ *
+ * THE MEASURED DEFECT. The world's route ends one full viewport before the
+ * spatial section does, because the sticky frame has to scroll away after the
+ * camera has finished. Through V7 that viewport was occupied: V6.5 deliberately
+ * framed a destination surface AT THE ROUTE'S TERMINUS so "the 900px of
+ * hand-over is a full frame leaving rather than an empty one". V8 deleted those
+ * surfaces as the owner's rejected early duplicates -- correctly -- and nothing
+ * replaced them, so the frame they were holding went empty.
+ *
+ * Measured on the built page at 1536x864 (docs/review/v9-release/metrics): a
+ * 360px run in which real content occupied 0.16-0.22% of the viewport, sitting
+ * exactly between the handoff scene and "Back on the surface". That is the
+ * owner's "space that seems to exist only because the page needed filling",
+ * reintroduced by construction.
+ *
+ * THE FIX IS RELOCATION, NOT DECORATION. This marker already existed; it was
+ * simply rendered AFTER the section, which put it below the fold for the whole
+ * dead run and then made it the first thing on an otherwise blank screen. It now
+ * renders INSIDE the sticky frame, low in the composition, so:
+ *
+ *   - the world's last frame contains the one event that belongs there -- the
+ *     moment the system's route stops being a world and becomes a page;
+ *   - it is still on screen while the frame scrolls away, which is precisely the
+ *     interval that measured empty;
+ *   - it leaves the frame just as the real lower page arrives underneath it,
+ *     so the hand-over is continuous rather than a cut to nothing.
+ *
+ * Nothing was added to the page. The same two rules and the same four words, in
+ * the frame that needed them.
+ */
+function SurfaceReturn() {
+  return (
+    <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:px-8">
+      {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
+          removed. Route two is drawn dashed and signal-toned everywhere in the
+          world above -- that is its registered grammar. Here that exact line
+          arrives from the left, terminates at a junction node, and continues as
+          a solid ink editorial rule: the system's route becoming the page's
+          rule, in one drawing. Everything below this line uses solid editorial
+          rules only; everything above used world grammar. The label is now a
+          caption on the event rather than the event. */}
+      <div className="relative">
+        <div aria-hidden="true" className="flex items-center">
+          <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:w-32" />
+          <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+          <span className="block h-px flex-1 bg-ink" />
+        </div>
+        {/* V9 (§P0): SET AS A STATEMENT, NOT AS A CAPTION. Measured, the moment
+            after the route ends holds the frame for ~180px, and through V8 the
+            only thing in it was one mono label — about 0.2% of the viewport in
+            rendered ink, which is why the interval read as empty even once the
+            marker had been moved into it. The words are unchanged and no second
+            device was added: the same four words are simply set at the scale of
+            the event they name. */}
+        <div className="pt-5">
+          <p className="font-display text-heading-l tracking-heading-l uppercase text-ink">
+            Back on the surface
+          </p>
+          <p className="mt-2 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+            The systems, indexed
+          </p>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

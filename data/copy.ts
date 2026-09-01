@@ -106,9 +106,53 @@ export const pendingCopy = {
   // which no visual device could overcome. The new line states the same truth
   // as a present fact rather than a promise.
   notesPrefix: "Writing currently lives externally:",
-  aboutPrefix: "A fuller introduction is coming here. In the meantime, get in touch on",
   realLife: "Personal, real-life products will appear here once they're ready to share.",
 };
+
+/**
+ * V9 (§P0) -- THE ABOUT PLACEHOLDER IS GONE.
+ *
+ * `pendingCopy.aboutPrefix` read "A fuller introduction is coming here. In the
+ * meantime, get in touch on LinkedIn." A production portfolio may not tell a
+ * reader that its introduction has not been written yet, and no visual treatment
+ * fixes a sentence that says so in words.
+ *
+ * WHAT THIS IS ALLOWED TO SAY, and why every line of it is safe. CLAUDE.md §11
+ * forbids inventing years, employers, metrics, outcomes, team sizes and
+ * technologies. So this introduction is assembled ONLY from facts the repository
+ * already asserts elsewhere and can be checked against:
+ *
+ *   - the role, verbatim from `homePositioning` (CLAUDE.md §4);
+ *   - the working thesis, verbatim from `positioningStatement` (CLAUDE.md §4),
+ *     which is why the first paragraph does not restate it;
+ *   - the three layers, from `layerDefinitions` (TASK-003), which is the
+ *     framework the site is actually built on;
+ *   - the kinds of system in `content/work/*` -- an orchestration core, a
+ *     shared-ledger fork, a delivery tool, and professional work under
+ *     constraint -- described by CLASS, never by outcome;
+ *   - the honesty rules the site visibly applies to itself (D-018/D-019
+ *     provenance, phase and asset labelling), which are demonstrable on this
+ *     page rather than claimed.
+ *
+ * It is deliberately SHORT. The brief's instruction is explicit: where the
+ * repository lacks enough verified fact for a long biography, write a shorter
+ * truthful one rather than inventing one. Everything a longer bio would need --
+ * years of experience, employers, location, a public email -- is recorded as
+ * missing in `docs/CONTENT_GAPS.md` and is not guessed at here.
+ */
+export const aboutIntro = {
+  /** The lead. States the discipline and the range, nothing more. */
+  lead: "I build product interfaces and the systems behind them — the data model, the states, the permissions and the constraints that decide whether an interface actually holds up.",
+  /** How the work is organised. These are the site's own three layers. */
+  method:
+    "Most of what I build starts as a system problem wearing an interface: who may see this, what happens offline, which state is authoritative, what the screen should do when the answer is inconvenient. I work through it in three layers — surface, flow and system — and the layer that is usually underestimated is the last one.",
+  /** What the work list actually contains, by class rather than by claim. */
+  practice:
+    "The work on this site runs from an orchestration core that routes changes through automated test, independent review and human approval, to a shared-ledger application built on top of an existing open-source project, to smaller delivery tools, to professional systems built inside real organisational constraints.",
+  /** The honesty rule, which this page demonstrates rather than asserts. */
+  honesty:
+    "Every system here states its own provenance, its current phase and how far its evidence has been verified. Where something is unfinished, forked or not yet publishable, it says so.",
+} as const;
 
 export const notFoundCopy = {
   heading: "Page not found",

@@ -45,3 +45,9 @@ next-env.d.ts
 
 # vitest
 /vitest.config.ts.timestamp-*
+
+# V9 review-artifact policy (docs/REVIEW_POLICY.md). Metrics and written
+# findings are versioned; still matrices and recordings are not. The V8 bundle
+# already in history is deliberately untouched.
+docs/review/**/*.webm
+docs/review/**/recordings/

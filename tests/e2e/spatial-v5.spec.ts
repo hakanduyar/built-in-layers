@@ -570,3 +570,24 @@ test.describe("Spatial V8: each lower-page section exists exactly once (§20)", 
     expect(stops).not.toContain("how-i-build");
   });
 });
+
+// V9 — THE GUARD ON THE GUARD.
+//
+// `spatial.spec.ts`'s "depth planes add no duplicate screen-reader content"
+// selects planes by `[data-camera-plane]`. That is a precise contract only while
+// every plane actually carries the attribute: if one stopped, the filter would
+// find nothing, the assertion would pass on an empty set, and a real regression
+// would go unreported. This asserts the population the other test depends on.
+test.describe("Spatial V9: the depth-plane contract cannot go vacuous", () => {
+  test("every camera plane is labelled, and more than one exists", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
+    const planes = await page
+      .locator("section[aria-label='Spatial system tour'] [data-camera-plane]")
+      .evaluateAll((nodes) => nodes.map((n) => n.getAttribute("data-camera-plane")));
+    expect(planes).toContain("world");
+    // Desktop renders the distant and near planes as well; the guard exists so
+    // the sibling test is never left with only the world plane to filter out.
+    expect(planes.filter((p) => p !== "world").length).toBeGreaterThan(0);
+  });
+});

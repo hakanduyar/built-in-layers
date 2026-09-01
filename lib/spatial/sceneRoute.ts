@@ -76,6 +76,7 @@ import {
   FOCUS_SPEED_RATIO,
   ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
+  SCENE_ALLOWANCE,
   TRAVEL_ALLOWANCE,
   TRAVEL_SPEED_RATIO,
   TRAVEL_WEIGHT_RATIO,
@@ -272,6 +273,23 @@ function arcTables(points: WorldPoint[]): ArcTable[] {
  * the same camera speed, so the two routes feel like one world rather than
  * two differently-paced sequences.
  */
+/**
+ * V9 (§4): the reading allowance each ROUTE POINT carries, parallel to the point
+ * arrays below. Camera-only coordinates (the entry beat, the cut, the exit turn,
+ * the decompression lead-in) carry `null` -- their segments are weighted as
+ * travel and never consult this. See SCENE_ALLOWANCE in scenes.ts.
+ */
+function pointAllowances(): { one: (number | null)[]; two: (number | null)[] } {
+  const of = (id: SceneId) => SCENE_ALLOWANCE[id] ?? FOCUS_ALLOWANCE;
+  const [heroId, ...restOne] = ROUTE_ONE_IDS;
+  return {
+    // [hero, ENTRY, ...rest, cut] -- mirrors `routePoints` exactly.
+    one: [of(heroId!), null, ...restOne.map(of), null],
+    // [lead-in, ...route two scenes, turn]
+    two: [null, ...ROUTE_TWO_IDS.map(of), null],
+  };
+}
+
 function routePoints(mobile: boolean) {
   const cut = mobile ? CUT_MOBILE_WORLD : CUT_WORLD;
   // V6.7 (JOB 1): the acquisition descent sits between the hero and Kivilcim, so
@@ -348,12 +366,25 @@ const AVAILABLE = 1;
  * charged TRAVEL_WEIGHT_RATIO of its length plus the smaller TRAVEL_ALLOWANCE,
  * so the camera crosses it faster; a scene leg is unchanged from V6.2.
  */
-function segmentWeight(table: ArcTable, kind: SegmentKind): number {
+function segmentWeight(table: ArcTable, kind: SegmentKind, allowance = FOCUS_ALLOWANCE): number {
   if (kind === "entry") return table.length * TRAVEL_WEIGHT_RATIO + ENTRY_ALLOWANCE;
   if (kind === "exit") return table.length * TRAVEL_WEIGHT_RATIO + EXIT_ALLOWANCE;
   return kind === "travel"
     ? table.length * TRAVEL_WEIGHT_RATIO + TRAVEL_ALLOWANCE
-    : table.length + FOCUS_ALLOWANCE;
+    : table.length + allowance;
+}
+
+/**
+ * V9 (§4): the reading allowance for the segment joining points `i` and `i+1` --
+ * the larger of the two anchors', so a leg leaving a dense scene is paid at that
+ * scene's rate rather than diluted toward its neighbour's. Camera-only
+ * coordinates contribute nothing.
+ */
+function segmentAllowances(points: (number | null)[]): number[] {
+  return points.slice(0, -1).map((value, i) => {
+    const pair = [value, points[i + 1] ?? null].filter((v): v is number => v !== null);
+    return pair.length ? Math.max(...pair) : FOCUS_ALLOWANCE;
+  });
 }
 
 type SegmentKind = "scene" | "travel" | "entry" | "exit";
@@ -367,9 +398,17 @@ function segmentKinds(count: number, exitCount: number, leadCount = 0): SegmentK
 }
 
 /** Scroll weight of a run of segments. */
-function routeWeight(tables: ArcTable[], exitCount = 0, leadCount = 0): number {
+function routeWeight(
+  tables: ArcTable[],
+  exitCount = 0,
+  leadCount = 0,
+  allowances?: number[],
+): number {
   const kinds = segmentKinds(tables.length, exitCount, leadCount);
-  return tables.reduce((sum, table, i) => sum + segmentWeight(table, kinds[i]!), 0);
+  return tables.reduce(
+    (sum, table, i) => sum + segmentWeight(table, kinds[i]!, allowances?.[i]),
+    0,
+  );
 }
 
 /**
@@ -384,8 +423,12 @@ function routeWeight(tables: ArcTable[], exitCount = 0, leadCount = 0): number {
  */
 const SPLIT = (() => {
   const { one, two } = routePoints(false);
-  const oneWeight = routeWeight(arcTables(one), 0, ENTRY_SEGMENTS);
-  return (AVAILABLE * oneWeight) / (oneWeight + routeWeight(arcTables(two), EXIT_SEGMENTS));
+  // V9 (§4): the split now reflects per-scene reading allowance, so route one's
+  // share of progress grows with the density of the scenes standing on it.
+  const allow = pointAllowances();
+  const oneWeight = routeWeight(arcTables(one), 0, ENTRY_SEGMENTS, segmentAllowances(allow.one));
+  const twoWeight = routeWeight(arcTables(two), EXIT_SEGMENTS, 0, segmentAllowances(allow.two));
+  return (AVAILABLE * oneWeight) / (oneWeight + twoWeight);
 })();
 
 function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
@@ -433,16 +476,17 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
     exitCount = 0,
     ends: { start?: number; end?: number } = {},
     leadCount = 0,
+    allowances?: number[],
   ) => {
     const controls = segmentControls(points);
     const kinds = segmentKinds(arcs.length, exitCount, leadCount);
-    const weightTotal = routeWeight(arcs, exitCount, leadCount);
+    const weightTotal = routeWeight(arcs, exitCount, leadCount, allowances);
     const span = to - from;
 
     const bounds: number[] = [from];
     let cursor = from;
     for (const [i, arc] of arcs.entries()) {
-      cursor += (span * segmentWeight(arc, kinds[i]!)) / weightTotal;
+      cursor += (span * segmentWeight(arc, kinds[i]!, allowances?.[i])) / weightTotal;
       bounds.push(cursor);
     }
     bounds[bounds.length - 1] = to; // kill float drift so the last anchor is exact
@@ -486,8 +530,29 @@ function buildRoutes(mobile: boolean): { one: RouteTable; two: RouteTable } {
     });
   };
 
-  const oneSegments = assemble(onePoints, oneArcs, 0, cut, 0, { end: travelSpeed }, ENTRY_SEGMENTS);
-  const twoSegments = assemble(twoPoints, twoArcs, cut, 1, EXIT_SEGMENTS, { start: travelSpeed });
+  // V9 (§4): the same per-scene allowances the SPLIT is derived from, so the
+  // segment bounds inside each route agree with the share the route was given.
+  const allow = pointAllowances();
+  const oneSegments = assemble(
+    onePoints,
+    oneArcs,
+    0,
+    cut,
+    0,
+    { end: travelSpeed },
+    ENTRY_SEGMENTS,
+    segmentAllowances(allow.one),
+  );
+  const twoSegments = assemble(
+    twoPoints,
+    twoArcs,
+    cut,
+    1,
+    EXIT_SEGMENTS,
+    { start: travelSpeed },
+    0,
+    segmentAllowances(allow.two),
+  );
 
   /**
    * Where each scene is framed.

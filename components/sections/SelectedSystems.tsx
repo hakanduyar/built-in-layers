@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import { TextLink } from "@/components/ui/TextLink";
 import { sectionIndex, selectedSystemsHeading, selectedSystemsSubheading } from "@/data/copy";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
 
@@ -19,6 +19,24 @@ function humanise(value: string): string {
  * lookup from the stored enum to the word the page shows, not a judgement this
  * component makes about a project.
  */
+/**
+ * How far the site's own claims about a system have been checked, in words a
+ * reader can act on. The stored enum values are `verified` / `partial` /
+ * `requires-user`; the last of those is an internal state name ("this needs the
+ * owner to confirm it"), and printing it raw told the reader nothing. Each label
+ * is a plain-English restatement of the same stored fact, never a softening of
+ * it — an unverified system still says so.
+ */
+const VERIFICATION_LABEL: Record<ProjectFrontmatter["verificationStatus"], string> = {
+  verified: "Verified against source",
+  partial: "Partly verified",
+  "requires-user": "Not yet verified",
+  // Unreachable from this section — `getPublishedProjects()` cannot return a
+  // do-not-publish entry — but the map is exhaustive so the enum cannot gain a
+  // value that silently renders as blank.
+  "do-not-publish": "Not published",
+};
+
 const PROVENANCE_LABEL: Record<ProjectFrontmatter["provenance"], string> = {
   personal: "Personal",
   professional: "Professional",
@@ -121,37 +139,85 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div>
+                    {/* IDENTITY, dominant. The phase rides with the name rather
+                        than sitting in the record below it: of everything the
+                        register knows, "what state is this system in" is the one
+                        fact that changes how the name itself should be read. */}
+                    {/* ONE LINK PER ROW, carrying its own affordance — the same
+                        decision the spatial scenes make, for the same reason. A
+                        separate "Open case study" link would give every row two
+                        links to one destination, two tab stops, and two entries
+                        in a screen-reader link list; worse, its accessible name
+                        had to contain the system's title to stay unambiguous,
+                        which made the row's links indistinguishable by name. The
+                        action is therefore stated visually inside the title's own
+                        anchor and hidden from assistive technology, which already
+                        has the title. */}
                     <h3 className="font-display text-heading-l tracking-heading-l text-ink">
-                      <TextLink href={`/work/${project.slug}`}>{project.title}</TextLink>
+                      <Link href={`/work/${project.slug}`} className="group/open block max-w-fit">
+                        <span className="underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text group-hover/open:decoration-2">
+                          {project.title}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="mt-3 flex items-center gap-2.5 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text"
+                        >
+                          <span className="block h-px w-5 bg-ink opacity-50 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-8" />
+                          {project.depth === "full" || project.depth === "short"
+                            ? "Open case study"
+                            : "Open system"}
+                        </span>
+                      </Link>
                     </h3>
-                    <p className="mt-2 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
-                      {project.categoryLabel}
+                    <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+                      <span>{project.categoryLabel}</span>
+                      {project.phase && (
+                        <>
+                          <span aria-hidden="true" className="text-line">
+                            /
+                          </span>
+                          <span className="text-ink">{humanise(project.phase)}</span>
+                        </>
+                      )}
                     </p>
                   </div>
                   <div className="mt-3 lg:mt-1.5">
-                    <p className="max-w-[36rem] font-display text-body text-ink-muted">
+                    <p className="max-w-[36rem] font-display text-body text-ink">
                       {project.description}
                     </p>
-                    {/* The register itself. A definition list on purpose: these
-                        are term/value pairs about one system, and the grid keeps
-                        the terms in one column so the five rows read DOWN as a
-                        record rather than across as a tag cloud. */}
-                    <dl className="mt-4 grid max-w-[36rem] grid-cols-[auto_minmax(0,1fr)] gap-x-5 gap-y-1.5 border-t border-line pt-3">
-                      <RegisterRow term="Provenance">
+                    {/* V9 (§11) — THREE WEIGHTS, NOT FIVE EQUAL ROWS.
+                        The V8 register was a five-row `<dl>` in which every term
+                        and every value rendered at the same 12px, muted, one per
+                        line. Measured at 1366, 1536 and 1918 it was identical:
+                        term 12px, value 12px. That is the "database table"
+                        reading the owner reported, and it also buried the two
+                        facts a reader actually navigates by.
+
+                        The record is now one line of SECONDARY facts — how the
+                        work came about, how far its claims are checked, and what
+                        can actually be opened — at label scale rather than meta
+                        scale, and the stack drops to TERTIARY beneath it. Same
+                        data, same loader, no invented fields; only the weights
+                        changed. The `<dl>` is kept for the pairs that are still
+                        pairs, and the separators are decorative. */}
+                    <dl className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-line pt-3 font-mono text-mono-label tracking-mono-label">
+                      <RegisterFact term="Provenance">
                         {PROVENANCE_LABEL[project.provenance]}
                         {project.upstream ? ` of ${project.upstream.name}` : ""}
-                      </RegisterRow>
-                      {project.phase && (
-                        <RegisterRow term="Phase">{humanise(project.phase)}</RegisterRow>
-                      )}
-                      <RegisterRow term="Access">{access(project)}</RegisterRow>
-                      <RegisterRow term="Record">
-                        {humanise(project.verificationStatus)}
-                      </RegisterRow>
-                      {project.tech.length > 0 && (
-                        <RegisterRow term="Stack">{project.tech.join(" · ")}</RegisterRow>
-                      )}
+                      </RegisterFact>
+                      <Divider />
+                      <RegisterFact term="Record">
+                        {VERIFICATION_LABEL[project.verificationStatus]}
+                      </RegisterFact>
+                      <Divider />
+                      <RegisterFact term="Access">{access(project)}</RegisterFact>
                     </dl>
+                    {project.tech.length > 0 && (
+                      <p className="mt-2.5 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+                        <span className="sr-only">Stack: </span>
+                        {project.tech.join(" · ")}
+                      </p>
+                    )}
                   </div>
                 </div>
               </li>
@@ -167,15 +233,29 @@ type SelectedSystemsProps = {
   projects: ProjectFrontmatter[];
 };
 
-/** One term/value pair in a system's register. Two grid cells, not a nested
- *  wrapper, so every value in the column starts on the same left edge. */
-function RegisterRow({ term, children }: { term: string; children: React.ReactNode }) {
+/**
+ * One fact in a system's record: the term small and muted, the value at label
+ * scale in ink. The two carry different weight on purpose — V8 rendered both at
+ * the same 12px, which is what made five true statements read as a table dump
+ * rather than as a record with a subject.
+ */
+function RegisterFact({ term, children }: { term: string; children: React.ReactNode }) {
+  // A `div`, not a `span`: a `<dl>` may only directly contain `dt`/`dd` groups,
+  // `script`, `template` or `div`, and axe's `definition-list` rule enforces it.
+  // Caught by the a11y suite when this was first written with a span.
   return (
-    <>
-      <dt className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
-        {term}
-      </dt>
-      <dd className="font-mono text-mono-meta tracking-mono-meta text-ink">{children}</dd>
-    </>
+    <div className="inline-flex items-baseline gap-2">
+      <dt className="text-mono-meta uppercase text-ink-muted">{term}</dt>
+      <dd className="text-ink">{children}</dd>
+    </div>
+  );
+}
+
+/** Decorative separator between record facts. Never announced. */
+function Divider() {
+  return (
+    <span aria-hidden="true" className="text-line">
+      ·
+    </span>
   );
 }

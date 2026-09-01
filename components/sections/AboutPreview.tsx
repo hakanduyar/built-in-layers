@@ -6,7 +6,7 @@ import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { TextLink } from "@/components/ui/TextLink";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import { homePositioning, homeWordmark, pendingCopy } from "@/data/copy";
+import { aboutIntro, homePositioning, homeWordmark } from "@/data/copy";
 import { contactUrl } from "@/data/site";
 
 // IA section 9. Same pending copy already live on /about.
@@ -92,17 +92,24 @@ export function AboutPreview() {
         {/* One signal accent in the whole lower page, spent here: the system's
             route colour ends at the person. lg:mt-3 hangs the accent just under
             the name's cap line so the two columns read as one register. */}
+        {/* V9 (§P0): a real introduction. The right column used to carry one
+            sentence saying the introduction had not been written yet, plus a
+            LinkedIn link -- so the page's own About section admitted to being a
+            placeholder. It now carries the lead and the method from
+            `aboutIntro`, which is assembled only from facts this repository
+            already asserts (see the note on that export). The remaining two
+            paragraphs live on /about; this is the preview, not the page. */}
         <div className="mt-10 lg:col-start-8 lg:col-span-5 lg:mt-3">
           <span aria-hidden="true" className="mb-5 block h-0.5 w-12 bg-signal" />
-          <p className="max-w-[34rem] font-display text-body-l text-ink-muted">
-            {pendingCopy.aboutPrefix}{" "}
+          <p className="max-w-[34rem] font-display text-body-l text-ink">{aboutIntro.lead}</p>
+          <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted">
+            {aboutIntro.honesty}
+          </p>
+          <nav aria-label="About" className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
+            <TextLink href="/about">Read the full introduction</TextLink>
             <TextLink href={contactUrl} external>
               LinkedIn
             </TextLink>
-            .
-          </p>
-          <nav aria-label="About" className="mt-7">
-            <TextLink href="/about">Visit the About page</TextLink>
           </nav>
         </div>
       </div>

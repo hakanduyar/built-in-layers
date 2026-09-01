@@ -5,7 +5,9 @@ import { chromium } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 
 const BASE = process.env.PROBE_BASE ?? "http://127.0.0.1:3200";
-const OUT = "docs/review/v8-responsive/after";
+// V9: honours PROBE_OUT. It was hardcoded at the V8 bundle, so re-running it in
+// a later pass silently overwrote that pass's committed evidence.
+const OUT = process.env.PROBE_OUT ?? "docs/review/v9-release/metrics";
 mkdirSync(OUT, { recursive: true });
 
 const MOBILE = [320, 360, 375, 390, 430, 768];

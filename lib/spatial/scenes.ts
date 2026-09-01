@@ -374,6 +374,79 @@ export const SCENE_BREAK_BANDS = 11;
 export const FOCUS_ALLOWANCE = 74;
 
 /**
+ * V9 (§4) -- READING ALLOWANCE PER SCENE, BECAUSE SCENES ARE NOT EQUALLY DENSE.
+ *
+ * THE MEASURED COMPLAINT. The owner's reading of the V8 build was that the four
+ * projects "pass relatively quickly, while the lower-page sections occupy much
+ * more perceived time". Measured against the real progress allocation, that is
+ * exactly what the route was doing:
+ *
+ *   software-factory  74.7vh      reorient   76.6vh
+ *   kivilcim          64.7vh      approach   81.2vh
+ *   jointledger       64.6vh      handoff    69.4vh
+ *   dropspot          62.3vh
+ *
+ * Route two's THREE statement scenes owned 227.2vh against the four projects'
+ * 266.3vh. A project scene carries a title, a category, a description, a
+ * metadata row and a plate of real evidence; `reorient` carries one word and one
+ * sentence. Paying them the same reading allowance is what made the evidence
+ * feel like scenery on the way to the page.
+ *
+ * THE FIX IS THE ALLOWANCE, NOT THE GOVERNOR. §14 of the brief is explicit that
+ * the scroll-speed ceiling stays exactly as it is, and it does: `ROUTE_MAX_RATE`
+ * and `useRouteGovernor` are untouched. What changes is how the route's fixed
+ * scroll budget is DIVIDED -- reading allowance is time to read, so a scene with
+ * more to read gets more of it. Nothing is snapped, nothing is held, and the
+ * reader can still move slower or faster within the ceiling exactly as before.
+ *
+ * A segment takes the LARGER of the allowances of the two anchors it joins, not
+ * their average: the segment between DropSpot and the SYSTEMS beat is where
+ * DropSpot's evidence is still being read on the way out, so it is paid at
+ * DropSpot's rate rather than diluted to the midpoint.
+ *
+ * MEASURED RESULT, and the ceiling that stopped it going further:
+ *
+ *   four projects      266.3vh -> 285.9vh
+ *   route two's three  227.2vh -> 207.6vh
+ *   ratio              1.17    -> 1.38
+ *
+ * The values below are the largest that keep EVERY standing route contract. They
+ * were found by raising them until the contracts failed, and the failures are
+ * worth recording because they are the honest bound on this lever rather than a
+ * matter of taste: at project allowances near 140 the world broke its 8%
+ * frame-to-frame speed ceiling at the exit join, route two exceeded its
+ * "comparable speed to route one" bound at 1.42x against 1.35, and the exit leg
+ * became more expensive to scroll than the cheapest scene leg. Reading allowance
+ * is a redistribution of a fixed budget, so past a point taking more for the
+ * projects does not slow them down — it speeds everything else up until the
+ * world stops being one continuous camera.
+ *
+ * The rest of the §4 complaint is answered by shortening what comes after the
+ * projects rather than by stretching the projects: see the dead-run removal in
+ * SpatialExperience's SurfaceReturn and the Field Notes footprint fix.
+ */
+export const SCENE_ALLOWANCE: Partial<Record<SceneId, number>> = {
+  // Four project scenes: title + category + description + metadata + evidence.
+  "software-factory": 124,
+  kivilcim: 116,
+  jointledger: 116,
+  dropspot: 116,
+  // The opening. Keeps the standard rate: it is a composition to take in, but
+  // the acquisition descent that follows already carries its own allowance.
+  hero: 74,
+  // A single expressive word opening on a surface. A beat, not a read.
+  tail: 64,
+  // UNDERNEATH plus the one approved supporting statement.
+  reorient: 72,
+  // Built in Layers: a heading and three real definitions -- genuinely more to
+  // read than anything else on route two, and the only scene there paid above
+  // the standard rate.
+  approach: 78,
+  // Two short lines and one button.
+  handoff: 70,
+};
+
+/**
  * V6.3: the same allowance for a segment with NO SCENE ON IT -- the exit
  * traverse. Reading allowance buys time to look at something; a travel leg has
  * nothing to look at, so paying it the full 74 would spend the page's scroll
@@ -445,6 +518,11 @@ export const ENTRY_ALLOWANCE = 46;
  * standing 8% ceiling -- caught by tests/unit/spatial-route.test.ts, not by eye,
  * and the same failure signature the entry beat produced at p=0.001.
  *
+ * V9 (§4) raised it 38 -> 40. Per-scene reading allowance narrowed route two's
+ * segments, which sharpened this same join again; 40 is the largest value that
+ * keeps the exit cheaper to scroll than the cheapest leg carrying a scene, which
+ * is the contract that stops it quietly becoming a journey again.
+ *
  * The value is deliberately BELOW the entry's 46. Reading allowance buys time to
  * look at something; the entry beat carries the tail of the hero's own reading
  * time, and this leg carries nothing at all now that the destination previews
@@ -452,7 +530,7 @@ export const ENTRY_ALLOWANCE = 46;
  * world's continuity contract, and no larger -- which is the whole point of
  * removing the previews rather than restyling them.
  */
-export const EXIT_ALLOWANCE = 38;
+export const EXIT_ALLOWANCE = 40;
 
 /**
  * Boundary speed, as a fraction of the route average, at joins that have NO SCENE

@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextLink } from "@/components/ui/TextLink";
-import { pendingCopy } from "@/data/copy";
+import { aboutIntro, workIndexLabel } from "@/data/copy";
 import { contactUrl } from "@/data/site";
 import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
@@ -19,8 +19,24 @@ export default function AboutPage() {
       <JsonLd data={buildPersonJsonLd()} />
       <SectionHeading label="ABOUT" />
       <h1 className="mt-4 font-display text-heading-l text-ink">About</h1>
+      {/* V9 (§P0): the real introduction, replacing "A fuller introduction is
+          coming here." Assembled only from facts this repository already asserts
+          — see the note on `aboutIntro` in data/copy.ts for the source of every
+          claim and for what is deliberately NOT said. */}
+      <p className="mt-6 max-w-[46rem] font-display text-body-l text-ink">{aboutIntro.lead}</p>
+      <p className="mt-5 max-w-[42rem] font-display text-body text-ink-muted">
+        {aboutIntro.method}
+      </p>
       <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
-        {pendingCopy.aboutPrefix}{" "}
+        {aboutIntro.practice}
+      </p>
+      <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
+        {aboutIntro.honesty}
+      </p>
+      <p className="mt-8 max-w-[42rem] font-display text-body text-ink-muted">
+        The systems themselves are on the{" "}
+        <TextLink href="/work">{workIndexLabel.toLowerCase()}</TextLink>. For anything else, reach
+        me on{" "}
         <TextLink href={contactUrl} external>
           LinkedIn
         </TextLink>

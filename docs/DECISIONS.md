@@ -385,3 +385,39 @@ Binding conditions attached to this approval — all already true of the current
   previews were invented to fix, so it cannot outlive them).
 - **Approval:** Hakan's explicit V8 brief and its follow-up correction distinguishing the early
   sparse duplicates from the later full versions; implemented as directed.
+
+## D-024 — Homepage release candidate: derived facts, per-scene pacing, one link per system (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **Facts that describe the route are derived from the route.** The handoff sentence's project
+     count and the travel material's scene order are both computed from `TOUR_SLUGS` / `SCENE_IDS`
+     rather than written. Both had gone stale at the V7 reorder; one merely lied in prose, the other
+     framed an oversized word crop across the flagship's composition at progress 0.137 against a
+     focus of 0.141.
+  2. **The world's terminus frame carries the regime change.** "Back on the surface" renders inside
+     the sticky frame rather than after the section, because the route ends one viewport before the
+     section does and V8 emptied that frame when it removed the destination previews.
+  3. **Reading allowance is per scene** (`SCENE_ALLOWANCE`), largest of a segment's two anchors.
+     The scroll governor is untouched.
+  4. **One link per system, carrying its own affordance.** The "Open case study" / "Open system"
+     cue is `aria-hidden` inside the title's anchor, and its wording is derived from `depth` so it
+     cannot promise a case study the content does not contain.
+  5. **Review artifacts follow `docs/REVIEW_POLICY.md`**: metrics in Git, still matrices and
+     recordings outside it, V8's committed bundle left untouched.
+- **Reason:** every one of these was a measured defect, not a preference — a 360px run at 0.2%
+  content fill, a 0.004-progress collision between a material fragment and a scene focus, a 1.17
+  project-to-statement pacing ratio, a five-row register rendering term and value at the same 12px.
+- **Binding conditions:** no invented content anywhere — the About introduction is assembled only
+  from facts the repository already asserts, and what a longer biography would need is recorded in
+  `docs/CONTENT_GAPS.md` instead of guessed; per-scene allowance may not exceed what the world's
+  continuity contracts permit (measured ceiling recorded in `SCENE_ALLOWANCE`); the affordance may
+  never add a second link to the same destination.
+- **Rejected:** a second "Open case study" link per system (duplicate tab stops, and its accessible
+  name had to contain the title, making the row's links indistinguishable); replacing the removed
+  Field Notes composition with anything (`data/notes.ts` is empty by design under D-008, so the
+  footprint shrinks instead); widening scene spacing to keep neighbouring scenes out of frame at
+  focus (they do not overlap, and their visibility is the "zooming out reveals more of the same
+  world" behaviour D-022 was asked for); changing end geometry for the CTA's apparent hold, which
+  was measured and is not dead scroll.
+- **Approval:** Hakan's explicit V9 homepage-finalization brief; implemented as directed.

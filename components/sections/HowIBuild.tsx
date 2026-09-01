@@ -78,6 +78,19 @@ export function HowIBuild() {
                   </span>
                   <h3 className="font-display text-heading-l tracking-heading-l text-ink">
                     {principle.title}
+                    {/* V9 (§12): the CONSEQUENCE ARROW. V8 drew the relation with
+                        a short rule and the word "So", and the owner's reading
+                        was that the causality stayed too quiet — at 12px, in
+                        muted ink, beside a 40px title, the relation was the
+                        faintest thing in a row about relations. The mark now
+                        leaves the title itself and points into the consequence,
+                        so the eye reads "principle -> therefore" before it reads
+                        either half. Decorative: the relation is already carried
+                        by the reading order for assistive technology. */}
+                    <span aria-hidden="true" className="mt-4 hidden items-center gap-2 lg:flex">
+                      <span className="block h-px w-10 bg-ink opacity-45" />
+                      <span className="block h-1.5 w-1.5 rotate-45 border-r border-t border-ink opacity-60" />
+                    </span>
                   </h3>
                   {/* V8 (§5) -- THE CONSEQUENCE IS NOW DRAWN, NOT IMPLIED.
                       The owner's reading of V7 was that this was four isolated
@@ -92,15 +105,18 @@ export function HowIBuild() {
                       no third column of invented consequences, no evidence
                       claims, no restated project copy. The structure states the
                       relationship; the words are still only the owner's. */}
-                  <div className="relative mt-3 max-w-[36rem] lg:mt-1.5">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-8 top-[0.72em] hidden h-px w-5 bg-ink opacity-30 lg:block"
-                    />
-                    <p className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
-                      So
+                  {/* The consequence, given the weight of a consequence. V8 set
+                      it in muted ink at body size, so the row's second half read
+                      as a caption on the first. It now carries the row: a
+                      registered label naming the relation, then the sentence in
+                      ink at body-l. Still the owner's approved copy, verbatim
+                      and unextended — the structure states the causality, the
+                      words are unchanged. */}
+                  <div className="relative mt-3 max-w-[36rem] border-l border-line pl-5 lg:mt-1.5 lg:border-l-0 lg:pl-0">
+                    <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+                      Consequence
                     </p>
-                    <p className="mt-1.5 font-display text-body text-ink-muted">{principle.body}</p>
+                    <p className="mt-2 font-display text-body-l text-ink">{principle.body}</p>
                   </div>
                 </div>
               </li>

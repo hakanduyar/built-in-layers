@@ -3,7 +3,7 @@
 Facts that are missing or unverified. Nothing here may be invented to fill a gap — record it and
 continue with everything else that is possible. See `CLAUDE.md §11`.
 
-_Last updated: 2026-08-28_
+_Last updated: 2026-09-01 (V9)_
 
 ---
 
@@ -11,7 +11,7 @@ _Last updated: 2026-08-28_
 
 | Gap | Needed for | Status |
 |---|---|---|
-| **V6.8 source tree** | everything after Phase 1 | **BLOCKED** — exists only on the Ubuntu machine, uncommitted and unpushed. See `docs/AUTONOMOUS_RECOVERY_STATUS.md`. |
+| _(none)_ | — | The V6.8 recovery blocker recorded here is **CLOSED**: the tree was recovered and merged at `682d54e`. |
 
 Until V6.8 is recovered, the project-content audit below cannot be completed against the real
 current tree, and `docs/PROJECT_INVENTORY.md` has deliberately **not** been written — writing it
@@ -53,3 +53,39 @@ proof lineage may be published until extracted from that source directly.
 
 **JointLedger** must not be reduced to a minor annotation if enough real content exists to
 support more.
+
+---
+
+## Homepage release-candidate gaps (V9, 2026-09-01)
+
+Recorded while removing the "A fuller introduction is coming here" placeholder from About and the
+homepage's About preview. The introduction that now ships is assembled **only** from facts this
+repository already asserts (see the note on `aboutIntro` in `data/copy.ts`). Everything below is
+what a longer, more personal biography would need and what this repository cannot supply — so it
+was **not written**, per CLAUDE.md §11.
+
+| Gap | Blocks | Why it is not guessed |
+|---|---|---|
+| Years of experience / career start date | a conventional "N years building X" line | Not derivable from any file in the repo |
+| Current employer, job title, team | professional framing on About | Professional work is deliberately anonymised; no employer is named anywhere in content |
+| Location / timezone / working availability | About, contact | Never stated in the repo |
+| Public email address | contact beyond LinkedIn | Deliberately unpublished until explicitly confirmed (carried from V5) |
+| Education, certifications | About | Not in the repo |
+| A personal photograph | About page identity | None exists in `public/images/` |
+| Three Medium article titles + URLs | Field Notes and `/notes` becoming a real index | `data/notes.ts` is intentionally an empty array (D-008); Field Notes ships as a compact
+external bridge until it is populated (V9 §P0) |
+
+### Professional Systems (§19)
+
+`content/work/professional-systems/index.mdx` carries `verificationStatus: "requires-user"`,
+`tech: []`, `links: []`, an empty contribution statement awaiting approval, and one
+`provisional-illustration` asset. It is honestly labelled everywhere it appears — the Selected
+Systems register now states "Not yet verified" and "No public artefact" for it explicitly — and it
+is deliberately kept as a `preview`-depth entry with no spatial scene, because the content cannot
+support one. What is missing before it can carry more:
+
+- the problem class and constraint, in publishable form
+- Hakan's specific role and contribution, approved for publication
+- whether any interface evidence can be shown at all, even anonymised
+
+Until then it stays compact. That is the honest presentation, not a placeholder.

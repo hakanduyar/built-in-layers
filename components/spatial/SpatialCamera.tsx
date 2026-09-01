@@ -77,6 +77,14 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
    */
   branchDestinations?: readonly string[];
   /**
+   * V9 (§P0): the regime change that ends the world, rendered INSIDE the sticky
+   * frame instead of after it. See SurfaceReturn in SpatialExperience for the
+   * measurement that moved it. It is page grammar rather than world grammar, so
+   * it deliberately sits OUTSIDE the scaled/parallaxed world layer: it does not
+   * travel, it does not answer the camera, and it does not scale with the fit.
+   */
+  surfaceReturn?: ReactNode;
+  /**
    * What the observing system is allowed to say about a scene, derived from
    * real project frontmatter by lib/spatial/systemPov.ts. Scenes without one
    * are simply not annotated -- there is no placeholder readout.
@@ -739,6 +747,7 @@ export function SpatialCamera({
   distantMaterial,
   nearMaterial,
   branchDestinations = [],
+  surfaceReturn,
   annotations = {},
   ...scenes
 }: SpatialCameraProps) {
@@ -837,6 +846,28 @@ export function SpatialCamera({
     return fit * (1 - 0.08 * exit * exit);
   });
 
+  // V9 (§P0): the surface-return marker resolves over the last third of the
+  // exit and is fully present at the terminus, so the world's final frame is
+  // never blank. Deliberately not tied to the departure zoom's easing -- the
+  // world receding and the page arriving are two statements, and the second one
+  // should be crisp.
+  // It must be FULLY present before progress reaches 1, not at it: the interval
+  // that measured empty begins at the route's terminus and lasts a whole
+  // viewport while the frame scrolls away, so a marker still fading in at
+  // progress 1 arrives after the run it exists to fill.
+  const surfaceReturnOpacity = useTransform(
+    progress,
+    [EXIT_FROM + (1 - EXIT_FROM) * 0.18, EXIT_FROM + (1 - EXIT_FROM) * 0.72],
+    [0, 1],
+  );
+
+  // V9 (§18): gone by the time the acquisition descent has finished, which is
+  // the beat at which the world has visibly answered the question the cue was
+  // asking. Driven by RAW progress rather than the filtered camera so it
+  // responds to the very first notch of input, which is the only moment it is
+  // about.
+  const entryCue = useTransform(scrollYProgress, [0, 0.012], [1, 0]);
+
   function scrollToProgress(target: number) {
     const spacer = spacerRef.current;
     if (!spacer) return;
@@ -883,6 +914,11 @@ export function SpatialCamera({
             </div>
           );
         })}
+        {/* V9 (§P0): the regime change is page grammar, so the reduced-motion and
+            no-JS trees get it too -- statically, at the end of the linear read,
+            which is exactly where it means the same thing. D-020: reduced motion
+            disables motion, not design. */}
+        {surfaceReturn}
       </div>
     );
   }
@@ -921,7 +957,19 @@ export function SpatialCamera({
         {/* V7: it carries one animation again — the departure zoom above. */}
         <motion.div
           className="absolute inset-0"
-          style={{ scale: worldScale, transformOrigin: "50% 44%" }}
+          // V9 (§18): `--entry-cue` rides the world layer that everything in the
+          // world inherits from. It is 1 before anything moves and 0 once the
+          // reader has committed to the route, so the hero's cue can stay a
+          // plain server-rendered span with a CSS fallback of 1 -- which is what
+          // leaves it statically visible in the reduced-motion and no-JS trees,
+          // where there is no camera for it to describe.
+          style={
+            {
+              scale: worldScale,
+              transformOrigin: "50% 44%",
+              "--entry-cue": entryCue,
+            } as MotionStyle
+          }
         >
           {/* V6 (§20.1): the world's pulse, behind every depth plane. Driven by
               RAW progress rather than by the camera, so scroll always produces
@@ -948,7 +996,13 @@ export function SpatialCamera({
           {/* Depth planes (§12). Mobile keeps the world plane only: parallax
               at 375px buys little and risks motion sickness (§30). */}
           {isDesktop && (
-            <CameraPlane progress={progress} rate={PLANE_DISTANT} inset={inset} mobile={mobile}>
+            <CameraPlane
+              progress={progress}
+              rate={PLANE_DISTANT}
+              inset={inset}
+              mobile={mobile}
+              data-camera-plane="distant"
+            >
               {/* V6.8 (§28): each project's field plane -- the second depth surface
                   its composition is read against. On this plane, not the world
                   plane, so the project slides across it as the camera travels. */}
@@ -1085,11 +1139,33 @@ export function SpatialCamera({
           </CameraPlane>
 
           {isDesktop && (
-            <CameraPlane progress={progress} rate={PLANE_NEAR} inset={inset} mobile={mobile}>
+            <CameraPlane
+              progress={progress}
+              rate={PLANE_NEAR}
+              inset={inset}
+              mobile={mobile}
+              data-camera-plane="near"
+            >
               {nearMaterial}
             </CameraPlane>
           )}
         </motion.div>
+
+        {/* V9 (§P0): the regime change, held low in the frame so it is still on
+            screen through the interval that measured empty -- the run after the
+            camera has finished and before the sticky frame has moved far enough
+            to reveal the lower page. It resolves across the exit rather than
+            being present all along: for the whole journey it is not there, and
+            the moment the world runs out it is what the frame contains.
+            Outside the world layer on purpose (see the prop's note). */}
+        {surfaceReturn && (
+          <motion.div
+            className="pointer-events-none absolute inset-x-0 bottom-[13vh]"
+            style={{ opacity: surfaceReturnOpacity }}
+          >
+            {surfaceReturn}
+          </motion.div>
+        )}
 
         <SceneBreak progress={progress} />
       </div>

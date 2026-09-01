@@ -84,7 +84,10 @@ test.describe("Home: about preview and CTA destinations", () => {
     // WebKit computes the click point before the post-autoscroll transform
     // settles and misses the link; bring it into view and let the transform
     // rest first. Same settle philosophy the spatial helpers use.
-    const link = page.getByRole("link", { name: "Visit the About page" });
+    // V9 (§P0): relabelled when the About preview stopped saying its introduction
+    // was still to be written and started carrying one. The destination is
+    // unchanged; the label now describes what is actually at the other end.
+    const link = page.getByRole("link", { name: "Read the full introduction" });
     await link.scrollIntoViewIfNeeded();
     await page.waitForTimeout(600);
     await link.click();

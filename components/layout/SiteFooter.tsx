@@ -128,7 +128,13 @@ export function SiteFooter() {
           page's final frame, which is why the review read the CTA as "sitting
           too low". 82vh + rebalanced padding centres the conclusion optically
           higher and leaves only a sliver of tail at 900 and 1200 alike. */}
-      <Container className="spatial-finale flex min-h-[82vh] flex-col justify-center pb-36 pt-10 lg:pb-48 lg:pt-12">
+      {/* V9 (§14): REBALANCED, not resized. `justify-center` with `pb-48` is a
+          contradiction — it centres the block and then pushes it back up, which
+          is what left the measured band of empty paper between the action and
+          the furniture strip while the composition sat high in the frame. The
+          bottom padding now only separates the finale from the strip below it,
+          and the centring does the placing. Height is untouched. */}
+      <Container className="spatial-finale flex min-h-[82vh] flex-col justify-center pb-20 pt-10 lg:pb-24 lg:pt-12">
         <div className="lg:pl-[8%]">
           {/* The journey's four routes, arriving and resolving. The vertical that
               leaves the convergence point lands exactly on the headline's leading
@@ -185,15 +191,39 @@ export function SiteFooter() {
           >
             End of route
           </p>
-          <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">
-            {footerCtaHeading}
-          </h2>
-          <p className="mt-8 max-w-[42rem] font-serif text-statement italic text-ink">
-            {footerCtaSubline}
-          </p>
-          <ButtonLink href={contactUrl} external className="mt-12">
-            {footerCtaLabel}
-          </ButtonLink>
+          {/* V9 (§14) -- THE CONVERGENCE NOW REACHES THE ACTION.
+              The owner's reading was that the geometry, the empty territory and
+              a small action did not resolve into one final state, and the frame
+              showed why: the vertical dropping out of the convergence node
+              stopped at the headline, so the last third of the composition --
+              the subline and the button, i.e. the actual decision -- stood
+              beside the drawing rather than at the end of it.
+
+              The axis now continues past the headline and terminates ON the
+              action, with the world's own closed corner at its foot. Nothing new
+              was invented: it is the same single line the four routes already
+              converge into, drawn to the place it was always pointing. */}
+          <div className="relative">
+            <span
+              aria-hidden="true"
+              className="absolute -left-6 top-0 hidden w-px bg-ink opacity-25 lg:block"
+              style={{ height: "calc(100% - 0.75rem)" }}
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
+              style={{ bottom: "0.75rem" }}
+            />
+            <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">
+              {footerCtaHeading}
+            </h2>
+            <p className="mt-8 max-w-[42rem] font-serif text-statement italic text-ink">
+              {footerCtaSubline}
+            </p>
+            <ButtonLink href={contactUrl} external className="mt-12">
+              {footerCtaLabel}
+            </ButtonLink>
+          </div>
         </div>
       </Container>
 

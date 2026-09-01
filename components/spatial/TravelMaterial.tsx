@@ -1,4 +1,10 @@
-import { PLANE_DISTANT, PLANE_NEAR, type SceneId, type WorldPoint } from "@/lib/spatial/scenes";
+import {
+  PLANE_DISTANT,
+  PLANE_NEAR,
+  SCENE_IDS,
+  type SceneId,
+  type WorldPoint,
+} from "@/lib/spatial/scenes";
 import { cameraPosition, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 import { worldX, worldY } from "@/lib/spatial/worldFit";
 
@@ -60,13 +66,33 @@ function planePosition(atProgress: number, rate: number, offset: WorldPoint): Wo
   return { x: camera.x * rate + offset.x, y: camera.y * rate + offset.y };
 }
 
-/** The progress at which a fragment is framed: partway along the leg into the
- *  scene it announces, so it is seen during travel and gone on arrival. */
+/**
+ * The progress at which a fragment is framed: partway along the leg into the
+ * scene it announces, so it is seen during travel and gone on arrival.
+ *
+ * V9 (§6) FIXED A STALE ORDER, and it was the cause of the owner's "large
+ * leftover typography cuts through the project frame".
+ *
+ * This function used to carry its own hardcoded scene order, written when the
+ * tour staged two projects: `["hero", "kivilcim", "dropspot", "tail",
+ * "reorient", "approach"]`. V7 inserted Software Factory and JointLedger into
+ * the route and never updated it, so any scene missing from that list fell
+ * through to `previous = 0` and every fragment was placed against the wrong leg.
+ *
+ * Measured on the built page, the consequence was exact: the Kıvılcım fragment
+ * resolved to progress 0.137 — Software Factory's focus is 0.141 — so an
+ * oversized crop of the word "KIVILCIM" was framed directly across the
+ * flagship's composition. It read as an accidental collision because it WAS
+ * one.
+ *
+ * The order now comes from `SCENE_IDS`, which is derived from the route itself,
+ * so a fragment is always placed on the leg into the scene it names and this
+ * cannot go stale again the next time the route changes.
+ */
 function leadProgress(before: SceneId): number {
   const target = sceneFocusProgress(before);
-  const order: SceneId[] = ["hero", "kivilcim", "dropspot", "tail", "reorient", "approach"];
-  const index = order.indexOf(before);
-  const previous = index > 0 ? sceneFocusProgress(order[index - 1]!) : 0;
+  const index = SCENE_IDS.indexOf(before);
+  const previous = index > 0 ? sceneFocusProgress(SCENE_IDS[index - 1]!) : 0;
   return previous + (target - previous) * 0.55;
 }
 

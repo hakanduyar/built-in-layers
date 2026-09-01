@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-01 (V8)_
+_Last updated: 2026-09-01 (V9)_
 
 ---
 
@@ -11,36 +11,39 @@ _Last updated: 2026-09-01 (V8)_
 
 | Field | Value |
 |---|---|
-| **Status** | V8 RESPONSIVE WORLD PASS COMPLETE — validated, committed and pushed; awaiting owner visual review |
+| **Status** | V9 HOMEPAGE RELEASE CANDIDATE — validated, committed and pushed. Homepage recommended for FREEZE; next workstream is the case-study system |
 | Current branch | `feature/spatial-portfolio-v5` |
 | Current HEAD | `44e0924` (V8 responsive world pass) |
 | Latest origin commit | `44e0924` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean |
-| Current phase | V8 (owner brief): early duplicate removal + true responsive world fit + late-page development |
+| Current phase | V9 (owner brief): homepage finalization — stale facts, dead run, pacing, affordance, About/Field Notes, CTA |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
-| Current visual artifacts | `docs/review/v8-responsive/index.html` (2026-09-01: 76 stills across 7 desktop viewports plus 6 mobile widths, before/after measurement tables, zoom + mobile matrices, 3 natural-scroll recordings). Superseded: `C:\Users\hakan\spatial-v5-review\` (V5-era, 2026-08-17) |
+| Current visual artifacts | `C:\Users\hakan\portfolio-review\v9\` (stills across six desktop viewports plus 80% / 67% zoom); metrics in `docs/review/v9-release/metrics/`. Policy: `docs/REVIEW_POLICY.md` |
 
 ## Next action
 
-**Owner visual review of V8.** Open `docs/review/v8-responsive/index.html` — comparison sheets for
-ten route stops across five viewports, the before/after measurement tables, and three
-natural-scroll recordings (1536×864, 1920×1080, 390px).
+**Owner visual review, then FREEZE the homepage.** Stills for every scene and landmark are in
+`C:\Users\hakan\portfolio-review\v9\` at six desktop viewports plus 80% and 67% zoom; the
+measurements behind every claim are in `docs/review/v9-release/metrics/`.
 
-Two things are worth the owner's judgement rather than another engineering pass:
+Three things are the owner's judgement rather than another engineering pass:
 
-1. **The 1440×900 change.** The world now renders at 0.94 there rather than 1.0. That viewport was
-   measured as clipping DropSpot by 38px, so it was not a correct reference — but it is the
-   viewport most earlier passes were composed against, and the difference is visible.
-2. **Scroll pacing.** The governor is deliberately unchanged (D-021 item 5 intact), and the brief
-   asks for pacing to be reassessed against new evidence once the geometry is right. That evidence
-   now exists in `recordings/`. If the journey reads slow or fast at the corrected scale, that is a
-   separate, deliberate retune — not a bug.
+1. **Neighbouring scenes are visible at focus** at viewports wider than the 1440 reference. They do
+   not overlap — this is the "zooming out reveals more of the same world" behaviour D-022 was asked
+   for, and hiding them again would mean widening the whole route. Left as is, deliberately.
+2. **Professional Systems stays compact** because its content cannot support more. What it would
+   need before it can carry a scene is listed in `docs/CONTENT_GAPS.md`.
+3. **Scroll pacing** is now 1.38 projects-to-statements, up from 1.17, and the governor is
+   untouched. The ceiling on that lever is the world's own continuity contracts, recorded in
+   `SCENE_ALLOWANCE`.
 
-The historical V6.8 recovery item below is closed: the source state has been `RESOLVED` since
-`682d54e`.
+After the freeze, the next workstream is the **project experience / case-study system**, starting
+with Software Factory: SURFACE / FLOW / SYSTEM, then architecture, topology, workflow, state and
+deployment where real, then the framework applied to Kıvılcım, JointLedger and DropSpot.
+
 
 ---
 
@@ -60,7 +63,7 @@ Do not restart or redesign these without evidence of an actual regression in cur
 
 ## Validation state
 
-Last full validation: **V8 responsive world pass, 2026-09-01** (Node 22.23.2 / pnpm 11.17.0),
+Last full validation: **V9 homepage release candidate, 2026-09-01** (Node 22.23.2 / pnpm 11.17.0),
 against the tree committed in this pass.
 
 | Gate | Result |
@@ -70,11 +73,13 @@ against the tree committed in this pass.
 | prettier | pass on every file changed in this pass |
 | unit tests | **500 / 500**, 20 files |
 | production build | pass — 15/15 pages |
-| Chromium E2E | **213 / 213** |
-| WebKit E2E | 211 / 213 at `--workers=2`; both remaining pass in isolation — see below |
-| Responsive matrix | 7 desktop viewports: **0 clipped scenes, 0 horizontal overflow, 0 console errors** |
+| Chromium E2E | **214 / 214** |
+| WebKit E2E | 211 / 214 at `--workers=2`; two pass in isolation in ~1s, one is the pre-existing skip-link failure — see below |
+| Responsive matrix | 6 desktop viewports + 80% / 67% zoom: **0 horizontal overflow, 0 console errors** |
 | Mobile matrix | 320 / 360 / 375 / 390 / 430 / 768: 0 overflow, 0 console errors |
 | Browser zoom | 90% / 100% / 110% / 125% at 1920×1080, plus 2560×1440 at 100% and 50%: 0 overflow, 0 console errors |
+| Dead scroll | step-and-settle probe: **0 dead runs** (was 3). Natural wheel input: one 41px run, the intentional black occlusion |
+| CTA end-hold | instrumented: 133 ticks to traverse, **1 stall** (inside the occlusion), document at true max scroll — **not dead scroll** |
 
 **WebKit, stated precisely.** WebKit has no GPU process on this machine and renders in software,
 achieving ~14fps against Chromium's ~45 on the same build. Several spatial tests wait for the
@@ -93,6 +98,19 @@ contention signature rather than a contract signature:
 At full parallelism (5 workers) WebKit reports 6 failures; every one of them passes serially. The
 honest reading is that WebKit results on this machine are only trustworthy at `--workers=2` or
 lower.
+
+**V9 classification (§23), against the three categories the brief names:**
+
+| Category | Verdict |
+|---|---|
+| A — genuine product defect | **none.** No WebKit failure in this pass reproduced as a product fault. |
+| B — deterministic test-design problem | **two, both fixed, neither by weakening.** The SYSTEMS settle helper trusted four stable polls and read a mid-crawl value at 14fps (now six after ten). The depth-plane contract selected planes positionally and broke when a non-plane element entered the frame — now by `[data-camera-plane]`, with every plane labelled and a second test asserting the population so it cannot pass vacuously. |
+| C — environment / software-render contention | **the remainder.** The failing set varies between runs; in the V9 run two failed at `--workers=2` and both passed in isolation, in 1.1s and 0.7s. |
+| Pre-existing, unrelated | `shell.spec.ts` skip link, which reproduces in isolation and predates V5. |
+
+**Recommended CI configuration:** run WebKit at `--workers=2` or lower on any runner without GPU
+acceleration, or at full parallelism on a GPU-enabled runner. Chromium is unaffected at any worker
+count.
 
 One assertion helper was strengthened, not relaxed: the SYSTEMS surface-opening test required four
 proven-stable polls before trusting a sample, and at 14fps four repeats are reachable *mid-crawl* —

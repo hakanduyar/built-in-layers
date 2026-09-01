@@ -1771,3 +1771,147 @@ and pacing reassessed against new evidence afterwards; that evidence is
 `docs/review/v8-responsive/` — open `index.html`. Comparison sheets for ten route stops across
 five viewports, the before/after measurement tables above, the zoom and mobile matrices, and three
 natural-scroll recordings driven with real wheel events at 1536×864, 1920×1080 and 390px.
+
+## 34. Spatial Portfolio V9 — the homepage release candidate (2026-09-01)
+
+`feature/spatial-portfolio-v5` only. Not merged to `main`. Owner brief: close the remaining
+homepage defects so the page can be frozen and the case-study system can become the next
+workstream.
+
+### 34.1 Two stale facts, both from the V7 reorder
+
+The tour grew from two project scenes to four in V7. Two places went on describing the old world,
+and neither had anything forcing it to notice.
+
+**The handoff sentence** read "Kıvılcım and DropSpot are two stops on a larger map" — a line that
+names two of the four systems the reader has just travelled through and silently erases Software
+Factory and JointLedger, including the flagship the route now opens on. The count is now derived
+from `TOUR_SLUGS` itself, so the sentence cannot go stale again.
+
+**The travel material's scene order** was worse, because it was invisible as a text defect and
+visible as a rendering one. `leadProgress()` carried its own hardcoded order —
+`["hero", "kivilcim", "dropspot", "tail", "reorient", "approach"]` — and any scene missing from it
+fell through to `previous = 0`. Measured: the Kıvılcım fragment resolved to progress **0.137**
+against Software Factory's focus of **0.141**, so an oversized crop of the word "KIVILCIM" was
+framed directly across the flagship's composition. That is the owner's "large leftover typography
+randomly cuts through the project frame" — it read as an accidental collision because it was one.
+The order now comes from `SCENE_IDS`.
+
+### 34.2 The dead run before Selected Systems — and its cause was V8
+
+Measured on the built page at 1536×864: a **360px run in which real content occupied 0.16–0.22% of
+the viewport**, between the handoff scene and "Back on the surface".
+
+The cause is structural and self-inflicted. The route ends one full viewport before the spatial
+section does, because a sticky frame has to scroll away after the camera has finished. V6.5
+deliberately framed a destination surface **at the route's terminus** so that "the 900px of
+hand-over is a full frame leaving rather than an empty one". V8 deleted those surfaces as the
+owner's rejected early duplicates — correctly — and nothing took their place.
+
+The fix is relocation, not decoration: the "Back on the surface" regime change already existed and
+was simply rendered *after* the section, which put it below the fold for the entire run. It now
+renders **inside** the sticky frame, low in the composition, resolving across the exit, so the
+world's last frame contains the one event that belongs there and the marker leaves as the real
+lower page arrives underneath it. It was also set at statement scale rather than as a mono caption,
+because a single 12px label is 0.2% of a viewport however meaningful it is.
+
+| | V8 | V9 |
+|---|---|---|
+| Dead runs, step-and-settle probe | 3 (360px, 360px, 120px) | **0** |
+| Dead runs, natural wheel input | 2 | **1 — the black occlusion cut, 41px, intentional** |
+| Mean content fill | 0.220 | 0.244 |
+| Document height | 9361px | 9228px |
+
+### 34.3 Pacing: reading allowance is now per scene
+
+The four projects owned 266.3vh against route two's three statement scenes at 227.2vh — a project
+scene carrying a title, category, description, metadata and a plate of evidence was paid the same
+reading allowance as a scene carrying one word. `SCENE_ALLOWANCE` now varies it, a segment takes the
+larger of its two anchors', and the result is 285.9vh against 207.6vh (ratio 1.17 → **1.38**).
+
+**The scroll governor is untouched.** `ROUTE_MAX_RATE`, `useRouteGovernor`, the glide ceiling and the
+break's fixed playback are byte-identical to V7. What changed is how a fixed budget is divided.
+
+The values are the largest the world's standing contracts permit, and the failures that bound them
+are worth recording: at project allowances near 140 the world broke its 8% frame-to-frame speed
+ceiling at the exit join, route two exceeded its "comparable speed to route one" bound at 1.42×
+against 1.35, and the exit leg became more expensive to scroll than the cheapest leg carrying a
+scene. Past that point, taking more for the projects does not slow them down — it speeds everything
+else up until the camera stops being continuous.
+
+### 34.4 The case-study affordance, and why it is one link
+
+Every project scene and every Selected Systems row now states how to open it — but the action is
+rendered **inside the title's own anchor**, `aria-hidden`, rather than as a second link. A separate
+link would give each system two tab stops and two entries in a screen-reader link list for one
+destination; worse, to stay unambiguous its accessible name had to contain the system's title,
+which made the two links indistinguishable by name. One link, one tab stop, one accessible name,
+and a visible cue that belongs to it.
+
+The label is **derived from content depth** so it cannot overclaim: `full` and `short` entries have
+layers and decisions and say "Open case study"; a `preview` entry has a real published route but no
+case study yet and says "Open system".
+
+### 34.5 Selected Systems: three weights, not five equal rows
+
+Measured identically at 1366, 1536 and 1918: term 12px, value 12px, five rows, one per line. That
+is the "database table" reading, and it buried the two facts a reader navigates by. Now:
+
+- **identity** dominant, with the system's phase riding beside the name rather than in the record;
+- **record** — provenance, verification, access — one line at label scale in ink;
+- **stack** tertiary beneath it;
+- **action** stated on the title's own link.
+
+`verificationStatus` is also translated for a reader: `requires-user` is an internal state name and
+printing it raw told nobody anything. "Not yet verified" says the same thing and does not soften it.
+
+### 34.6 How I Build: the consequence given the weight of a consequence
+
+V8 drew the relation with a hairline and the word "So", set at 12px in muted ink beside a 40px
+title — the faintest thing in a row about causality. The consequence now carries a registered
+label and is set at `body-l` in ink, with the relation mark leaving the title itself. The owner's
+approved copy is unchanged and unextended; only the structure states the causality.
+
+### 34.7 About and Field Notes: no placeholders, no oversized empties
+
+**About** said "A fuller introduction is coming here." A production portfolio may not tell a reader
+its introduction has not been written. `aboutIntro` in `data/copy.ts` now carries a real one,
+assembled only from facts this repository already asserts — the role, the working thesis, the three
+layers, the *classes* of system in `content/work/*`, and the honesty rules the site visibly applies
+to itself. It is deliberately short. Everything a longer biography would need is recorded as missing
+in `docs/CONTENT_GAPS.md` and is not guessed at.
+
+**Field Notes** was a full twelve-column split — a seven-column archive beside a four-column index —
+holding one row and two links, one of which pointed at the same URL as the other. `data/notes.ts` is
+intentionally empty (D-008), so the empty state is now a one-line editorial bridge. The populated
+branch is unchanged and takes its full composition the moment real entries exist.
+
+### 34.8 The CTA resolves onto the action
+
+The four routes converged to a node and a vertical dropped to the headline — and then stopped, so
+the subline and the button, the actual decision, stood beside the drawing rather than at the end of
+it. The axis now continues past the headline and terminates **on** the action with the world's own
+closed corner. Nothing was invented: it is the same line the routes already converge into, drawn to
+where it was pointing. The finale's padding was also rebalanced — `justify-center` with `pb-48`
+centres the block and then pushes it back up, which is what left a band of empty paper between the
+action and the furniture strip.
+
+### 34.9 The CTA end-hold is not dead scroll
+
+The V8 recording showed several near-identical CTA frames, which a video cannot explain because it
+does not record input. `cta-endhold-probe.mjs` drives real wheel events and records input against
+movement. Result at 1536×864: **133 ticks to traverse the page, one stall before the end** — inside
+the occlusion cut, where forward input is deliberately absorbed for a bounded window — and the
+document reached its true maximum scroll. The 14 "wasted" ticks were input sent *after* the page had
+nowhere left to go. There is no dead scroll at the CTA, and nothing was changed for it.
+
+### 34.10 Two test defects found and fixed, neither by weakening
+
+- The SYSTEMS surface-opening test trusted four proven-stable polls; at WebKit's ~14fps on this
+  machine four repeats are reachable **mid-crawl**, and it read 783px from the middle of a journey
+  and reported it as a surface that failed to open. Now six repeats after ten polls.
+- The depth-plane contract selected planes positionally as `.sticky > div > div`, which assumed
+  every element at that depth was a camera plane. That stopped being true when the surface-return
+  marker moved into the frame. It now selects `[data-camera-plane]` — and because that would have
+  made the assertion pass on an empty set if a plane ever lost its label, every plane is now labelled
+  and a second test asserts the population the first one depends on.
