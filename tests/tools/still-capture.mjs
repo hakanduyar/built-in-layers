@@ -49,7 +49,10 @@ const range = await page.evaluate(() => {
 
 // Focus progresses come from the committed route dump.
 const focus = JSON.parse(
-  (await import("node:fs")).readFileSync("docs/review/v9-release/metrics/route-focus.json", "utf8"),
+  (await import("node:fs")).readFileSync(
+    process.env.FOCUS_FILE ?? "docs/review/v9-release/metrics/route-focus.json",
+    "utf8",
+  ),
 ).desktop;
 
 for (const id of SCENES) {

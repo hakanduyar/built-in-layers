@@ -116,16 +116,63 @@ export const VW_PER_VH = 1.6;
  * Mobile keeps the vertical route with the same two extra stops: 130vh per
  * scene, cut at tail+78 exactly as before, route two below it untouched.
  */
+/**
+ * V11 (§4, §5, §6, §10) -- THE STEP IS DERIVED FROM FOCUS ISOLATION.
+ *
+ * THE MEASURED FAILURE. At every one of 1366/1440/1536/1920/2560, at every one
+ * of the five primary destinations, a NEIGHBOURING primary scene was inside the
+ * viewport at the active scene's own focus -- overlapping by 2,079px^2 at best
+ * and 334,219px^2 at worst, with DropSpot and SYSTEMS measuring a clear gap of
+ * exactly 0 at every viewport. The sequence was glued together, and no amount of
+ * opacity or visibility work could fix it because the WORLD was too small.
+ *
+ * THE POLICY, and why 155 is not a magic number. At focus the active scene's ink
+ * starts at the camera inset L and the next scene's ink starts one step later,
+ * so isolation requires
+ *
+ *     stepPx  >=  viewportWidth - L + safetyMargin
+ *
+ * and stepPx = STEP_VW x worldUnitPx x fit. Solving that at each tested viewport
+ * with a 10%-of-viewport safety margin, using the L and fit measured on the
+ * built page:
+ *
+ *     1366x768   L=259  fit 0.740   ->  STEP_VW >= 123.1
+ *     1440x900   L=197  fit 0.865   ->  STEP_VW >= 111.3
+ *     1536x864   L=233  fit 0.831   ->  STEP_VW >= 121.8
+ *     1920x1080  L=301  fit 1.000   ->  STEP_VW >= 125.8
+ *     2560x1440  L=620  fit 1.000   ->  STEP_VW >= 152.5
+ *
+ * 2560 is the binding case, because CAMERA_INSET centres the world in the
+ * 1320px container there (L = 50vw - 660 = 620) while the world unit is capped
+ * at 14.4px. 155 satisfies every row with margin in hand, and it is ONE policy
+ * rather than five offsets: narrow viewports are not compressed, because the
+ * requirement is solved at each of them rather than at a design width.
+ *
+ * The bearing is preserved exactly: 106/155 = 0.684 against the previous
+ * 66/96 = 0.6875, so the approved ~34-degree diagonal is unchanged.
+ *
+ * SYSTEMS GETS A FULL STEP. It used to sit 84vw after DropSpot -- a short hop --
+ * which is why it measured a zero gap and 66k-224k px^2 of intrusion at its own
+ * focus. It is a primary destination (§10) and is now spaced like one.
+ *
+ * ROUTE TWO IS TRANSLATED, NOT RESHAPED. Every reorient/approach/handoff bearing
+ * and leg length is byte-identical to the long-tuned V6.x choreography; the
+ * whole run simply moves down by 200vh so that `reorient` stays 122vh below the
+ * deepened `tail` and remains the world's lowest point, exactly as before.
+ *
+ * Mobile anchors are untouched: mobile is a vertical route where no two scenes
+ * share a frame, so it never had this failure (§29).
+ */
 export const SCENES: readonly SceneConfig[] = [
   { id: "hero", world: { x: 0, y: 0 }, mobileWorld: { x: 0, y: 0 } },
-  { id: "software-factory", world: { x: 96, y: 66 }, mobileWorld: { x: 0, y: 130 } },
-  { id: "kivilcim", world: { x: 192, y: 132 }, mobileWorld: { x: 0, y: 260 } },
-  { id: "jointledger", world: { x: 288, y: 198 }, mobileWorld: { x: 0, y: 390 } },
-  { id: "dropspot", world: { x: 384, y: 264 }, mobileWorld: { x: 0, y: 520 } },
-  { id: "tail", world: { x: 468, y: 330 }, mobileWorld: { x: 0, y: 650 } },
-  { id: "reorient", world: { x: -14, y: 452 }, mobileWorld: { x: 0, y: 748 } },
-  { id: "approach", world: { x: 132, y: 386 }, mobileWorld: { x: 0, y: 876 } },
-  { id: "handoff", world: { x: 264, y: 348 }, mobileWorld: { x: 0, y: 1000 } },
+  { id: "software-factory", world: { x: 155, y: 106 }, mobileWorld: { x: 0, y: 130 } },
+  { id: "kivilcim", world: { x: 310, y: 212 }, mobileWorld: { x: 0, y: 260 } },
+  { id: "jointledger", world: { x: 465, y: 318 }, mobileWorld: { x: 0, y: 390 } },
+  { id: "dropspot", world: { x: 620, y: 424 }, mobileWorld: { x: 0, y: 520 } },
+  { id: "tail", world: { x: 775, y: 530 }, mobileWorld: { x: 0, y: 650 } },
+  { id: "reorient", world: { x: -14, y: 652 }, mobileWorld: { x: 0, y: 748 } },
+  { id: "approach", world: { x: 132, y: 586 }, mobileWorld: { x: 0, y: 876 } },
+  { id: "handoff", world: { x: 264, y: 548 }, mobileWorld: { x: 0, y: 1000 } },
 ] as const;
 
 export const SCENE_IDS: readonly SceneId[] = SCENES.map((scene) => scene.id);
@@ -165,7 +212,9 @@ export const ROUTE_TWO_IDS = ["reorient", "approach", "handoff"] as const;
  * Mobile takes the same beat; its route is vertical throughout, so this simply makes
  * the first move a measured one there too.
  */
-export const ENTRY_WORLD: WorldPoint = { x: 0, y: 42 };
+// V11: scaled with the route step (42 x 155/96), so the acquisition descent
+// keeps its proportion of the first leg.
+export const ENTRY_WORLD: WorldPoint = { x: 0, y: 68 };
 export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
 
 /**
@@ -258,7 +307,8 @@ export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
  * through it falls from 61.4vh to ~16vh. The journey is tighter by exactly the
  * amount that had nothing in it.
  */
-export const TURN_WORLD: WorldPoint = { x: 292, y: 424 };
+// V11: translated with route two (+200vh); its bearing and length are unchanged.
+export const TURN_WORLD: WorldPoint = { x: 292, y: 624 };
 /** Mobile has no bearing to turn -- its route is vertical throughout (§30) --
  *  so this is purely the handover run, cut in the same proportion as the desktop
  *  exit: 176vh of travel behind two deleted previews becomes 58vh. */
@@ -283,7 +333,8 @@ export const TURN_MOBILE_WORLD: WorldPoint = { x: 0, y: 1058 };
  * The coordinate itself is unchanged, because route one's geometry was never the
  * problem.
  */
-export const CUT_WORLD: WorldPoint = { x: 498, y: 354 };
+// V11: keeps its exact tail-relative offset, scaled with the step (+48,+33).
+export const CUT_WORLD: WorldPoint = { x: 823, y: 563 };
 export const CUT_MOBILE_WORLD: WorldPoint = { x: 0, y: 728 };
 
 /**
@@ -530,7 +581,7 @@ export const ENTRY_ALLOWANCE = 46;
  * world's continuity contract, and no larger -- which is the whole point of
  * removing the previews rather than restyling them.
  */
-export const EXIT_ALLOWANCE = 40;
+export const EXIT_ALLOWANCE = 48;
 
 /**
  * Boundary speed, as a fraction of the route average, at joins that have NO SCENE

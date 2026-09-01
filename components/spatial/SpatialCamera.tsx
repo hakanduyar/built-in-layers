@@ -903,10 +903,33 @@ export function SpatialCamera({
   // same kind of statement about the same thing -- how large this world is in
   // this frame -- and putting them on two nested transformed layers would cost a
   // second compositing layer to express a product.
-  const worldScale = useTransform(progress, (value) => {
-    if (value <= EXIT_FROM) return fit;
+  /**
+   * V11 (§17, §18) -- THE WORLD FIT NO LONGER SCALES THE FOREGROUND.
+   *
+   * MEASURED CAUSE OF THE BLUR. Every piece of text and every screenshot in the
+   * spatial world sat inside this one transform, and the accumulated scale on
+   * their ancestor chain measured 0.740 at 1366x768, 0.865 at 1440x900, 0.831 at
+   * 1536x864 -- and exactly 1.000 at 1920x1080 and 2560x1440. A CSS
+   * `transform: scale` is a PAINT-time operation: the layer is laid out at full
+   * size, rasterised, and then resampled, so glyphs and screenshots are
+   * resampled at a non-integer factor. That is precisely why the site looked
+   * soft on the laptop and sharp on the 27-inch display, and why it looked
+   * softest while moving, when the compositor is least willing to re-rasterise.
+   *
+   * `zoom` is the same visual result computed at LAYOUT time. Text is laid out at
+   * the final size and painted once at native scale; screenshots resolve against
+   * their real intrinsic pixels. It is a static per-viewport value, so it costs
+   * one layout on resize rather than a resample on every frame.
+   *
+   * The DEPARTURE ZOOM stays a transform, deliberately: it is a moving effect
+   * confined to the last ~5% of the route (after EXIT_FROM), where it is the
+   * intended "world steps back" beat rather than the reading state. Animating
+   * `zoom` instead would relayout the whole world every frame.
+   */
+  const departureScale = useTransform(progress, (value) => {
+    if (value <= EXIT_FROM) return 1;
     const exit = Math.min((value - EXIT_FROM) / (1 - EXIT_FROM), 1);
-    return fit * (1 - 0.08 * exit * exit);
+    return 1 - 0.08 * exit * exit;
   });
 
   // V9 (§P0): the surface-return marker resolves over the last third of the
@@ -1028,7 +1051,11 @@ export function SpatialCamera({
           // where there is no camera for it to describe.
           style={
             {
-              scale: worldScale,
+              // V11 (§17): the fit is a LAYOUT zoom, not a paint scale, so text
+              // and screenshots stay at native raster scale. Only the departure
+              // beat still uses a transform.
+              zoom: fit,
+              scale: departureScale,
               transformOrigin: "50% 44%",
               "--entry-cue": entryCue,
             } as MotionStyle

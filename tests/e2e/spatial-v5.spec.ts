@@ -308,11 +308,41 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
       const m = new DOMMatrixReadOnly(getComputedStyle(parent).transform);
       return (Math.atan2(m.b, m.a) * 180) / Math.PI;
     });
-    // Route one descends left-to-right through the giant word at ~33 degrees.
-    // Bounded rather than exact so a small route re-aim does not fail the suite,
-    // but tight enough to exclude 0 (axis-aligned) and 45 (an authored diagonal).
-    expect(rotation).toBeGreaterThan(24);
-    expect(rotation).toBeLessThan(42);
+    // V11 DERIVES THE EXPECTATION INSTEAD OF WINDOWING IT, which is the stronger
+    // form of the same contract and the form the test's own comment already
+    // claims to be testing.
+    //
+    // The bound used to be a hardcoded 24..42 window calibrated against the V7
+    // route. V11 widened the project step to buy focus isolation, and although
+    // the approved diagonal was preserved to within a tenth of a degree
+    // (66/96 -> 106/155, 23.26deg -> 23.14deg), the window had been sitting a
+    // degree above the real bearing all along and the re-aim exposed it. A window
+    // that has to be re-tuned whenever the route legitimately moves is not
+    // testing "the cut follows the route" — it is testing "the route has not
+    // changed".
+    //
+    // So the expectation is now computed from the same route geometry the
+    // component derives the cut from. If anyone hard-codes a "nicer" diagonal the
+    // two stop agreeing, which is exactly what this exists to catch — and it
+    // still excludes the two failure modes the window was drawn around, because
+    // the real bearing is neither 0 nor 45.
+    const expected = await page.evaluate(() => {
+      const marks = [...document.querySelectorAll("[data-scene]")];
+      const at = (id: string) => {
+        const el = marks.find((m) => m.getAttribute("data-scene") === id);
+        return el ? el.getBoundingClientRect() : null;
+      };
+      // Two consecutive project anchors give the route's own screen bearing.
+      const a = at("kivilcim");
+      const b = at("jointledger");
+      if (!a || !b) return null;
+      return (Math.atan2(b.top - a.top, b.left - a.left) * 180) / Math.PI;
+    });
+    expect(expected, "route bearing must be measurable").not.toBeNull();
+    expect(Math.abs(rotation - (expected as number))).toBeLessThan(2);
+    // The two failure modes the old window existed to exclude, kept explicit.
+    expect(Math.abs(rotation)).toBeGreaterThan(5);
+    expect(Math.abs(rotation - 45)).toBeGreaterThan(5);
   });
 
   test("the word is never masked, clipped, faded or transformed at any point", async ({ page }) => {
@@ -346,6 +376,14 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
   });
 
   test("the surface opens monotonically and stays open", async ({ page }) => {
+    // V11: settle-bound, not assertion-bound. This sweeps 13 samples across the
+    // cut and waits at each for the camera to arrive, and V11 made arrival
+    // legitimately slower in wall-clock: route one's world grew 61% to buy focus
+    // isolation and `ROUTE_MAX_RATE` came down 0.155 -> 0.105 to hold the
+    // perceived travel speed, so the minimum time to cross the route rose from
+    // ~6.5s to ~9.5s. It passes alone in ~22s and only misses under parallel
+    // contention. The budget is raised; not one assertion is touched.
+    test.setTimeout(120_000);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const { start, end } = await routeRange(page);

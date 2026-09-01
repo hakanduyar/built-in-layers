@@ -18,7 +18,10 @@ mkdirSync(OUT, { recursive: true });
 if (SHOTS) mkdirSync(SHOT_OUT, { recursive: true });
 
 const FOCUS = JSON.parse(
-  (await import("node:fs")).readFileSync("docs/review/v9-release/metrics/route-focus.json", "utf8"),
+  (await import("node:fs")).readFileSync(
+    process.env.FOCUS_FILE ?? "docs/review/v9-release/metrics/route-focus.json",
+    "utf8",
+  ),
 ).desktop;
 const PROJECTS = ["software-factory", "kivilcim", "jointledger", "dropspot"];
 

@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-01 (V10)_
+_Last updated: 2026-09-01 (V11)_
 
 ---
 
@@ -11,13 +11,13 @@ _Last updated: 2026-09-01 (V10)_
 
 | Field | Value |
 |---|---|
-| **Status** | V10 SPATIAL SYSTEM PASS COMPLETE — one governed scroll model, bounded wheel intent, plane registration and seam fixed; validated, committed and pushed |
+| **Status** | V11 DESKTOP SYSTEM GATE COMPLETE — focus isolation and motion sharpness fixed at the architecture; acceptance matrix in docs/DESKTOP_FREEZE_ACCEPTANCE.md. Desktop recommended for FREEZE |
 | Current branch | `feature/spatial-portfolio-v5` |
 | Current HEAD | `4f45b6d` (V10 spatial system pass) |
 | Latest origin commit | `4f45b6d` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean |
-| Current phase | V10 (owner brief): route, project-ground and pacing rearchitecture |
+| Current phase | V11 (owner brief): final desktop system pass — systemic fixes only |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
@@ -63,7 +63,7 @@ Do not restart or redesign these without evidence of an actual regression in cur
 
 ## Validation state
 
-Last full validation: **V10 spatial system pass, 2026-09-01** (Node 22.23.2 / pnpm 11.17.0),
+Last full validation: **V11 desktop system gate, 2026-09-01** (Node 22.23.2 / pnpm 11.17.0),
 against the tree committed in this pass.
 
 | Gate | Result |
@@ -74,6 +74,10 @@ against the tree committed in this pass.
 | unit tests | **500 / 500**, 20 files |
 | production build | pass — 15/15 pages |
 | Chromium E2E | **214 / 214** |
+| WebKit E2E (V11) | **213 / 214** at --workers=2; the one failure is the pre-existing skip-link |
+| Focus isolation | **0px neighbour intrusion in all 25 cells** (5 destinations x 5 viewports); 669-1055px clear between projects |
+| Motion sharpness | transform scale over text **1.0000 at every viewport** (was 0.74 / 0.87 / 0.83 at 1366 / 1440 / 1536) |
+| Zoom-out | 1 scene at 1920@100%, 2 at 90%, 2 at 2560@100%, **4 at 2560@50%** |
 | Scroll ceiling | route 728px/s, lower page 767px/s under hard input — one model, both bounded (lower page was previously uncapped) |
 | Wheel-intent coast | **496px / 0.57vh / 0.6s** after input stops (was 2827px / 3.27vh / 5.6s) |
 | Reverse latency | **1 notch, 0px wrong-way, 106ms** (was 7 notches, 484-506px, ~1100ms) |

@@ -256,7 +256,6 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
    * `seamRem` stays as the pre-hydration and no-JS value, so the server render is
    * unchanged and the measured value only ever refines it.
    */
-  const fieldRef = useRef<HTMLSpanElement>(null);
   const blockRef = useRef<HTMLDivElement>(null);
   const [seam, setSeam] = useState<{ top: number; draw: boolean } | null>(null);
   useSeamEffect(() => {
@@ -314,12 +313,33 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
 
   return (
     <div ref={ref} className="relative w-full" style={{ paddingTop: `${plate.gapVh}vh` }}>
+      {/* V11 (§24) -- THE LOWER WORLD STOPS BORROWING THE PROJECT GROUND.
+          This was a filled `bg-soft-paper` rectangle: the exact material
+          `ProjectPlane` uses, in a region where ProjectPlane's mechanism does not
+          exist. A project ground is a surface a composition physically stands on,
+          which is why it leads, registers and trails with the scene above it.
+          Down here nothing does that, so the same fill could only ever read as
+          the motif copied into unrelated editorial sections -- and it was
+          measured at 76-86% empty paper.
+
+          What replaces it is not another rectangle and not decoration: it is the
+          section's REGISTERED TERRITORY, drawn in the world's own linework.
+              - a seam rule at the measured typographic seam, so the register and
+                heading overhang it and the body stands on it, exactly as the
+                filled version intended but without the fill;
+              - a terminating tick at each end of that rule, the same closed-corner
+                mark route two's anchors carry, so the territory is bounded rather
+                than fading out;
+              - one hairline running the field's full height at its leading edge --
+                the route continuing down the page THROUGH the section, which is
+                the one relationship the lower page actually has to the world above.
+          Three marks, all of which state something. No fill, no HUD, no
+          coordinates, no telemetry. */}
       {(seam === null || seam.draw) && (
         <span
-          ref={fieldRef}
           aria-hidden="true"
           data-drift-field={id}
-          className="pointer-events-none absolute hidden bg-soft-paper lg:block"
+          className="pointer-events-none absolute hidden lg:block"
           style={{
             left: trackX(field.left),
             width: `calc(${field.span.toFixed(4)} * (100vw - 2 * var(--drift-pad) - var(--drift-w)) + ${measure.toFixed(4)} * var(--drift-w))`,
@@ -327,7 +347,15 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
             bottom: "-3rem",
             opacity: driftFieldOpacity(id),
           }}
-        />
+        >
+          {/* the seam */}
+          <span className="absolute left-0 right-0 top-0 block h-px bg-ink opacity-[0.34]" />
+          {/* its two terminations */}
+          <span className="absolute left-0 top-0 block h-2 w-px bg-ink opacity-[0.42]" />
+          <span className="absolute right-0 top-0 block h-2 w-px bg-ink opacity-[0.42]" />
+          {/* the route, continuing through the section */}
+          <span className="absolute bottom-0 left-0 top-0 block w-px bg-ink opacity-[0.12]" />
+        </span>
       )}
       <motion.div
         ref={blockRef}

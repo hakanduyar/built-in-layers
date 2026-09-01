@@ -455,3 +455,32 @@ Binding conditions attached to this approval — all already true of the current
   visible gain at 50% zoom, −46% of the hero composition there); deleting the lower-page field motif
   and replacing it with line work (the motif is not the defect; the seam was).
 - **Approval:** Hakan's explicit V10 brief; implemented as directed.
+
+## D-026 — The desktop system gate: a world large enough to isolate, and a fit that does not resample text (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **The project step is solved from focus isolation, not authored.** `stepPx >= viewportWidth −
+     cameraInset + margin` at every tested viewport gives `STEP_VW = 155` (2560 binds). SYSTEMS gets
+     a full step as a primary destination. Route two is translated 200vh, never reshaped.
+  2. **The world fit is a layout `zoom`, not a paint `transform: scale`.** Text and screenshots are
+     laid out and painted once at native scale.
+  3. **`ROUTE_MAX_RATE` falls with the world's growth**, 0.155 → 0.105, because it is a fraction of
+     the route per second and therefore sets `rate × worldLength` as the permitted world speed.
+  4. **The lower page's fields are linework, not fill** — seam rule, terminating ticks, and the route
+     continuing through the section. A field with less body than its overhang is not drawn.
+- **Reason:** measured. 25 of 25 focus-isolation cells failed, by up to 334,219px². The accumulated
+  transform scale over text measured 0.74/0.87/0.83 at the three viewports that looked soft and
+  exactly 1.0 at the two that looked sharp. Both are recorded with their numbers in
+  `docs/DESKTOP_FREEZE_ACCEPTANCE.md` and `DESIGN_SYSTEM §36`.
+- **Binding conditions:** the approved diagonal is preserved to a tenth of a degree; route two's
+  internal bearings and leg lengths are byte-identical; `ROUTE_LENGTH_VH` is untouched so page
+  length does not grow; the departure zoom stays a transform because it is a moving beat confined to
+  the last 5% of the route; mobile anchors are untouched (§29).
+- **Rejected, with the measurement that rejected it:** deriving ground bounds from project ink (the
+  validating case was an arithmetic identity, and adopting it would move an owner-approved plane
+  135.8 world px at 2560 and delete two measured `x + w == 1.00` registrations); raising
+  `ROUTE_LENGTH_VH` to pay for the bigger world (unnecessary — the ceiling is a fraction of the
+  route, so page length is independent of it); solving isolation with opacity or visibility windows
+  (explicitly ruled out, and it would have left the route too short underneath).
+- **Approval:** Hakan's explicit V11 final desktop system brief; implemented as directed.

@@ -2070,3 +2070,109 @@ answer: fewer surfaces, each of which is doing something.
 - **No route-geometry change for §E.** The vacuum is one viewport of sticky-release, which
   `position: sticky` makes unavoidable, plus section offsets — of which the two safe ones were taken
   (`pb-16 pt-8` → `pb-16`, and Selected Systems' `gapVh` 5 → 0).
+
+## 36. Spatial Portfolio V11 — the desktop system gate (2026-09-01)
+
+`feature/spatial-portfolio-v5` only. Not merged to `main`. Owner brief: stop patching symptoms and
+make the desktop spatial system coherent enough to freeze.
+
+Full PASS/FAIL matrix with every number: `docs/DESKTOP_FREEZE_ACCEPTANCE.md`.
+
+### 36.1 Two root causes, both single-line
+
+Ten passes of coordinate tuning had not fixed either of the owner's two loudest complaints, because
+neither was a coordinate problem.
+
+**The blur was one CSS property.** The world fit — added in V8 to stop compositions being clipped on
+short viewports — was applied as `transform: scale`. That is a *paint-time* operation: the layer is
+laid out at full size, rasterised, and then resampled. Measured on the ancestor chain of real text
+and a real screenshot, the accumulated scale was **0.7400 at 1366×768, 0.8654 at 1440×900, 0.8308 at
+1536×864 — and exactly 1.0000 at 1920×1080 and 2560×1440**. The two viewports that looked right were
+the two where the scale was already 1. `zoom` is the same visual result computed at *layout* time:
+glyphs are laid out and painted once at native scale, screenshots resolve against their real
+intrinsic pixels. The transform chain over text is now empty at every viewport, and it costs one
+layout on resize instead of a resample every frame.
+
+**The glued sequence was a world too small.** Measured as screen-space intersection of each
+neighbouring primary scene's ink *plus its ground* against the viewport at the active scene's own
+focus: **25 of 25 cells failed** — 2,079px² of intrusion at best, **334,219px² at worst**, and a
+clear gap of exactly **0** between DropSpot and SYSTEMS at every viewport. No opacity or visibility
+work could have fixed that; the route simply did not contain enough distance.
+
+### 36.2 The step is solved, not chosen
+
+Isolation requires `stepPx >= viewportWidth − cameraInset + margin`, and
+`stepPx = STEP_VW × worldUnitPx × fit`. Solving at each tested viewport with a 10%-of-viewport
+margin, against the inset and fit measured on the built page:
+
+| Viewport | inset | fit | STEP_VW required |
+|---|---|---|---|
+| 1366×768 | 259 | 0.740 | ≥ 123.1 |
+| 1440×900 | 197 | 0.865 | ≥ 111.3 |
+| 1536×864 | 233 | 0.831 | ≥ 121.8 |
+| 1920×1080 | 301 | 1.000 | ≥ 125.8 |
+| 2560×1440 | 620 | 1.000 | ≥ 152.5 |
+
+`155` satisfies every row. **2560 binds**, because `CAMERA_INSET` centres the world in the 1320px
+container there (`50vw − 660` = 620) while the world unit is capped at 14.4px — which is why the
+owner's own display was the worst case rather than the best. Narrow viewports are not compressed,
+because the requirement is solved *at each of them* rather than at one design width.
+
+SYSTEMS was given a **full step** rather than the short 84vw hop that produced its zero gap. Route
+two is **translated, not reshaped**: every bearing and leg length is byte-identical, the whole run
+moved down 200vh so `reorient` stays 122vh below the deepened `tail` and remains the world's lowest
+point. The approved diagonal is preserved to a tenth of a degree (66/96 = 0.6875 → 106/155 = 0.684).
+
+Result: **0px of neighbour intrusion in all 25 cells**, with 669–1055px of clear paper between
+projects.
+
+### 36.3 The ceiling had to come down with the world
+
+`ROUTE_MAX_RATE` is a fraction of the *route* per second, so the world speed it permits is
+`rate × worldLength` — the route always takes at least `1/rate` seconds however large the world is.
+Growing route one 61% would therefore have made everything move 61% faster at the ceiling, which is
+the precise opposite of the standing complaint.
+
+```
+0.155 × 880  = 136 units/s   V10
+0.155 × 1420 = 220 units/s   V11 unfixed
+0.105 × 1420 = 149 units/s   V11
+```
+
+Minimum time to cross the route rises 6.5s → 9.5s, which is the breathing the larger world was
+bought for. **Page length is unchanged** — `ROUTE_LENGTH_VH` is untouched, and the projects' share
+of it rose from 285.9vh to 315.1vh on their own, because their legs got longer.
+
+Measured after: gentle 504/486 px/s, aggressive **522 px/s in the route against 545 px/s in the
+lower page** — 4% apart, one physics. Coast after input stops 0.58vh in both. Reverse: 1 notch, 0px
+wrong-way, 112ms.
+
+### 36.4 Isolation and zoom-out stopped fighting
+
+These had been in direct conflict: the world-unit cap (V8) made zoom-out reveal more world, and the
+same cap made 2560 the worst focus-isolation failure. With the world large enough, both hold —
+scenes in one frame at the same route progress: **1 at 1920@100%, 2 at 90%, 2 at 2560@100%, 4 at
+2560@50%.**
+
+### 36.5 The lower world stops borrowing the project ground
+
+The pale rectangles were `bg-soft-paper` — the exact material `ProjectPlane` uses — in a region
+where ProjectPlane's mechanism does not exist. A project ground is a surface a composition
+physically stands on, which is why it leads, registers and trails; nothing down there does that, so
+the same fill could only read as the motif copied into unrelated sections.
+
+It is replaced by three marks that each state something: a **seam rule** at the measured
+typographic seam, a **terminating tick** at each end so the territory is bounded rather than fading
+out, and one hairline at the leading edge — the **route continuing through** the section, which is
+the one relationship the lower page genuinely has to the world above. Fields with less body than
+their own overhang are not drawn at all. No fill, no HUD, no coordinates, no telemetry.
+
+### 36.6 Two test expectations corrected, none weakened
+
+- The SYSTEMS cut-bearing assertion used a hardcoded 24–42° window. The route's real bearing is
+  23.2° and was 23.3° before, so the window had been sitting a degree above the truth all along and
+  the re-aim merely exposed it. It now **derives** the expected angle from two consecutive project
+  anchors — the stronger form of the same contract, and the one its own comment always claimed —
+  while keeping the two failure modes the window existed to exclude explicit.
+- One settle-bound test's budget was raised because the route is now legitimately 46% slower to
+  cross. No assertion touched.

@@ -201,7 +201,28 @@ export const GLIDE_RELEASE_GAIN = 8;
  * the occlusion's own fixed playback (BREAK_PLAYBACK_MS over its band) remains
  * the slowest beat — the ceiling never competes with the cut's choreography.
  */
-export const ROUTE_MAX_RATE = 0.155;
+/**
+ * V11 (§11, §14) LOWERED IT 0.155 -> 0.105, and the arithmetic is the whole
+ * argument.
+ *
+ * This is a fraction of the ROUTE per second, so the world speed it actually
+ * permits is `ROUTE_MAX_RATE x routeWorldLength` — the route is always traversed
+ * in at least `1 / ROUTE_MAX_RATE` seconds no matter how large the world is.
+ * V11 grew route one's world from ~880 screen units to ~1420 to buy focus
+ * isolation (see SCENES), which at 0.155 would have raised the permitted world
+ * speed by 61% — the exact opposite of the owner's standing complaint that
+ * scroll still feels too fast.
+ *
+ *   world speed at the ceiling = 0.155 x  880 = 136 units/s   (V10)
+ *                                0.155 x 1420 = 220 units/s   (V11, unfixed)
+ *                                0.105 x 1420 = 149 units/s   (V11)
+ *
+ * So the ceiling comes down with the world's growth, the perceived maximum
+ * travel rate stays where it was, and the minimum time to cross the route rises
+ * from 6.5s to 9.5s — which is the breathing the larger world was bought for.
+ * Page length is unchanged: `ROUTE_LENGTH_VH` is untouched.
+ */
+export const ROUTE_MAX_RATE = 0.105;
 
 /**
  * V10 (§H3-H5): how far the wheel's intent target may lead the page's real
