@@ -13,8 +13,8 @@ _Last updated: 2026-09-01 (V11)_
 |---|---|
 | **Status** | V11 DESKTOP SYSTEM GATE COMPLETE — focus isolation and motion sharpness fixed at the architecture; acceptance matrix in docs/DESKTOP_FREEZE_ACCEPTANCE.md. Desktop recommended for FREEZE |
 | Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `4f45b6d` (V10 spatial system pass) |
-| Latest origin commit | `4f45b6d` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
+| Current HEAD | `9255748` (V11 desktop system gate) |
+| Latest origin commit | `9255748` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean |
 | Current phase | V11 (owner brief): final desktop system pass — systemic fixes only |
@@ -192,5 +192,6 @@ None are open. No handoff exists in `.ai/handoffs/`.
 | 2026-09-01 | `44e0924` | feat: remove the early duplicates and give the world a height axis (V8) |
 | 2026-09-01 | `5bbd391` | feat: close the homepage defects for a release candidate (V9) |
 | 2026-09-01 | `4f45b6d` | feat: one governed scroll model, bounded intent, a ground that registers (V10) |
+| 2026-09-01 | `9255748` | feat: the desktop system gate — isolate the focus, stop resampling the text (V11) |
 | 2026-08-28 | `d7bcebc` | feat: checkpoint recovered spatial portfolio v6.8 (Ubuntu source, 33M/5A/1D) |
 | 2026-08-28 | `682d54e` | merge: reconcile Ubuntu V6.8 source with Windows recovery documentation |
