@@ -175,10 +175,16 @@ test.describe("Spatial V5: Editorial Drift moves in a real browser", () => {
     };
     const first = await read();
     await page.reload();
-    // The browser restores the previous scroll offset across a reload, so reset
-    // to the top and let the drift track re-initialise before re-measuring --
-    // otherwise the first sample is taken mid-passage and reads as a mismatch
-    // that has nothing to do with determinism.
+    // The lower blocks exist in the server fallback before the enhanced route
+    // restores its final spacer height. WebKit can resolve an "attached" lower
+    // block during that interval, so wait for the same hydrated invariant as
+    // beforeEach before resetting scroll and measuring the final geometry.
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor({
+      state: "attached",
+    });
+    // The browser restores the previous scroll offset across a reload. Reset
+    // only after hydration so scroll anchoring cannot move it again when the
+    // route swaps from its server fallback to its final height.
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect(page.locator('[data-drift-block="how-i-build"]')).toBeAttached();
     const second = await read();

@@ -18,7 +18,10 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: W, height: H } });
 const page = await context.newPage();
 await page.goto(BASE, { waitUntil: "networkidle" });
-await page.waitForTimeout(1000);
+await page
+  .locator("section[aria-label='Spatial system tour'] .sticky")
+  .waitFor({ state: "attached", timeout: 30000 });
+await page.waitForTimeout(300);
 
 await page.evaluate(() => {
   const NODES = "h1,h2,h3,p,li,dt,dd,a,img,figure,button,span";

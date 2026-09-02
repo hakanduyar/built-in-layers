@@ -31,7 +31,10 @@ for (const [W, H] of VIEWPORTS) {
   const context = await browser.newContext({ viewport: { width: W, height: H } });
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "networkidle" });
-  await page.waitForTimeout(800);
+  await page
+    .locator("section[aria-label='Spatial system tour'] .sticky")
+    .waitFor({ state: "attached", timeout: 30000 });
+  await page.waitForTimeout(300);
 
   const range = await page.evaluate(() => {
     const s = document.querySelector("section[aria-label='Spatial system tour']");

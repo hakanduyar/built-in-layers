@@ -29,7 +29,10 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: W, height: H } });
 const page = await context.newPage();
 await page.goto(BASE, { waitUntil: "networkidle" });
-await page.waitForTimeout(900);
+await page
+  .locator("section[aria-label='Spatial system tour'] .sticky")
+  .waitFor({ state: "attached", timeout: 30000 });
+await page.waitForTimeout(300);
 
 const range = await page.evaluate(() => {
   const s = document.querySelector("section[aria-label='Spatial system tour']");
@@ -64,7 +67,14 @@ const settle = (sel) =>
 
 const report = { viewport: `${W}x${H}`, projects: {} };
 // Progress window either side of focus, in units of the gap to the neighbour.
-const LADDER = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75];
+const LADDER = [-0.75, -0.375, 0, 0.375, 0.75];
+const BEAT = new Map([
+  [-0.75, "entry"],
+  [-0.375, "mid-entry"],
+  [0, "focus"],
+  [0.375, "early-exit"],
+  [0.75, "exit"],
+]);
 
 for (const [i, id] of PROJECTS.entries()) {
   const focus = FOCUS[id];
@@ -100,8 +110,8 @@ for (const [i, id] of PROJECTS.entries()) {
       };
     }, id);
     rows.push({ approach: a, ...m });
-    if (SHOTS && (a === -0.5 || a === 0 || a === 0.5)) {
-      const beat = a === 0 ? "focus" : a < 0 ? "entry" : "exit";
+    if (SHOTS) {
+      const beat = BEAT.get(a);
       await page.screenshot({ path: `${SHOT_OUT}/${W}x${H}--${id}--${beat}.png` });
     }
   }
@@ -127,6 +137,24 @@ for (const [i, id] of PROJECTS.entries()) {
     `${id.padEnd(17)} lead=${String(lead).padStart(4)}px  focus=0px  trail=${String(trail).padStart(4)}px  ` +
       `phase=${lead > 6 && trail > 6 ? "YES" : "NO"}  trail>lead=${trail > lead ? "YES" : "NO"}`,
   );
+}
+
+if (SHOTS) {
+  const systemsFocus = FOCUS.tail;
+  const systemsPrevious = FOCUS.dropspot;
+  const systemsNext = FOCUS.reorient;
+  for (const [beat, target] of [
+    ["approach", systemsFocus - 0.5 * (systemsFocus - systemsPrevious)],
+    ["focus", systemsFocus],
+    ["departure", systemsFocus + 0.5 * (systemsNext - systemsFocus)],
+  ]) {
+    await page.evaluate(({ r, v }) => window.scrollTo(0, r.start + (r.end - r.start) * v), {
+      r: range,
+      v: target,
+    });
+    await settle('[data-scene="tail"]');
+    await page.screenshot({ path: `${SHOT_OUT}/${W}x${H}--systems--${beat}.png` });
+  }
 }
 
 writeFileSync(`${OUT}/plane-phase-${W}x${H}.json`, JSON.stringify(report, null, 2));

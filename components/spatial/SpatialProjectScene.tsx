@@ -231,7 +231,7 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // was exact: assembled, not architected.
     //
     // The fix is registration, not decoration:
-    //   - the evidence drops to 76% and LOCKS to the identity column's left edge,
+    //   - the evidence drops to 84% and LOCKS to the identity column's left edge,
     //     so the name and its proof stand on one shared registration line with real
     //     paper margins on the other three sides (the 1400x637 screenshot is a wide,
     //     shallow surface -- contained, it reads as evidence acquired rather than a
@@ -258,7 +258,12 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
                 from the honest source again — width. At 84% of the px-capped
                 block the uncropped 2.2:1 surface renders ~449px tall at
                 1440x900 (was 403 at 76%), and the group below extends it. */}
-            <div className="w-full lg:w-[84%] lg:[&_figcaption]:max-w-[56%]">{plate}</div>
+            <div
+              data-project-ground-source={project.slug}
+              className="w-full lg:w-[84%] lg:[&_figcaption]:max-w-[56%]"
+            >
+              {plate}
+            </div>
             {secondary && (
               // The pair's geometry, in the scene's own fractions so it holds
               // at every viewport: the detail shot registers its right edge on
@@ -269,7 +274,10 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
               // surfaces, not a stamp on a plate. Desktop only: the mobile
               // scene keeps the single plate (§30), and its vertical budget
               // is fixed.
-              <div className="absolute left-[48%] top-[46%] hidden w-[52%] lg:block">
+              <div
+                data-project-ground-source={project.slug}
+                className="absolute left-[48%] top-[46%] hidden w-[52%] lg:block"
+              >
                 <Figure src={secondary.src} alt={secondary.alt} caption={secondary.caption} />
               </div>
             )}
@@ -283,11 +291,10 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   }
 
   if (variant === "foundation") {
-    // V7 — SOFTWARE FACTORY. The systemic layer the rest of the journey stands
+    // V12 — SOFTWARE FACTORY. The systemic layer the rest of the journey stands
     // on, and the composition says so structurally rather than with any badge:
-    // one full-measure identity line, then the WIDEST plate on the route — the
-    // delivery-loop diagram at 92% of the block, wider than any evidence that
-    // follows it. Nothing else competes in the frame; the system is the hero.
+    // one full-measure identity line, then a deliberately legible verification
+    // plate. Nothing else competes in the frame; the system is the hero.
     return (
       <div className="w-full">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pt-7">
@@ -295,7 +302,10 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
           <div className="lg:col-span-6 lg:col-start-7">{detail}</div>
         </div>
         {plate && (
-          <div className="relative mt-7 w-full" style={resolveDown}>
+          <div
+            className="relative mt-7 w-full lg:[@media(max-height:1100px)]:mt-3"
+            style={resolveDown}
+          >
             {/* V8 -- THE ONE PIECE OF EVIDENCE THAT ALSO NEEDS A HEIGHT BUDGET.
                 The world-fit scale (lib/spatial/worldFit.ts) brought every scene
                 in the owner's matrix inside its frame except this one: Software
@@ -306,12 +316,13 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
 
                 A plate's height is its width divided by the asset's aspect
                 ratio, so the only way to give height back is to take width. The
-                rule is therefore stated where the cause is -- "on a frame this
-                short, the widest plate on the route is not 76% of the block" --
-                rather than as another scale factor on top of the world's. It
-                binds below 800px of viewport height and nowhere else, so every
-                frame the owner approved is untouched. */}
-            <div className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%] lg:[@media(max-height:800px)]:w-[66%]">
+                rule is therefore stated where the cause is -- "on a desktop
+                frame, preserve the verification caption as well as the diagram"
+                -- rather than as another scale factor on top of the world's. */}
+            <div
+              data-project-ground-source={project.slug}
+              className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%] lg:[@media(max-height:1100px)]:w-[67%]"
+            >
               {plate}
             </div>
           </div>
@@ -347,7 +358,11 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
             counter to `split`. Only the bleed past the block edge goes, and it
             goes from the one scene where it collided with a neighbour. */}
         {plate && (
-          <div className="order-2 lg:order-1 lg:col-span-8" style={resolveDown}>
+          <div
+            data-project-ground-source={project.slug}
+            className="order-2 lg:order-1 lg:col-span-8"
+            style={resolveDown}
+          >
             {plate}
           </div>
         )}
@@ -366,7 +381,11 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         {detail}
       </div>
       {plate && (
-        <div className="lg:col-span-8" style={{ ...resolveDown, ...overhangRight }}>
+        <div
+          data-project-ground-source={project.slug}
+          className="lg:col-span-8"
+          style={{ ...resolveDown, ...overhangRight }}
+        >
           {plate}
         </div>
       )}

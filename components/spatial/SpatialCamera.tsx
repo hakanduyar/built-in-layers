@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   motion,
   useAnimationFrame,
@@ -57,6 +64,15 @@ import {
   sceneFocusProgress,
 } from "@/lib/spatial/sceneRoute";
 import type { SystemAnnotation } from "@/lib/spatial/systemPov";
+import {
+  MOBILE_PROJECT_GROUND_GEOMETRY,
+  PROJECT_GROUND_SCENES,
+  fallbackProjectGroundGeometries,
+  projectGroundGeometry,
+  type ProjectGroundGeometry,
+  type ProjectGroundScene,
+  type ProjectVisualBounds,
+} from "@/lib/spatial/projectGround";
 import { WORLD_UNIT, worldFit, worldX, worldY } from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
@@ -825,6 +841,7 @@ export function SpatialCamera({
   // px-capped composition, and so it has none of the width-derived height demand
   // the fit exists to correct.
   const fit = useWorldFit(mounted && isDesktop);
+  const projectGrounds = useProjectGroundGeometries(enhanced && isDesktop);
 
   const spacerRef = useRef<HTMLDivElement>(null);
   // The target is supplied only while the enhanced tree is actually rendered.
@@ -1105,52 +1122,30 @@ export function SpatialCamera({
                   window, so no plane can intrude on another scene's frame. */}
               <ProjectPlane
                 scene="software-factory"
-                // The foundational field. Right edge registers on the scene
-                // block's right edge (x + w == 1.00); the diagram plate
-                // (0..0.76 of the block) crosses its left edge, and its top
-                // tucks under the identity row -- media breaks two bounds,
-                // never nests.
-                offset={{ x: 0.3, y: 0.18 }}
-                width={0.7}
-                height={0.5}
+                // Foundational field. Geometry comes from the live diagram
+                // bounds and keeps trailing-edge registration at focus.
+                geometry={projectGrounds["software-factory"]}
                 progress={progress}
               />
               <ProjectPlane
                 scene="kivilcim"
-                // OWNER V7: slightly larger than the long-approved 0.7078 x
-                // 0.4576, growing DOWN-RIGHT from the same registered top-left
-                // (x 0 = the identity column's own margin; y unchanged), so
-                // every alignment the composition was tuned against still
-                // holds and the ground simply carries more of the scene.
-                offset={{ x: 0, y: 0.0839 }}
-                width={0.75}
-                height={0.49}
+                // Lead-edge registration preserves the approved foreground;
+                // the shared derivation policy gives this ground extra mass.
+                geometry={projectGrounds.kivilcim}
                 progress={progress}
               />
               <ProjectPlane
                 scene="jointledger"
-                // The mirror of Kıvılcım's field, for the mirrored (counter)
-                // composition: right edge registers on the block's right edge
-                // (x + w == 1.00), same top stagger and near-same mass as
-                // Kıvılcım -- one grammar, opposite hand. The left-leading
-                // evidence plate crosses its left edge.
-                offset={{ x: 0.26, y: 0.0839 }}
-                width={0.74}
-                height={0.48}
+                // Mirror/counter composition: live evidence bounds with the
+                // shared trailing-edge registration.
+                geometry={projectGrounds.jointledger}
                 progress={progress}
               />
               <ProjectPlane
                 scene="dropspot"
-                // OWNER V7: with the crop reverted and the two-shot group
-                // restored, the ground returns to running under the whole
-                // group -- and, per the owner, reads a step LARGER AND WIDER
-                // than Kıvılcım's, because the evidence above it is larger and
-                // wider. Right edge stays exactly on the scene block's right
-                // edge (x + w == 1.00); the primary shot (0..0.84) crosses its
-                // left edge; the group's lower-right quarter stands on it.
-                offset={{ x: 0.14, y: 0.2 }}
-                width={0.86}
-                height={0.53}
+                // Both uncropped screenshots participate in the measured visual
+                // union; the shared policy keeps this the route's widest ground.
+                geometry={projectGrounds.dropspot}
                 progress={progress}
               />
               {distantMaterial}
@@ -1196,9 +1191,7 @@ export function SpatialCamera({
                 <ProjectPlane
                   key={id}
                   scene={id}
-                  offset={{ x: 0.08, y: 0.24 }}
-                  width={0.92}
-                  height={0.52}
+                  geometry={MOBILE_PROJECT_GROUND_GEOMETRY}
                   progress={progress}
                   mobile
                 />
@@ -1424,6 +1417,94 @@ function useIsDesktop(): boolean {
     return () => query.removeEventListener("change", handler);
   }, []);
   return desktop;
+}
+
+/**
+ * Measure each project's real evidence group in the scene's own coordinate
+ * system, then derive all four grounds through one policy. offset* values are
+ * used deliberately: they describe layout geometry without the camera's current
+ * transform, the scene's focus scale, or the evidence resolve transform, so the
+ * result stays stable while scrolling and only changes when layout changes.
+ */
+function useProjectGroundGeometries(
+  active: boolean,
+): Record<ProjectGroundScene, ProjectGroundGeometry> {
+  const [geometries, setGeometries] = useState(fallbackProjectGroundGeometries);
+
+  useLayoutEffect(() => {
+    if (!active) return;
+
+    const measure = () => {
+      const next = fallbackProjectGroundGeometries();
+
+      for (const sceneId of PROJECT_GROUND_SCENES) {
+        const scene = document.querySelector<HTMLElement>(`[data-scene="${sceneId}"]`);
+        const sources = Array.from(
+          document.querySelectorAll<HTMLElement>(`[data-project-ground-source="${sceneId}"]`),
+        );
+        if (!scene || sources.length === 0 || scene.offsetWidth <= 0) continue;
+
+        let left = Number.POSITIVE_INFINITY;
+        let top = Number.POSITIVE_INFINITY;
+        let right = Number.NEGATIVE_INFINITY;
+        let bottom = Number.NEGATIVE_INFINITY;
+
+        for (const source of sources) {
+          let x = 0;
+          let y = 0;
+          let node: HTMLElement | null = source;
+          while (node && node !== scene) {
+            x += node.offsetLeft;
+            y += node.offsetTop;
+            node = node.offsetParent as HTMLElement | null;
+          }
+          if (node !== scene) continue;
+          left = Math.min(left, x);
+          top = Math.min(top, y);
+          right = Math.max(right, x + source.offsetWidth);
+          bottom = Math.max(bottom, y + source.offsetHeight);
+        }
+
+        if (!Number.isFinite(left) || right <= left || bottom <= top) continue;
+        const unit = scene.offsetWidth;
+        const visual: ProjectVisualBounds = {
+          x: left / unit,
+          y: top / unit,
+          width: (right - left) / unit,
+          height: (bottom - top) / unit,
+        };
+        next[sceneId] = projectGroundGeometry(sceneId, visual);
+      }
+
+      setGeometries((current) => {
+        const unchanged = PROJECT_GROUND_SCENES.every((scene) => {
+          const a = current[scene];
+          const b = next[scene];
+          return (
+            Math.abs(a.offset.x - b.offset.x) < 0.0005 &&
+            Math.abs(a.offset.y - b.offset.y) < 0.0005 &&
+            Math.abs(a.width - b.width) < 0.0005 &&
+            Math.abs(a.height - b.height) < 0.0005
+          );
+        });
+        return unchanged ? current : next;
+      });
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    for (const sceneId of PROJECT_GROUND_SCENES) {
+      const scene = document.querySelector<HTMLElement>(`[data-scene="${sceneId}"]`);
+      if (scene) observer.observe(scene);
+    }
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [active]);
+
+  return geometries;
 }
 
 /**

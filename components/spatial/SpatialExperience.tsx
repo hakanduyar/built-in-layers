@@ -136,6 +136,7 @@ export function SpatialExperience() {
         // as a real link in the scene it names.
         distantMaterial={
           <TravelMaterial
+            key="distant-material"
             plane="distant"
             words={[
               // V7: the two NEW stops announce themselves; Kıvılcım and
@@ -166,7 +167,7 @@ export function SpatialExperience() {
             ]}
           />
         }
-        nearMaterial={<TravelMaterial plane="near" words={[]} />}
+        nearMaterial={<TravelMaterial key="near-material" plane="near" words={[]} />}
         // What the observing system may say about each scene (§9, §12). Both
         // entries are built by systemAnnotation() from the project's own
         // validated frontmatter -- there is no slug->copy table here and no
@@ -200,7 +201,7 @@ export function SpatialExperience() {
           // it, so without this it overflowed the document by 125px at 1440
           // (caught by the responsive check, not by eye). `clip` rather than
           // `hidden` so it never becomes a scrollable container.
-          <div className="relative w-full overflow-clip">
+          <div key="hero" className="relative w-full overflow-clip">
             {/* The hero's own distant plane: the first noun of the approved
                 thesis, oversized and clipped by the top of the composition.
                 It is the same material language the travel space uses, so the
@@ -291,10 +292,18 @@ export function SpatialExperience() {
             </div>
           </div>
         }
-        software-factory={<SpatialProjectScene project={softwareFactory} variant="foundation" />}
-        kivilcim={<SpatialProjectScene project={kivilcim} variant="split" />}
-        jointledger={<SpatialProjectScene project={jointledger} variant="counter" />}
-        dropspot={<SpatialProjectScene project={dropspot} variant="stacked" />}
+        software-factory={
+          <SpatialProjectScene
+            key="software-factory"
+            project={softwareFactory}
+            variant="foundation"
+          />
+        }
+        kivilcim={<SpatialProjectScene key="kivilcim" project={kivilcim} variant="split" />}
+        jointledger={
+          <SpatialProjectScene key="jointledger" project={jointledger} variant="counter" />
+        }
+        dropspot={<SpatialProjectScene key="dropspot" project={dropspot} variant="stacked" />}
         reorient={
           // The reposition target. The giant word is no longer an isolated
           // piece of typography floating in space (§9): it stands at the
@@ -314,7 +323,7 @@ export function SpatialExperience() {
           // (DECOMPRESSION_REACH in scenes.ts), the indent is free to do what §7
           // actually asks -- stage the composition in the middle region of the
           // frame instead of against its left edge -- without losing the rail.
-          <div className="w-full lg:pl-[15vw]">
+          <div key="reorient" className="w-full lg:pl-[15vw]">
             <div className="relative pl-8">
               <span
                 aria-hidden="true"
@@ -361,7 +370,7 @@ export function SpatialExperience() {
           // definition pairs, and no <li> may exist in the spatial world
           // (that is the structural contract keeping V1's rejected project
           // cards out).
-          <div className="w-full">
+          <div key="approach" className="w-full">
             <SectionHeading index="03" label="Built in Layers" />
             <h2 className="mt-5 font-display text-display-l tracking-display-l uppercase text-ink">
               Built in Layers
@@ -382,7 +391,7 @@ export function SpatialExperience() {
           // The last beat inside the world, reached by one more short
           // diagonal. Only after this does the page hand off to ordinary
           // document flow (§7).
-          <div className="w-full">
+          <div key="handoff" className="w-full">
             {/* V9 (§P0) FIXED A FACTUAL CONTRADICTION. This line read
                 "Kıvılcım and DropSpot are two stops on a larger map" — true when
                 the tour staged two projects, and false since V7 staged four. It
@@ -412,7 +421,7 @@ export function SpatialExperience() {
             </div>
           </div>
         }
-        surfaceReturn={<SurfaceReturn />}
+        surfaceReturn={<SurfaceReturn key="surface-return" />}
       />
     </section>
   );

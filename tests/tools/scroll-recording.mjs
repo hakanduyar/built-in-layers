@@ -23,7 +23,10 @@ for (const run of RUNS) {
   });
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "networkidle" });
-  await page.waitForTimeout(1200);
+  await page
+    .locator("section[aria-label='Spatial system tour'] .sticky")
+    .waitFor({ state: "attached", timeout: 30000 });
+  await page.waitForTimeout(400);
   for (let i = 0; i < run.ticks; i += 1) {
     await page.mouse.wheel(0, run.wheel);
     await page.waitForTimeout(55);

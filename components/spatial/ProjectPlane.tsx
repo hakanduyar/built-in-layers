@@ -2,7 +2,8 @@
 
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { planeShift, sceneTravelDirection } from "@/lib/spatial/planeChoreography";
-import { PLANE_DISTANT, type SceneId, type WorldPoint } from "@/lib/spatial/scenes";
+import { PLANE_DISTANT, type SceneId } from "@/lib/spatial/scenes";
+import type { ProjectGroundGeometry } from "@/lib/spatial/projectGround";
 import {
   cameraPosition,
   sceneApproach,
@@ -64,29 +65,17 @@ const SCENE_UNIT = "min(84vw, 1180px)";
 type ProjectPlaneProps = {
   /** The scene whose field this is. */
   scene: SceneId;
-  /** Offset of the plane's top-left from the camera anchor point at the moment
-   *  the scene is exactly framed, as FRACTIONS of the scene measure. */
-  offset: WorldPoint;
-  /** Size as fractions of the scene measure. Sized and offset so the media
-   *  always breaks at least one of the plane's edges at focus -- the two must
-   *  never share bounds or nest, so they can never read as a frame and its
-   *  picture. */
-  width: number;
-  height: number;
+  /** Geometry derived from this scene's measured evidence group through the
+   *  shared project-ground policy. Fractions of the scene measure. */
+  geometry: ProjectGroundGeometry;
   progress: MotionValue<number>;
   /** V7: the plane exists on the mobile world plane too (rate 1); the
    *  choreography and proximity must then read the mobile route. */
   mobile?: boolean;
 };
 
-export function ProjectPlane({
-  scene,
-  offset,
-  width,
-  height,
-  progress,
-  mobile = false,
-}: ProjectPlaneProps) {
+export function ProjectPlane({ scene, geometry, progress, mobile = false }: ProjectPlaneProps) {
+  const { offset, width, height } = geometry;
   // Same derivation as every parallax mark: place it where this plane's
   // coordinate space puts the scene's focal frame, plus the authored offset --
   // the camera term stays in the plane's own vw/vh space, the offset is in the

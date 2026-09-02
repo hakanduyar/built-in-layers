@@ -37,7 +37,10 @@ const errors = [];
 page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto(BASE, { waitUntil: "networkidle" });
-await page.waitForTimeout(900);
+await page
+  .locator("section[aria-label='Spatial system tour'] .sticky")
+  .waitFor({ state: "attached", timeout: 30000 });
+await page.waitForTimeout(300);
 const tag = `${W}x${H}${ZOOM === 100 ? "" : `@${ZOOM}`}`;
 
 const range = await page.evaluate(() => {

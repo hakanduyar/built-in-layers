@@ -16,7 +16,10 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 await page.goto(BASE, { waitUntil: "networkidle" });
-await page.waitForTimeout(1500);
+await page
+  .locator("section[aria-label='Spatial system tour'] .sticky")
+  .waitFor({ state: "attached", timeout: 30000 });
+await page.waitForTimeout(500);
 
 // GENTLE: a reader taking it in.
 for (let i = 0; i < 90; i += 1) {

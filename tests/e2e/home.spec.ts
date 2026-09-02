@@ -43,16 +43,17 @@ test.describe("Home: positioning statement", () => {
 // explicit list of every assertion this replaced.
 
 test.describe("Home: selected systems", () => {
-  // V7 (owner §7-§8): the dormant "Built for real life" register is replaced by
-  // the Selected Systems index — every published system, loader-fed, in the
-  // owner-ordered sequence.
-  test("lists every published system with real loader data", async ({ page }) => {
+  // V12: the project journey already supplied the gallery. This section resolves
+  // the same loader-fed records into one operational layer map instead.
+  test("resolves every published system by layer and record", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Selected systems" })).toBeVisible();
     const section = page.locator('[data-drift-block="selected-systems"]');
     for (const title of ["Software Factory", "JointLedger", "DropSpot"]) {
       await expect(section.getByRole("link", { name: title })).toBeVisible();
     }
+    await expect(section.getByText("Resolved by layer and record")).toBeVisible();
+    await expect(section.locator("[data-layer-record]")).toHaveCount(15);
     // The mandatory fork disclosure surfaces here too (CONTENT_MODEL §9).
     await expect(section.getByText("Fork of ezBookkeeping")).toBeVisible();
   });

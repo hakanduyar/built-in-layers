@@ -1,0 +1,124 @@
+{
+  "viewports": {
+    "1366x768": {
+      "atRest": {
+        "top": 79.805419921875,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 71.981689453125,
+        "heading": {
+          "scaleX": 0.9992,
+          "scaleY": 0.9992,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 0.9992,
+          "scaleY": 0.9992,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 5.42,
+      "consoleErrors": []
+    },
+    "1536x864": {
+      "atRest": {
+        "top": 100.4949951171875,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 91.7701416015625,
+        "heading": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 7.1,
+      "consoleErrors": []
+    },
+    "1920x1080": {
+      "atRest": {
+        "top": 151.71826171875,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 138.82470703125,
+        "heading": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 11.03,
+      "consoleErrors": []
+    },
+    "2560x1440": {
+      "atRest": {
+        "top": 201.7822265625,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 189.07421875,
+        "heading": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 0.9993,
+          "scaleY": 0.9993,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 8.51,
+      "consoleErrors": []
+    }
+  }
+}
