@@ -3,7 +3,26 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-02 (V12 — desktop frozen)_
+_Last updated: 2026-09-02 (V13 — project inventory; waiting for review resource)_
+
+---
+
+## WAITING_FOR_REVIEW_RESOURCE
+
+| Field | Value |
+|---|---|
+| **State** | Pre-review work complete. Blocked on an external resource, not on work. |
+| **Missing resource** | **Codex CLI capacity.** Quota exhausted; probed directly at 2026-09-02 and refused with "You've hit your usage limit… try again at **2:57 PM**". Session id of the refused probe: `01a0616b-f1dc-7512-a88f-da52af966d89`. |
+| Reviewer required | Fresh Codex process — `gpt-5.6-luna`, effort `xhigh`. NOT a resumed session. |
+| Why not substitute | The implementing Claude session cannot be its own independent reviewer, and no unproven local model may be qualified as an acceptance reviewer to avoid waiting. |
+| Review candidate | `f85b166cc277484511e71108d99a03e694de06b4` — content baseline. Any later commit on this branch adds only this status record; verify with `git merge-base --is-ancestor f85b166 HEAD`. |
+| Branch | `feature/project-architecture-v13`, based on frozen `243db393` |
+| Tree state | clean, except the intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` |
+| Review packet | `.ai/handoffs/CODEX-ARCH-GATE.md` — complete; launching Codex is the only remaining step |
+| Expected return | `.ai/handoffs/CODEX-ARCH-RETURN.md` |
+| Frozen boundary | all 30 fingerprinted blobs verified unchanged (`docs/FROZEN_BOUNDARY.md` §4) |
+| On resume | independent review → remediation if required → re-review → **then** freeze the first slice's acceptance criteria → continue |
+| Acceptance criteria | **NOT frozen** — the standing process requires the independent review first |
 
 ---
 
@@ -17,7 +36,7 @@ _Last updated: 2026-09-02 (V12 — desktop frozen)_
 | Latest origin commit | `0752883` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean except one intentional untracked artifact: `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
-| Current phase | V12 complete. Next: project architecture / content expansion — not yet started |
+| Current phase | **V13 PROJECT INVENTORY — pre-review work complete**, waiting for Codex review capacity (see §WAITING_FOR_REVIEW_RESOURCE). Working branch `feature/project-architecture-v13`; `feature/spatial-portfolio-v5` stays frozen at `243db393` |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
