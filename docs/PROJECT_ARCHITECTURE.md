@@ -6,8 +6,11 @@ two.
 
 - Branch: `feature/project-architecture-v13`
 - Base commit: `243db3934d634f2c39d339cd2a267c01d86be2bd` (frozen V12 tip)
-- Status: **proposal — pending independent architecture review.** No implementation slice has
-  started and no acceptance criteria are frozen.
+- Status: **reviewed — ACCEPT WITH CHANGES** (independent Codex review, `gpt-5.6-luna`/xhigh,
+  2026-09-02, candidate `499e7d8`; return in `.ai/handoffs/CODEX-ARCH-RETURN.md`). The review's
+  factual corrections are applied below and marked inline. No implementation slice has started and
+  **no acceptance criteria are frozen** — several proposed policies now require owner approval
+  first.
 
 ---
 
@@ -25,7 +28,7 @@ lib/content/schemas.ts               Zod parse + superRefine conditional rules
         ▼
 lib/content/work.ts                  parseAllProjects → filter status:published
         │                            → validatePublicationGates (THROWS on failure)
-        │                            → sortByTierThenOrder
+        │                            → sortByTierThenOrder  [NAME LIES — see below]
         ▼
 lib/content/validate.ts              layer length ≥400, layer similarity ≤0.6,
         │                            required h2 sections by depth, asset extension allow-list
@@ -59,10 +62,20 @@ Three consumers order the same five projects, from **two** sources:
 | Consumer | Source | Result |
 |---|---|---|
 | Frozen spatial homepage | scene ids in `lib/spatial/scenes.ts` | SF → Kıvılcım → JointLedger → DropSpot |
-| `/work` index | `sortByTierThenOrder` → `order` | SF(0) → Kıvılcım(1) → JointLedger(2) → DropSpot(3) → Professional(4) |
-| Case-study "next project" | hand-written `nextSlug` | Kıvılcım → DropSpot → JointLedger → Professional → ∅; **SF → ∅** |
+| `/work` index | global `order` sort, then tier grouping | SF(0) → Kıvılcım(1) → JointLedger(2) → DropSpot(3) → Professional(4) |
+| Case-study "next project" | hand-written `nextSlug` | Kıvılcım → DropSpot → JointLedger → Professional; SF and Professional carry no `nextSlug` |
 
-The first two agree. The third disagrees with both and dead-ends the flagship.
+The first two agree. The third disagrees with both, and the flagship has no onward link.
+
+**Corrected after independent review — `sortByTierThenOrder` does not sort by tier.** Its body is
+`sort((a, b) => a.order - b.order)`: a single global sort on `order`, ignoring tier entirely. Tier
+grouping happens separately in `app/work/page.tsx` via `getProjectsByTier`. The function name
+asserts a two-key ordering the code does not implement — a naming defect in its own right, and the
+reason this map originally described the pipeline incorrectly.
+
+**Ordering semantics are therefore undefined in one respect:** nothing specifies what `order` means
+*across* tiers, or how ties break. Any derived-neighbour implementation must state this explicitly
+rather than inherit it.
 
 ---
 
@@ -85,13 +98,25 @@ getPublishedProjects()  →  sorted by (tier, order)
                               app/work/[slug]/page.tsx → NextProject
 ```
 
-`nextSlug` is then removable from the schema and from all five `index.mdx` files. This satisfies
-"no duplicate source of truth for project content" (`CLAUDE.md` §8) and makes F2 unrepresentable
-rather than merely fixed.
+`nextSlug` is then removable from the schema and from the **three** entries that carry it —
+Kıvılcım, JointLedger, DropSpot — plus the fixture
+`tests/fixtures/content/work/delta-full/index.mdx`. (Corrected: it was never on all five.) This
+satisfies "no duplicate source of truth for project content" (`CLAUDE.md` §8), executes D-021's
+already-accepted "`order` … single source of truth", and makes F2 unrepresentable rather than
+merely fixed.
 
-### 2.2 A depth ladder that matches position
+The derivation must define, explicitly and testably: whether neighbours are global or within-tier,
+what happens at the first and last entry, and how equal `order` values break ties.
 
-The target is that **presented prominence and content depth agree**:
+### 2.2 A depth ladder that matches position — PROPOSAL-AUTHORED, OWNER APPROVAL REQUIRED
+
+> **Independent review ruling:** this is an **invented hard rule**. The per-depth *requirements* are
+> grounded in `CONTENT_MODEL.md`; the mapping from *prominence* to *required depth* is not stated in
+> any approved source. It was authored by this proposal and may not become an acceptance criterion
+> without the owner's approval. The same applies to the evidence parity (§2.3) and coverage parity
+> (§2.4) policies below.
+
+The proposed rule is that **presented prominence and content depth agree**:
 
 | Position | Required depth | Implies |
 |---|---|---|
@@ -126,14 +151,22 @@ Every featured project gets a content suite and an asset suite, matching the exi
 | G3 | Flagship at `preview` depth | F1 | **UNKNOWN 1–2 (owner)** | G4, G5, depth ladder |
 | G4 | No SF layer files / decisions | F1 | G3 decision | flagship case study |
 | G5 | No SF test suites | F5 | G4 content exists | coverage parity |
-| G6 | Real screenshots for Kıvılcım / JointLedger | F4 | **UNKNOWN 6 (owner)** | evidence parity |
-| G7 | `professional-systems` empty | F3 | **UNKNOWN 3 (owner)** | tier/featured integrity |
-| G8 | No timelines | F6 | **UNKNOWN 4 (owner)** | — |
-| G9 | No live/demo links | F6 | **UNKNOWN 5 (owner)** | — |
+| G6 | Real screenshots for Kıvılcım / JointLedger | F4 | **UNKNOWN 6 (owner)** | evidence parity *(policy — not required today)* |
+| G7 | `professional-systems` empty | F3 | **UNKNOWN 3 (owner)** | *editorial choice — contract-compliant today* |
+| G8 | No timelines | F6 | **UNKNOWN 4 (owner)** | *optional field — not required* |
+| G9 | No live/demo links | F6 | **UNKNOWN 5 (owner)** | *optional field — not required* |
 
-**Six of nine gaps are blocked on owner facts.** Exactly one gap — G1 — is fully unblocked, purely
-structural, and needs no new content. That is the shape of this phase: the code-side work is small
-and the content-side work is gated on the owner.
+**Corrected after independent review.** The original summary — "six of nine gaps blocked, exactly
+one actionable" — was too strong in both directions.
+
+- G6–G9 are **observed absences against proposal-authored aspirations**, not violations of any
+  standing contract. They are only "gaps" if the owner adopts the §2.2–2.4 policies.
+- Conversely, more than one thing is actionable without new project facts: the ordering-contract
+  clarification (§1.2), the derived-navigation implementation that follows it, generic gate-level
+  test coverage, and documentation cleanup are all unblocked.
+
+What *is* strictly blocked on owner facts is **truthful content expansion** — G3/G4 and anything
+that would require stating something about a project that no source records.
 
 ---
 
@@ -142,16 +175,27 @@ and the content-side work is gated on the owner.
 No slice below has been started. None has frozen acceptance criteria — that comes after the
 independent review.
 
-### Slice 1 — Derive project neighbours from `order` (UNBLOCKED)
+### Slice 0 — Ordering-contract clarification (UNBLOCKED, must precede Slice 1)
 
-Replace the hand-written `nextSlug` chain with a derivation from the published, sorted list; add
-previous-project navigation; delete `nextSlug` from the schema and the five entries.
+*Added after independent review.* Before any navigation is derived, write down what `order` means:
+global versus within-tier neighbours, first/last behaviour, and tie-breaking. Correct or rename
+`sortByTierThenOrder`, whose name asserts an ordering its body does not implement. Documentation
+and naming only.
+
+### Slice 1 — Derive project neighbours from `order` (UNBLOCKED, after Slice 0)
+
+Replace the hand-written `nextSlug` chain with a derivation from the published, sorted list; delete
+`nextSlug` from the schema and from every reference.
 
 - Touches: `lib/content/work.ts`, `lib/content/schemas.ts`, `app/work/[slug]/page.tsx`,
-  `components/project/NextProject.tsx`, 5 × `index.mdx`, new unit test
-- Requires no new facts, invents nothing, and removes a duplicate source of truth
-- Risk: schema field removal is build-affecting; must run the full gate suite
-- **Recommended first slice**
+  `components/project/NextProject.tsx`, **3 × `index.mdx`** (Kıvılcım, JointLedger, DropSpot),
+  `tests/fixtures/content/work/delta-full/index.mdx`, new unit test
+- Requires no new facts, invents nothing, and executes D-021's accepted single-source rule
+- Risk: schema field removal is build-affecting; must run the full gate suite. Verify whether Zod
+  strips or rejects the unknown key before choosing the edit order
+- **Scope correction from review:** *forward* navigation only. Adding **previous**-project
+  navigation is a new IA element and needs separate owner approval — it is removed from this slice.
+- **Recommended first implementation slice**, after Slice 0
 
 ### Slice 2 — Software Factory depth upgrade (BLOCKED — owner)
 
@@ -176,11 +220,12 @@ flagship case study being reachable at all.
 Where an independent reviewer should attack this proposal hardest. These are stated as invitations,
 not defences.
 
-1. **Is `nextSlug` actually obsolete, or is it deliberate editorial sequencing?** The chain
-   Kıvılcım → DropSpot → JointLedger could be an intentional narrative order that `order` cannot
-   express. If so, Slice 1 destroys a real signal and the correct fix is the opposite: make the
-   homepage follow `nextSlug`. No document states which is intended — this is the single most
-   consequential open question in the proposal.
+1. ~~**Is `nextSlug` actually obsolete, or is it deliberate editorial sequencing?** … No document
+   states which is intended.~~ **ANSWERED — and the premise was wrong.** A document does state it:
+   accepted **D-021** (`docs/DECISIONS.md:317-328`) sets the order to SF → Kıvılcım → JointLedger →
+   DropSpot and keeps "`order` frontmatter … the single source of truth". The `nextSlug` values
+   predate that reorder, so they are stale sequencing, not an approved editorial signal. This
+   proposal missed an accepted decision record in its own repository.
 2. **Is the depth ladder (§2.2) an invention?** `CONTENT_MODEL.md` defines what each depth
    requires, but does it anywhere require that prominence and depth agree? If not, §2.2 is a new
    rule an agent proposed, and it needs owner approval rather than review approval.

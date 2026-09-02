@@ -85,9 +85,28 @@ software-factory → (none)
 ```
 
 Two independent orderings of the same five projects exist in the same content set, and they
-disagree. A reader arriving at the flagship case study has **no** onward navigation.
+disagree.
 
-### F3 — `professional-systems` is published while explicitly unverified
+**Corrected after independent review (2026-09-02):** `nextSlug` is carried by **three** entries
+only — Kıvılcım, JointLedger, DropSpot — plus the test fixture
+`tests/fixtures/content/work/delta-full/index.mdx`. Software Factory and Professional Systems
+never had it. And the flagship route is **not** unreachable: `/work/software-factory` is generated
+and the build succeeds. The precise defect is narrower than first stated — the flagship has no
+onward next-project link, and sits at preview depth.
+
+The intent is also no longer open: **D-021 settles it** (`docs/DECISIONS.md:317-328`). It sets the
+order to Software Factory → Kıvılcım → JointLedger → DropSpot and states that "`order` frontmatter
+stays the single source of truth". The current `nextSlug` values predate that reorder, so they are
+stale manual sequencing, not an approved editorial sequence.
+
+### F3 — `professional-systems` is published while explicitly unverified — BY CONTRACT
+
+**Corrected after independent review:** this is **not** a defect. `docs/CONTENT_MODEL.md`
+§"Professional case-study placeholder" models this entry exactly as it stands — `tier: featured`,
+`depth: preview`, `verificationStatus: requires-user`, `status: published`, the last "allowed ONLY
+because it contains zero concrete claims". The file follows an approved contract and uses approved
+pending copy. Whether the owner would rather hide it as a draft is an **editorial choice**, not a
+repair. Recorded below as observation, not fault.
 
 `verificationStatus: requires-user`, a 15-word body, **0** tech entries, **0** links and a single
 `provisional-illustration`, yet `status: published` so it ships. It is honest by construction —
@@ -99,8 +118,12 @@ disagree. A reader arriving at the flagship case study has **no** onward navigat
 
 `real-screenshot` appears **only** on DropSpot (4 of 7 images). Kıvılcım and JointLedger present
 their evidence entirely as diagrams, and Kıvılcım additionally carries one
-`provisional-illustration`. Nothing here is dishonest — every asset is correctly typed — but the
-"real project assets" requirement in `CLAUDE.md` §5 is currently met by one project out of five.
+`provisional-illustration`.
+
+**Corrected after independent review:** this is an **observed absence, not a contract violation.**
+D-019 expressly permits honest diagrams as evidence, and every asset here is correctly typed. Any
+requirement that each project carry a real screenshot would be a **new policy**, which only the
+owner can set. Recorded as an observation.
 
 ### F5 — Test coverage mirrors the same asymmetry
 
@@ -113,6 +136,9 @@ The least-covered project is the flagship.
 `timeline` is absent on all five (optional per `lib/content/schemas.ts:110`). Every project that has
 links has exactly one, of kind `repo`, visibility `public`; there is no `live`, `demo` or `article`
 link anywhere, and `professional-systems` has none.
+
+**Corrected after independent review:** both fields are **optional** in the content model, so these
+are observed absences rather than gaps against a standing requirement.
 
 ### F7 — Three of four tiers are unpopulated (NOT a defect)
 
@@ -155,11 +181,23 @@ content-population question, not a code defect.
 
 ### MISSING — required by the target, not present
 
-- Software Factory `surface.mdx` / `flow.mdx` / `system.mdx` and ≥3 decisions
-- Any `real-screenshot` for Kıvılcım and JointLedger
-- Any `live` / `demo` / `article` link for any project
-- `software-factory` unit suites (content + assets)
-- A derived, single-source ordering for case-study navigation
+**Corrected after independent review:** this list originally mixed genuine requirement gaps with
+absences that no standing contract requires. Split accordingly.
+
+*Required by an existing, approved contract:*
+
+- A derived, single-source ordering for case-study navigation — D-021 already names `order` as the
+  single source of truth, and `nextSlug` contradicts it
+
+*Conditional on an owner decision (currently aspirations, not requirements):*
+
+- Software Factory `surface.mdx` / `flow.mdx` / `system.mdx` and ≥3 decisions — required only if
+  the owner raises its depth (UNKNOWN 1)
+- Any `real-screenshot` for Kıvılcım and JointLedger — D-019 permits diagrams; parity would be a
+  new policy
+- Any `live` / `demo` / `article` link — the field is optional
+- `software-factory` unit suites — `PROJECT_SPEC` requires tests for critical interactions, not one
+  suite per project
 
 ### OBSOLETE — candidate for removal
 

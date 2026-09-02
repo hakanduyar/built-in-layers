@@ -3,26 +3,40 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-02 (V13 — project inventory; waiting for review resource)_
+_Last updated: 2026-09-02 (V13 — inventory reviewed; blocked on owner decisions)_
 
 ---
 
-## WAITING_FOR_REVIEW_RESOURCE
+## HUMAN_REQUIRED — owner decisions block the criteria freeze
+
+The independent architecture review is **complete**. The phase cannot advance to frozen acceptance
+criteria or implementation without owner answers.
 
 | Field | Value |
 |---|---|
-| **State** | Pre-review work complete. Blocked on an external resource, not on work. |
-| **Missing resource** | **Codex CLI capacity.** Quota exhausted; probed directly at 2026-09-02 and refused with "You've hit your usage limit… try again at **2:57 PM**". Session id of the refused probe: `01a0616b-f1dc-7512-a88f-da52af966d89`. |
-| Reviewer required | Fresh Codex process — `gpt-5.6-luna`, effort `xhigh`. NOT a resumed session. |
-| Why not substitute | The implementing Claude session cannot be its own independent reviewer, and no unproven local model may be qualified as an acceptance reviewer to avoid waiting. |
-| Review candidate | `f85b166cc277484511e71108d99a03e694de06b4` — content baseline. Any later commit on this branch adds only this status record; verify with `git merge-base --is-ancestor f85b166 HEAD`. |
+| **State** | Review returned **ACCEPT WITH CHANGES**. Factual remediation applied. Blocked on owner decisions. |
+| Reviewer | Fresh Codex process, session `01a06372-fc4a-7232-b371-6d78c1bd42c5`, model `gpt-5.6-luna`, effort `xhigh` — not a resumed session |
+| Reviewed candidate | `499e7d8a43151480650346f9aa1e445faf1edb32` |
+| Return | `.ai/handoffs/CODEX-ARCH-RETURN.md` (272 lines) — committed here because the review sandbox had `.git` read-only |
+| Verified after review | frozen boundary intact (all 30 blobs), no application source touched, no implementation slice started, V12 bundle preserved |
 | Branch | `feature/project-architecture-v13`, based on frozen `243db393` |
-| Tree state | clean, except the intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` |
-| Review packet | `.ai/handoffs/CODEX-ARCH-GATE.md` — complete; launching Codex is the only remaining step |
-| Expected return | `.ai/handoffs/CODEX-ARCH-RETURN.md` |
-| Frozen boundary | all 30 fingerprinted blobs verified unchanged (`docs/FROZEN_BOUNDARY.md` §4) |
-| On resume | independent review → remediation if required → re-review → **then** freeze the first slice's acceptance criteria → continue |
-| Acceptance criteria | **NOT frozen** — the standing process requires the independent review first |
+| Acceptance criteria | **NOT frozen** — correct per process; owner approval is required for the proposal-authored policies first |
+| Next owner | **OWNER** |
+
+### What the owner must decide
+
+**A. Project facts (unchanged, six items)** — Software Factory publishability and depth; whether
+publishable Software Factory screenshots exist; everything about Professional Systems; timelines;
+any live/demo URL; whether Kıvılcım and JointLedger have screenshottable running states.
+
+**B. Proposal-authored policies the review refused to accept without the owner** — the
+prominence-to-depth ladder, evidence parity, per-project coverage parity, global-versus-tier
+ordering semantics, and whether previous-project navigation should exist at all.
+
+### Then, without further owner input
+
+Slice 0 (ordering-contract clarification) → Slice 1 (derived forward navigation + complete
+`nextSlug` removal) → re-review → freeze criteria → implement.
 
 ---
 
@@ -36,7 +50,7 @@ _Last updated: 2026-09-02 (V13 — project inventory; waiting for review resourc
 | Latest origin commit | `0752883` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean except one intentional untracked artifact: `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
-| Current phase | **V13 PROJECT INVENTORY — pre-review work complete**, waiting for Codex review capacity (see §WAITING_FOR_REVIEW_RESOURCE). Working branch `feature/project-architecture-v13`; `feature/spatial-portfolio-v5` stays frozen at `243db393` |
+| Current phase | **V13 PROJECT INVENTORY — independent review complete (ACCEPT WITH CHANGES)**, blocked on owner decisions (see §HUMAN_REQUIRED). Working branch `feature/project-architecture-v13`; `feature/spatial-portfolio-v5` stays frozen at `243db393` |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
@@ -44,9 +58,9 @@ _Last updated: 2026-09-02 (V13 — project inventory; waiting for review resourc
 
 ## Next action
 
-**Project architecture / content expansion**, beginning with a truthful `PROJECT_INVENTORY` in the
-established order: 01 Software Factory, 02 Kıvılcım, 03 JointLedger, 04 DropSpot. The desktop
-homepage is frozen — do not reopen it without a measured regression.
+**Owner decisions — see §HUMAN_REQUIRED above.** `docs/PROJECT_INVENTORY.md` is written and
+independently reviewed; the phase is blocked on facts and policy approvals only the owner can give.
+The desktop homepage is frozen — do not reopen it without a measured regression.
 
 Three things remain the owner's judgement rather than another engineering pass:
 
