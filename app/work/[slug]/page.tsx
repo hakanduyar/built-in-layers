@@ -118,9 +118,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       {/* IA 11: movement between case studies, derived from the global
           `order` sequence (D-027) rather than an authored link. */}
-      <div className="mt-16">
-        <ProjectNeighbours previous={previous} next={next} />
-      </div>
+      {(previous || next) && (
+        <div className="mt-16">
+          <ProjectNeighbours previous={previous} next={next} />
+        </div>
+      )}
     </Container>
   );
 }

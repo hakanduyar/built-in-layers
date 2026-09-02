@@ -54,6 +54,15 @@ describe("global ordering contract (D-027)", () => {
     expect(errors.map((error) => error.rule.match(/order (\d+)/)?.[1])).toEqual(["1", "5"]);
   });
 
+  it("fails the loader, not just the checker, when published orders collide", () => {
+    // Integration cover for the wiring, not the predicate: proving
+    // checkUniqueOrder returns errors is worthless if getPublishedProjects
+    // never calls it. Two fixture entries deliberately share order 7.
+    const DUPLICATE = path.join(process.cwd(), "tests/fixtures/content/work-duplicate-order");
+    expect(() => getPublishedProjects(DUPLICATE)).toThrow(/order 7 is used by more than one/);
+    expect(() => getPublishedProjects(DUPLICATE)).toThrow(/one, two/);
+  });
+
   it("sorts published projects into the owner-declared global order", () => {
     // Owner decision 2026-09-02, consistent with D-021.
     expect(getPublishedProjects().map((project) => project.slug)).toEqual([

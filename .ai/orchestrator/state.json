@@ -1,5 +1,10 @@
 {
-  "pipeline": ["CODEX", "FABLE_5_1", "OPUS_FINAL_QA", "DESKTOP_FREEZE_CANDIDATE"],
+  "pipeline": [
+    "CODEX",
+    "FABLE_5_1",
+    "OPUS_FINAL_QA",
+    "DESKTOP_FREEZE_CANDIDATE"
+  ],
   "current_stage": "CODEX",
   "current_substage": "SLICE_0_1_RE_REVIEW",
   "branch": "feature/project-architecture-v13",
@@ -27,8 +32,8 @@
       "return": ".ai/handoffs/CODEX-ARCH-RETURN.md"
     },
     "slice_re_review": {
-      "session_id": null,
-      "status": "PENDING",
+      "session_id": "01a063b6-1ab1-7cb2-bbbc-6afb28c778f6",
+      "status": "RUNNING",
       "reviewed_sha": "78bf83057bbdddda11da783f4e77dcabb7362c17",
       "gate": ".ai/handoffs/CODEX-SLICE-GATE.md",
       "return": ".ai/handoffs/CODEX-SLICE-RETURN.md"
@@ -57,8 +62,8 @@
     "final_head": null
   },
   "heads": {
-    "last_observed_local": "78bf83057bbdddda11da783f4e77dcabb7362c17",
-    "last_observed_origin": "78bf83057bbdddda11da783f4e77dcabb7362c17"
+    "last_observed_local": "1bea2aabc406a00eaa8a9ef2a715aaf5c30d2fdb",
+    "last_observed_origin": "1bea2aabc406a00eaa8a9ef2a715aaf5c30d2fdb"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
   "frozen_boundary_check": "all 30 blobs unchanged vs 243db393"

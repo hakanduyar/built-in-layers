@@ -75,7 +75,6 @@ for (const slug of slugs) {
     }, {}),
     imagesWithLayer: imgs.filter((i) => i.layer).length,
     timeline: fm.timeline ?? null,
-    nextSlug: fm.nextSlug ?? null,
     indexBodyWords: words(content),
     layerFiles,
     assetsMissingOnDisk: missingOnDisk,

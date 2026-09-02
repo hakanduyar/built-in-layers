@@ -6,11 +6,20 @@ two.
 
 - Branch: `feature/project-architecture-v13`
 - Base commit: `243db3934d634f2c39d339cd2a267c01d86be2bd` (frozen V12 tip)
-- Status: **reviewed — ACCEPT WITH CHANGES** (independent Codex review, `gpt-5.6-luna`/xhigh,
-  2026-09-02, candidate `499e7d8`; return in `.ai/handoffs/CODEX-ARCH-RETURN.md`). The review's
-  factual corrections are applied below and marked inline. No implementation slice has started and
-  **no acceptance criteria are frozen** — several proposed policies now require owner approval
-  first.
+- Status: **Slice 0 and Slice 1 IMPLEMENTED** (`78bf8305`), reviewed twice by independent Codex
+  (`gpt-5.6-luna`/xhigh): the proposal at `499e7d8` and the implementation at `1bea2aa`, both
+  ACCEPT WITH CHANGES. Returns in `.ai/handoffs/CODEX-ARCH-RETURN.md` and
+  `.ai/handoffs/CODEX-SLICE-RETURN.md`. Every open policy question was answered by the owner on
+  2026-09-02 and is recorded in **D-027**.
+- **Acceptance criteria are still NOT frozen** — the second review requires the defects it found to
+  be fixed and the full browser suite re-run first.
+
+> **Reading order.** Sections 1–5 below were written *before* implementation and are kept as the
+> record of how the decision was reached, with corrections marked inline. Where they describe
+> something as proposed or undecided, **D-027 is now authoritative.** What actually shipped:
+> `order` is one global unique sequence, `sortByOrder` replaced `sortByTierThenOrder`,
+> `nextSlug` is gone, and `getCaseStudyNeighbours` derives both directions for projects whose
+> `depth` is `full` or `short`.
 
 ---
 
@@ -28,7 +37,7 @@ lib/content/schemas.ts               Zod parse + superRefine conditional rules
         ▼
 lib/content/work.ts                  parseAllProjects → filter status:published
         │                            → validatePublicationGates (THROWS on failure)
-        │                            → sortByTierThenOrder  [NAME LIES — see below]
+        │                            → sortByOrder  [was sortByTierThenOrder; see 1.2]
         ▼
 lib/content/validate.ts              layer length ≥400, layer similarity ≤0.6,
         │                            required h2 sections by depth, asset extension allow-list
@@ -90,12 +99,12 @@ model, and the fail-closed gates are all kept as they are.
 published, sorted list rather than from a hand-maintained field.
 
 ```
-getPublishedProjects()  →  sorted by (tier, order)
+getPublishedProjects()  →  sorted by `order` (global), gated for uniqueness
         │
-        └── getProjectNeighbours(slug) → { previous, next }   [new, lib/content/work.ts]
+        └── getCaseStudyNeighbours(slug) → { previous, next }   [lib/content/work.ts]
                                                   │
                                                   ▼
-                              app/work/[slug]/page.tsx → NextProject
+                              app/work/[slug]/page.tsx → ProjectNeighbours
 ```
 
 `nextSlug` is then removable from the schema and from the **three** entries that carry it —
@@ -108,15 +117,20 @@ merely fixed.
 The derivation must define, explicitly and testably: whether neighbours are global or within-tier,
 what happens at the first and last entry, and how equal `order` values break ties.
 
-### 2.2 A depth ladder that matches position — PROPOSAL-AUTHORED, OWNER APPROVAL REQUIRED
+### 2.2 A depth ladder that matches position — OWNER-APPROVED AS ROLES, NOT A RIGID LADDER
 
-> **Independent review ruling:** this is an **invented hard rule**. The per-depth *requirements* are
-> grounded in `CONTENT_MODEL.md`; the mapping from *prominence* to *required depth* is not stated in
-> any approved source. It was authored by this proposal and may not become an acceptance criterion
-> without the owner's approval. The same applies to the evidence parity (§2.3) and coverage parity
-> (§2.4) policies below.
+> **Independent review ruling:** this was an **invented hard rule** — the per-depth *requirements*
+> are grounded in `CONTENT_MODEL.md`, but the mapping from *prominence* to *required depth* was not.
+>
+> **Owner ruling, 2026-09-02 — superseding the table below.** Approved as three publication
+> **roles**, explicitly *not* as a rigid ladder: FLAGSHIP (Software Factory), CORE PROJECT
+> (Kıvılcım, JointLedger, DropSpot), PREVIEW / PROFESSIONAL INDEX (Professional Systems).
+> Prominence sets editorial priority, **not permission to invent content — evidence availability
+> always overrides desired depth.** Strict evidence parity (§2.3) and strict per-project test
+> parity (§2.4) were both **REJECTED** in favour of *evidence fitness* and shared framework tests
+> plus risk-based project tests.
 
-The proposed rule is that **presented prominence and content depth agree**:
+The originally proposed rigid rule, kept for the record and **not** in force:
 
 | Position | Required depth | Implies |
 |---|---|---|
@@ -175,27 +189,27 @@ that would require stating something about a project that no source records.
 No slice below has been started. None has frozen acceptance criteria — that comes after the
 independent review.
 
-### Slice 0 — Ordering-contract clarification (UNBLOCKED, must precede Slice 1)
+### Slice 0 — Ordering-contract clarification — **DONE** (`78bf8305`)
 
 *Added after independent review.* Before any navigation is derived, write down what `order` means:
 global versus within-tier neighbours, first/last behaviour, and tie-breaking. Correct or rename
 `sortByTierThenOrder`, whose name asserts an ordering its body does not implement. Documentation
 and naming only.
 
-### Slice 1 — Derive project neighbours from `order` (UNBLOCKED, after Slice 0)
+### Slice 1 — Derive project neighbours from `order` — **DONE** (`78bf8305`)
 
 Replace the hand-written `nextSlug` chain with a derivation from the published, sorted list; delete
 `nextSlug` from the schema and from every reference.
 
 - Touches: `lib/content/work.ts`, `lib/content/schemas.ts`, `app/work/[slug]/page.tsx`,
-  `components/project/NextProject.tsx`, **3 × `index.mdx`** (Kıvılcım, JointLedger, DropSpot),
+  `components/project/ProjectNeighbours.tsx` (replacing `NextProject.tsx`), **3 × `index.mdx`**,
   `tests/fixtures/content/work/delta-full/index.mdx`, new unit test
 - Requires no new facts, invents nothing, and executes D-021's accepted single-source rule
 - Risk: schema field removal is build-affecting; must run the full gate suite. Verify whether Zod
   strips or rejects the unknown key before choosing the edit order
-- **Scope correction from review:** *forward* navigation only. Adding **previous**-project
-  navigation is a new IA element and needs separate owner approval — it is removed from this slice.
-- **Recommended first implementation slice**, after Slice 0
+- **Superseded scope note.** The first review deferred *previous*-project navigation as a new IA
+  element needing separate approval. The owner approved it on 2026-09-02, so **both directions**
+  shipped, derived from the same collection. See D-027.
 
 ### Slice 2 — Software Factory depth upgrade (BLOCKED — owner)
 
