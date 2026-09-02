@@ -34,7 +34,9 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 | V9 | Homepage release candidate: stale facts, dead run, pacing, affordance, About/Field Notes, CTA | Opus | **COMPLETE** — D-024, DESIGN_SYSTEM §34 |
 | V10 | Route/plane/scroll rearchitecture: one governed scroll model, bounded intent, plane registration, seam | Opus | **COMPLETE** — D-025, DESIGN_SYSTEM §35 |
 | V11 | **Desktop system gate**: focus isolation, motion sharpness, world spacing, ceiling, lower-world language | Opus | **COMPLETE** — D-026, DESIGN_SYSTEM §36, docs/DESKTOP_FREEZE_ACCEPTANCE.md |
-| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | after Gate 1 |
+| V12 | **Independent desktop review gate** (Codex gpt-5.6-sol, xhigh): evidence-derived project grounds, Selected Systems topology, probe hydration races | Codex | **COMPLETE** — `42798f1`/`0752883`, docs/DESKTOP_FREEZE_ACCEPTANCE.md, `.ai/handoffs/CODEX-RETURN.md` |
+| — | **DESKTOP SPATIAL SYSTEM — FROZEN** (2026-09-02, `0752883`) | — | Do not reopen spacing, grounds, scroll, sharpness, lower world, zoom, SYSTEMS or UNDERNEATH without a measured regression |
+| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | **NEXT** — desktop is frozen |
 | — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | after Phase 4 |
 | 5 | Apply the approved case-study system to remaining projects | Opus | after Gate 2 |
 | — | **Fable Gate 3** — Software Factory flagship | Fable | after real architecture is extracted by Opus |

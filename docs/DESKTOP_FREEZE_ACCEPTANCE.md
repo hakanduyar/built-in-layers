@@ -5,7 +5,8 @@ Final measured acceptance matrix for the desktop spatial homepage.
 - Branch: `feature/spatial-portfolio-v5`
 - Starting HEAD: `fd8228a8ea75fea820294e1916f3ea1f863a413c`
 - Review date: 2026-09-02
-- Verdict: **NOT READY — experience passes; required Git checkpoint is blocked**
+- Verdict: **PASS — desktop spatial system FROZEN** (the gate's only outstanding item, the Git
+  checkpoint, was published on 2026-09-02; see "Checkpoint status")
 
 This decision follows the complete inspect → measure → implement → render → watch → capture →
 critique → refute → fix → repeat loop. It is based on final production-browser geometry, direct
@@ -200,18 +201,34 @@ formatted and checked.
 
 ## Checkpoint status
 
-- [ ] **FAIL — commit attached to the local feature ref.** The execution sandbox exposes `.git` as
-  read-only, so Git cannot create `index.lock` or update the branch ref.
-- [ ] **FAIL — feature branch pushed.** HTTPS push cannot read or persist the configured Windows
-  credential, the installed GitHub CLI token is invalid, no token environment variable exists, and
-  SSH has no authorized key. Origin remains at the starting HEAD.
+The gate ran in a `workspace-write` sandbox that exposes `.git` as read-only, so the reviewing agent
+could neither create `index.lock` nor reach any push credential. It therefore built the checkpoint
+from an alternate writable index/object store — without rewriting history — and left a verified
+bundle at `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle`. Recovery details are recorded in
+`.ai/handoffs/CODEX-RETURN.md`.
 
-A verified checkpoint commit was instead built from an alternate writable index/object store without
-rewriting history. Its recovery details are recorded in `.ai/handoffs/CODEX-RETURN.md`.
+Both items were resolved on 2026-09-02 by importing that bundle and fast-forwarding:
+
+- [x] **PASS — commit attached to the local feature ref.** `fd8228a` → `42798f1` → `0752883`.
+- [x] **PASS — feature branch pushed.** `feature/spatial-portfolio-v5` fast-forwarded
+  `fd8228a..0752883` on origin. No force push, no history rewrite, `main` untouched.
+
+Publication verification: bundle SHA-256 `3a4d39a8…8560` matched the recorded digest and
+`git bundle verify` passed; every tracked file in the working tree was proved byte-identical to
+`0752883` before any ref moved; `git reset --mixed` then reported no unstaged changes, confirming
+zero application-source mutation during publication. Re-run after publication: typecheck clean, lint
+clean, 22 unit files / 506 tests passing.
 
 ## Freeze decision
 
 No visual, motion, responsive, content, runtime, or test FAIL remains, and no unresolved pure
-art-direction question warrants a Fable handoff. The required Git checkpoint is nevertheless a
-critical incomplete gate item, so the overall verdict is **NOT READY**. Recommended next owner:
-**OPUS** to publish the prepared checkpoint unchanged; after publication, **FREEZE**.
+art-direction question warrants a Fable handoff. With the checkpoint published, the last incomplete
+gate item is closed and the overall verdict is **PASS**.
+
+**DESKTOP SPATIAL SYSTEM — FROZEN** (2026-09-02, `0752883`).
+
+Project spacing, project grounds, scroll feel, motion sharpness, lower-world composition, zoom,
+SYSTEMS and UNDERNEATH are closed. Do not reopen them without a measured regression. The next
+product phase is project architecture and content expansion, beginning with a truthful
+`PROJECT_INVENTORY` in the established order: 01 Software Factory, 02 Kıvılcım, 03 JointLedger,
+04 DropSpot.

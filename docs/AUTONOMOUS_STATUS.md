@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-01 (V11)_
+_Last updated: 2026-09-02 (V12 — desktop frozen)_
 
 ---
 
@@ -11,29 +11,29 @@ _Last updated: 2026-09-01 (V11)_
 
 | Field | Value |
 |---|---|
-| **Status** | V11 DESKTOP SYSTEM GATE COMPLETE — focus isolation and motion sharpness fixed at the architecture; acceptance matrix in docs/DESKTOP_FREEZE_ACCEPTANCE.md. Desktop recommended for FREEZE |
+| **Status** | **DESKTOP SPATIAL SYSTEM — FROZEN** (2026-09-02). V12 independent Codex gate closed every product item; acceptance matrix in docs/DESKTOP_FREEZE_ACCEPTANCE.md |
 | Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `9255748` (V11 desktop system gate) |
-| Latest origin commit | `9255748` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
+| Current HEAD | `0752883` (V12 Codex gate return; implementation is its parent `42798f1`) |
+| Latest origin commit | `0752883` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
-| Working tree | clean |
-| Current phase | V11 (owner brief): final desktop system pass — systemic fixes only |
+| Working tree | clean except one intentional untracked artifact: `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
+| Current phase | V12 complete. Next: project architecture / content expansion — not yet started |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
-| Current visual artifacts | `C:\Users\hakan\portfolio-review\v9\` (stills across six desktop viewports plus 80% / 67% zoom); metrics in `docs/review/v9-release/metrics/`. Policy: `docs/REVIEW_POLICY.md` |
+| Current visual artifacts | `docs/review/v12-codex-gate/` — 221 files: 204 stills across 1366/1440/1536/1920/2560 plus 80% / 67% / 50% zoom, project and SYSTEMS phases, reduced motion, moving-vs-stationary sharpness, six recordings and extracted frames, 10 JSON metric reports. Policy: `docs/REVIEW_POLICY.md` |
 
 ## Next action
 
-**Owner visual review, then FREEZE the homepage.** Stills for every scene and landmark are in
-`C:\Users\hakan\portfolio-review\v9\` at six desktop viewports plus 80% and 67% zoom; the
-measurements behind every claim are in `docs/review/v9-release/metrics/`.
+**Project architecture / content expansion**, beginning with a truthful `PROJECT_INVENTORY` in the
+established order: 01 Software Factory, 02 Kıvılcım, 03 JointLedger, 04 DropSpot. The desktop
+homepage is frozen — do not reopen it without a measured regression.
 
-Three things are the owner's judgement rather than another engineering pass:
+Three things remain the owner's judgement rather than another engineering pass:
 
-1. **Neighbouring scenes are visible at focus** at viewports wider than the 1440 reference. They do
-   not overlap — this is the "zooming out reveals more of the same world" behaviour D-022 was asked
-   for, and hiding them again would mean widening the whole route. Left as is, deliberately.
+1. ~~**Neighbouring scenes are visible at focus** at viewports wider than the 1440 reference.~~
+   **Resolved in V11/V12** — the route was widened and neighbouring painted intersection is now
+   0 px² at every destination across all five desktop viewports.
 2. **Professional Systems stays compact** because its content cannot support more. What it would
    need before it can carry a scene is listed in `docs/CONTENT_GAPS.md`.
 3. **Scroll pacing** is now 1.38 projects-to-statements, up from 1.17, and the governor is
@@ -175,7 +175,9 @@ starved frames. Chromium passed that test either way.
 | Fable Gate 3 — Software Factory flagship | Fable 5 | real architecture extraction |
 | Fable Gate 4 — mobile art direction | Fable 5 | desktop structural stability |
 
-None are open. No handoff exists in `.ai/handoffs/`.
+None are open. The V12 Codex gate explicitly found no remaining pure art-direction question, so no
+Fable handoff was raised. `.ai/handoffs/` holds `CODEX-GATE.md` (the V12 brief), `CODEX-RETURN.md`
+(its return), `FABLE-GATE.md` and `OPUS-RETURN.md` from earlier gates.
 
 ---
 
@@ -193,5 +195,7 @@ None are open. No handoff exists in `.ai/handoffs/`.
 | 2026-09-01 | `5bbd391` | feat: close the homepage defects for a release candidate (V9) |
 | 2026-09-01 | `4f45b6d` | feat: one governed scroll model, bounded intent, a ground that registers (V10) |
 | 2026-09-01 | `9255748` | feat: the desktop system gate — isolate the focus, stop resampling the text (V11) |
+| 2026-09-02 | `42798f1` | feat: close desktop spatial freeze gate (V12, independent Codex review) |
+| 2026-09-02 | `0752883` | docs: record Codex desktop gate return (V12 checkpoint tip) |
 | 2026-08-28 | `d7bcebc` | feat: checkpoint recovered spatial portfolio v6.8 (Ubuntu source, 33M/5A/1D) |
 | 2026-08-28 | `682d54e` | merge: reconcile Ubuntu V6.8 source with Windows recovery documentation |
