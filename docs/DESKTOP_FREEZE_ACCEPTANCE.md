@@ -5,7 +5,7 @@ Final measured acceptance matrix for the desktop spatial homepage.
 - Branch: `feature/spatial-portfolio-v5`
 - Starting HEAD: `fd8228a8ea75fea820294e1916f3ea1f863a413c`
 - Review date: 2026-09-02
-- Verdict: **PASS — desktop freeze-ready**
+- Verdict: **NOT READY — experience passes; required Git checkpoint is blocked**
 
 This decision follows the complete inspect → measure → implement → render → watch → capture →
 critique → refute → fix → repeat loop. It is based on final production-browser geometry, direct
@@ -198,7 +198,20 @@ formatted and checked.
   cleared three arrival cases; the fourth exposed and fixed a real post-reload hydration race in its
   harness.
 
+## Checkpoint status
+
+- [ ] **FAIL — commit attached to the local feature ref.** The execution sandbox exposes `.git` as
+  read-only, so Git cannot create `index.lock` or update the branch ref.
+- [ ] **FAIL — feature branch pushed.** HTTPS push cannot read or persist the configured Windows
+  credential, the installed GitHub CLI token is invalid, no token environment variable exists, and
+  SSH has no authorized key. Origin remains at the starting HEAD.
+
+A verified checkpoint commit was instead built from an alternate writable index/object store without
+rewriting history. Its recovery details are recorded in `.ai/handoffs/CODEX-RETURN.md`.
+
 ## Freeze decision
 
-No critical FAIL remains and no unresolved pure art-direction question warrants a Fable handoff.
-Recommended next owner: **FREEZE**.
+No visual, motion, responsive, content, runtime, or test FAIL remains, and no unresolved pure
+art-direction question warrants a Fable handoff. The required Git checkpoint is nevertheless a
+critical incomplete gate item, so the overall verdict is **NOT READY**. Recommended next owner:
+**OPUS** to publish the prepared checkpoint unchanged; after publication, **FREEZE**.
