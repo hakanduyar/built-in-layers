@@ -1,0 +1,262 @@
+{
+  "generated": "PROJECT INVENTORY",
+  "projects": [
+    {
+      "slug": "dropspot",
+      "title": "DropSpot",
+      "tier": "featured",
+      "depth": "short",
+      "order": 3,
+      "provenance": "personal",
+      "status": "published",
+      "verificationStatus": "verified",
+      "phase": "paused",
+      "factsChecked": true,
+      "aiAssisted": null,
+      "hasContribution": true,
+      "contributionWords": 24,
+      "hasLayersSummary": true,
+      "layerSummaryWords": {
+        "surface": 24,
+        "flow": 27,
+        "system": 27
+      },
+      "decisions": 4,
+      "tech": 6,
+      "links": [
+        "repo:public"
+      ],
+      "images": 7,
+      "assetTypes": {
+        "real-screenshot": 4,
+        "verified-diagram": 3
+      },
+      "imagesWithLayer": 7,
+      "timeline": null,
+      "nextSlug": "jointledger",
+      "indexBodyWords": 584,
+      "layerFiles": {
+        "surface": {
+          "exists": true,
+          "words": 432,
+          "bytes": 2923
+        },
+        "flow": {
+          "exists": true,
+          "words": 399,
+          "bytes": 2572
+        },
+        "system": {
+          "exists": true,
+          "words": 577,
+          "bytes": 4001
+        }
+      },
+      "assetsMissingOnDisk": [],
+      "assetsOnDiskUnreferenced": []
+    },
+    {
+      "slug": "jointledger",
+      "title": "JointLedger",
+      "tier": "featured",
+      "depth": "short",
+      "order": 2,
+      "provenance": "fork",
+      "status": "published",
+      "verificationStatus": "verified",
+      "phase": "active-development",
+      "factsChecked": true,
+      "aiAssisted": null,
+      "hasContribution": true,
+      "contributionWords": 68,
+      "hasLayersSummary": true,
+      "layerSummaryWords": {
+        "surface": 41,
+        "flow": 40,
+        "system": 37
+      },
+      "decisions": 4,
+      "tech": 5,
+      "links": [
+        "repo:public"
+      ],
+      "images": 4,
+      "assetTypes": {
+        "verified-diagram": 4
+      },
+      "imagesWithLayer": 4,
+      "timeline": null,
+      "nextSlug": "professional-systems",
+      "indexBodyWords": 643,
+      "layerFiles": {
+        "surface": {
+          "exists": true,
+          "words": 211,
+          "bytes": 1517
+        },
+        "flow": {
+          "exists": true,
+          "words": 309,
+          "bytes": 1979
+        },
+        "system": {
+          "exists": true,
+          "words": 488,
+          "bytes": 3342
+        }
+      },
+      "assetsMissingOnDisk": [],
+      "assetsOnDiskUnreferenced": []
+    },
+    {
+      "slug": "kivilcim",
+      "title": "Kıvılcım",
+      "tier": "featured",
+      "depth": "full",
+      "order": 1,
+      "provenance": "personal",
+      "status": "published",
+      "verificationStatus": "verified",
+      "phase": "active-development",
+      "factsChecked": true,
+      "aiAssisted": true,
+      "hasContribution": true,
+      "contributionWords": 19,
+      "hasLayersSummary": true,
+      "layerSummaryWords": {
+        "surface": 20,
+        "flow": 19,
+        "system": 20
+      },
+      "decisions": 6,
+      "tech": 6,
+      "links": [
+        "repo:public"
+      ],
+      "images": 4,
+      "assetTypes": {
+        "provisional-illustration": 1,
+        "verified-diagram": 3
+      },
+      "imagesWithLayer": 4,
+      "timeline": null,
+      "nextSlug": "dropspot",
+      "indexBodyWords": 793,
+      "layerFiles": {
+        "surface": {
+          "exists": true,
+          "words": 357,
+          "bytes": 2279
+        },
+        "flow": {
+          "exists": true,
+          "words": 452,
+          "bytes": 3018
+        },
+        "system": {
+          "exists": true,
+          "words": 424,
+          "bytes": 2983
+        }
+      },
+      "assetsMissingOnDisk": [],
+      "assetsOnDiskUnreferenced": []
+    },
+    {
+      "slug": "professional-systems",
+      "title": "Professional Systems",
+      "tier": "featured",
+      "depth": "preview",
+      "order": 4,
+      "provenance": "professional",
+      "status": "published",
+      "verificationStatus": "requires-user",
+      "phase": null,
+      "factsChecked": false,
+      "aiAssisted": null,
+      "hasContribution": true,
+      "contributionWords": 17,
+      "hasLayersSummary": false,
+      "layerSummaryWords": null,
+      "decisions": 0,
+      "tech": 0,
+      "links": [],
+      "images": 1,
+      "assetTypes": {
+        "provisional-illustration": 1
+      },
+      "imagesWithLayer": 0,
+      "timeline": null,
+      "nextSlug": null,
+      "indexBodyWords": 15,
+      "layerFiles": {
+        "surface": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        },
+        "flow": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        },
+        "system": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        }
+      },
+      "assetsMissingOnDisk": [],
+      "assetsOnDiskUnreferenced": []
+    },
+    {
+      "slug": "software-factory",
+      "title": "Software Factory",
+      "tier": "featured",
+      "depth": "preview",
+      "order": 0,
+      "provenance": "personal",
+      "status": "published",
+      "verificationStatus": "verified",
+      "phase": "active-development",
+      "factsChecked": true,
+      "aiAssisted": true,
+      "hasContribution": true,
+      "contributionWords": 74,
+      "hasLayersSummary": false,
+      "layerSummaryWords": null,
+      "decisions": 0,
+      "tech": 3,
+      "links": [
+        "repo:public"
+      ],
+      "images": 1,
+      "assetTypes": {
+        "verified-diagram": 1
+      },
+      "imagesWithLayer": 1,
+      "timeline": null,
+      "nextSlug": null,
+      "indexBodyWords": 130,
+      "layerFiles": {
+        "surface": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        },
+        "flow": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        },
+        "system": {
+          "exists": false,
+          "words": 0,
+          "bytes": 0
+        }
+      },
+      "assetsMissingOnDisk": [],
+      "assetsOnDiskUnreferenced": []
+    }
+  ]
+}
