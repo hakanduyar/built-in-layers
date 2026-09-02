@@ -1,0 +1,13 @@
+# AUTONOMOUS PIPELINE LOG
+# Append-only. Timestamped stage transitions and blockers.
+
+2026-09-02 15:04  CODEX/quota      PAUSED_FOR_QUOTA cleared. Probe returned QUOTA_OK at the stated 2:57 PM reset.
+2026-09-02 15:05  CODEX/arch       Launched fresh review, session 01a06372-fc4a-7232-b371-6d78c1bd42c5, gpt-5.6-luna, xhigh.
+2026-09-02 22:00  CODEX/arch       COMPLETE. Verdict ACCEPT WITH CHANGES on candidate 499e7d8. Return written; .git read-only in sandbox so Claude published it.
+2026-09-02 22:1x  CODEX/arch       Corrections verified and applied: D-021 already settled Q1; sortByTierThenOrder sorts by order only; nextSlug on 3 entries not 5; professional-systems is contract-compliant; screenshots/timelines/links are optional, not violations.
+2026-09-02 22:2x  OWNER            Decision brief received. Policies resolved: global order authoritative, nextSlug removed, previous+next approved, evidence fitness over parity, no strict test parity, prominence roles approved.
+2026-09-02 22:5x  CODEX/slice0+1   IMPLEMENTED and pushed as 78bf8305. typecheck/lint/prettier clean, 520/520 unit, build 15/15, work.spec.ts 46/46 chromium. Frozen boundary intact.
+2026-09-02 22:5x  CODEX/slice0+1   Rejected an unproven optimisation: React cache gave 1210/1162/1162ms across three calls (no memoisation outside a request scope). Removed rather than shipped; two test budgets raised to the measured cost, no assertion relaxed.
+2026-09-02 23:0x  ORCHESTRATOR     Pipeline brief premise corrected: no Codex process was running when it arrived. Nothing was interrupted.
+2026-09-02 23:0x  FABLE/probe      Fable 5.1 AVAILABLE as claude-fable-5-1. Self-reports that id; a bogus control model is rejected by the API, so acceptance is meaningful. Not a blocker.
+2026-09-02 23:0x  ORCHESTRATOR     Persistent state established: state.json, AUTONOMOUS_PIPELINE_STATE.md, pipeline-watchdog.ps1 (observation only).

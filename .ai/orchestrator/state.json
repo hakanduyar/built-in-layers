@@ -1,0 +1,65 @@
+{
+  "pipeline": ["CODEX", "FABLE_5_1", "OPUS_FINAL_QA", "DESKTOP_FREEZE_CANDIDATE"],
+  "current_stage": "CODEX",
+  "current_substage": "SLICE_0_1_RE_REVIEW",
+  "branch": "feature/project-architecture-v13",
+  "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
+  "frozen_branch": "feature/spatial-portfolio-v5",
+  "main": "16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6",
+  "owner_decisions_recorded": [
+    "docs/DECISIONS.md#D-021",
+    "docs/DECISIONS.md#D-027",
+    "docs/CONTENT_GAPS.md",
+    ".ai/handoffs/CODEX-ARCH-GATE.md",
+    ".ai/handoffs/CODEX-ARCH-RETURN.md"
+  ],
+  "codex": {
+    "cli": "codex-cli 0.147.0",
+    "model": "gpt-5.6-luna",
+    "effort": "xhigh",
+    "sandbox": "workspace-write, network enabled, .git READ-ONLY",
+    "architecture_review": {
+      "session_id": "01a06372-fc4a-7232-b371-6d78c1bd42c5",
+      "status": "COMPLETE",
+      "verdict": "ACCEPT WITH CHANGES",
+      "reviewed_sha": "499e7d8a43151480650346f9aa1e445faf1edb32",
+      "gate": ".ai/handoffs/CODEX-ARCH-GATE.md",
+      "return": ".ai/handoffs/CODEX-ARCH-RETURN.md"
+    },
+    "slice_re_review": {
+      "session_id": null,
+      "status": "PENDING",
+      "reviewed_sha": "78bf83057bbdddda11da783f4e77dcabb7362c17",
+      "gate": ".ai/handoffs/CODEX-SLICE-GATE.md",
+      "return": ".ai/handoffs/CODEX-SLICE-RETURN.md"
+    },
+    "quota": {
+      "state": "AVAILABLE",
+      "last_exhausted_reset": "2026-09-02T14:57:00",
+      "note": "Quota exhaustion is PAUSED_FOR_QUOTA, never FAILED. Resume the same session id."
+    }
+  },
+  "fable": {
+    "model": "claude-fable-5-1",
+    "availability": "CONFIRMED",
+    "availability_evidence": "claude --model claude-fable-5-1 returns completions and self-reports claude-fable-5-1; a bogus control model name is rejected by the API, so acceptance is meaningful",
+    "effort": "highest supported",
+    "session_id": null,
+    "status": "NOT_STARTED",
+    "starting_head": null,
+    "final_head": null,
+    "gate": ".ai/handoffs/FABLE-GATE.md",
+    "return": ".ai/handoffs/FABLE-RETURN.md"
+  },
+  "opus_final_qa": {
+    "status": "NOT_STARTED",
+    "starting_head": null,
+    "final_head": null
+  },
+  "heads": {
+    "last_observed_local": "78bf83057bbdddda11da783f4e77dcabb7362c17",
+    "last_observed_origin": "78bf83057bbdddda11da783f4e77dcabb7362c17"
+  },
+  "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
+  "frozen_boundary_check": "all 30 blobs unchanged vs 243db393"
+}
