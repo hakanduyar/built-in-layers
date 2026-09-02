@@ -47,3 +47,31 @@ Defects found: (1) stale live `nextSlug` projection in `tests/tools/project-inve
 May architecture acceptance criteria be FROZEN: NO
 If NO, exactly what must change first: Remove `nextSlug` from the active inventory extractor and reconcile or explicitly label its generated snapshot; update current architecture/inventory docs and the stale component-tree/route references to the implemented D-027 contract; add a fixture-backed test through `getPublishedProjects()` proving duplicate published orders fail; optionally make the page spacing wrapper conditional. Then rerun the full browser suite and re-review the two unrelated WebKit failures before freezing.
 Next owner: OPUS
+
+## Confirmation review
+
+Reviewed candidate SHA: `bc2dad371651ef350f65658d6d5df37e623bc372` on
+`feature/project-architecture-v13`. Scope was limited to the four return conditions.
+
+1. **Inventory projection — MET.** `tests/tools/project-inventory.mjs` no longer emits
+   `nextSlug`. A UTF-8 byte-accurate execution of the extractor matches
+   `docs/review/v13-inventory/metrics/project-inventory.json` exactly; the diff removes the five
+   stale emitted fields.
+2. **Documentation — MET.** `docs/PROJECT_ARCHITECTURE.md` now identifies Slice 0/1 as
+   implemented, routes the current pipeline through `sortByOrder`, names
+   `getCaseStudyNeighbours`/`ProjectNeighbours`, and records the owner's approval of both
+   previous and next navigation. Its remaining NOT-frozen status is correct pending this review.
+3. **Duplicate-order loader coverage — MET.** The two new published fixtures both use `order: 7`;
+   the focused `tests/unit/project-order.test.ts` run passed 15/15 and exercises
+   `getPublishedProjects(fixtureDir)` throwing with the duplicate order and both slugs.
+4. **Browser suite — MET.** I did not rerun the full browser suite. I reviewed the candidate
+   commit's recorded Chromium `214/214` and WebKit `212/214` run, independently confirmed both
+   configured projects enumerate 214 tests, and confirmed neither the E2E suite nor the two named
+   failure tests changed since `1bea2aa`. Existing repository records and the candidate report
+   identify `shell.spec.ts:35` as the known skip-link failure and `spatial.spec.ts:265` as the
+   software-rendering contention case that passes serially.
+
+New defects in this four-condition confirmation: none.
+
+MAY ACCEPTANCE CRITERIA BE FROZEN: YES
+Next owner: FABLE

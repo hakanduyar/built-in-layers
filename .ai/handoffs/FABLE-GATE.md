@@ -1,185 +1,131 @@
-# FABLE GATE 1 — DESKTOP FINAL ART DIRECTION (DropSpot + lower homepage)
+MODEL: claude-fable-5-1 (Fable 5.1)
+EFFORT: max
+RUNNER: Claude CLI
 
-**Raised by:** Opus 5 (High), autonomous engineering supervisor
-**Date:** 2026-08-31
-**Branch:** `feature/spatial-portfolio-v5`
-**HEAD at gate:** see `git log -1` (checkpoint committed immediately before this gate)
-**Model requested:** Claude Fable 5 — `ultracode - xhigh+workflows`
+# FABLE GATE — FINAL ART DIRECTION
 
----
+> Supersedes the 2026-08-31 Fable Gate 1 brief, whose starting state (`.ai/handoffs/OPUS-RETURN.md`)
+> is now three system passes old. Written from the actual current HEAD.
 
-## 1. Why this is a gate and not more engineering
+You own **art direction, visual coherence, spatial experience and case-study presentation quality**.
+You do not own correctness or system architecture — that was settled by two independent reviews and
+is frozen. Your question is the one a test suite cannot answer:
 
-Before raising it I ran an adversarial refutation panel (4 independent lenses) whose explicit job
-was to prove the remaining problems were mechanical and that this gate was premature. **It partly
-succeeded, and I acted on everything it found.** Two real mechanical defects were discovered and
-are now fixed (§3). What survived refutation is stated in §4 and is genuinely compositional.
+**Does this actually look and feel finished?**
 
-I am not asking for a redesign. I am asking for **decisions** on a small number of questions that
-measurement cannot settle.
+## 0. State
 
----
-
-## 2. The human feedback still outstanding
-
-From the owner's last review, verbatim in substance:
-
-- DropSpot screenshot **width was acceptable** — do not widen further.
-- Screenshot/evidence **vertical presence is still too short**.
-- The pale supporting **world plane looked badly / arbitrarily aligned**.
-- **Kıvılcım is the quality benchmark**; DropSpot was **not** approved.
-- The **lower half** still feels weaker than Kıvılcım / SYSTEMS / UNDERNEATH.
-- POI / The Machine / Samaritan influence must come from **structure and behaviour** — state,
-  acquisition, route, topology, classification, resolution, layer relationships — **never** from
-  HUD decoration, fake telemetry, arbitrary coordinates or sci-fi clutter.
-
----
-
-## 3. Mechanical defects I already found and fixed (do not re-litigate)
-
-| Defect | Evidence | Fix |
-|---|---|---|
-| **Plane right edge registered to nothing** — the code claimed it landed on "91vw"; after an earlier vw→scene-fraction conversion that arithmetic was stale and the edge sat **57–70px adrift** (x1367 vs scene block x1297) | measured at 1440 and 2552 | `width` 0.85 → **0.79** so `offset.x + width == 1.00` scene units — the right edge now registers **exactly** on the scene block's right edge, at every viewport by construction (measured 1296 vs 1297) |
-| **Every project plane was floored at opacity 0.14 forever** — `sceneProximity` returns exactly 0 outside a scene's window, so the DropSpot plane stayed painted inside the **frozen Kıvılcım frame**, and DropSpot's `offset.x` had been pushed 0.14→0.21 purely to dodge that leak, costing 82px of its own ground | plane[dropspot] opacity **0.140** at kivilcim-focus | presence is now `0.66 * max(0, near)` — **identical at focus** (0.66), decays to **0.000** out of window. One plane's placement is no longer hostage to another's leak. |
-| Reduced-motion **hydration failure** (React #418) regenerating the whole lower page | server `translateX(…0.04…)` vs client `…0.22…` | new `useSettledReducedMotion()`; applied to `EditorialDrift`, `AboutPreview`, `SystemNode` |
-| `Target ref is defined but not hydrated` | `useScroll` targeted `spacerRef`, which only exists in the enhanced tree | target supplied only while `enhanced` |
-
-**Verified after the fixes:** Kıvılcım focus frame is **pixel-identical** (0 pixels differ >2/255 at
-1440; 29 px at ≤4/255 at 2552 = antialiasing). Production and reduced-motion consoles clean.
-typecheck / lint / prettier clean, unit **491/491**, build 14/14, overflow **0px** at
-320/375/768/1024/1440/2552 in both motion modes.
-
-**`offset.x = 0.21` is now free.** It was a collision constant; with the opacity floor gone it can
-return toward 0.14 (or anywhere) purely on compositional merit. That is one of your levers.
-
----
-
-## 4. What genuinely remains — the questions only art direction can answer
-
-### Q1. The evidence-height problem is an ASPECT-RATIO problem, and every solution costs something
-
-Hard arithmetic, measured at 1440×900, DropSpot focus:
-
-| | asset | intrinsic AR | rendered at accepted width | height as % of viewport |
-|---|---|---|---|---|
-| **Kıvılcım (benchmark)** | `local-first-architecture.svg` | **1.600** | 833×**521** | **57.9%** |
-| DropSpot primary | `browse-drops.webp` | **2.198** | 887×**403** | 44.8% |
-| DropSpot secondary | `drop-detail.webp` | 2.068 | 556×269 | 29.9% |
-
-At a fixed 887px width, `height = 887 / AR`. Matching the benchmark's 521px requires **AR 1.703**.
-**Every** DropSpot real screenshot is 2.068–2.324. The shallowest is 2.068. So:
-
-> No non-cropping, non-distorting change can make a **real DropSpot screenshot** as tall as
-> Kıvılcım's diagram at the accepted width. That is arithmetic, not a bug.
-> (Verified: `object-fit` is `fill` and rendered AR == intrinsic AR to 3 decimals at every beat —
-> there is no crop bug, no distortion, no container bug to fix.)
-
-Also worth knowing, because it re-frames the complaint: the evidence **group** already spans 539px
-against Kıvılcım's 557px figure — only **3.2% apart**. What is short is the largest **continuous**
-plate: 439px vs 557px, a **118px** gap. The perceived deficit is about one dominant mass, not total
-extent.
-
-**The three real options, with their true prices — pick one:**
-
-- **(a) Crop to the benchmark ratio.** An opt-in `frameRatio` prop on `Figure` + `object-fit: cover`
-  hits **exactly 521px** at the current width, no widening, no distortion, Kıvılcım untouched.
-  **Price:** 22.5% of the screenshot's width (≈316 of 1400 source px) leaves the frame — roughly
-  0.7 of a product card. The D-019 caption says *"browsing drops with waitlist status visible"*, so
-  the crop window must keep that true. A half-measure at AR 1.928 gives 460px (+57px) for a 12.3%
-  crop. **Choosing the crop window is a design decision, not a layout one.**
-- **(b) Change what the secondary slot holds.** DropSpot registers three **1600×1000 (AR 1.600)**
-  verified diagrams. One in the secondary slot renders **556×348** instead of 269 — **+79px of
-  real, uncropped evidence**. **Price:** the pair stops arguing *surface + surface* and starts
-  arguing *surface + system*. Arguably on-message for this site; still an editorial call.
-- **(c) Change the lead asset to a diagram.** Reaches **554px** — taller than the benchmark, zero
-  crop. **Price:** the scene's declared identity. Its marker literally reads `REAL SCREENSHOT`;
-  `representativeAsset()` prefers real screenshots deliberately and a unit test pins it. A
-  diagram-led DropSpot risks becoming Kıvılcım-with-a-different-diagram, which the component
-  contract explicitly forbids. **I recommend against (c)** but record it because it is available.
-
-Positional levers alone are exhausted: every overlap/gap/padding retune is ceiling-bound at about
-**+6%**, and the group's bottom (y852) is already **48px** from the camera's clip edge.
-
-**Also measured, yours to judge:** the secondary shot currently occludes **15.6%** of the primary.
-Reducing that is a one-line offset change — but *how much* evidence should overlap is composition.
-
-### Q2. The plane's VERTICAL placement has no derivable anchor
-
-Horizontal registration is now solved and provably correct (§3). But `offset.y = 0.22` and
-`height = 0.45` register to nothing and **cannot** be derived — the panel confirmed only a feasible
-band exists, not a correct value. What should the plane's top and bottom relate to: the primary
-media's top? the identity block's baseline? the scene block's bottom? Should it read as *ground the
-evidence stands on*, or as *a surface the evidence hangs in front of*? That is your call.
-
-### Q3. The lower half, still weaker than the top
-
-Built for Real Life · How I Build · Field Notes · About · Back on the Surface · the CTA finale.
-Current state is captured in the artifacts. The specific question: these were rebuilt into
-two-axis registers in an earlier pass, and they are *tidy* — but the owner still reads them as
-weaker than Kıvılcım / SYSTEMS / UNDERNEATH. What is the actual compositional idea that makes the
-lower page belong to the same system, expressed through **structure and behaviour** rather than
-added marks?
-
----
-
-## 5. FROZEN — do not touch
-
-- **Kıvılcım** — composition, plane, and its 1440 focus frame is a pixel gate.
-- **SYSTEMS** — core concept and intact typography.
-- **The deterministic bidirectional black transition** and its state machine.
-- **UNDERNEATH** core composition.
-- **The main spatial diagonal route** and its geometry.
-- The **opening glide** (`glideStep` / `ENTRY_GLIDE_TO`).
-- Do **not** change Kıvılcım to make DropSpot easier.
-- Do **not** invent project facts, metrics, or diagrams (`CLAUDE.md` §11). Missing facts go to
-  `docs/CONTENT_GAPS.md`.
-
----
-
-## 6. Files you will most likely touch
-
-| File | Role |
+| | |
 |---|---|
-| `components/spatial/SpatialProjectScene.tsx` | the `stacked` branch **is** DropSpot's composition; `secondary` selection at ~L61; pair geometry at ~L204; reserved extent ~L210 |
-| `components/spatial/SpatialCamera.tsx` | the two `ProjectPlane` instances (~L745–825) |
-| `components/spatial/ProjectPlane.tsx` | plane placement + presence model |
-| `components/ui/Figure.tsx` | shared media primitive — **also renders frozen Kıvılcım**, so any change must be prop-gated and default to today's behaviour |
-| `components/sections/*.tsx` | the lower-half sections |
-| `components/layout/SiteFooter.tsx` | the CTA finale |
+| Repository | `C:\GitHub\portfolio` |
+| Branch | `feature/project-architecture-v13` |
+| HEAD | `bc2dad371651ef350f65658d6d5df37e623bc372` — verify with `git rev-parse HEAD` |
+| Base | `243db393` — the V12 desktop freeze |
+| Frozen branch | `feature/spatial-portfolio-v5` @ `243db393` — **do not touch** |
+| `main` | `16d3ec0` — **do not touch** |
+| Tree | clean except untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB V12 recovery bundle — **do not delete**) |
 
----
+Validation at HEAD: typecheck, lint, Prettier clean; unit 521/521; build 15/15; Chromium 214/214;
+WebKit 212/214 with two classified pre-existing failures.
 
-## 7. Acceptance criteria
+## 1. Read first
 
-1. DropSpot reads as deliberately composed at **1440×900 and 2552×1200**, at **all four beats**
-   (entry / mid / focus / exit) — not only at focus.
-2. The evidence has real vertical presence; if that costs a crop, the crop keeps the caption true.
-3. The plane reads as an intentional spatial object with legible registration — its horizontal
-   registration is already exact, so this is about the vertical relationship.
-4. Kıvılcım's 1440 focus frame stays **pixel-identical** (the gate I will re-run).
-5. Nothing in §5 regresses.
-6. No filler, no HUD decoration, no fake telemetry, no invented facts.
-7. The lower half belongs to the same system as the top.
+| Path | Why |
+|---|---|
+| `docs/DESKTOP_FREEZE_ACCEPTANCE.md` | What the V12 desktop freeze measured and accepted |
+| `docs/FROZEN_BOUNDARY.md` | **30 fingerprinted files you must not edit without cause** |
+| `docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md` | The architecture criteria frozen 2026-09-03 |
+| `docs/DECISIONS.md` D-019, D-021, D-022…D-027 | Standing decisions |
+| `docs/DESIGN_SYSTEM.md` §32–§36 | The visual language and its history |
+| `docs/CONTENT_GAPS.md` | What is unverified — never fill a gap by inventing |
+| `docs/review/v12-codex-gate/` | 221 existing artifacts: stills at 5 viewports, zoom, phases, sharpness, recordings |
 
----
+## 2. Render it yourself
 
-## 8. Artifacts
+Do not trust anyone's PASS, including mine. `pnpm build && pnpm start` (port 3000 may be held by a
+stale process — use another port). Then actually watch it: scroll naturally, scroll hard, reverse,
+scrub the recordings, at **1366, 1440, 1536, 1920, 2560** and at 100/80/67/50% zoom.
 
-- **Before fixes:** `/home/hakan/spatial-fable-gate1-evidence/*.png` — 5 beats × 2 viewports
-  (`01-kivilcim-focus-BENCHMARK` is the frozen benchmark).
-- **After my mechanical fixes:** `/home/hakan/spatial-fable-gate1-evidence/after/*.png` — same set.
-- Measurement scripts (re-runnable against a server on :3608):
-  `p3-measure.mjs` (beat geometry), `p3-anchors.mjs` (alignment anchors), `p3-shots.mjs` (captures),
-  `overflow-check.mjs`, `p2-runtime.mjs` (console/lifecycle/a11y) — all in the session scratchpad
-  `/tmp/claude-1000/-home-hakan-GitHub-portfolio/712926f4-1179-4197-a46f-9b0b1f08f6bf/scratchpad/`.
+## 3. Judge
 
----
+**Homepage journey** — 01 Software Factory → 02 Kıvılcım → 03 JointLedger → 04 DropSpot →
+05 SYSTEMS, then the lower world. Does each destination get its own moment: ARRIVE → EXPERIENCE →
+DEPART → TRAVEL → ACQUIRE NEXT? Does 1366/1440 feel intentional rather than a cramped fallback?
+Does 2560 feel expansive without going empty?
 
-## 9. Return contract
+**Project grounds** — judge the *visual behaviour*, not the abstraction's name. Required perception:
+ground **leads** on entry → **resolves** with the foreground at focus → **trails** on exit. If it
+still reads as "a beige rectangle moving behind a card", it fails. Refining timing, scale or
+composition is yours; reverting to four hardcoded offsets is not.
 
-Write `.ai/handoffs/OPUS-RETURN.md` containing: what you changed and why; which of Q1's options you
-chose and the price you accepted; the compositional rule you applied to Q2; your approach to Q3;
-any file you touched that is shared with a frozen area and how you proved no regression; and the
-artifacts you captured. Opus then independently re-validates (typecheck, lint, prettier, unit,
-build, Chromium, WebKit where practical, reduced motion, keyboard/focus, overflow, the Kıvılcım
-pixel gate), fixes mechanical regressions itself, and checkpoints + pushes.
+**Project roles** — Software Factory must feel flagship/foundational and systemic (do **not** force
+fake UI screenshots; architecture and workflow evidence is stronger and truthful). Kıvılcım's strong
+foreground is preserved. JointLedger must feel first-class, not connective filler. DropSpot keeps
+its full uncropped evidence. Professional Systems keeps its publication-safe preview role.
+
+**Case-study pages** — newly reworked, and never art-directed. `/work/kivilcim`, `/work/jointledger`,
+`/work/dropspot` now carry derived previous/next navigation; `/work/software-factory` and
+`/work/professional-systems` deliberately carry none. Judge hierarchy, evidence presentation,
+diagram treatment, typography, density, rhythm, and whether the pages feel related without being
+cloned. **Truthfully asymmetric evidence must still look deliberately designed** — visual
+consistency does not mean identical evidence slots.
+
+**Lower world** — UNDERNEATH → transition → SELECTED SYSTEMS → HOW I BUILD → FIELD NOTES → ABOUT →
+CTA. No dead route, no arbitrary pale rectangles, every section with a reason to exist, CTA as final
+system state. Negative space is welcome; dead space is not.
+
+**Motion** — controlled, not violent, no scene-blasting, natural reverse, diagonal and vertical
+feeling like one system, text and images optically sharp *while moving*.
+
+## 4. Preserve
+
+Hero identity; Kıvılcım's foreground; SYSTEMS intact typography and its surface-opening concept;
+UNDERNEATH; the deterministic geometric transition; the warm off-white restrained language;
+system intelligence expressed through focus/route/state rather than sci-fi decoration.
+
+Previously rejected and must not return: wall collision or recoil, eroded/damaged SYSTEMS
+typography, peeling or hatch gimmicks, HUD clutter, fake telemetry or coordinates, arbitrary pale
+filler boxes, fake code, decorative technical noise.
+
+## 5. Authority
+
+You MAY: inspect, render, capture, iterate visually, edit presentation code, and commit and push
+`feature/project-architecture-v13`.
+
+You MAY NOT: merge or touch `main`; touch `feature/spatial-portfolio-v5`; force push; rewrite
+history; delete the V12 bundle; invent any project fact, screenshot, metric, timeline or URL;
+weaken tests; or rewrite the scroll physics or ordering/navigation architecture for visual novelty.
+
+Editing a file fingerprinted in `docs/FROZEN_BOUNDARY.md` §1 requires a stated visual reason and
+the same standard the freeze was granted under: evidence, not preference. Say so explicitly when
+you do it.
+
+Iterate internally — RENDER → WATCH → CRITIQUE → MODIFY → RENDER → COMPARE → REFUTE → REFINE. Do
+not stop after one pass and do not ask for approval between iterations. If several small coordinate
+tweaks fail to fix the same thing, question the composition instead of tweaking again.
+
+If you find an objective engineering regression, **document it — do not paper over it with a visual
+trick.** It goes to the final engineering QA.
+
+## 6. Required output
+
+Create `.ai/handoffs/FABLE-RETURN.md`: starting HEAD, final HEAD, exact model, exact effort,
+art-direction findings, changes made, architecture deliberately preserved, frozen areas preserved,
+artifacts produced, remaining objective engineering findings, and the verdict.
+
+End your final message with exactly:
+
+```
+FABLE ART DIRECTION:
+FREEZE
+```
+
+or
+
+```
+FABLE ART DIRECTION:
+NOT READY
+```
+
+Do not report FREEZE because the implementation is technically correct. Report FREEZE only if the
+actual desktop experience looks and feels like a finished premium portfolio.

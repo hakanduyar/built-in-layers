@@ -12,3 +12,8 @@
 2026-09-02 23:0x  FABLE/probe      Fable 5.1 AVAILABLE as claude-fable-5-1. Self-reports that id; a bogus control model is rejected by the API, so acceptance is meaningful. Not a blocker.
 2026-09-02 23:0x  ORCHESTRATOR     Persistent state established: state.json, AUTONOMOUS_PIPELINE_STATE.md, pipeline-watchdog.ps1 (observation only).
 2026-09-02 23:1x  CODEX/slice      Review RUNNING. Fresh session 01a063b6-1ab1-7cb2-bbbc-6afb28c778f6, gpt-5.6-luna, xhigh, candidate 78bf8305 (+ orchestrator commit 1bea2aa).
+2026-09-02 23:42  CODEX/slice      COMPLETE. ACCEPT WITH CHANGES on 1bea2aa. 4 defects + wider-e2e gap found. Session 01a063b6.
+2026-09-03 00:0x  OPUS/fixes       All 4 fixed at bc2dad3. Full suite run: Chromium 214/214, WebKit 212/214 (both pre-existing, classified).
+2026-09-03 00:1x  CODEX/confirm    Session 01a063f1. All 4 conditions MET, no new defects. MAY FREEZE: YES. Next owner: FABLE.
+2026-09-03 00:1x  ORCHESTRATOR     Architecture acceptance criteria FROZEN at bc2dad3 -> docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md
+2026-09-03 00:1x  FABLE            Gate rewritten from current HEAD (superseding the 2026-08-31 brief). Launching claude-fable-5-1, effort max.

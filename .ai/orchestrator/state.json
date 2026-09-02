@@ -5,8 +5,8 @@
     "OPUS_FINAL_QA",
     "DESKTOP_FREEZE_CANDIDATE"
   ],
-  "current_stage": "CODEX",
-  "current_substage": "SLICE_0_1_RE_REVIEW",
+  "current_stage": "FABLE_5_1",
+  "current_substage": "LAUNCHING",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -33,25 +33,27 @@
     },
     "slice_re_review": {
       "session_id": "01a063b6-1ab1-7cb2-bbbc-6afb28c778f6",
-      "status": "RUNNING",
+      "status": "COMPLETE",
       "reviewed_sha": "78bf83057bbdddda11da783f4e77dcabb7362c17",
       "gate": ".ai/handoffs/CODEX-SLICE-GATE.md",
-      "return": ".ai/handoffs/CODEX-SLICE-RETURN.md"
+      "return": ".ai/handoffs/CODEX-SLICE-RETURN.md",
+      "verdict": "ACCEPT WITH CHANGES -> all conditions MET on confirmation (session 01a063f1); criteria FROZEN"
     },
     "quota": {
       "state": "AVAILABLE",
       "last_exhausted_reset": "2026-09-02T14:57:00",
       "note": "Quota exhaustion is PAUSED_FOR_QUOTA, never FAILED. Resume the same session id."
-    }
+    },
+    "confirmation_session_id": "01a063f1-8cff-7f02-9a8c-870c24c254e7"
   },
   "fable": {
     "model": "claude-fable-5-1",
     "availability": "CONFIRMED",
     "availability_evidence": "claude --model claude-fable-5-1 returns completions and self-reports claude-fable-5-1; a bogus control model name is rejected by the API, so acceptance is meaningful",
-    "effort": "highest supported",
+    "effort": "max",
     "session_id": null,
     "status": "NOT_STARTED",
-    "starting_head": null,
+    "starting_head": "bc2dad371651ef350f65658d6d5df37e623bc372",
     "final_head": null,
     "gate": ".ai/handoffs/FABLE-GATE.md",
     "return": ".ai/handoffs/FABLE-RETURN.md"
@@ -62,9 +64,14 @@
     "final_head": null
   },
   "heads": {
-    "last_observed_local": "1bea2aabc406a00eaa8a9ef2a715aaf5c30d2fdb",
-    "last_observed_origin": "1bea2aabc406a00eaa8a9ef2a715aaf5c30d2fdb"
+    "last_observed_local": "bc2dad371651ef350f65658d6d5df37e623bc372",
+    "last_observed_origin": "bc2dad371651ef350f65658d6d5df37e623bc372"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
-  "frozen_boundary_check": "all 30 blobs unchanged vs 243db393"
+  "frozen_boundary_check": "all 30 blobs unchanged vs 243db393",
+  "acceptance_criteria": {
+    "status": "FROZEN",
+    "at": "bc2dad371651ef350f65658d6d5df37e623bc372",
+    "doc": "docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md"
+  }
 }
