@@ -85,7 +85,6 @@ decisions:
         "A one-shot script assumed to run exactly once against a database with no existing book data",
       ]
     tradeoff: "More defensive code — an existence check before every insert — for a backfill that can be run any number of times, against any mix of already-migrated and not-yet-migrated users, without creating a duplicate book or double-processing already-scoped rows; directly exercised by a dedicated idempotency test."
-nextSlug: "professional-systems"
 ---
 
 ## One-minute summary

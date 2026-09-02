@@ -162,14 +162,17 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
     expect(bodyText).not.toContain("/home/");
   });
 
-  test("Next project link points at the now-published DropSpot, not at a draft or 404 route", async ({
-    page,
-  }) => {
+  // D-027: navigation is derived from the global `order` sequence.
+  // Kivilcim is the first case-study destination, so it has a next and no
+  // previous.
+  test("derived navigation offers JointLedger next and no previous", async ({ page }) => {
     await page.goto("/work/kivilcim");
-    const nextLink = page.locator("a[href='/work/dropspot']");
-    await expect(nextLink).toBeVisible();
-    await expect(page.getByText("Next project")).toBeVisible();
-    const response = await page.goto("/work/dropspot");
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByText("Next project")).toBeVisible();
+    await expect(nav.getByText("Previous project")).toHaveCount(0);
+    await expect(nav.locator("a[href='/work/jointledger']")).toBeVisible();
+    const response = await page.goto("/work/jointledger");
     expect(response?.status()).toBe(200);
   });
 
@@ -311,13 +314,15 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]?admin123|user123/);
   });
 
-  test("Next project link points at the published JointLedger, never at a 404 route", async ({
-    page,
-  }) => {
+  // DropSpot is the last case-study destination: previous, but no next, and
+  // never a wrap-around back to the first.
+  test("derived navigation offers JointLedger previous and no next", async ({ page }) => {
     await page.goto("/work/dropspot");
-    await expect(page.getByText("Next project")).toBeVisible();
-    const nextLink = page.locator("a[href='/work/jointledger']");
-    await expect(nextLink).toBeVisible();
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByText("Previous project")).toBeVisible();
+    await expect(nav.getByText("Next project")).toHaveCount(0);
+    await expect(nav.locator("a[href='/work/jointledger']")).toBeVisible();
     const response = await page.request.get("/work/jointledger");
     expect(response.status()).toBe(200);
   });
@@ -431,15 +436,20 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
     expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]/);
   });
 
-  test("Next project link points at the published Professional Systems, never at a 404 route", async ({
+  // JointLedger sits between two destinations, so both directions render.
+  // Professional Systems is a preview index with no case study, so it must
+  // NOT appear in this navigation even though it is published and ordered
+  // immediately after DropSpot.
+  test("derived navigation offers both directions and excludes the preview index", async ({
     page,
   }) => {
     await page.goto("/work/jointledger");
-    await expect(page.getByText("Next project")).toBeVisible();
-    const nextLink = page.locator("a[href='/work/professional-systems']");
-    await expect(nextLink).toBeVisible();
-    const response = await page.request.get("/work/professional-systems");
-    expect(response.status()).toBe(200);
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav.getByText("Previous project")).toBeVisible();
+    await expect(nav.getByText("Next project")).toBeVisible();
+    await expect(nav.locator("a[href='/work/kivilcim']")).toBeVisible();
+    await expect(nav.locator("a[href='/work/dropspot']")).toBeVisible();
+    await expect(nav.locator("a[href='/work/professional-systems']")).toHaveCount(0);
   });
 
   for (const width of [375, 768, 1024, 1440]) {

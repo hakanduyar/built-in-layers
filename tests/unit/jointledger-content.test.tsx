@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { CaseStudyHero } from "@/components/project/CaseStudyHero";
 import { DecisionList } from "@/components/project/DecisionList";
 import { LayerSection } from "@/components/project/LayerSection";
-import { NextProject } from "@/components/project/NextProject";
+import { ProjectNeighbours } from "@/components/project/ProjectNeighbours";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { ProjectFrontmatterSchema } from "@/lib/content/schemas";
 import {
@@ -15,7 +15,12 @@ import {
   containsContentRequiredMarker,
   validatePublicationGates,
 } from "@/lib/content/validate";
-import { getProjectBySlug, getProjectIndexBody, getProjectLayers } from "@/lib/content/work";
+import {
+  getCaseStudyNeighbours,
+  getProjectBySlug,
+  getProjectIndexBody,
+  getProjectLayers,
+} from "@/lib/content/work";
 
 // Real content, not a fixture — this is the JointLedger publication pass's
 // entry itself. Published under D-019/CONTENT_MODEL §9: repository claims
@@ -254,15 +259,18 @@ describe("JointLedger real content — genuine semantic rendering of the full te
     expect(decisionsHtml).toContain("Personal books use the owner");
     expect(decisionsHtml).toContain("own user id as the book id");
 
-    // Kıvılcım -> DropSpot -> JointLedger -> Professional Systems: JointLedger
-    // must point at the genuinely-public Professional Systems, never at a
-    // draft or nonexistent route.
-    expect(project.nextSlug).toBe("professional-systems");
-    const nextProject = getProjectBySlug(project.nextSlug ?? "");
-    expect(nextProject).toBeDefined();
-    if (!nextProject) return;
-    expect(nextProject.status).toBe("published");
-    const nextHtml = renderToStaticMarkup(<NextProject project={nextProject} />);
-    expect(nextHtml).toContain("Professional Systems");
+    // D-027: both directions derive from the global `order` sequence.
+    // JointLedger is order 2, between Kıvılcım (1) and DropSpot (3).
+    // Professional Systems is NOT a neighbour: it is a preview index with no
+    // case-study destination, so it never enters this navigation.
+    const { previous, next } = getCaseStudyNeighbours(project.slug);
+    expect(previous?.slug).toBe("kivilcim");
+    expect(next?.slug).toBe("dropspot");
+    expect(previous?.status).toBe("published");
+    expect(next?.status).toBe("published");
+    const navHtml = renderToStaticMarkup(<ProjectNeighbours previous={previous} next={next} />);
+    expect(navHtml).toContain("Kıvılcım");
+    expect(navHtml).toContain("DropSpot");
+    expect(navHtml).not.toContain("Professional Systems");
   });
 });

@@ -119,7 +119,6 @@ const ProjectFrontmatterBaseSchema = z.object({
 
   layers: ProjectLayersSchema.optional(),
   decisions: z.array(ProjectDecisionSchema).optional(),
-  nextSlug: z.string().optional(),
 });
 
 export const ProjectFrontmatterSchema = ProjectFrontmatterBaseSchema.superRefine((data, ctx) => {

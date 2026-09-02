@@ -282,6 +282,34 @@ export type PublishedContentCheck = {
   layerBodies?: LayerBodies;
 };
 
+/**
+ * Ordering gate (D-027): `order` is a single global editorial sequence, so it
+ * must be unique across published projects.
+ *
+ * This is a cross-project rule, so it cannot live in the per-project gate.
+ * Without it, two entries sharing an `order` would sort by whatever
+ * `Array.prototype.sort` happened to do — an undocumented tie-breaker
+ * silently deciding editorial sequence, and therefore also deciding
+ * previous/next navigation. Duplicates fail the build instead.
+ */
+export function checkUniqueOrder(
+  projects: ReadonlyArray<Pick<ProjectFrontmatter, "slug" | "order">>,
+): GateError[] {
+  const bySlug = new Map<number, string[]>();
+  for (const { slug, order } of projects) {
+    bySlug.set(order, [...(bySlug.get(order) ?? []), slug]);
+  }
+
+  return [...bySlug.entries()]
+    .filter(([, slugs]) => slugs.length > 1)
+    .sort((a, b) => a[0] - b[0])
+    .map(([order, slugs]) => ({
+      slug: [...slugs].sort()[0]!,
+      file: "index.mdx",
+      rule: `order ${order} is used by more than one published project (${[...slugs].sort().join(", ")}); order must be globally unique`,
+    }));
+}
+
 /** Master publication gate for a single `status: "published"` project.
  *  Returns every failing rule, each identifying the project, file, and rule
  *  — never just a boolean. Never called for `status: "draft"` content. */

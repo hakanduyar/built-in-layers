@@ -31,7 +31,8 @@ ProjectFrontmatter = {
   description: string,               // one sentence, ≤160 chars
   tier: Tier,
   depth: CaseStudyDepth,
-  order: number,                     // sort position within tier
+  order: number,                     // GLOBAL editorial position (D-027); unique across
+                                     // published projects, never per-tier
 
   // Truthfulness
   provenance: Provenance,
@@ -84,7 +85,6 @@ ProjectFrontmatter = {
     alternatives: string[],
     tradeoff: string
   }>,
-  nextSlug?: string                  // "next project" link; must exist if set
 }
 ```
 

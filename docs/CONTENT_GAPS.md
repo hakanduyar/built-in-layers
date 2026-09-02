@@ -89,3 +89,25 @@ support one. What is missing before it can carry more:
 - whether any interface evidence can be shown at all, even anonymised
 
 Until then it stays compact. That is the honest presentation, not a placeholder.
+
+## Evidence gaps recorded by owner decision (2026-09-02)
+
+These are open questions, not defects. Per the owner's content rule, none of them blocks
+architecture, ordering, navigation, the project data model, the case-study framework or
+evidence-slot design — they block only the content that would otherwise have to be fabricated.
+
+| # | Gap | Status | Blocks |
+|---|---|---|---|
+| 1 | Software Factory screenshot availability | Not yet verified. Must be established by inspecting the real repository/runtime, not assumed. If there is no meaningful product UI, do **not** force screenshot parity — use verified architecture/workflow/topology/state diagrams. | Evidence selection for the flagship |
+| 2 | Verified Software Factory public architecture depth | Approved in principle at public logical/system-architecture level: role boundaries, workflow orchestration, review/release gates, proof lineage, state transitions, module relationships, topology, verified data/control flow, decisions and trade-offs, verification model. Every claim must be verified against actual source — never inferred from portfolio copy. Never publish credentials, secrets, tokens, private endpoints, or confidential third-party detail. | Raising Software Factory above `depth: "preview"` |
+| 3 | Kıvılcım runnable screenshot state | Unverified. To be established by inspecting the actual project. Real screenshots if a runnable state exists; otherwise keep verified architectural evidence and fabricate nothing. | Evidence selection |
+| 4 | JointLedger runnable screenshot state | Unverified, same rule. | Evidence selection |
+| 5 | Verified timelines | No timeline policy or data established. Dates may be added only if verifiable from git history, repository history or project documentation. Never estimate for parity. | The optional `timeline` field |
+| 6 | Verified live/demo destinations | `https://github.com/hakanduyar/jointledger` is a **repository** link and must never be presented as a live application or demo. Kıvılcım, Software Factory and DropSpot have no verified live/demo URL. Repository, live and demo are distinct evidence types; if no verified destination exists, omit the field. | The optional `links` entries |
+
+### Navigation consequence of gap 2
+
+Under D-027, case-study previous/next navigation includes only projects whose `depth` is `full` or
+`short`. Software Factory is the flagship but is still `preview`, so it is **not** currently in that
+sequence and its page has no onward link. This is a content gap, not a navigation defect: closing
+gap 2 raises its depth and it enters the sequence automatically, with no code change.

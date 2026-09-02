@@ -484,3 +484,42 @@ Binding conditions attached to this approval — all already true of the current
   route, so page length is independent of it); solving isolation with opacity or visibility windows
   (explicitly ruled out, and it would have left the route too short underneath).
 - **Approval:** Hakan's explicit V11 final desktop system brief; implemented as directed.
+
+## D-027 — One global order, and navigation derived from it
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` and its descendants (2026-09-02, owner
+  decision). **Not** in force on `main`.
+- **Context:** two orderings of the same five projects disagreed. `order` and the frozen homepage
+  ran Software Factory → Kıvılcım → JointLedger → DropSpot; a hand-authored `nextSlug` chain ran
+  Kıvılcım → DropSpot → JointLedger → Professional Systems. D-021 had already named `order` "the
+  single source of truth", so the `nextSlug` values were stale sequencing left over from D-016's
+  order, not an approved editorial signal. An independent architecture review confirmed this.
+- **Decisions:**
+  1. **`order` is a single GLOBAL editorial sequence**, not a position within a tier. The
+     published order is Software Factory 0, Kıvılcım 1, JointLedger 2, DropSpot 3, Professional
+     Systems 4. Tier may drive visual treatment, prominence and depth policy; it must never
+     silently reorder.
+  2. **`order` must be unique** across published projects. Duplicates fail the build
+     (`checkUniqueOrder`) rather than resolving through an undocumented sort tie-breaker.
+  3. **`sortByTierThenOrder` is renamed `sortByOrder`.** Its body was always a flat sort on
+     `order`; the old name asserted a two-key ordering the code never implemented and misled a
+     documentation pass into repeating the claim.
+  4. **`nextSlug` is removed** from the schema, from the three entries that carried it, and from
+     the test fixture. No manually-authored next-project graph returns unless a genuine non-linear
+     editorial requirement appears.
+  5. **Previous and next are derived** from one ordered collection, so they cannot disagree.
+     Boundaries are open — the first destination has no previous, the last has no next, and there
+     is no wrap-around, which would imply a cycle the editorial order does not have.
+  6. **Only case-study destinations participate.** A project enters the sequence when
+     `depth` is `full` or `short` — the same test `getProjectLayers` already uses. A preview index
+     such as Professional Systems has no case study, so offering it a position would invent a
+     relationship that does not exist.
+- **Consequence, accepted knowingly:** Software Factory is the flagship but is still
+  `depth: "preview"`, so it is not yet in the sequence and its page still has no onward link. It
+  joins automatically when its depth rises, with no code change. Recorded in `docs/CONTENT_GAPS.md`.
+- **Rejected:** keeping `nextSlug` as editorial sequencing (D-021 already settled the question);
+  adding a new `publicationRole` field to express eligibility (depth already draws that line, and a
+  second source of truth is what this decision exists to remove); tier-first sorting (owner
+  explicitly rejected it); memoising the publication gates to speed up derivation — measured at
+  ~1.2s per run either way, so the optimisation was removed rather than shipped unproven.
+- **Approval:** Hakan's owner-decision brief, 2026-09-02, sections B.4, B.5 and B.6.

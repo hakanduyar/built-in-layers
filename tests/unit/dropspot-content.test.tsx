@@ -14,7 +14,12 @@ import {
   containsContentRequiredMarker,
   validatePublicationGates,
 } from "@/lib/content/validate";
-import { getProjectBySlug, getProjectIndexBody, getProjectLayers } from "@/lib/content/work";
+import {
+  getCaseStudyNeighbours,
+  getProjectBySlug,
+  getProjectIndexBody,
+  getProjectLayers,
+} from "@/lib/content/work";
 
 // Real content, not a fixture — this is TASK-006's DropSpot entry itself.
 // Published under D-019 (docs/DECISIONS.md): text and repository claims are
@@ -258,9 +263,11 @@ describe("DropSpot real content — genuine semantic rendering of the full templ
     );
     expect(decisionsHtml).toContain("A deployment-unique seed for priority-score coefficients");
 
-    // nextSlug points at the now-published JointLedger (D-016 order:
-    // Kıvılcım -> DropSpot -> JointLedger -> Professional Systems) — never
-    // at a route that would 404.
-    expect(project.nextSlug).toBe("jointledger");
+    // D-027: the next case study is derived from the global `order`
+    // sequence, not authored here. DropSpot is order 3, so its neighbours
+    // are the case-study destinations either side of it.
+    const { previous, next } = getCaseStudyNeighbours(project.slug);
+    expect(previous?.slug).toBe("jointledger");
+    expect(next).toBeUndefined();
   });
 });

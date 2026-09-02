@@ -4,10 +4,11 @@ import { describe, expect, it } from "vitest";
 import { CaseStudyHero } from "@/components/project/CaseStudyHero";
 import { DecisionList } from "@/components/project/DecisionList";
 import { LayerSection } from "@/components/project/LayerSection";
-import { NextProject } from "@/components/project/NextProject";
+import { ProjectNeighbours } from "@/components/project/ProjectNeighbours";
 import { compileProjectMDX } from "@/lib/content/mdx";
 import {
   getAllProjects,
+  getCaseStudyNeighbours,
   getProjectBySlug,
   getProjectIndexBody,
   getProjectLayers,
@@ -147,10 +148,8 @@ describe("11-section case-study template (fixture proof, not public content)", (
     expect(layers).not.toBeNull();
     if (!layers) return;
 
-    expect(project.nextSlug).toBe("alpha");
-    const nextProject = project.nextSlug ? getProjectBySlug(project.nextSlug, GOOD) : undefined;
-    expect(nextProject).toBeDefined();
-    if (!nextProject) return;
+    // D-027: neighbours derive from the fixture set's own global order.
+    const { previous, next } = getCaseStudyNeighbours("delta-full", GOOD);
 
     expect(project.decisions).toBeDefined();
     if (!project.decisions) return;
@@ -165,7 +164,19 @@ describe("11-section case-study template (fixture proof, not public content)", (
       <LayerSection label="System">{layers.system}</LayerSection>,
     );
     const decisionsHtml = renderToStaticMarkup(<DecisionList decisions={project.decisions} />);
-    const nextHtml = renderToStaticMarkup(<NextProject project={nextProject} />);
+    // Section 11 renders both directions. delta-full is the only case-study
+    // destination in this fixture set (alpha/beta are preview, gamma is a
+    // draft), so it correctly has no neighbours of its own — proving the
+    // boundary case. The component itself is exercised with real fixture
+    // entries either side.
+    expect(previous).toBeUndefined();
+    expect(next).toBeUndefined();
+    const nextHtml = renderToStaticMarkup(
+      <ProjectNeighbours
+        previous={getProjectBySlug("beta", GOOD)}
+        next={getProjectBySlug("alpha", GOOD)}
+      />,
+    );
 
     // 1. Project hero
     expect(heroHtml).toContain("Delta Full");
@@ -190,8 +201,10 @@ describe("11-section case-study template (fixture proof, not public content)", (
     expect(bodyHtml).toContain("Evolution");
     // 10. Reflection
     expect(bodyHtml).toContain("Reflection");
-    // 11. Next project
+    // 11. Movement between case studies, both directions
     expect(nextHtml).toContain("Alpha");
+    expect(nextHtml).toContain("Previous project");
+    expect(nextHtml).toContain("Next project");
 
     // Restricted MDX component whitelist (Figure, Note, DecisionCallout) —
     // exercised inside the layer bodies themselves, proving the compiler

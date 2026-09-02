@@ -8,7 +8,11 @@ import {
   type ProjectFrontmatter,
   type Tier,
 } from "@/lib/content/schemas";
-import { formatGateError, validatePublicationGates } from "@/lib/content/validate";
+import {
+  checkUniqueOrder,
+  formatGateError,
+  validatePublicationGates,
+} from "@/lib/content/validate";
 
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content/work");
 
@@ -100,13 +104,28 @@ const parseAllProjects = cache((contentDir: string): ParsedProject[] => {
   });
 });
 
-function sortByTierThenOrder(projects: ProjectFrontmatter[]): ProjectFrontmatter[] {
+/**
+ * THE ORDERING CONTRACT (D-027, owner decision 2026-09-02).
+ *
+ * `order` is a single GLOBAL editorial sequence, not a position within a
+ * tier. It is the only ordering source: D-021 already named it "the single
+ * source of truth", and nothing may silently reorder around it.
+ *
+ * This function was previously called `sortByTierThenOrder`, a name that
+ * asserted a two-key sort its body never performed — it has always been a
+ * flat sort on `order`. Tier does not participate: `/work` groups by tier
+ * separately (`getProjectsByTier`), which is presentation, not ordering.
+ *
+ * `order` must be unique across published projects, enforced by
+ * `checkUniqueOrder`, so no tie-breaker is needed and none is implied.
+ */
+function sortByOrder(projects: ProjectFrontmatter[]): ProjectFrontmatter[] {
   return [...projects].sort((a, b) => a.order - b.order);
 }
 
 /** All projects regardless of status — includes drafts. Server-only. */
 export function getAllProjects(contentDir: string = DEFAULT_CONTENT_DIR): ProjectFrontmatter[] {
-  return sortByTierThenOrder(parseAllProjects(contentDir).map((entry) => entry.project));
+  return sortByOrder(parseAllProjects(contentDir).map((entry) => entry.project));
 }
 
 /**
@@ -144,7 +163,14 @@ export function getPublishedProjects(
     }
   }
 
-  return sortByTierThenOrder(published.map((entry) => entry.project));
+  // Cross-project ordering gate (D-027) — runs after the per-project gates so
+  // a duplicate `order` cannot quietly decide editorial sequence.
+  const orderErrors = checkUniqueOrder(published.map((entry) => entry.project));
+  if (orderErrors.length > 0) {
+    throw new Error(orderErrors.map(formatGateError).join("; "));
+  }
+
+  return sortByOrder(published.map((entry) => entry.project));
 }
 
 export function getProjectsByTier(
@@ -172,6 +198,58 @@ export function getProjectIndexBody(
   contentDir: string = DEFAULT_CONTENT_DIR,
 ): string | undefined {
   return parseAllProjects(contentDir).find((entry) => entry.project.slug === slug)?.indexBody;
+}
+
+/**
+ * Whether a project is a destination in case-study navigation.
+ *
+ * Owner decision (2026-09-02): a preview entry "must not automatically enter
+ * full case-study previous/next navigation unless it actually has a
+ * case-study destination". "Has a case study" is not a new idea needing a new
+ * field — the content model already draws that line at depth, and
+ * `getProjectLayers` uses the same test to decide whether case-study layers
+ * exist at all.
+ *
+ * Consequence, stated openly rather than hidden: Software Factory is the
+ * flagship but is still `depth: "preview"`, so it is NOT in this collection
+ * today and its case study still has no onward link. It joins automatically
+ * the moment its depth rises — no navigation code changes with it. Recorded
+ * in docs/CONTENT_GAPS.md.
+ */
+export function isCaseStudyDestination(project: ProjectFrontmatter): boolean {
+  return project.depth === "full" || project.depth === "short";
+}
+
+export type ProjectNeighbours = {
+  previous: ProjectFrontmatter | undefined;
+  next: ProjectFrontmatter | undefined;
+};
+
+/**
+ * Previous/next case studies, derived from the single global `order`
+ * sequence (D-027). Replaces the hand-authored `nextSlug` chain, which
+ * duplicated the ordering and had drifted out of agreement with it.
+ *
+ * Both directions come from the same collection, so they cannot disagree.
+ * Boundaries are open: the first destination has no previous, the last has
+ * no next — never a wrap-around, which would imply a cycle the editorial
+ * order does not have.
+ *
+ * A slug that is not itself a case-study destination gets no neighbours: it
+ * has no position in this sequence, so offering one would be an invention.
+ */
+export function getCaseStudyNeighbours(
+  slug: string,
+  contentDir: string = DEFAULT_CONTENT_DIR,
+): ProjectNeighbours {
+  const destinations = getPublishedProjects(contentDir).filter(isCaseStudyDestination);
+  const index = destinations.findIndex((project) => project.slug === slug);
+  if (index === -1) return { previous: undefined, next: undefined };
+
+  return {
+    previous: index > 0 ? destinations[index - 1] : undefined,
+    next: index < destinations.length - 1 ? destinations[index + 1] : undefined,
+  };
 }
 
 export type ProjectLayers = {

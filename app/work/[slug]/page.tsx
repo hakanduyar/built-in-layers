@@ -3,11 +3,12 @@ import { notFound } from "next/navigation";
 import { CaseStudyHero } from "@/components/project/CaseStudyHero";
 import { DecisionList } from "@/components/project/DecisionList";
 import { LayerExplorer } from "@/components/project/LayerExplorer";
-import { NextProject } from "@/components/project/NextProject";
+import { ProjectNeighbours } from "@/components/project/ProjectNeighbours";
 import { Container } from "@/components/ui/Container";
 import { TextLink } from "@/components/ui/TextLink";
 import { compileProjectMDX } from "@/lib/content/mdx";
 import {
+  getCaseStudyNeighbours,
   getPublishedProjects,
   getProjectBySlug,
   getProjectIndexBody,
@@ -59,7 +60,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const indexBody = getProjectIndexBody(slug);
   const indexContent = indexBody ? await compileProjectMDX(indexBody) : null;
   const layers = await getProjectLayers(slug);
-  const nextProject = project.nextSlug ? getProjectBySlug(project.nextSlug) : undefined;
+  const { previous, next } = getCaseStudyNeighbours(slug);
 
   return (
     <Container className="py-16">
@@ -115,12 +116,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       )}
 
-      {/* IA 11: Next project */}
-      {nextProject && (
-        <div className="mt-16">
-          <NextProject project={nextProject} />
-        </div>
-      )}
+      {/* IA 11: movement between case studies, derived from the global
+          `order` sequence (D-027) rather than an authored link. */}
+      <div className="mt-16">
+        <ProjectNeighbours previous={previous} next={next} />
+      </div>
     </Container>
   );
 }
