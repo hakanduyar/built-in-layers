@@ -17,3 +17,9 @@
 2026-09-03 00:1x  CODEX/confirm    Session 01a063f1. All 4 conditions MET, no new defects. MAY FREEZE: YES. Next owner: FABLE.
 2026-09-03 00:1x  ORCHESTRATOR     Architecture acceptance criteria FROZEN at bc2dad3 -> docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md
 2026-09-03 00:1x  FABLE            Gate rewritten from current HEAD (superseding the 2026-08-31 brief). Launching claude-fable-5-1, effort max.
+2026-09-03 00:2x  FABLE            RUNNING. claude-fable-5-1, effort max, permission-mode acceptEdits, starting HEAD a5da0ed.
+                                   Launch notes for recovery: bypassPermissions is blocked by this environment's classifier (acceptEdits works);
+                                   background stdin is detached so -p must receive the prompt as an argument via a launcher script, not a pipe.
+2026-09-03 01:07  FABLE            COMPLETE. Verdict NOT READY. Could not render: acceptEdits sandbox refused build/serve/test, Playwright MCP refused to connect. Judged from 221 V12 artifacts + code. Correctly committed nothing.
+2026-09-03 01:2x  OPUS/QA          Verified Fable's frozen-file claim INDEPENDENTLY by rendering. CONFIRMED: hero thesis clipped at 1920 (256px box for 309px of text) and effectively absent at 2560 (24px box). V12 missed it because ancestor clipping is not overflow.
+2026-09-03 01:3x  OPUS/QA          Fable's fix validated: 1366/1440/1536 numerically IDENTICAL to baseline; 1920 and 2560 now fit the full line with 27px clearance. typecheck/lint/prettier clean, 521/521 unit, build 15/15, Chromium 214/214.

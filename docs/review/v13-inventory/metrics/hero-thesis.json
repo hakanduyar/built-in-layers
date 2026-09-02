@@ -1,0 +1,75 @@
+{
+  "base": "http://127.0.0.1:3100",
+  "viewports": {
+    "1366x768": {
+      "found": true,
+      "text": "Interfaces on the surface. Systems underneath.",
+      "left": 566,
+      "right": 874,
+      "width": 308,
+      "scrollWidth": 415,
+      "clientWidth": 415,
+      "clipperRight": 930,
+      "clipperTag": "div",
+      "overhangPx": -56,
+      "visible": true,
+      "clipped": false
+    },
+    "1440x900": {
+      "found": true,
+      "text": "Interfaces on the surface. Systems underneath.",
+      "left": 698,
+      "right": 1058,
+      "width": 360,
+      "scrollWidth": 415,
+      "clientWidth": 415,
+      "clipperRight": 1121,
+      "clipperTag": "div",
+      "overhangPx": -63,
+      "visible": true,
+      "clipped": false
+    },
+    "1536x864": {
+      "found": true,
+      "text": "Interfaces on the surface. Systems underneath.",
+      "left": 715,
+      "right": 1060,
+      "width": 346,
+      "scrollWidth": 415,
+      "clientWidth": 415,
+      "clipperRight": 1082,
+      "clipperTag": "div",
+      "overhangPx": -22,
+      "visible": true,
+      "clipped": false
+    },
+    "1920x1080": {
+      "found": true,
+      "text": "Interfaces on the surface. Systems underneath.",
+      "left": 1037,
+      "right": 1453,
+      "width": 416,
+      "scrollWidth": 414,
+      "clientWidth": 414,
+      "clipperRight": 1480,
+      "clipperTag": "div",
+      "overhangPx": -27,
+      "visible": true,
+      "clipped": false
+    },
+    "2560x1440": {
+      "found": true,
+      "text": "Interfaces on the surface. Systems underneath.",
+      "left": 1357,
+      "right": 1773,
+      "width": 416,
+      "scrollWidth": 414,
+      "clientWidth": 414,
+      "clipperRight": 1800,
+      "clipperTag": "div",
+      "overhangPx": -27,
+      "visible": true,
+      "clipped": false
+    }
+  }
+}

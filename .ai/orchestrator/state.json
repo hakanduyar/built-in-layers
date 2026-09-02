@@ -5,8 +5,8 @@
     "OPUS_FINAL_QA",
     "DESKTOP_FREEZE_CANDIDATE"
   ],
-  "current_stage": "FABLE_5_1",
-  "current_substage": "LAUNCHING",
+  "current_stage": "OPUS_FINAL_QA",
+  "current_substage": "FABLE_FINDINGS_TRIAGE",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -52,15 +52,19 @@
     "availability_evidence": "claude --model claude-fable-5-1 returns completions and self-reports claude-fable-5-1; a bogus control model name is rejected by the API, so acceptance is meaningful",
     "effort": "max",
     "session_id": null,
-    "status": "NOT_STARTED",
+    "status": "COMPLETE",
     "starting_head": "bc2dad371651ef350f65658d6d5df37e623bc372",
-    "final_head": null,
+    "final_head": "a5da0ed24a693063affe81ed525a979e745c8a34",
     "gate": ".ai/handoffs/FABLE-GATE.md",
-    "return": ".ai/handoffs/FABLE-RETURN.md"
+    "return": ".ai/handoffs/FABLE-RETURN.md",
+    "permission_mode": "acceptEdits",
+    "launch_notes": "bypassPermissions blocked by environment classifier; background stdin detached so the prompt must be an argument via a launcher script",
+    "verdict": "NOT READY",
+    "blocker": "Its acceptEdits sandbox refused every build/serve/test command and Playwright MCP would not connect, so it could not RENDER. Judged from the 221 existing V12 artifacts plus code."
   },
   "opus_final_qa": {
-    "status": "NOT_STARTED",
-    "starting_head": null,
+    "status": "RUNNING",
+    "starting_head": "a5da0ed24a693063affe81ed525a979e745c8a34",
     "final_head": null
   },
   "heads": {

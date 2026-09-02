@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { SpatialCamera } from "@/components/spatial/SpatialCamera";
 import { SpatialProjectScene } from "@/components/spatial/SpatialProjectScene";
 import { TravelMaterial } from "@/components/spatial/TravelMaterial";
@@ -15,6 +16,7 @@ import {
 import { getProjectsByTier } from "@/lib/content/work";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
 import { systemAnnotation } from "@/lib/spatial/systemPov";
+import { WORLD_UNIT } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -68,6 +70,39 @@ const [transitionWord = "Systems", orientationWord = "underneath"] = systemsClau
 // travel leg, computed from the route itself. The hero therefore points
 // where the camera is about to go, and cannot drift if the route moves.
 const HERO_LEAD = heroLeadRule(18);
+
+/**
+ * V13 (Fable art direction) -- THE HERO'S OWN UNIT, and the clip that made it
+ * necessary. The rule's origin, its length and the thesis column were composed
+ * in raw `vw` inside a scene block that stops growing at 1180px (SCENE_WIDTH),
+ * so above the reference desktop the offsets kept growing while the block did
+ * not. Measured on the frozen stills: at 1920x1080 the thesis line began at
+ * 48vw = 922px and was clipped mid-word by the block edge
+ * (docs/review/v12-codex-gate/responsive/1920x1080--hero.png); at 2560x1440 it
+ * began 49px OUTSIDE the block and did not render at all, and the lead rule was
+ * cut short (responsive/2560x1440--hero.png); at 80% zoom on a 1920 display
+ * only its 2px left border survived at the block edge as an orphan stroke
+ * (zoom/2400x1350@80--hero.png). The site's primary line was being cut on
+ * every display wider than ~1600px, and in the reduced-motion tree too, which
+ * shares this markup.
+ *
+ * The unit is exactly `1vw` up to 1536 -- the widest approved viewport, and the
+ * widest at which 48vw plus the 26rem column still fit inside the block -- so
+ * every approved 1366/1440/1536 frame is pixel-identical. Above it the hero
+ * holds the composition it was approved at, exactly as the rest of the world
+ * does (WORLD_UNIT). The rule's rise takes the world's own vertical unit so
+ * that, with its run capped, the rule keeps pointing along the first travel
+ * leg instead of steepening with the frame.
+ */
+const HERO_UNIT = { x: "min(1vw, 15.36px)", y: WORLD_UNIT.y } as const;
+const heroX = (vw: number) => `calc(${vw} * ${HERO_UNIT.x})`;
+const heroY = (vh: number) => `calc(${vh} * ${HERO_UNIT.y})`;
+
+/** Where the lead rule leaves the wordmark, in hero units. The thesis column
+ *  registers on the rule's far end, so its x is derived from the rule rather
+ *  than retyped as the 48 it happens to equal. */
+const HERO_RULE_ORIGIN_VW = 30;
+const HERO_THESIS_X = heroX(HERO_RULE_ORIGIN_VW + HERO_LEAD.width);
 
 /** The approved wordmark, split for the hero's two-line setting. Derived so
  *  the composition can never disagree with CLAUDE.md §4's name. */
@@ -249,8 +284,12 @@ export function SpatialExperience() {
 
             <div
               aria-hidden="true"
-              className="relative ml-[30vw] hidden lg:block"
-              style={{ width: `${HERO_LEAD.width}vw`, height: `${HERO_LEAD.height}vh` }}
+              className="relative hidden lg:block"
+              style={{
+                marginLeft: heroX(HERO_RULE_ORIGIN_VW),
+                width: heroX(HERO_LEAD.width),
+                height: heroY(HERO_LEAD.height),
+              }}
             >
               <svg
                 viewBox="0 0 100 100"
@@ -285,7 +324,10 @@ export function SpatialExperience() {
               </span>
             </div>
 
-            <div className="mt-10 lg:ml-[48vw] lg:mt-0">
+            <div
+              className="mt-10 lg:ml-[var(--hero-thesis-x)] lg:mt-0"
+              style={{ "--hero-thesis-x": HERO_THESIS_X } as CSSProperties}
+            >
               <p className="max-w-[26rem] border-l-2 border-ink pl-6 font-display text-heading-l tracking-heading-l uppercase text-ink">
                 {heroPrimaryLine}
               </p>
