@@ -147,7 +147,21 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
           </span>
           <span
             aria-hidden="true"
-            className="mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text"
+            className={cn(
+              "items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
+              // V13 (Fable gate, finding C): as an inline-flex this register
+              // line sits in an anonymous line box whose strut is the heading's
+              // own line-height -- 98.8px at display-xl for an 18px label, with
+              // the label parked at its baseline. Measured on the production
+              // build, that strut alone cost the flagship 80px of the vertical
+              // budget that put its plate on the frame floor. Only the
+              // foundation variant pays that price, so only it lays the line
+              // out as a block; the three display-l scenes keep the register
+              // the V12 freeze accepted. `mt-8` keeps the register's distance
+              // from the display-xl underline in step with the display-l
+              // scenes (46px there, 25px here at mt-5, measured at 1536x864).
+              variant === "foundation" ? "mt-8 flex" : "mt-4 inline-flex",
+            )}
           >
             {/* The world's own register mark, extending on hover: the route
                 reaching toward the destination rather than a button. */}
@@ -295,36 +309,60 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // on, and the composition says so structurally rather than with any badge:
     // one full-measure identity line, then a deliberately legible verification
     // plate. Nothing else competes in the frame; the system is the hero.
+    //
+    // V13 (Fable gate, finding C) RECOMPOSED THE ROW BELOW THE TITLE. Measured
+    // on the production build at focus, the V12 flagship's plate bottom sat
+    // 23 / 0 / 4 / 16 px from the viewport floor at 1366 / 1440 / 1536 / 1920,
+    // and at 2560 the wider 76% plate hung 51px below its own ground. Two
+    // causes, both structural:
+    //
+    //   - the title wrapped to two display-xl lines inside a 5-column identity
+    //     cell (468px) when "Software Factory" measures 756px on one line at
+    //     every desktop viewport, against a 1147-1180px scene: a second line
+    //     that only existed because of the column, costing ~99px;
+    //   - the plate's width branched on the REAL viewport height
+    //     (`max-height: 1100px`) although the world-fit scale gives the scene
+    //     the same 1040 world-px budget at every desktop height, so 2560x1440
+    //     got a taller plate for a frame that had not grown.
+    //
+    // The identity now takes the full measure (the one-line title the comment
+    // above already promised), and the plate shares its row with the reading
+    // column: diagram left at nine columns, description and stack right, on
+    // the ground together. The description explains the diagram it now sits
+    // beside, and the frame gets its floor back without shrinking the
+    // evidence: nine columns of the 12-column grid span 875 world px of the
+    // 1180 world-px scene, against the 790 world px the V12 `w-[67%]` branch
+    // gave every viewport up to 1100px tall (and the 897 world px that
+    // `w-[76%]` gave the taller ones, where the frame had not grown).
     return (
       <div className="w-full">
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pt-7">
-          <div className="lg:col-span-5">{identity}</div>
-          <div className="lg:col-span-6 lg:col-start-7">{detail}</div>
-        </div>
+        <div className="lg:pt-7">{identity}</div>
         {plate && (
-          <div
-            className="relative mt-7 w-full lg:[@media(max-height:1100px)]:mt-3"
-            style={resolveDown}
-          >
-            {/* V8 -- THE ONE PIECE OF EVIDENCE THAT ALSO NEEDS A HEIGHT BUDGET.
-                The world-fit scale (lib/spatial/worldFit.ts) brought every scene
-                in the owner's matrix inside its frame except this one: Software
-                Factory is the tallest composition on the route, and at 1366x768
-                its plate still overhung by 34px -- the diagram itself fit, the
-                figure's caption and border did not, which is a D-019 asset-
-                honesty label being cut off rather than a cosmetic overhang.
-
-                A plate's height is its width divided by the asset's aspect
-                ratio, so the only way to give height back is to take width. The
-                rule is therefore stated where the cause is -- "on a desktop
-                frame, preserve the verification caption as well as the diagram"
-                -- rather than as another scale factor on top of the world's. */}
+          <div className="mt-7 grid gap-6 lg:mt-14 lg:grid-cols-12 lg:gap-10">
+            {/* Below `lg` the reading column keeps its place before the
+                evidence, as in every other composition. */}
+            {/* Nine columns, not eight. `spatial.spec.ts:193` holds the scene
+                to a frozen contract: at 1440x900 and 30% route progress the
+                first evidence image must measure more than 45% of the viewport
+                (648px), so the evidence "genuinely occupies the frame" instead
+                of returning to V1's ~384px card. At the world-fit scale of
+                that viewport (1180 -> 999.5px) eight columns are 773 world px
+                of container and a 642px image on screen, under the floor at
+                any gap; nine columns are 875 world px and a 714px image,
+                above the floor and still inside the 760px the frozen
+                `w-[76%]` gave it -- so the evidence is no wider than the V12
+                freeze and no longer narrower than its contract. */}
             <div
               data-project-ground-source={project.slug}
-              className="w-full lg:w-[76%] lg:[&_figcaption]:max-w-[56%] lg:[@media(max-height:1100px)]:w-[67%]"
+              className="order-2 w-full lg:order-1 lg:col-span-9 lg:[&_figcaption]:max-w-[56%]"
+              style={resolveDown}
             >
               {plate}
             </div>
+            {/* The reading column keeps its gap of ground to the right without
+                `pr-10`: at three columns that padding would cut the measure to
+                180px and break the description across too many lines. */}
+            <div className="order-1 lg:order-2 lg:col-span-3 lg:pt-1">{detail}</div>
           </div>
         )}
       </div>

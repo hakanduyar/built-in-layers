@@ -1,0 +1,256 @@
+{
+  "base": "http://127.0.0.1:3100",
+  "tag": "final",
+  "matrix": {},
+  "phases": {},
+  "work": {
+    "375x812": {
+      "software-factory": {
+        "h1FontPx": 36,
+        "h1Top": 181,
+        "firstImageTop": 383,
+        "firstImageInFold": true,
+        "contentRight": 359,
+        "containerRight": 375,
+        "pageHeight": 3397,
+        "hasContribution": true,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.Verified system diagram, traced ",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 36,
+        "h1Top": 181,
+        "firstImageTop": 353,
+        "firstImageInFold": true,
+        "contentRight": 359,
+        "containerRight": 375,
+        "pageHeight": 12033,
+        "hasContribution": true,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.Verified architecture diagram.ProvenancePersonalPhaseActive devel",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 36,
+        "h1Top": 181,
+        "firstImageTop": 405,
+        "firstImageInFold": true,
+        "contentRight": 359,
+        "containerRight": 375,
+        "pageHeight": 10267,
+        "hasContribution": true,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 36,
+        "h1Top": 181,
+        "firstImageTop": 353,
+        "firstImageInFold": true,
+        "contentRight": 359,
+        "containerRight": 375,
+        "pageHeight": 10259,
+        "hasContribution": true,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.Home page, signed in — browsing drops with waitlist status visi",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 36,
+        "h1Top": 181,
+        "firstImageTop": 353,
+        "firstImageInFold": true,
+        "contentRight": 359,
+        "containerRight": 375,
+        "pageHeight": 2174,
+        "hasContribution": true,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Provisional editorial illustration b",
+        "errors": []
+      }
+    },
+    "768x1024": {
+      "software-factory": {
+        "h1FontPx": 38,
+        "h1Top": 165,
+        "firstImageTop": 339,
+        "firstImageInFold": true,
+        "contentRight": 744,
+        "containerRight": 768,
+        "pageHeight": 3205,
+        "hasContribution": true,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.Verified system diagram, traced ",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 38,
+        "h1Top": 165,
+        "firstImageTop": 310,
+        "firstImageInFold": true,
+        "contentRight": 744,
+        "containerRight": 768,
+        "pageHeight": 8865,
+        "hasContribution": true,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.Verified architecture diagram.ProvenancePersonalPhaseActive devel",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 38,
+        "h1Top": 165,
+        "firstImageTop": 344,
+        "firstImageInFold": true,
+        "contentRight": 744,
+        "containerRight": 768,
+        "pageHeight": 7692,
+        "hasContribution": true,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 38,
+        "h1Top": 165,
+        "firstImageTop": 310,
+        "firstImageInFold": true,
+        "contentRight": 744,
+        "containerRight": 768,
+        "pageHeight": 7927,
+        "hasContribution": true,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.Home page, signed in — browsing drops with waitlist status visi",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 38,
+        "h1Top": 165,
+        "firstImageTop": 310,
+        "firstImageInFold": true,
+        "contentRight": 744,
+        "containerRight": 768,
+        "pageHeight": 2423,
+        "hasContribution": true,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Provisional editorial illustration b",
+        "errors": []
+      }
+    },
+    "1024x768": {
+      "software-factory": {
+        "h1FontPx": 51,
+        "h1Top": 197,
+        "firstImageTop": 384,
+        "firstImageInFold": true,
+        "contentRight": 992,
+        "containerRight": 1024,
+        "pageHeight": 2594,
+        "hasContribution": true,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.Verified system diagram, traced ",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 51,
+        "h1Top": 197,
+        "firstImageTop": 354,
+        "firstImageInFold": true,
+        "contentRight": 992,
+        "containerRight": 1024,
+        "pageHeight": 8284,
+        "hasContribution": true,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.Verified architecture diagram.ProvenancePersonalPhaseActive devel",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 51,
+        "h1Top": 197,
+        "firstImageTop": 388,
+        "firstImageInFold": true,
+        "contentRight": 992,
+        "containerRight": 1024,
+        "pageHeight": 7071,
+        "hasContribution": true,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 51,
+        "h1Top": 197,
+        "firstImageTop": 354,
+        "firstImageInFold": true,
+        "contentRight": 992,
+        "containerRight": 1024,
+        "pageHeight": 7528,
+        "hasContribution": true,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.Home page, signed in — browsing drops with waitlist status visi",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 51,
+        "h1Top": 197,
+        "firstImageTop": 384,
+        "firstImageInFold": true,
+        "contentRight": 992,
+        "containerRight": 1024,
+        "pageHeight": 2173,
+        "hasContribution": true,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Provisional editorial illustration b",
+        "errors": []
+      }
+    },
+    "1280x800": {
+      "software-factory": {
+        "h1FontPx": 64,
+        "h1Top": 197,
+        "firstImageTop": 397,
+        "firstImageInFold": true,
+        "contentRight": 1248,
+        "containerRight": 1280,
+        "pageHeight": 2712,
+        "hasContribution": true,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.Verified system diagram, traced ",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 64,
+        "h1Top": 197,
+        "firstImageTop": 367,
+        "firstImageInFold": true,
+        "contentRight": 1248,
+        "containerRight": 1280,
+        "pageHeight": 8161,
+        "hasContribution": true,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.Verified architecture diagram.ProvenancePersonalPhaseActive devel",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 64,
+        "h1Top": 197,
+        "firstImageTop": 401,
+        "firstImageInFold": true,
+        "contentRight": 1248,
+        "containerRight": 1280,
+        "pageHeight": 7121,
+        "hasContribution": true,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 64,
+        "h1Top": 197,
+        "firstImageTop": 367,
+        "firstImageInFold": true,
+        "contentRight": 1248,
+        "containerRight": 1280,
+        "pageHeight": 7425,
+        "hasContribution": true,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.Home page, signed in — browsing drops with waitlist status visi",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 64,
+        "h1Top": 197,
+        "firstImageTop": 367,
+        "firstImageInFold": true,
+        "contentRight": 1248,
+        "containerRight": 1280,
+        "pageHeight": 2294,
+        "hasContribution": true,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Provisional editorial illustration b",
+        "errors": []
+      }
+    }
+  }
+}

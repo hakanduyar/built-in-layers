@@ -23,18 +23,35 @@ type FigureProps = {
    * decision made per call site -- it decides what the caption's claim shows.
    */
   framePosition?: string;
+  /**
+   * V13 (Fable gate, finding D): the case-study hero now leads with the
+   * project's representative asset, which makes that one Figure the page's
+   * largest above-the-fold paint. The TASK-008 `fetchPriority="low"` below was
+   * measured for Figures that all sat BELOW the LCP candidate; a lead plate is
+   * the LCP candidate, so it opts into a high fetch priority instead. Every
+   * other call site is unchanged.
+   */
+  priority?: boolean;
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
 // 3, aria-hidden, decorative only), radius-1, mono-meta "FIG NN — caption".
-export function Figure({ src, alt, caption, index, frameRatio, framePosition }: FigureProps) {
+export function Figure({
+  src,
+  alt,
+  caption,
+  index,
+  frameRatio,
+  framePosition,
+  priority = false,
+}: FigureProps) {
   const dimensions = readIntrinsicDimensions(src);
   const image = (
     /* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */
     <img
       src={src}
       alt={alt}
-      fetchPriority="low"
+      fetchPriority={priority ? "high" : "low"}
       decoding="async"
       className={frameRatio ? "block h-full w-full object-cover" : "block h-auto w-full"}
       style={frameRatio && framePosition ? { objectPosition: framePosition } : undefined}

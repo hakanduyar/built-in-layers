@@ -34,7 +34,10 @@ export const PROJECT_GROUND_POLICY = {
   blockPadding: 0.05,
   minWidth: 0.78,
   maxWidth: 0.96,
-  minHeight: 0.51,
+  // V13 (Fable gate, finding B): 0.51 -> 0.40. The floor only has to keep a
+  // small evidence group on a real plinth; at 0.51 it was the reason the two
+  // shallow compositions carried a blank field below their evidence.
+  minHeight: 0.4,
   maxHeight: 0.58,
   minTop: 0.08,
   maxTop: 0.22,
@@ -57,12 +60,23 @@ export function projectGroundGeometry(
 ): ProjectGroundGeometry {
   const policy = PROJECT_GROUND_POLICY;
   const width = clamp(visual.width + policy.inlinePadding * 2, policy.minWidth, policy.maxWidth);
-  const height = clamp(visual.height + policy.blockPadding * 2, policy.minHeight, policy.maxHeight);
   const top = clamp(
     visual.y * policy.topWeight + visual.height * policy.heightWeight,
     policy.minTop,
     policy.maxTop,
   );
+  // V13 (Fable gate, finding B) -- THE GROUND'S LOWER EDGE IS ANCHORED TO THE
+  // EVIDENCE. The previous derivation sized the ground from the evidence's
+  // height alone (`height + 2 * blockPadding`) while `top` was clamped to its
+  // floor for every shallow composition, so the whole surplus landed BELOW the
+  // group: measured on the production build at focus, Kıvılcım's and
+  // JointLedger's grounds ran 153 / 184 / 177 / 213 / 213 px past their
+  // evidence at 1366 / 1440 / 1536 / 1920 / 2560, and trailed off-frame as a
+  // blank beige field (260 px at early-exit, 1536x864). Deriving the height
+  // from where the group actually ends keeps the top edge's lead exactly as it
+  // was and puts one block padding under the evidence instead of a field.
+  const bottom = visual.y + visual.height + policy.blockPadding;
+  const height = clamp(bottom - top, policy.minHeight, policy.maxHeight);
 
   return {
     offset: { x: registersAtStart(scene) ? 0 : 1 - width, y: top },
@@ -77,7 +91,11 @@ export function projectGroundGeometry(
  * these values only prevent an unregistered flash during hydration/no-JS.
  */
 export const PROJECT_GROUND_FALLBACK_VISUALS: Record<ProjectGroundScene, ProjectVisualBounds> = {
-  "software-factory": { x: 0, y: 0.33, width: 0.76, height: 0.51 },
+  // V13: the foundation composition is now a one-line title over a
+  // nine-column plate | three-column detail row; measured at focus on the
+  // production build (0 / 0.227 / 0.742 / 0.504 of the scene width at 1440,
+  // 1536, 1920 and 2560; y 0.233 and height 0.506 at 1366's 1147px scene).
+  "software-factory": { x: 0, y: 0.23, width: 0.74, height: 0.5 },
   kivilcim: { x: 0.34, y: 0.05, width: 0.75, height: 0.45 },
   jointledger: { x: 0, y: 0.05, width: 0.67, height: 0.42 },
   dropspot: { x: 0, y: 0.23, width: 1, height: 0.52 },

@@ -1,0 +1,253 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "tag": "before",
+  "matrix": {
+    "1536x864": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 860
+          },
+          "ground": {
+            "left": 308,
+            "top": 316,
+            "right": 1083,
+            "bottom": 865
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 410,
+            "right": 760,
+            "bottom": 860
+          },
+          "media": {
+            "left": 108,
+            "top": 414,
+            "right": 756,
+            "bottom": 819
+          },
+          "title": {
+            "top": 153,
+            "left": 103,
+            "bottom": 399
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 93,
+            "below": 5,
+            "left": -205,
+            "right": 323
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 657,
+            "h": 450
+          },
+          "frame": {
+            "plateBottomClearance": 4,
+            "plateTopClearance": 410,
+            "labelTopClearance": 124
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 100,
+            "right": 1082,
+            "bottom": 617
+          },
+          "ground": {
+            "left": 102,
+            "top": 179,
+            "right": 920,
+            "bottom": 740
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 440,
+            "top": 100,
+            "right": 1140,
+            "bottom": 563
+          },
+          "media": {
+            "left": 444,
+            "top": 105,
+            "right": 1136,
+            "bottom": 537
+          },
+          "title": {
+            "top": 235,
+            "left": 102,
+            "bottom": 342
+          },
+          "labelTop": 206,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 177,
+            "left": 338,
+            "right": -220
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 700,
+            "h": 462
+          },
+          "frame": {
+            "plateBottomClearance": 301,
+            "plateTopClearance": 100,
+            "labelTopClearance": 206
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 618
+          },
+          "ground": {
+            "left": 318,
+            "top": 179,
+            "right": 1083,
+            "bottom": 703
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 101,
+            "right": 745,
+            "bottom": 527
+          },
+          "media": {
+            "left": 107,
+            "top": 105,
+            "right": 741,
+            "bottom": 501
+          },
+          "title": {
+            "top": 213,
+            "left": 779,
+            "bottom": 319
+          },
+          "labelTop": 183,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 176,
+            "left": -215,
+            "right": 337
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 642,
+            "h": 426
+          },
+          "frame": {
+            "plateBottomClearance": 337,
+            "plateTopClearance": 101,
+            "labelTopClearance": 183
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 101,
+            "right": 1083,
+            "bottom": 811
+          },
+          "ground": {
+            "left": 141,
+            "top": 270,
+            "right": 1083,
+            "bottom": 839
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 102,
+            "top": 283,
+            "right": 1083,
+            "bottom": 798
+          },
+          "media": {
+            "left": 107,
+            "top": 287,
+            "right": 1078,
+            "bottom": 772
+          },
+          "title": {
+            "top": 153,
+            "left": 102,
+            "bottom": 259
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 12,
+            "below": 41,
+            "left": -39,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 980,
+            "h": 516
+          },
+          "frame": {
+            "plateBottomClearance": 66,
+            "plateTopClearance": 283,
+            "labelTopClearance": 124
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 936,
+          "recordColumnLeft": 1016,
+          "labelToColumnPx": 80,
+          "headingRight": 810,
+          "registerRight": 1239
+        },
+        "howIBuild": {
+          "titleRight": 778,
+          "markLeft": 417,
+          "markRight": 778,
+          "consequenceLeft": 810,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    }
+  },
+  "phases": {},
+  "work": {}
+}

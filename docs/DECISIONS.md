@@ -523,3 +523,91 @@ Binding conditions attached to this approval — all already true of the current
   explicitly rejected it); memoising the publication gates to speed up derivation — measured at
   ~1.2s per run either way, so the optimisation was removed rather than shipped unproven.
 - **Approval:** Hakan's owner-decision brief, 2026-09-02, sections B.4, B.5 and B.6.
+
+## D-028 — A project ground is anchored to the bottom of its evidence, not sized from its height
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable art-direction gate's
+  delegated authority (`.ai/handoffs/FABLE-GATE.md` §5, 2026-09-03; owner unavailable). Owner
+  review of the returned before/after evidence is still pending. **Not** in force on `main`.
+- **Context:** `lib/spatial/projectGround.ts` derived a ground's height from the evidence union's
+  height plus two block paddings while clamping `top` to a floor. For the two shallow compositions
+  (Kıvılcım, JointLedger) the top clamped and the whole surplus landed below the evidence: measured
+  on the production build at scene focus, the ground ran 153 / 184 / 177 / 213 / 213 px past the
+  evidence at 1366 / 1440 / 1536 / 1920 / 2560, and on exit the blank part trailed last (260 px of
+  ground below the evidence at early-exit, 1536×864) — a beige rectangle behind a card, which the
+  V12 freeze explicitly forbids. The file is fingerprinted in `docs/FROZEN_BOUNDARY.md` §1; this is
+  the measured regression that justifies moving it.
+- **Decisions:**
+  1. **The ground's lower edge is derived from where the evidence ends:** `bottom = union.bottom +
+     blockPadding`, `height = clamp(bottom − top, minHeight, maxHeight)`. `top` keeps its previous
+     derivation, so the lead the top edge gives the evidence is unchanged.
+  2. **`minHeight` falls 0.51 → 0.40.** The floor exists to keep a small group on a real plinth,
+     not to pad a shallow one; at 0.51 the floor alone reproduced most of the surplus.
+  3. **The Software Factory fallback visual is re-measured** for the foundation composition's new
+     shape (0 / 0.23 / 0.74 / 0.50), read from the production build, not typed.
+  4. **The contract in `tests/unit/project-ground.test.ts` is re-derived from the measured
+     visuals** (Kıvılcım, JointLedger, DropSpot and Software Factory unions read off the build) and
+     now asserts the anchoring itself: bottom-anchored grounds end exactly one `blockPadding` under
+     their evidence; grounds that hit `maxHeight` still end within that padding.
+- **Consequence:** at focus the ground now ends 42 / 51 / 49 / 59 / 59 px below the evidence at the
+  five viewports; Kıvılcım's exit trail (242 px at 1536, 340 at 1920) is within 5 px of DropSpot's
+  untouched values (237 / 335), so the residual trail is the frozen `resolveDown`/`resolveUp`
+  choreography, not the ground's shape. DropSpot's numbers are byte-identical before and after.
+- **Rejected:** hard-coded per-project ground offsets (the freeze's registration-by-measurement
+  principle); lowering `minHeight` alone (removes at most the floor's share and leaves the shape
+  rule that caused it); re-splitting the bleed by the evidence's own position (a second free
+  parameter with no measured need once the bottom is anchored).
+- **Approval:** delegated by the Fable gate brief; the before/after frames for the owner's review
+  are `docs/review/v13-fable-gate/stills/B--{before,after}--*.png` (numbers in
+  `docs/review/v13-fable-gate/metrics/{before,final}/fable-gate-all.json`, keys
+  `groundOutsideEvidence` and `phases`); the full frame sets are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-fable-gate\{before-HEAD-76c5660,final-build-VAodX66DmpweO6L6gBPZk}`
+  per `docs/REVIEW_POLICY.md`.
+
+## D-029 — The case-study destination opens with its evidence and its record
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable art-direction gate's
+  delegated authority (2026-09-03; owner unavailable). Owner review pending. **Not** in force on
+  `main`.
+- **Context:** no capture of any `/work/*` route existed in any review set (v8–v12). Measured on the
+  production build at 1440×900: the case-study `h1` was 40 px — the same size as the `heading-l`
+  section headings that followed it, and smaller than the 64 px the same project's title has on the
+  homepage; the first figure sat ~3000 px down inside a layer tab; everything ran in one 42 rem column
+  against a 1320 px container; and two fields the content model requires of every featured project
+  (`contribution`, and `aiDisclosure` whenever `aiAssisted`) were validated by the schema and
+  rendered nowhere on the site.
+- **Decisions:**
+  1. **The lead plate is chosen by the homepage's rule.** `CaseStudyHero` renders
+     `representativeAsset(project)` (`lib/spatial/systemPov.ts`) as a `Figure` with its real
+     caption, so the plate the reader arrives from is the plate the destination opens with. No
+     new asset, no crop.
+  2. **The record is shared vocabulary.** A `<dl>` of Provenance · Phase · Record · Stack · Access
+     uses the same reader-facing translations Selected Systems uses for the same fields; a field
+     that does not exist produces no row. Nothing is written per project.
+  3. **Contribution and AI assistance are rendered on the destination, and only there.** The
+     `/work` listing deliberately does not carry the disclosure; the destination always does.
+  4. **The composition follows DESIGN_SYSTEM §4's asymmetry** on the page's 12-column grid: title
+     on columns 1–10 at `display-l`, lead plate on 1–8 with the record on 10–12, contribution on
+     the reading column with the disclosure in the meta column; each decision one 12-column row
+     with the trade-off set in ink.
+  5. **Preview-depth destinations exit to the index.** A project that is not a case-study
+     destination (`isCaseStudyDestination` false — Software Factory, Professional Systems) gets a
+     single `/work` exit in the same `DestinationLink` register instead of neighbour navigation,
+     because D-027 gives it no position in the sequence.
+- **Consequence:** `h1` 64 px at desktop, 38 px tablet, 36 px mobile (51 px at the 1024 breakpoint,
+  where the fluid scale is mid-clamp); the first image's top is inside the first viewport on all
+  five routes at 375 / 768 / 1024 / 1280 / 1366 / 1440 / 1920, with no horizontal overflow; contribution
+  rendered on all five, AI disclosure on the two `aiAssisted` projects; Professional Systems reads
+  "Not yet verified" in its record and exits to `/work`. The unit assertion that the hero contained
+  `"text-heading-l"` moves to `"text-display-l"` — a contract update from the measured defect, not
+  a weakening.
+- **Rejected:** a bespoke per-project hero (would need per-project markup — the site's content
+  boundary forbids it); showing the disclosure on the `/work` cards too (a listing is not a
+  disclosure surface, and the card already links to the page that carries it); inventing a preview
+  illustration or status line for Professional Systems beyond its existing provisional asset and
+  its real `verificationStatus`.
+- **Approval:** delegated by the Fable gate brief; the before/after captures for the owner's review
+  are `docs/review/v13-fable-gate/stills/D--*.png` (numbers for all five routes at 375 / 768 /
+  1024 / 1280 / 1366 / 1440 / 1920 in `docs/review/v13-fable-gate/metrics/final/fable-gate-{all,work}.json`,
+  key `work`); the full route captures are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-fable-gate\final-build-VAodX66DmpweO6L6gBPZk\work\`.

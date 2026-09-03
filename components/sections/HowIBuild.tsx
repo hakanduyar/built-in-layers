@@ -87,8 +87,14 @@ export function HowIBuild() {
                         so the eye reads "principle -> therefore" before it reads
                         either half. Decorative: the relation is already carried
                         by the reading order for assistive technology. */}
+                    {/* V13 (Fable gate, finding E): the rule now runs the title
+                        column's full measure, so the arrowhead lands at the
+                        column's edge, one grid gap from the consequence it points
+                        at. At 40px the mark stopped 338px short of the
+                        consequence column (measured at 1366-2560): an arrow
+                        pointing into empty paper, not into the consequence. */}
                     <span aria-hidden="true" className="mt-4 hidden items-center gap-2 lg:flex">
-                      <span className="block h-px w-10 bg-ink opacity-45" />
+                      <span className="block h-px flex-1 bg-ink opacity-45" />
                       <span className="block h-1.5 w-1.5 rotate-45 border-r border-t border-ink opacity-60" />
                     </span>
                   </h3>

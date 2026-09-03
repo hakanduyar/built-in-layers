@@ -76,6 +76,25 @@ test.describe("Work: project routes", () => {
     );
   });
 
+  // V13 (Fable gate, finding D): a preview-depth project has no layers,
+  // decisions or neighbours. It used to end after a tech line, reading as a
+  // page that had failed to load; it now carries its plate, its (placeholder)
+  // contribution statement and one honest onward route -- the work index.
+  test("/work/professional-systems states its contribution and routes back to the work index", async ({
+    page,
+  }) => {
+    await page.goto("/work/professional-systems");
+    await expect(
+      page.locator('main header img[src*="professional-systems-overview.svg"]'),
+    ).toBeVisible();
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText).toContain("I will share my specific role and contributions here");
+    expect(bodyText).toContain("Not yet verified");
+    const nav = page.getByRole("navigation", { name: "Work index" });
+    await expect(nav.locator("a[href='/work']")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Case study navigation" })).toHaveCount(0);
+  });
+
   test("an unknown slug 404s", async ({ page }) => {
     const response = await page.goto("/work/this-project-does-not-exist");
     expect(response?.status()).toBe(404);
@@ -120,28 +139,52 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
     page,
   }) => {
     await page.goto("/work/kivilcim");
+    // V13: the case-study hero now opens with the project's representative
+    // asset (the same one the System tab carries), so each tab's assets are
+    // asserted inside the active tab panel, not anywhere in main.
+    const panel = page.getByRole("tabpanel");
 
     // Surface: the illustrative product map.
-    await expect(page.locator('main img[src*="product-areas-map.svg"]')).toBeVisible();
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="product-areas-map.svg"]')).toBeVisible();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Illustrative product map based on the audited repository");
 
     // Flow: the core flow diagram + the focus lifecycle state diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
-    await expect(page.locator('main img[src*="focus-lifecycle.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="focus-lifecycle.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
     expect(bodyText).toContain("Verified state diagram");
 
     // System: the local-first architecture diagram.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="local-first-architecture.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="local-first-architecture.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram");
 
     const fullText = (await page.locator("main").innerText()).toLowerCase();
     expect(fullText).not.toContain("screenshot of");
+  });
+
+  // V13 (Fable gate, finding D): `contribution` is required of every featured
+  // project and `aiDisclosure` whenever `aiAssisted` is true, yet neither
+  // rendered anywhere on the site. The hero now carries both, and opens with
+  // the representative asset the spatial scene chose for the project.
+  test("the hero states the contribution and the AI disclosure and opens with the representative asset", async ({
+    page,
+  }) => {
+    await page.goto("/work/kivilcim");
+    const hero = page.locator("main header");
+    await expect(hero.locator('img[src*="local-first-architecture.svg"]')).toBeVisible();
+    // The block labels are mono labels, CSS-uppercased, so `innerText` reports
+    // them as CONTRIBUTION / AI ASSISTANCE; the statements themselves are not.
+    await expect(hero.getByRole("heading", { name: /^contribution$/i })).toBeVisible();
+    await expect(hero.getByRole("heading", { name: /^ai assistance$/i })).toBeVisible();
+    const heroText = await hero.innerText();
+    expect(heroText).toContain("I defined Kıvılcım's product idea");
+    expect(heroText).toContain("AI tools assisted parts of the planning");
+    expect(heroText).toContain("Verified against source");
   });
 
   test("no generic placeholder asset remains for Kıvılcım", async ({ page }) => {
@@ -219,29 +262,32 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     page,
   }) => {
     await page.goto("/work/dropspot");
+    // V13: the hero opens with browse-drops.webp (DropSpot's representative
+    // asset), so the Surface tab's copy of it is asserted inside the panel.
+    const panel = page.getByRole("tabpanel");
 
     // Surface (default tab): the three real screenshots.
     for (const filename of ["browse-drops.webp", "drop-detail.webp", "admin-panel.webp"]) {
-      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
+      await expect(panel.locator(`img[src*="${filename}"]`)).toBeVisible();
     }
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Home page, signed in — browsing drops with waitlist status");
     expect(bodyText).toContain("Drop detail page before joining the waitlist.");
     expect(bodyText).toContain("Admin panel — drop management table");
 
     // Flow: the 4th real screenshot + the flow diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="waitlist-joined.webp"]')).toBeVisible();
-    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="waitlist-joined.webp"]')).toBeVisible();
+    await expect(panel.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Drop detail page after joining the waitlist.");
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
 
     // System: the two remaining architecture diagrams.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="claim-transaction-diagram.svg"]')).toBeVisible();
-    await expect(page.locator('main img[src*="priority-score-diagram.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="claim-transaction-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="priority-score-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
 
     // The removed provisional screens-map must not linger anywhere.
@@ -264,8 +310,9 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
       "drop-detail.webp": 1731 / 837,
       "admin-panel.webp": 1878 / 808,
     };
+    const panel = page.getByRole("tabpanel");
     for (const [filename, intrinsicRatio] of Object.entries(surfaceExpected)) {
-      const img = page.locator(`main img[src*="${filename}"]`);
+      const img = panel.locator(`img[src*="${filename}"]`);
       // `boundingBox()` is a raw, non-retrying layout read -- it can catch
       // the image before its real bytes have finished decoding (no explicit
       // width/height on Figure's <img>, so pre-decode layout can be
@@ -284,7 +331,7 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     }
 
     await page.getByRole("tab", { name: "Flow" }).click();
-    const waitlistImg = page.locator('main img[src*="waitlist-joined.webp"]');
+    const waitlistImg = panel.locator('img[src*="waitlist-joined.webp"]');
     await expect
       .poll(async () => await waitlistImg.boundingBox(), { timeout: 10_000 })
       .not.toBeNull();
@@ -382,25 +429,26 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
     page,
   }) => {
     await page.goto("/work/jointledger");
+    // V13: the hero opens with book-data-model-diagram.svg (JointLedger's
+    // representative asset), so the System tab's copy is asserted in the panel.
+    const panel = page.getByRole("tabpanel");
 
     // Surface (default tab): the upstream extension map.
-    await expect(page.locator('main img[src*="upstream-extension-map.svg"]')).toBeVisible();
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="upstream-extension-map.svg"]')).toBeVisible();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified extension diagram, not a product screenshot");
 
     // Flow: the personal-book backfill flow diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="personal-book-backfill-flow.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="personal-book-backfill-flow.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
 
     // System: the two remaining architecture diagrams.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="book-data-model-diagram.svg"]')).toBeVisible();
-    await expect(
-      page.locator('main img[src*="book-scoped-authorization-diagram.svg"]'),
-    ).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="book-data-model-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="book-scoped-authorization-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
 
     const fullText = (await page.locator("main").innerText()).toLowerCase();

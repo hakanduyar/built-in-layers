@@ -53,7 +53,12 @@ export function projectLayerCoverage(project: ProjectFrontmatter, layer: LayerKe
 export function SelectedSystems({ projects }: SelectedSystemsProps) {
   return (
     <SystemNode index={sectionIndex.selectedSystems} label={selectedSystemsHeading}>
-      <div className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-10">
+      {/* V13 (Fable gate, finding E): the title row shares the register's own
+          12-column grid AND its gap, so the column label below lands exactly on
+          the Record column it names. Before, it started at column 9 of a
+          gap-10 grid -- measured 77-80px left of the Record header at every
+          desktop viewport, aligned to nothing on the page. */}
+      <div className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-8">
         <div className="lg:col-span-7">
           <h2 className="mt-5 font-display text-display-l uppercase text-ink">
             {selectedSystemsHeading}
@@ -62,7 +67,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
             {selectedSystemsSubheading}
           </p>
         </div>
-        <p className="mt-5 max-w-[28rem] font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:col-start-9 lg:col-span-4 lg:mt-0">
+        <p className="mt-5 max-w-[28rem] font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:col-start-10 lg:col-span-3 lg:mt-0">
           Resolved by layer and record
         </p>
       </div>

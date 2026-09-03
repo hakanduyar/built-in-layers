@@ -252,7 +252,9 @@ describe("JointLedger real content — genuine semantic rendering of the full te
     const decisionsHtml = renderToStaticMarkup(<DecisionList decisions={project.decisions} />);
 
     expect(heroHtml).toContain("JointLedger");
-    expect(heroHtml).toContain("text-heading-l");
+    // V13: the case-study title is set at display scale, above the
+    // `heading-l` section headings that follow it, not level with them.
+    expect(heroHtml).toContain("text-display-l");
     expect(surfaceHtml).toContain(">Surface<");
     expect(flowHtml).toContain(">Flow<");
     expect(systemHtml).toContain(">System<");

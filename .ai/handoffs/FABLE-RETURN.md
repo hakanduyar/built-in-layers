@@ -415,3 +415,290 @@ case-study pages designed per D and captured at three viewports; (5) the product
 re-shot at 1366/1440/1536/1920/2560 and 100/80/67/50 %.
 
 **NOT READY.**
+
+---
+
+# FABLE RETURN — PASS 2 (rendered, measured, fixed)
+
+**Model:** `claude-fable-5-1`, effort `max`, `--permission-mode acceptEdits`, autonomous.
+**Branch:** `feature/project-architecture-v13`. **Starting HEAD:** `76c5660` (finding A's hero
+fix, committed and pushed at the start of this pass; HEAD == origin verified). **Final HEAD:** the
+commit that carries this section (its hash is in the pass-2 message to the orchestrator and in
+`git log`). **Date:** 2026-09-03 (local, UTC+3; transcript timestamps below are UTC where marked Z).
+
+## 11.1 What changed since pass 1
+
+Pass 1 could not build, serve or test. This pass could, and everything below is measured on
+production builds (`pnpm build` → `next start`), never on the dev server: no dev badge in any
+still. The five conditions pass 1 set for FREEZE (§10) are each closed below: (1) a rendering
+stage — §11.2; (2) validation and pixel proof of the hero unit — §11.3 A; (3) findings B and C
+resolved with before/after frames and re-derived contracts — §11.3 B, C and §11.5; (4) the
+case-study pages designed and captured — §11.3 D; (5) the production matrix re-shot at
+1366/1440/1536/1920/2560 and 100/80/67/50 % — §11.2, §11.7.
+
+## 11.2 Method and provenance of every number
+
+- **Probe.** `tests/tools/fable-gate-probe.mjs` (new, committed) drives Playwright Chromium over
+  the production server and writes DOM measurements plus stills: the responsive matrix
+  (1366×768, 1440×900, 1536×864, 1920×1080, 2560×1440) and zoom (2400×1350@80, 2866×1612@67,
+  3840×2160@50) for the hero, the four project scenes, SYSTEMS and the lower-world landmarks;
+  entry → mid-entry → focus → early-exit → exit phases for all four project scenes at 1536×864 and
+  1920×1080; and the five `/work/*` routes at 1366/1440/1920 (`all` mode) and 375/768/1024/1280
+  (`work` mode), viewport and full page.
+- **BEFORE** = HEAD `76c5660`, built and served by this session on :3200 at 01:19 local, captured
+  01:25–01:30 local — before any other writer existed. **FINAL** = build
+  `VAodX66DmpweO6L6gBPZk` of the committed tree, built clean (`rm -rf .next && pnpm build`, 14:38:20
+  local, 15 routes) and served by this session on :3100 (PID 32636, then 33304 after the WebKit
+  classification in §11.6), captured 14:39–14:44 local with no other writer active. Both sets:
+  **0 console errors** across 230 FINAL stills.
+- **Numbers of record are DOM measurements** (`docs/review/v13-fable-gate/metrics/{before,final}/`).
+  Pixel diffs of the stills corroborate them; note that the diff has to be run at a channel-sum
+  threshold of 6 to see the ground tint (at the default 24 it is blind to the beige/paper
+  difference — reported here so nobody reads a "0 differing pixels" as more than it is).
+- **Finding E's BEFORE numbers** are read from the pixels of the frozen BEFORE stills (an ink run
+  starting at the mark's x), not computed from source; AFTER is DOM.
+- **Supersession.** Every capture taken while a second process was building or serving under this
+  session's ports is invalid or superseded and was moved out of the repository under its origin
+  (§11.7). Nothing in `docs/review/v13-fable-gate/` comes from a contaminated run.
+
+## 11.3 Findings, before → after
+
+Viewport order throughout: 1366 / 1440 / 1536 / 1920 / 2560, then 80 / 67 / 50 % zoom.
+
+### A — The hero's primary line was cut above ~1600 px (fixed at `76c5660`; proven here)
+
+| Measure (FINAL build) | 1366 | 1440 | 1536 | 1920 | 2560 | @80 | @67 | @50 |
+|---|---|---|---|---|---|---|---|---|
+| thesis inside the hero block | yes | yes | yes | yes | yes | yes | yes | yes |
+| lead rule inside the block | yes | yes | yes | yes | yes | yes | yes | yes |
+| thesis lines | 5 | 6 | 6 | 7 | 7 | 7 | 7 | 7 |
+
+Hero stills BEFORE vs FINAL at 1366/1440/1536/1920/2560: **0 differing pixels** at threshold 6 —
+the hero is exactly what `76c5660` committed. The 3840@50 hero still differs only in its
+bottom-right corner (3509–3839 × 1578–2159), which is the Software Factory scene entering the
+frame with its new plate (finding C), not the hero.
+
+### B — Kıvılcım and JointLedger grounds trailed as blank beige (D-028)
+
+Ground extending below the evidence union at scene focus, px:
+
+| Scene | before | after |
+|---|---|---|
+| Kıvılcım | 153 / 184 / 177 / 213 / 213 (zoom 213 / 213 / 213) | **42 / 51 / 49 / 59 / 59** (59 / 59 / 59) |
+| JointLedger | 153 / 184 / 176 / 212 / 212 (212 / 212 / 212) | **43 / 51 / 49 / 59 / 59** (59 / 59 / 59) |
+| DropSpot (control) | 33 / 42 / 41 / 50 / 50 | 33 / 42 / 41 / 50 / 50 — unchanged |
+
+Phases (ground below evidence, px): Kıvılcım 1536 focus 177 → 49, early-exit **260 → 133**, exit
+369 → 242; 1920 focus 213 → 59, early-exit 334 → 181, exit 493 → 340. JointLedger 1536 early-exit
+259 → 132, exit 369 → 241. DropSpot 1536 early-exit 126, exit 237 — unchanged. Kıvılcım's residual
+exit trail (242 / 340) is within 5 px of DropSpot's untouched 237 / 335, so what remains is the
+frozen `resolveDown`/`resolveUp` choreography, not the ground's shape. Evidence boxes of Kıvılcım,
+JointLedger and DropSpot: Δ0 on every edge at every viewport; ground boxes of the two changed
+scenes moved on the bottom edge only (−111 / −133 / −128 / −154 / −153 px). Stills:
+`stills/B--{before,after}--*` (1920 Kıvılcım at focus, 1440 JointLedger at focus, 1536 early-exit
+for both).
+
+### C — Software Factory's plate sat on the frame's bottom edge
+
+| Software Factory, at focus | before | after |
+|---|---|---|
+| plate-bottom clearance to the viewport, px | 23 / **0** / **4** / **16** / 243 (zoom 166 / 392 / 863) | **62 / 44 / 46 / 67 / 376** (299 / 525 / 996) |
+| identity block bottom, px from top | 345 / 420 / 399 / 510 / 560 | 236 / 293 / 277 / 363 / 413 |
+| evidence top, px | 354 / 431 / 410 / 522 / 589 | 277 / 341 / 324 / 419 / 469 |
+| media width, px | 561 / 675 / 648 / 781 / 887 | 622 / 748 / 718 / 865 / 865 |
+| ground below evidence, px | −3 / 5 / 5 / 7 / **−51** | 37 / 48 / 46 / 55 / 55 |
+
+Phases, plate-bottom clearance: 1536 focus 4 → 46, early-exit 230 → 272; 1920 focus 16 → 67,
+early-exit 343 → 393. The register (`CASE 01 / 04` line) and the label top are unchanged
+(labelTop identical at every size). Above the 1180 px scene cap (1920+) the plate is 22 px
+narrower than before (evidence 897 → 875) because nine of twelve columns are less than the old
+`76 %`; below the cap it is 61–84 px wider. The composition is a one-line identity above a
+9 + 3 column row (plate, reading column), instead of the identity and plate stacked. Stills:
+`stills/C--{before,after}--*` (1440, 2560, and the 1536 focus phase).
+
+### D — The five case-study destinations had never been designed or captured (D-029)
+
+| Route, 1440×900 | h1 px | first image top, px | image in first viewport | contribution rendered | AI disclosure |
+|---|---|---|---|---|---|
+| software-factory | 40 → **64** | none → 397 | no → yes | no → yes | n/a |
+| kivilcim | 40 → **64** | 3168 → 367 | no → yes | no → yes | yes |
+| jointledger | 40 → **64** | 2438 → 401 | no → yes | no → yes | yes |
+| dropspot | 40 → **64** | 2237 → 367 | no → yes | no → yes | n/a |
+| professional-systems | 40 → **64** | none → 367 | no → yes | no → yes | n/a |
+
+Same on all five routes at 1366 and 1920; at 375 the h1 is 36 px, at 768 38 px, at 1024 51 px
+(mid-clamp), at 1280 64 px, and the first image is inside the first viewport at every width.
+Content right edge ≤ container right edge at 375 / 768 / 1024 / 1280 / 1366 / 1440 / 1920 (no
+horizontal overflow; the e2e overflow tests agree). The record (Provenance · Phase · Record ·
+Stack · Access) shares the row with the lead plate on columns 10–12 from 1024 up and stacks under
+it below; Professional Systems shows only the two facts it has (Professional, Not yet verified)
+and exits to `/work` instead of ending after its tech line. Contribution and AI-disclosure text
+are the frontmatter's own strings, verified against `content/work/*/index.mdx`. Stills:
+`stills/D--*` (1440 pairs for Kıvılcım, Professional Systems, Software Factory; FINAL 1920
+JointLedger; FINAL 375 DropSpot).
+
+### E — Lower world: the consequence mark and the register label
+
+| Measure | before | after |
+|---|---|---|
+| HOW I BUILD consequence rule length, px (1366 / 1440 / 1536 / 1920 / 2560) | 40 / 40 / 40 / 40 / 40 | **331 / 347 / 347 / 347 / 347** |
+| arrowhead end → CONSEQUENCE column, px | 322 / 338 / 338 / 338 / 338 | **31 / 31 / 31 / 31 / 31** |
+| SELECTED SYSTEMS label left − Record column left, px (all eight sizes) | 77 / 80 / 80 / 80 / 80 / 80 / 80 / 80 | **0** at all eight |
+| SELECTED SYSTEMS register right edge | unchanged at all eight sizes (1147 / 1200 / 1239 / 1395 / 1656 / 1591 / 1781 / 2179) | |
+| SELECTED SYSTEMS heading right edge | 734 / 771 / 810 / 967 / 1228 | 738 / 775 / 814 / 970 / 1231 (+3–4 px: the gutter is now 32 px) |
+
+Stills: `stills/E--{before,after}--1920x1080--{how-i-build,selected-systems}`.
+
+## 11.4 Frozen-boundary files: each move, its reason, its evidence
+
+`docs/FROZEN_BOUNDARY.md` §4 loop on the committed tree, worktree vs `243db393`:
+
+| File | frozen | HEAD 76c5660 | committed | reason (visual) | evidence |
+|---|---|---|---|---|---|
+| `components/spatial/SpatialExperience.tsx` | `fa941e8` | `8568129` | `8568129` (= HEAD, untouched this pass) | finding A (pass 1 §5) | §11.3 A: inside the block at all eight sizes; hero stills 0-diff |
+| `lib/spatial/projectGround.ts` | `aa159e9` | `aa159e9` | `6431139` | B: the shape rule put the surplus below the evidence | §11.3 B; D-028 |
+| `components/spatial/SpatialProjectScene.tsx` | `edb9cd4` | `edb9cd4` | `34b48d5` | C: plate on the frame edge; identity stacked on the plate | §11.3 C |
+| `components/sections/HowIBuild.tsx` | `a48126a` | `a48126a` | `2d90924` | E: a 40 px mark 322–338 px short of the column it points to read as a link, not a relationship | §11.3 E |
+| `components/sections/SelectedSystems.tsx` | `751aa48` | `751aa48` | `592b79e` | E: the register label named a column it did not sit on (77–80 px off) | §11.3 E |
+
+Nothing else under `lib/spatial/`, `components/spatial/` or `components/sections/` moved. Scroll
+physics, ordering and navigation architecture, `resolveDown`/`resolveUp`, `worldFit`, the scene
+width and the 12-column grid are untouched; each frozen edit is confined to the lines its finding
+names. Attribution for `SpatialProjectScene.tsx`: the register spacing and the 8-column plate
+were this session's first edits; the nine-column plate originated in the concurrent session at
+01:49:47 Z and was adopted here at 02:07:39 Z after measuring that eight columns give a 641.8 px
+first tour image against the frozen 648 px floor (`tests/e2e/spatial.spec.ts:193`); nine give
+714 px at 1440.
+
+## 11.5 Test contracts moved (none weakened)
+
+- `tests/unit/project-ground.test.ts`: the measured visuals are re-read from the FINAL build
+  (Software Factory 0 / 0.227 / 0.742 / 0.504; Kıvılcım 0.345 / 0 / 0.714 / 0.472; JointLedger
+  0 / 0 / 0.655 / 0.435; DropSpot 0 / 0.186 / 1 / 0.525); the Kıvılcım floor moves from
+  `height > 0.49` to `height > 0.44` because the bottom-anchored height is 0.442
+  (0.472 + 0.05 padding − 0.08 top; the old rule gave 0.572), and a new assertion checks the
+  anchoring itself (bottom = union bottom + one `blockPadding`; `maxHeight` grounds still end
+  within that padding).
+- `tests/unit/jointledger-content.test.tsx`: the hero title contract `text-heading-l` →
+  `text-display-l` (the defect D measured).
+- `tests/e2e/work.spec.ts`: image locators scoped to `getByRole("tabpanel")` because the hero now
+  also renders the representative asset (the old page-wide locator would resolve to two
+  elements); two tests added — Professional Systems exits to `/work`; Kıvılcım renders its
+  contribution and AI disclosure.
+- `tests/unit/case-study-hero.test.tsx`: new.
+
+## 11.6 Validation — final tree, single writer
+
+Run in sequence on the committed source, with this session's own server on :3100 and no other
+process writing to the repository:
+
+| Check | Result |
+|---|---|
+| `pnpm typecheck` | exit 0 |
+| `pnpm lint` | 0 errors (the only warnings were in the session's `.scratch/`, moved out of the repository before commit — see §11.7) |
+| `prettier --check` on every changed file | clean (one formatting-only wrap applied to `DecisionList.tsx`) |
+| `pnpm test` | **527 / 527**, 24 files |
+| `pnpm build` | exit 0, 15 routes, `VAodX66DmpweO6L6gBPZk` (the captured build). The one edit after it — Prettier's line wrap in `DecisionList.tsx`, JSX whitespace only — was rebuilt clean as `oTK3kI1nS1mv8rqXlANG-`: exit 0, 15 routes, every route 200 and `/nope` 404 on this session's server, decision titles render byte-identical (no whitespace inside the span), unit 527 / 527 again, Chromium `work.spec.ts` 48 / 48 again; no recapture needed |
+| Chromium e2e (`--project=chromium`) | **216 / 216** |
+| WebKit e2e (`--project=webkit`) | **211 / 216**; the five failures are classified below |
+| frozen loop | the five moves in §11.4, nothing else |
+
+**WebKit classification.** The five failures — `home.spec.ts:63` (field-notes navigation),
+`shell.spec.ts:35` (skip-link focus), `spatial.spec.ts:265` (camera re-centre on focus),
+`spatial-v5.spec.ts:384` (surface opens monotonically), `spatial.spec.ts:320` (break rails) —
+fail again at `--workers=1`, and fail **with identical expected/received values** (`783.36`,
+`1440`, viewport ratio 0, "inactive") against a separate build of HEAD `76c5660` exported with
+`git archive` outside the repository and served on the same port. None of the five specs or the
+code they exercise was changed in this pass. They are pre-existing WebKit-under-software-rendering
+failures on this machine and are carried forward as engineering item 1 in §11.9. No assertion was
+relaxed.
+
+## 11.7 Artifacts, by origin
+
+In git (`docs/review/v13-fable-gate/`): `stills/` — 28 decision-bearing before/after stills named
+`<finding>--<before|after|final>--<viewport>--<subject>.png`; `metrics/before/fable-gate-all.json`,
+`metrics/final/fable-gate-all.json`, `metrics/final/fable-gate-work.json`,
+`metrics/final/lower-world.json` (finding E), `metrics/final/hero-unit.txt` (finding A);
+`metrics/route-focus.json` from pass 1.
+
+Outside git (`C:\Users\hakan\portfolio-review\v13-fable-gate\`), per `docs/REVIEW_POLICY.md`:
+
+| Directory | What it is | Status |
+|---|---|---|
+| `before-HEAD-76c5660/` | full BEFORE matrix, phases and routes, this session, 01:25 local | authoritative BEFORE |
+| `final-build-VAodX66DmpweO6L6gBPZk/` | full FINAL matrix, phases and routes, this session, 14:39 local | authoritative FINAL |
+| `superseded-after-1-mine-0145/` | this session's first after-capture (01:45 local), before finding D's work | superseded |
+| `superseded-after-2-other-session-0434/`, `superseded-after-3-other-session-0451/` | captured by the concurrent session under this session's servers | not authoritative |
+| `superseded-after-mine-0511-build-8vKUfzDNK7_Oy96MQbuWs/` | this session, 05:11 local, before the revert was discovered | superseded |
+| `invalid-final-eCsGW2F0-8col-plate/` | built from the partially reverted `SpatialProjectScene.tsx` (8-column plate) | invalid |
+| `baseline-HEAD-76c5660/` (sibling directory) | `git archive` export of HEAD used for the WebKit classification; `.next` and the `node_modules` junction removed | evidence |
+| `session-scratch-logs-and-tools/` | this session's `.scratch/`: build, server, probe and e2e logs (Chromium, WebKit, WebKit-at-HEAD), the measurement and replay scripts, the pre-format `DecisionList.tsx` | evidence |
+
+No `.webm` was recorded.
+
+## 11.8 Interference record
+
+This is a log, not a complaint; it explains every superseded artifact and every restored file.
+
+- 01:31 Z (04:31 local) — a concurrent session (`software-factory-0b`, "Opus QA of this gate")
+  ran prettier over the tree; 01:32:59 Z started a server on this session's port; 01:34:13 Z
+  captured an "after" set; 01:47:12 Z measured the plate; **01:49:47 Z edited
+  `SpatialProjectScene.tsx` to a nine-column plate**; 01:50:02 Z re-tested; 01:53:01 Z ran a full
+  gate; 02:06 Z sent its results. This session measured its own eight-column plate against the
+  frozen contract and adopted the nine-column version at 02:07:39 Z (§11.4).
+- **06:16:42 local** — `components/ui/Figure.tsx`, `components/project/ProjectNeighbours.tsx`,
+  `app/work/[slug]/page.tsx` and (partially — the plate columns) `components/spatial/SpatialProjectScene.tsx`
+  were reverted to HEAD by the other session. All four were restored by replaying this session's
+  own Write/Edit calls from its transcript onto HEAD's blobs; the replayed results equal the diffs
+  recorded at the time of the edits, and `SpatialProjectScene.tsx` restored to blob `34b48d5`, the
+  hash this session's frozen-loop run had recorded before the revert. Typecheck was green before
+  any further visual work.
+- The bounded reconciliation compared every changed file against the transcript replay and the
+  two recovery snapshots (evidence only, never copied over the repo): no other reverted file,
+  no partially applied refactor, no test without its implementation, no missing asset, no
+  overwritten decision entry, no altered measurement. The two snapshot mismatches in
+  `docs/DECISIONS.md` / `docs/PROGRESS.md` were CRLF-on-disk, verified by `git diff`.
+- Servers found on :3100 (PID 21336), :3200 (PID 19928) and :3000 (PID 35732) were not this
+  session's; nothing they served was trusted. The first two were stopped; :3000 was left alone and
+  never used. The FINAL build was served only by this session's own `next start`.
+
+## 11.9 Residual engineering findings (for the final engineering QA)
+
+1. **WebKit, five pre-existing failures** (§11.6) — identical at HEAD; the constant received
+   values (`783.36`, `1440`) suggest the scripted scroll is not executed at all in this software-
+   rendered WebKit rather than merely slow; worth one engineering look, not an art-direction item.
+2. Repo-wide `prettier --check .` pre-existing debt (pass 1 §9.9) — not re-measured; only the
+   changed files were checked and are clean.
+3. `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` remains untracked, as instructed.
+4. Above the 1180 px scene cap the Software Factory plate is 22 px narrower than before
+   (§11.3 C); the first-tour-image floor holds with 66 px of margin at 1440.
+5. The `Stack` record row wraps to two lines at 1440 for six-item stacks (Kıvılcım); accepted.
+6. The still-diff tool's default threshold (24) does not see the ground tint; the DOM numbers are
+   the record (§11.2).
+7. The "exit" phase frame of a scene is the next scene's entry (the departing ground is already
+   clipped), so the decision-bearing B frame is `early-exit`; the curated pair uses it.
+
+## 11.10 Self-run adversarial review
+
+Two attempts to launch an independent reviewer agent failed (DNS `ENOTFOUND`, then HTTP 429), so
+the review was run by this session against its own work, with measurement rather than reading
+wherever possible: heading order on `/work/*` is h1 → h2 only (LayerSection h2, hero h2s,
+Decisions h2); the record's label maps are identical to `SelectedSystems.tsx` lines 15–26; every
+content string the new tests expect exists in `content/work/*/index.mdx` frontmatter; the test
+changes are tightenings or stated contract moves (§11.5); no fact, asset, metric, date or URL was
+invented; the record renders only fields that exist; rendered overflow checked at 375 / 768 /
+1024 / 1280 (none); the record shares the plate's row at 1024–1920 and stacks under it at ≤768.
+
+## 11.11 Verdict
+
+The five conditions pass 1 set for FREEZE are closed with rendered, before/after evidence from
+the production build: the hero holds at every approved width and zoom; the two trailing grounds
+end one padding under their evidence, with DropSpot as an unchanged control; the flagship plate
+has cleared the frame's edge at every size; the five destinations open with their evidence, their
+record, the contribution and the disclosure the content model requires, at display scale, without
+overflow from 375 up; and the lower world's two marks now sit on what they name. The frozen V12
+desktop system was reopened only where a measured regression named the line, and each of those
+five moves is declared with its numbers. Validation on the committed tree is green in the two
+browsers the gate specifies, with WebKit's five failures proven pre-existing at HEAD.
+
+**FREEZE.**
