@@ -3,54 +3,39 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-02 (V13 — inventory reviewed; blocked on owner decisions)_
+_Last updated: 2026-09-03 (V13 — Fable checkpoint 26836ba; Claude-only gate, Opus 5 High reviewing)_
 
 ---
 
-## HUMAN_REQUIRED — owner decisions block the criteria freeze
+## Current gate — CLAUDE ONLY
 
-The independent architecture review is **complete**. The phase cannot advance to frozen acceptance
-criteria or implementation without owner answers.
+The owner-decision block that stood here is resolved: every question was answered on 2026-09-02
+and is recorded in **D-027**. The architecture acceptance criteria were frozen at `bc2dad3`
+(`docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md`).
 
 | Field | Value |
 |---|---|
-| **State** | Review returned **ACCEPT WITH CHANGES**. Factual remediation applied. Blocked on owner decisions. |
-| Reviewer | Fresh Codex process, session `01a06372-fc4a-7232-b371-6d78c1bd42c5`, model `gpt-5.6-luna`, effort `xhigh` — not a resumed session |
-| Reviewed candidate | `499e7d8a43151480650346f9aa1e445faf1edb32` |
-| Return | `.ai/handoffs/CODEX-ARCH-RETURN.md` (272 lines) — committed here because the review sandbox had `.git` read-only |
-| Verified after review | frozen boundary intact (all 30 blobs), no application source touched, no implementation slice started, V12 bundle preserved |
-| Branch | `feature/project-architecture-v13`, based on frozen `243db393` |
-| Acceptance criteria | **NOT frozen** — correct per process; owner approval is required for the proposal-authored policies first |
-| Next owner | **OWNER** |
+| **Reviewer for this gate** | **Claude Opus 5, effort High** |
+| GPT / Codex | **REMOVED from the current gate** (owner decision 2026-09-03, capacity exhausted). Do not wait for, schedule, retry or launch it until the owner reverses this. Its completed architecture and slice reviews remain valid history in `.ai/handoffs/`. |
+| Art direction | Fable 5.1, session `20173014-40f9-4a94-8e5b-a8a3fb435448`, verdict **FREEZE** |
+| Fable checkpoint | `26836ba` — 52 files, local == origin |
+| Stage | Opus 5 High final QA against the committed checkpoint |
 
-### What the owner must decide
-
-**A. Project facts (unchanged, six items)** — Software Factory publishability and depth; whether
-publishable Software Factory screenshots exist; everything about Professional Systems; timelines;
-any live/demo URL; whether Kıvılcım and JointLedger have screenshottable running states.
-
-**B. Proposal-authored policies the review refused to accept without the owner** — the
-prominence-to-depth ladder, evidence parity, per-project coverage parity, global-versus-tier
-ordering semantics, and whether previous-project navigation should exist at all.
-
-### Then, without further owner input
-
-Slice 0 (ordering-contract clarification) → Slice 1 (derived forward navigation + complete
-`nextSlug` removal) → re-review → freeze criteria → implement.
+Live orchestration state, including the concurrent-writer incident and recovery snapshots, is in
+[`.ai/orchestrator/`](../.ai/orchestrator/AUTONOMOUS_PIPELINE_STATE.md).
 
 ---
-
 ## Current state
 
 | Field | Value |
 |---|---|
-| **Status** | **DESKTOP SPATIAL SYSTEM — FROZEN** (2026-09-02). V12 independent Codex gate closed every product item; acceptance matrix in docs/DESKTOP_FREEZE_ACCEPTANCE.md |
-| Current branch | `feature/spatial-portfolio-v5` |
-| Current HEAD | `0752883` (V12 Codex gate return; implementation is its parent `42798f1`) |
-| Latest origin commit | `0752883` on `feature/spatial-portfolio-v5` (local == origin); `16d3ec0` on `main`, untouched |
+| **Status** | V12 desktop spatial system **FROZEN** (2026-09-02, `0752883`). V13 project-architecture + art-direction work is on `feature/project-architecture-v13`, under Opus 5 High final QA |
+| Current branch | `feature/project-architecture-v13` (`feature/spatial-portfolio-v5` stays frozen at `243db393`) |
+| Current HEAD | `26836ba` (Fable art-direction gate pass 2) |
+| Latest origin commit | `26836ba` on `feature/project-architecture-v13` (local == origin); `16d3ec0` on `main`, untouched |
 | Remote | `https://github.com/hakanduyar/built-in-layers.git` (renamed from `portfolio.git`) |
 | Working tree | clean except one intentional untracked artifact: `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
-| Current phase | **V13 PROJECT INVENTORY — independent review complete (ACCEPT WITH CHANGES)**, blocked on owner decisions (see §HUMAN_REQUIRED). Working branch `feature/project-architecture-v13`; `feature/spatial-portfolio-v5` stays frozen at `243db393` |
+| Current phase | **V13 — Fable art-direction gate returned FREEZE at `26836ba`.** Opus 5 High final QA in progress against that committed checkpoint |
 | Source state | **RESOLVED** (was STATE D) — V6.8 checkpoint `d7bcebc`, merged with `dc81393` at `682d54e`; see `docs/AUTONOMOUS_RECOVERY_STATUS.md` section 0 |
 | Last checkpoint commit | see §"Checkpoints" below |
 | Pending Fable gate | none open — Gate 1 executed; `.ai/handoffs/OPUS-RETURN.md` written. Gates 2–4 not yet raised |
@@ -58,9 +43,9 @@ Slice 0 (ordering-contract clarification) → Slice 1 (derived forward navigatio
 
 ## Next action
 
-**Owner decisions — see §HUMAN_REQUIRED above.** `docs/PROJECT_INVENTORY.md` is written and
-independently reviewed; the phase is blocked on facts and policy approvals only the owner can give.
-The desktop homepage is frozen — do not reopen it without a measured regression.
+**Opus 5 High final QA against `26836ba`** — see §"Current gate" above. Owner decisions are
+resolved (D-027) and acceptance criteria are frozen (`docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md`).
+The V12 desktop system stays frozen — do not reopen it without a measured regression.
 
 Three things remain the owner's judgement rather than another engineering pass:
 

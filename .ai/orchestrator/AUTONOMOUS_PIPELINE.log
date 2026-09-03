@@ -23,3 +23,59 @@
 2026-09-03 01:07  FABLE            COMPLETE. Verdict NOT READY. Could not render: acceptEdits sandbox refused build/serve/test, Playwright MCP refused to connect. Judged from 221 V12 artifacts + code. Correctly committed nothing.
 2026-09-03 01:2x  OPUS/QA          Verified Fable's frozen-file claim INDEPENDENTLY by rendering. CONFIRMED: hero thesis clipped at 1920 (256px box for 309px of text) and effectively absent at 2560 (24px box). V12 missed it because ancestor clipping is not overflow.
 2026-09-03 01:3x  OPUS/QA          Fable's fix validated: 1366/1440/1536 numerically IDENTICAL to baseline; 1920 and 2560 now fit the full line with 27px clearance. typecheck/lint/prettier clean, 521/521 unit, build 15/15, Chromium 214/214.
+2026-09-03 01:4x  FABLE/pass2      PAUSED_FOR_QUOTA. Claude session limit, resets 02:40 Europe/Istanbul. NOT a failure. Work preserved uncommitted: 5 modified files, 269 artifacts, fable-gate-probe.mjs.
+2026-09-03 04:2x  ORCHESTRATOR     Paused state snapshotted to C:/Users/hakan/fable-v13-paused-recovery-20260903 (864/864 files verified). Hero fix safe at 76c5660.
+2026-09-03 04:2x  FABLE/pass2      RESUMED SAME SESSION 20173014-40f9-4a94-8e5b-a8a3fb435448 (identified by claude-fable-5-1 + 43 refs to its own v13 artifacts). No new session created. No quota error on resume.
+2026-09-03 04:5x  ATTRIBUTION      Fable pass 2 reported a "concurrent edit by Opus QA of this gate" to SpatialProjectScene.tsx (mtime 04:49:50, comment at line 341) and planned to credit that session in FABLE-RETURN.md.
+                                   CORRECTED: no such session exists. The orchestrator (this session) has made zero application-file edits since 76c5660. Transcript check shows only two live sessions for this project --
+                                   75854813 (claude-opus-5, orchestrator) and 20173014 (claude-fable-5-1, Fable pass 2); all others last wrote 01:08 or earlier. The edit falls inside Fable's own resumed run and is
+                                   almost certainly its own, possibly via a self-described QA subagent. Fable asked to verify before attributing, and warned not to rest the 9-column plate on a phantom peer's validation.
+2026-09-03 04:5x  ORCHESTRATOR     Holding all working-tree edits until Fable commits and pushes. Orchestrator in-flight files are only .ai/orchestrator/{AUTONOMOUS_PIPELINE.log,state.json}, which Fable has agreed not to touch.
+2026-09-03 05:0x  ATTRIBUTION      CORRECTION TO MY OWN CORRECTION. A third session DOES exist and my check was flawed: I searched only
+                                   .claude/projects/c--GitHub-portfolio/, so a session working from a DIFFERENT project directory was structurally invisible to it.
+                                   Fable identified it with better evidence: session 83dae76d under c--GitHub-software-factory (claude-opus-5, IDE-embedded, ListAgents
+                                   name software-factory-0b), Edit on components/spatial/SpatialProjectScene.tsx at 2026-09-03T01:49:47.963Z vs the 04:49:50 mtime,
+                                   with both our transcripts eliminated line by line. Lesson: scope session checks by ListAgents, not by one project directory.
+2026-09-03 05:0x  INTERFERENCE     That session also ran three Chromium e2e suites (01:44/01:50/01:53Z) which rebuilt .next underneath Fable's running :3200
+                                   production server, producing HTTP 500s in Fable's zoom captures; started/killed a :3100 server; and captured after-2/after-3.
+                                   Its edit landed in a FROZEN-boundary file carrying an attribution to a role that does not exist.
+2026-09-03 05:0x  ORCHESTRATOR     Messaged software-factory-0b to hold all writes/builds/servers/Playwright against C:\GitHub\portfolio until Fable pushes, and to
+                                   route changes through Fable or me. Read-only inspection and its observation-only watch script left alone. Told Fable that final
+                                   validation numbers must come from a clean run after the interference stops, not from any run overlapping those rebuilds.
+2026-09-03 05:0x  FABLE/pass2b     PAUSED_FOR_QUOTA again. Claude session limit, resets 09:20 Europe/Istanbul. NOT a failure. Work grew to 717 artifacts and 11 modified files (+473/-85) before the pause.
+2026-09-03 05:1x  ORCHESTRATOR     Snapshotted to .../pass2b (1355/1355 verified). Nothing reverted, stashed or cleaned.
+2026-09-03 05:1x  BLOCKER/tree     THE TREE DOES NOT COMPILE at the pause point: CaseStudyHero.tsx:96 passes `priority` to <Figure>, Figure.tsx has no such prop and sits unmodified at HEAD.
+                                   Figure.tsx WAS modified at ~04:5x and has since reverted -- plausibly collateral from the concurrent software-factory-0b session, which was running builds and e2e in this tree.
+                                   Deliberately NOT fixed by the orchestrator: it is Fable's in-flight work and the orchestrator committed to holding edits. Recorded so Fable resolves it first thing on resume.
+2026-09-03 14:2x  SCHEDULER        The 09:27 one-shot resume NEVER FIRED (still listed pending at 14:19; session-only cron fires only while the REPL is idle). Cancelled to avoid a duplicate launch.
+2026-09-03 14:2x  INTERFERENCE     software-factory-0b did NOT stand down. Evidence: Figure.tsx / ProjectNeighbours.tsx / app/work/[slug]/page.tsx / SpatialProjectScene.tsx all rewritten at 06:16:42 (same second = checkout/revert);
+                                   tsconfig.tsbuildinfo written 11:20:22 (a typecheck) and .ai/orchestrator/state.json 11:21:32, while Fable was quota-paused since ~05:05 and the orchestrator idle since ~05:15;
+                                   servers started on :3100 (PID 21336, 05:21) and :3200 (PID 19928, 05:11) after the pause. Orchestrator state content survived intact.
+2026-09-03 14:2x  LOST WORK        Three Fable files confirmed REVERTED to HEAD: components/ui/Figure.tsx, components/project/ProjectNeighbours.tsx, app/work/[slug]/page.tsx. Neither recovery snapshot contains them --
+                                   both predate the 06:16:42 revert. Recovered the Figure.tsx intent verbatim from Fable's own transcript (priority?: boolean -> fetchPriority high/low for the LCP lead plate) and handed it back as evidence.
+                                   The orchestrator did NOT apply it: owner directive is to recover Fable's intended implementation, not to add a property blindly.
+2026-09-03 14:2x  ORCHESTRATOR     Relayed the owner's explicit full stand-down directive to software-factory-0b, incl. a request that it stop its own :3100/:3200 processes and never write .ai/orchestrator/*.
+2026-09-03 14:3x  FABLE/pass2c     RESUMED SAME session 20173014-40f9-4a94-8e5b-a8a3fb435448. No quota error. Briefed with: the three reverted files, the verbatim Figure edit, the bounded interference audit,
+                                   contaminated-capture invalidation, single-writer status, and the requirement that final numbers come from an isolated build (527/527 and 215/216 are NOT accepted).
+2026-09-03 14:3x  OWNER DECISION   GPT/Codex REMOVED from the current gate (capacity exhausted). CLAUDE ONLY until the owner reverses it. Reviewer for this gate is now CLAUDE OPUS 5, effort High.
+                                   Verified no Codex/GPT retries can fire: CronList empty at 14:35. Historical Codex reviews stay as valid history in .ai/handoffs/; only the CURRENT reviewer role changed.
+2026-09-03 14:3x  ISOLATION        software-factory-0b: no portfolio write attributable to it in the preceding 40 minutes. Its :3200 server is gone; :3100 is a new PID (29892, 14:28) consistent with Fable's own build.
+                                   Every portfolio write in that window is Fable's own recovery (.scratch/replay-edits.mjs, .scratch/restored/*). Behavioural isolation, not enforced -- re-verify before the checkpoint.
+2026-09-03 14:3x  SNAPSHOT         post-isolation capture taken WHILE Fable was writing: source-side patch + status + .scratch (86 files). Point-in-time, not a coherent checkpoint; the 717+ artifacts remain covered by pass2b.
+                                   Its purpose is to protect Fable's transcript-reconstructed edits, which no earlier snapshot contains.
+2026-09-03 14:4x  FABLE            COMPLETE. Verdict FREEZE. Checkpoint 26836ba pushed (52 files, +11169/-142). local == origin verified by the orchestrator.
+                                   Fable claims: typecheck 0, lint 0, prettier clean, unit 527/527, Chromium 216/216, WebKit 211/216 with 5 failures said to reproduce value-for-value against a build of 76c5660.
+2026-09-03 14:4x  ORCHESTRATOR     Independently verified: HEAD==origin==26836ba, main untouched at 16d3ec0, feature/spatial-portfolio-v5 untouched at 243db393.
+                                   Frozen-boundary check: exactly 5 of the 30 fingerprinted blobs have moved since 243db393 -- SpatialExperience.tsx (the hero fix, already justified in 76c5660) plus
+                                   projectGround.ts, SpatialProjectScene.tsx, HowIBuild.tsx, SelectedSystems.tsx from this checkpoint. Matches Fable's claim of 4 in this pass; no undeclared frozen change.
+2026-09-03 14:4x  DOCS             docs/AUTONOMOUS_STATUS.md reconciled now that single-writer is released: the obsolete HUMAN_REQUIRED/WAITING-on-Codex block replaced with the Claude-only gate state,
+                                   and the stale Current-state rows (branch, HEAD, origin, phase, next action) corrected. 0 dangling HUMAN_REQUIRED references remain.
+2026-09-03 14:4x  OPUS QA          LAUNCHED. Fresh independent session, claude-opus-5, effort high, reviewing the COMMITTED checkpoint 26836ba only.
+                                   Briefed to re-run all validation itself, to verify the "pre-existing" WebKit claim against 243db393/76c5660 rather than trust it, to check for concurrent-writer residue,
+                                   and to return art-direction issues to Fable rather than fixing them.
+2026-09-03 15:0x  OPUS QA          COMPLETE. Verdict PASS WITH DOCUMENTED NON-BLOCKERS. Pushed 742ecf5 (frozen-boundary ledger) and 83ebac7 (its return). Both docs-only.
+                                   Verified the WebKit "pre-existing" claim by building 76c5660 in a detached worktree: all five failures reproduce with identical received values. Environment, not regression.
+                                   Found and fixed a real documentation defect: FROZEN_BOUNDARY.md printed five unexplained MOVED lines because the document defining the boundary had never been updated.
+2026-09-03 15:0x  ORCHESTRATOR     Independently re-verified: HEAD==origin==83ebac7; main 16d3ec0 with a single reflog entry; feature/spatial-portfolio-v5 243db393; QA commits touch only docs/ and .ai/;
+                                   frozen boundary exactly 5 of 30, matching the new ledger; typecheck 0, lint 0, unit 527/527 reproduced locally. No stray worktrees.
+2026-09-03 15:0x  PIPELINE         COMPLETE -> DESKTOP FREEZE CANDIDATE on feature/project-architecture-v13. main deliberately untouched. FINAL-PIPELINE-RETURN.md written.

@@ -1,12 +1,7 @@
 {
-  "pipeline": [
-    "CODEX",
-    "FABLE_5_1",
-    "OPUS_FINAL_QA",
-    "DESKTOP_FREEZE_CANDIDATE"
-  ],
-  "current_stage": "OPUS_FINAL_QA",
-  "current_substage": "FABLE_FINDINGS_TRIAGE",
+  "pipeline": ["FABLE_5_1", "OPUS_5_HIGH_FINAL_QA", "DESKTOP_FREEZE_CANDIDATE"],
+  "current_stage": "COMPLETE",
+  "current_substage": "DESKTOP_FREEZE_CANDIDATE",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -44,7 +39,8 @@
       "last_exhausted_reset": "2026-09-02T14:57:00",
       "note": "Quota exhaustion is PAUSED_FOR_QUOTA, never FAILED. Resume the same session id."
     },
-    "confirmation_session_id": "01a063f1-8cff-7f02-9a8c-870c24c254e7"
+    "confirmation_session_id": "01a063f1-8cff-7f02-9a8c-870c24c254e7",
+    "current_gate_role": "NONE — removed by owner decision 2026-09-03"
   },
   "fable": {
     "model": "claude-fable-5-1",
@@ -54,28 +50,64 @@
     "session_id": null,
     "status": "COMPLETE",
     "starting_head": "bc2dad371651ef350f65658d6d5df37e623bc372",
-    "final_head": "a5da0ed24a693063affe81ed525a979e745c8a34",
+    "final_head": "26836ba",
     "gate": ".ai/handoffs/FABLE-GATE.md",
     "return": ".ai/handoffs/FABLE-RETURN.md",
     "permission_mode": "acceptEdits",
     "launch_notes": "bypassPermissions blocked by environment classifier; background stdin detached so the prompt must be an argument via a launcher script",
-    "verdict": "NOT READY",
-    "blocker": "Its acceptEdits sandbox refused every build/serve/test command and Playwright MCP would not connect, so it could not RENDER. Judged from the 221 existing V12 artifacts plus code."
+    "verdict": "FREEZE",
+    "blocker": "Its acceptEdits sandbox refused every build/serve/test command and Playwright MCP would not connect, so it could not RENDER. Judged from the 221 existing V12 artifacts plus code.",
+    "pass_2b": {
+      "limit": "Claude session limit, resets 09:20 Europe/Istanbul",
+      "paused_at": "~05:05 local 2026-09-03",
+      "resume": "SAME session 20173014-40f9-4a94-8e5b-a8a3fb435448 -- do NOT start a new one",
+      "work_uncommitted": "11 modified files (+473/-85), 717 artifacts under docs/review/v13-fable-gate/, tests/tools/fable-gate-probe.mjs, tests/unit/case-study-hero.test.tsx, .scratch/",
+      "snapshot": "C:/Users/hakan/fable-v13-paused-recovery-20260903/pass2b (1355/1355 files verified)",
+      "TREE_DOES_NOT_COMPILE": "components/project/CaseStudyHero.tsx:96 passes `priority` to <Figure>, but components/ui/Figure.tsx has no such prop and is unmodified at HEAD. Figure.tsx WAS modified at ~04:5x and has since reverted. Fable must restore the Figure change or drop the prop. Deliberately not fixed by the orchestrator: it is Fable in-flight work and the orchestrator agreed to hold edits."
+    }
   },
   "opus_final_qa": {
-    "status": "RUNNING",
-    "starting_head": "a5da0ed24a693063affe81ed525a979e745c8a34",
-    "final_head": null
+    "status": "COMPLETE",
+    "verdict": "PASS WITH DOCUMENTED NON-BLOCKERS",
+    "model": "claude-opus-5 effort high",
+    "starting_head": "26836ba",
+    "final_head": "83ebac739f3d9b62a8866b3566caf3cdf950554e",
+    "return_doc": ".ai/handoffs/OPUS-QA-RETURN.md"
   },
   "heads": {
-    "last_observed_local": "bc2dad371651ef350f65658d6d5df37e623bc372",
-    "last_observed_origin": "bc2dad371651ef350f65658d6d5df37e623bc372"
+    "last_observed_local": "83ebac739f3d9b62a8866b3566caf3cdf950554e",
+    "last_observed_origin": "83ebac739f3d9b62a8866b3566caf3cdf950554e"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
   "frozen_boundary_check": "all 30 blobs unchanged vs 243db393",
   "acceptance_criteria": {
     "status": "FROZEN",
     "at": "bc2dad371651ef350f65658d6d5df37e623bc372",
-    "doc": "docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md"
-  }
+    "doc": "docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md",
+    "reviewer_for_this_gate": "CLAUDE OPUS 5 HIGH"
+  },
+  "interference": {
+    "session": "software-factory-0b (83dae76d, claude-opus-5, IDE-embedded, project dir c--GitHub-software-factory)",
+    "harms": "3 Chromium e2e runs rebuilt .next under the Fable :3200 server, producing HTTP 500s in the zoom captures; an edit to frozen-boundary SpatialProjectScene.tsx carrying a false 'Opus QA of this gate' attribution; plausible cause of the lost Figure.tsx edit",
+    "action": "asked to hold all writes/builds/servers/Playwright against C:/GitHub/portfolio until Fable pushes; read-only inspection and its observation-only watch script left alone",
+    "status": "ISOLATED as of 2026-09-03 14:35 — no portfolio write attributable to software-factory-0b in the preceding 40 minutes; its :3200 server is gone and :3100 is a new PID consistent with Fable's own build. Its own IDE process remains alive for its own project, which is fine.",
+    "lost_work": "Figure.tsx, ProjectNeighbours.tsx, app/work/[slug]/page.tsx reverted to HEAD at 06:16:42; not in either snapshot; Figure intent recovered from Fable transcript and handed back",
+    "verification": "port listeners, process start times, and every portfolio file written in the last 40 minutes (all attributable to Fable's .scratch recovery)",
+    "caveat": "behavioural isolation, not enforced isolation — nothing technically prevents it writing again. Re-verify before the Opus checkpoint."
+  },
+  "orchestrator_lesson": "Scope concurrent-session checks by ListAgents, not by one .claude/projects/<dir>. A session working from a different project directory is invisible to a per-directory transcript search, which is how the orchestrator initially and wrongly concluded no third session existed.",
+  "reviewer": "CLAUDE OPUS 5, effort High",
+  "gpt_codex": {
+    "status": "REMOVED FROM CURRENT GATE",
+    "reason": "owner decision 2026-09-03 — GPT/Codex quota/capacity exhausted",
+    "rule": "do not wait for, schedule, retry or launch Codex for this gate until the owner reverses it",
+    "scheduled_retries": "none pending — CronList empty, verified 2026-09-03 14:35",
+    "historical_note": "the Codex architecture and slice reviews already completed and remain valid history; their returns stay in .ai/handoffs/"
+  },
+  "snapshots": [
+    "C:/Users/hakan/fable-v13-paused-recovery-20260903/worktree (pre-resume ~04:2x)",
+    "C:/Users/hakan/fable-v13-paused-recovery-20260903/pass2b/worktree (pause ~05:1x, 1355/1355 verified)",
+    "C:/Users/hakan/fable-v13-paused-recovery-20260903/post-isolation (14:3x, source-side + .scratch/restored, 86 files; taken mid-write, point-in-time not coherent)"
+  ],
+  "final_return": ".ai/orchestrator/FINAL-PIPELINE-RETURN.md"
 }
