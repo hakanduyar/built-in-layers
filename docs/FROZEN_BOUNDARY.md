@@ -13,7 +13,9 @@ follows: what is frozen, how to detect that it moved, and what counts as a permi
 ## 1. Frozen surface — 30 files
 
 Any change to a blob listed here moves the frozen system and must be justified as a deliberate,
-measured change rather than a side effect.
+measured change rather than a side effect. Five have moved since, each with its evidence; they are
+listed in §5. The fingerprints below are deliberately left at their `243db393` values — they are
+what §4 compares against.
 
 ### Spatial engine — `lib/spatial/` (8 files)
 
@@ -115,4 +117,36 @@ pnpm test:e2e                  # includes spatial-v5.spec.ts
 ```
 
 If a frozen blob must move, the change requires the same standard the freeze was granted under:
-measured evidence, not judgement.
+measured evidence, not judgement. Moves that have met that standard are recorded in §5, so the loop
+above is read against a ledger rather than against silence.
+
+---
+
+## 5. Sanctioned moves since `243db393`
+
+The fingerprints in §1 stay written as they were at `243db393` — they are the reference the loop in
+§4 compares against, and rewriting them would erase the boundary. This section is the ledger of
+moves that were granted under §4's standard, so a `MOVED:` line can be checked against a decision
+instead of being read as an undetected regression.
+
+On `feature/project-architecture-v13`, the §4 loop prints exactly these five lines. Nothing else
+under `lib/spatial/`, `components/spatial/` or `components/sections/` has moved, and no file has
+been added to or removed from the 30.
+
+| File | `243db393` | now | Granted by | Measured evidence |
+|---|---|---|---|---|
+| `components/spatial/SpatialExperience.tsx` | `fa941e8` | `8568129` | hero-clipping fix, commit `76c5660` | `FABLE-RETURN.md` §5 (defect, five frozen stills) and §11.3 A (fix, eight viewports); `metrics/final/hero-unit.txt` |
+| `lib/spatial/projectGround.ts` | `aa159e9` | `6431139` | **D-028** | `FABLE-RETURN.md` §11.3 B; `metrics/{before,final}/fable-gate-all.json`, key `groundOutsideEvidence` |
+| `components/spatial/SpatialProjectScene.tsx` | `edb9cd4` | `34b48d5` | **D-029** (finding C) | `FABLE-RETURN.md` §11.3 C; same metrics, plate-bottom clearance |
+| `components/sections/HowIBuild.tsx` | `a48126a` | `2d90924` | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; `metrics/final/lower-world.json` |
+| `components/sections/SelectedSystems.tsx` | `751aa48` | `592b79e` | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; same file, label/column offset |
+
+Metric paths are relative to `docs/review/v13-fable-gate/`. D-028 and D-029 are accepted on this
+branch under the art-direction gate's delegated authority and are **not in force on `main`**; the
+boundary on `main` remains all 30 blobs at `243db393`.
+
+**§3.1 is resolved, not open.** The ruling it asked for was answered by D-027: Software Factory
+stays at `depth: preview`, so `SpatialProjectScene.tsx`'s `project.depth` branch still renders
+"Open system" and the question of a content-driven string change inside a frozen scene did not
+arise. `isCaseStudyDestination` now reads the same `depth` field for the case-study route's exit
+(D-029), which is the same data answering the same question in a second place.
