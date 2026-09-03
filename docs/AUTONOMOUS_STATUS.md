@@ -3,7 +3,7 @@
 Single source of truth for machine-readable project state. Conversation history is **not** the
 source of truth — this file is. Updated at every checkpoint and every gate.
 
-_Last updated: 2026-09-03 (V13 — Fable checkpoint 26836ba; Claude-only gate, Opus 5 High reviewing)_
+_Last updated: 2026-09-03 (V13 gate CLOSED at `5000201` — accepted freeze candidate)_
 
 ---
 
@@ -19,7 +19,9 @@ and is recorded in **D-027**. The architecture acceptance criteria were frozen a
 | GPT / Codex | **REMOVED from the current gate** (owner decision 2026-09-03, capacity exhausted). Do not wait for, schedule, retry or launch it until the owner reverses this. Its completed architecture and slice reviews remain valid history in `.ai/handoffs/`. |
 | Art direction | Fable 5.1, session `20173014-40f9-4a94-8e5b-a8a3fb435448`, verdict **FREEZE** |
 | Fable checkpoint | `26836ba` — 52 files, local == origin |
-| Stage | Opus 5 High final QA against the committed checkpoint |
+| Opus 5 High QA | **PASS WITH DOCUMENTED NON-BLOCKERS** — `.ai/handoffs/OPUS-QA-RETURN.md` |
+| Stage | **V13 GATE CLOSED** at `5000201` — accepted freeze candidate on this branch. Not merged to `main`. |
+| Accepted deferred polish | Decision *alternatives* render as a comma join rather than a list. Owner-accepted 2026-09-03: non-blocking, not a regression, nothing in the docs claims otherwise. Revisit only in a future art-direction pass. |
 
 Live orchestration state, including the concurrent-writer incident and recovery snapshots, is in
 [`.ai/orchestrator/`](../.ai/orchestrator/AUTONOMOUS_PIPELINE_STATE.md).

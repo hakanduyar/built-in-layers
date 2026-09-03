@@ -79,3 +79,7 @@
 2026-09-03 15:0x  ORCHESTRATOR     Independently re-verified: HEAD==origin==83ebac7; main 16d3ec0 with a single reflog entry; feature/spatial-portfolio-v5 243db393; QA commits touch only docs/ and .ai/;
                                    frozen boundary exactly 5 of 30, matching the new ledger; typecheck 0, lint 0, unit 527/527 reproduced locally. No stray worktrees.
 2026-09-03 15:0x  PIPELINE         COMPLETE -> DESKTOP FREEZE CANDIDATE on feature/project-architecture-v13. main deliberately untouched. FINAL-PIPELINE-RETURN.md written.
+2026-09-03 15:2x  OWNER DECISION   Art-direction non-blocker (decision alternatives as a comma join rather than a list) ACCEPTED as deferred polish. NOT returned to Fable: non-blocking, not a regression,
+                                   nothing in the docs falsely claims it was implemented, and the iteration cost is not justified. No new Fable pass, no Codex/GPT review.
+2026-09-03 15:2x  GATE CLOSED      V13 accepted freeze candidate at 5000201 on feature/project-architecture-v13. Fable FREEZE; Opus QA PASS WITH DOCUMENTED NON-BLOCKERS; frozen boundary 5/30, all ledgered;
+                                   no application source changed after the QA verdict (every commit since 83ebac7 touches docs/ and .ai/ only); main untouched at 16d3ec0. NOT merged to main.

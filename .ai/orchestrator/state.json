@@ -1,7 +1,7 @@
 {
   "pipeline": ["FABLE_5_1", "OPUS_5_HIGH_FINAL_QA", "DESKTOP_FREEZE_CANDIDATE"],
-  "current_stage": "COMPLETE",
-  "current_substage": "DESKTOP_FREEZE_CANDIDATE",
+  "current_stage": "CLOSED",
+  "current_substage": "V13_ACCEPTED_FREEZE_CANDIDATE",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -75,8 +75,8 @@
     "return_doc": ".ai/handoffs/OPUS-QA-RETURN.md"
   },
   "heads": {
-    "last_observed_local": "83ebac739f3d9b62a8866b3566caf3cdf950554e",
-    "last_observed_origin": "83ebac739f3d9b62a8866b3566caf3cdf950554e"
+    "last_observed_local": "5000201df8db9f3ad36a6d019a42e2739a85023a",
+    "last_observed_origin": "5000201df8db9f3ad36a6d019a42e2739a85023a"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
   "frozen_boundary_check": "all 30 blobs unchanged vs 243db393",
@@ -109,5 +109,22 @@
     "C:/Users/hakan/fable-v13-paused-recovery-20260903/pass2b/worktree (pause ~05:1x, 1355/1355 verified)",
     "C:/Users/hakan/fable-v13-paused-recovery-20260903/post-isolation (14:3x, source-side + .scratch/restored, 86 files; taken mid-write, point-in-time not coherent)"
   ],
-  "final_return": ".ai/orchestrator/FINAL-PIPELINE-RETURN.md"
+  "final_return": ".ai/orchestrator/FINAL-PIPELINE-RETURN.md",
+  "gate_closed": {
+    "at": "5000201df8db9f3ad36a6d019a42e2739a85023a",
+    "date": "2026-09-03",
+    "by": "owner decision",
+    "fable": "FREEZE",
+    "opus_qa": "PASS WITH DOCUMENTED NON-BLOCKERS"
+  },
+  "accepted_deferred_polish": [
+    {
+      "item": "decision alternatives rendered as a comma join rather than a list",
+      "classification": "ART-DIRECTION",
+      "status": "ACCEPTED / DEFERRED",
+      "decided": "2026-09-03 owner",
+      "reason": "non-blocking, not a regression, no documentation claims otherwise, reopening the Fable gate is not justified",
+      "action": "revisit only in a future art-direction pass -- no new Fable pass for this"
+    }
+  ]
 }

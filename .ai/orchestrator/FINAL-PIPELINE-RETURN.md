@@ -66,7 +66,7 @@ approved viewports byte-identical by construction.
 
 | | |
 |---|---|
-| `feature/project-architecture-v13` | `83ebac739f3d9b62a8866b3566caf3cdf950554e` |
+| `feature/project-architecture-v13` | `5000201df8db9f3ad36a6d019a42e2739a85023a` (QA verdict was issued at `83ebac7`; everything after it is docs only) |
 | origin | identical |
 | `main` | `16d3ec0` — **untouched**, reflog holds exactly one entry (the original clone) |
 | `feature/spatial-portfolio-v5` | `243db393` — **untouched** |
@@ -77,9 +77,12 @@ approved viewports byte-identical by construction.
 
 1. **WebKit environment condition** — five failures under software rendering; the constant received
    values suggest the scripted scroll never executes. Pre-existing, reproduced at `76c5660`.
-2. **Art direction, for Fable** — pass 1's directive to set decision *alternatives* as a list rather
-   than a comma join was not carried into pass 2. D-029 does not claim it was, so nothing asserted is
-   false. Left undecided rather than settled by an engineering pass.
+2. **Art direction — ACCEPTED / DEFERRED by the owner (2026-09-03).** Pass 1's directive to set
+   decision *alternatives* as a list rather than a comma join was not carried into pass 2. D-029 does
+   not claim it was, so nothing asserted is false. The owner accepted it as deferred polish rather
+   than reopening the Fable gate: non-blocking, not a regression, no false claim in the docs, and the
+   iteration cost is not justified. **No new Fable pass.** It stays on this list as polish, not as a
+   defect.
 3. Three `<nav>`s sharing `aria-label="Primary"` — pre-existing, axe-clean, `components/layout/`
    untouched by this work.
 4. The repo-wide Prettier "debt" figure is largely a `core.autocrlf` artefact.
@@ -99,6 +102,12 @@ no third session existed. **Scope concurrent-writer checks by `ListAgents`, not 
 
 ## FINAL VERDICT
 
-**DESKTOP FREEZE CANDIDATE** — for `feature/project-architecture-v13` only.
+**V13 GATE CLOSED — ACCEPTED FREEZE CANDIDATE** at `5000201`, for
+`feature/project-architecture-v13` only.
+
+Closed by owner decision 2026-09-03: Fable FREEZE, Opus QA PASS WITH DOCUMENTED NON-BLOCKERS, the
+one art-direction item accepted as deferred polish. No further Fable pass, no Codex/GPT review, and
+no application source changed after the QA verdict — every commit since `83ebac7` touches `docs/`
+and `.ai/` only.
 
 `main` is untouched and nothing here proposes merging it.
