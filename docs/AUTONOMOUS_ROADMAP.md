@@ -36,13 +36,14 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 | V11 | **Desktop system gate**: focus isolation, motion sharpness, world spacing, ceiling, lower-world language | Opus | **COMPLETE** — D-026, DESIGN_SYSTEM §36, docs/DESKTOP_FREEZE_ACCEPTANCE.md |
 | V12 | **Independent desktop review gate** (Codex gpt-5.6-sol, xhigh): evidence-derived project grounds, Selected Systems topology, probe hydration races | Codex | **COMPLETE** — `42798f1`/`0752883`, docs/DESKTOP_FREEZE_ACCEPTANCE.md, `.ai/handoffs/CODEX-RETURN.md` |
 | — | **DESKTOP SPATIAL SYSTEM — FROZEN** (2026-09-02, `0752883`) | — | Do not reopen spacing, grounds, scroll, sharpness, lower world, zoom, SYSTEMS or UNDERNEATH without a measured regression |
-| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | **NEXT** — desktop is frozen |
-| — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | after Phase 4 |
-| 5 | Apply the approved case-study system to remaining projects | Opus | after Gate 2 |
-| — | **Fable Gate 3** — Software Factory flagship | Fable | after real architecture is extracted by Opus |
-| 6 | Mobile audit (320/360/375/390/430/768) | Opus | after desktop is structurally stable — V8 verified all six widths for overflow and console health, but not art direction |
-| — | **Fable Gate 4** — mobile art direction | Fable | after the Phase 6 audit |
-| 7 | Final engineering / console / performance | Opus | last |
+| V13 | **Project architecture + case-study art direction**: global order contract, derived navigation, case-study destinations | Opus + Codex + Fable | **COMPLETE** — gate closed at `5000201`; D-027/D-028/D-029, `docs/PROJECT_ARCHITECTURE_ACCEPTANCE.md` |
+| 4 | Project architecture / content expansion (`PROJECT_INVENTORY.md`) | Opus | **PARTIALLY ABSORBED by V13** — inventory, architecture map, ordering contract and derived navigation shipped. What remains is *content* depth, not architecture: Software Factory is still `depth: "preview"` and outside case-study navigation |
+| — | **Fable Gate 2** — project experience system (SURFACE / FLOW / SYSTEM, case-study framework) | Fable | **SUPERSEDED by V13's D-029** — the case-study destination system (hero, lead asset, record, contribution, disclosure, derived previous/next) was designed and shipped inside the V13 gate |
+| 5 | Apply the approved case-study system to remaining projects | Opus | **PARTIALLY ABSORBED** — the system is applied to all five destinations. Remaining work is per-project evidence depth, tracked in `docs/CONTENT_GAPS.md` |
+| — | **Fable Gate 3** — Software Factory flagship | Fable | **BLOCKED** — needs verified architecture from the external `software-factory` repository (`CONTENT_GAPS` 1–2), which the owner has placed out of scope |
+| 6 | Mobile audit (320/360/375/390/430/768) | Opus | **COMPLETE** — `docs/MOBILE_AUDIT.md`, 48 measured states, evidence in `docs/review/phase6-mobile-audit/`. 0 overflow, 0 console errors, touch verified; 4 P1 composition findings, 0 P0, 0 mechanical defects. Was: — precondition met (desktop frozen V12, V13 closed). V8 verified the six widths for overflow and console health only; composition has never been reviewed, and V13's five case-study destinations have never been rendered below 1024px |
+| — | **Fable Gate 4** — mobile art direction | Fable | **NEXT — REQUIRED.** Phase 6 proved every remaining mobile finding is compositional: unreadable diagram evidence at phone widths, 82-95ch measure at 768, homepage route travel costing ~67% of a viewport, sub-44px tap targets. Bounded scope in `docs/MOBILE_AUDIT.md` |
+| 7 | Final engineering / console / performance | Opus | **DEFERRED — last.** After the mobile track closes |
 
 ---
 
