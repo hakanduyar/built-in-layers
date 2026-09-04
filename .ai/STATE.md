@@ -9,8 +9,9 @@ _Updated: 2026-09-04_
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/project-architecture-v13` |
-| HEAD | `8a24e03` |
-| Origin | same — in sync |
+| Last application checkpoint | `8a24e03` — Fable Gate 4 final pass. Later commits on this branch are documentation/workflow only |
+| Branch tip | `b11067d` at time of writing; verify with `git rev-parse HEAD` rather than trusting this row |
+| Origin | in sync — verify with `git rev-parse origin/feature/project-architecture-v13` |
 | `main` | `16d3ec0` — untouched, never merged to |
 | Working tree | clean except intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
 
