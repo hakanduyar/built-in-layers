@@ -1,5 +1,9 @@
 # AUTONOMOUS PIPELINE STATE
 
+> **Historical (2026-09-04).** The V13 / mobile pipeline it tracked is complete. Current state is
+> `.ai/STATE.md`; policy is `.ai/TOKEN_POLICY.md`. Kept for its recovery record and the
+> concurrent-writer incident. Do not read it by default.
+
 Recovery record for the autonomous pipeline, so an interrupted CLI session can be resumed without
 the owner reconstructing context. Machine-readable twin: [`state.json`](state.json). Timestamped
 transitions: [`AUTONOMOUS_PIPELINE.log`](AUTONOMOUS_PIPELINE.log).

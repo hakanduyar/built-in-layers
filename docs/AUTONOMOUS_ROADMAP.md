@@ -9,6 +9,9 @@ _Last updated: 2026-09-01 (V9)_
 
 ## Model policy
 
+> Superseded by `.ai/TOKEN_POLICY.md`, which is canonical for model routing and effort tiers. The
+> table below is the historical V6.8–V13 policy.
+
 | Role | Model | Scope |
 |---|---|---|
 | Default worker | **Opus 5, high effort** | recovery, git, implementation, refactors, tests, types, lint, format, build, E2E, console/runtime triage, performance, accessibility, documentation, and repeat application of an already-approved design system |
@@ -42,8 +45,9 @@ cleanly. Fable returns via `.ai/handoffs/OPUS-RETURN.md`.
 | 5 | Apply the approved case-study system to remaining projects | Opus | **PARTIALLY ABSORBED** — the system is applied to all five destinations. Remaining work is per-project evidence depth, tracked in `docs/CONTENT_GAPS.md` |
 | — | **Fable Gate 3** — Software Factory flagship | Fable | **BLOCKED** — needs verified architecture from the external `software-factory` repository (`CONTENT_GAPS` 1–2), which the owner has placed out of scope |
 | 6 | Mobile audit (320/360/375/390/430/768) | Opus | **COMPLETE** — `docs/MOBILE_AUDIT.md`, 48 measured states, evidence in `docs/review/phase6-mobile-audit/`. 0 overflow, 0 console errors, touch verified; 4 P1 composition findings, 0 P0, 0 mechanical defects. Was: — precondition met (desktop frozen V12, V13 closed). V8 verified the six widths for overflow and console health only; composition has never been reviewed, and V13's five case-study destinations have never been rendered below 1024px |
-| — | **Fable Gate 4** — mobile art direction | Fable | **NEXT — REQUIRED.** Phase 6 proved every remaining mobile finding is compositional: unreadable diagram evidence at phone widths, 82-95ch measure at 768, homepage route travel costing ~67% of a viewport, sub-44px tap targets. Bounded scope in `docs/MOBILE_AUDIT.md` |
-| 7 | Final engineering / console / performance | Opus | **DEFERRED — last.** After the mobile track closes |
+| — | **Fable Gate 4** — mobile art direction | Fable | **COMPLETE** — Fable 5.1 verdict FREEZE at `8a24e03`; D-030..D-033, DESIGN_SYSTEM §37, `.ai/handoffs/FABLE-MOBILE-RETURN.md`. Independent Opus QA PASS WITH DOCUMENTED NON-BLOCKERS at `4c788b4` (44/44 desktop-parity walks). Was: Phase 6 proved every remaining mobile finding is compositional: unreadable diagram evidence at phone widths, 82-95ch measure at 768, homepage route travel costing ~67% of a viewport, sub-44px tap targets. Bounded scope in `docs/MOBILE_AUDIT.md` |
+| — | **MOBILE SYSTEM — FROZEN** (2026-09-04, `8a24e03`) | — | Do not reopen the mobile world unit, the figure inspector, the measure token, touch-target treatment or mobile route legs without a measured regression |
+| 7 | Final engineering / console / performance | Opus | **NEXT** — the mobile track is closed |
 
 ---
 

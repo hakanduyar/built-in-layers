@@ -7,7 +7,7 @@
     "PHASE_7_FINAL_ENGINEERING"
   ],
   "current_stage": "FABLE_GATE_4",
-  "current_substage": "PASS_2_RESUMED_AFTER_QUOTA",
+  "current_substage": "BOUNDED_CORRECTION_PASS",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -81,8 +81,8 @@
     "return_doc": ".ai/handoffs/OPUS-QA-RETURN.md"
   },
   "heads": {
-    "last_observed_local": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4",
-    "last_observed_origin": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4"
+    "last_observed_local": "4c788b4e53fa2e9aa746a99cff67685c7add8570",
+    "last_observed_origin": "4c788b4e53fa2e9aa746a99cff67685c7add8570"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
   "frozen_boundary_check": "all 30 blobs unchanged vs 243db393",
@@ -140,7 +140,7 @@
     "result": "0 P0, 0 mechanical defects, 4 P1 composition findings; Fable Gate 4 REQUIRED"
   },
   "fable_gate_4": {
-    "status": "RUNNING (resumed same session)",
+    "status": "IMPLEMENTATION COMPLETE, RETURN DOC OWED",
     "model": "claude-fable-5-1",
     "effort": "max",
     "starting_head": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4",
@@ -155,6 +155,43 @@
       "lib/spatial/worldFit.ts",
       "components/spatial/SpatialCamera.tsx"
     ],
-    "frozen_requirement": "each needs stated reason + measured desktop-unchanged proof + FROZEN_BOUNDARY §5 ledger entry, or revert"
+    "frozen_requirement": "each needs stated reason + measured desktop-unchanged proof + FROZEN_BOUNDARY §5 ledger entry, or revert",
+    "checkpoint": "b23284e81b725008e0c7472167722b2e18ae1469",
+    "committed_by": "orchestrator (Fable hit session limit before it could commit; resets 11:10)",
+    "return_doc": "NOT YET WRITTEN — .ai/handoffs/FABLE-MOBILE-RETURN.md",
+    "decisions": [
+      "D-030 mobile world unit + route two mobile legs",
+      "D-031 figure inspector",
+      "D-032 measure token",
+      "D-033 touch-link + tour CTA floor"
+    ],
+    "validated_before_commit": {
+      "typecheck": 0,
+      "lint": 0,
+      "prettier": "clean",
+      "unit": "553/553",
+      "build": "15/15",
+      "chromium": "219/219"
+    },
+    "frozen_moves": "7 files, all ledgered in FROZEN_BOUNDARY §5 with desktop-parity proof, max-lg scoped"
+  },
+  "opus_mobile_qa": {
+    "status": "COMPLETE",
+    "verdict": "PASS WITH DOCUMENTED NON-BLOCKERS",
+    "model": "claude-opus-5 effort high",
+    "session": "1c39f0e7-c276-4111-83ec-41f8180c59e3",
+    "reviewed": "b23284e",
+    "final_head": "4c788b4e53fa2e9aa746a99cff67685c7add8570",
+    "return_doc": ".ai/handoffs/OPUS-MOBILE-QA-RETURN.md",
+    "key": "44/44 desktop-parity walks at parity — no desktop regression hiding in the mobile pass; M1-M4 all closed at six widths; tests purely additive",
+    "returned_to_fable": [
+      "ART-1 /work card thumbnails: diagrams at 0.19-0.22 scale with no inspector",
+      "ART-2 34rem measure lengthens Kivilcim at 768 by 8.5%",
+      "A11Y-1 five identically-named INSPECT buttons per case study"
+    ],
+    "not_finished": [
+      "WebKit suite not re-run (+3 inspector tests unmeasured there)",
+      "reduced-motion desktop-parity walk not reproduced (related claim verified: +6px below lg, 0px at 1280)"
+    ]
   }
 }

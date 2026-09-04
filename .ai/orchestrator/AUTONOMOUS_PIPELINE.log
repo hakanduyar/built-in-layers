@@ -92,3 +92,19 @@
 2026-09-04 06:2x  ORCHESTRATOR     Snapshotted to C:/Users/hakan/fable-gate4-paused-20260904 (911 files, 39KB patch). Single-writer verified: ZERO portfolio writes since 01:15.
 2026-09-04 06:2x  FABLE/gate4      RESUMED SAME session 888a4bb7-e3f8-4ae3-8916-507402fe4d9c (identified by 86 refs to its own FigureInspect/MOBILE_AUDIT work). No new session. Briefed that it has touched 3 FROZEN files
                                    (scenes.ts, worldFit.ts, SpatialCamera.tsx) which need stated reason + measured desktop-unchanged proof + §5 ledger entry, or revert.
+2026-09-04 07:2x  FABLE/gate4      PAUSED_FOR_QUOTA a second time (resets 11:10) with the implementation substantively COMPLETE but uncommitted and no return doc.
+                                   Snapshotted to C:/Users/hakan/fable-gate4-paused-b-20260904 (690 files, 104KB patch). Validated the paused tree BEFORE committing anything:
+                                   typecheck 0, lint 0, prettier clean, unit 553/553 (+26), build 15/15, Chromium 219/219 (+3). All green -> checkpointed protectively as b23284e rather than
+                                   leaving a night of work uncommitted for four hours. Fable still owes .ai/handoffs/FABLE-MOBILE-RETURN.md and its verdict.
+                                   Frozen boundary: 7 files moved, all ledgered in §5 with measured evidence and a desktop-parity proof; changes are max-lg scoped, `world` anchors byte-identical.
+2026-09-04 07:3x  OPUS QA          LAUNCHED against the committed checkpoint b23284e. Fresh independent session, claude-opus-5, effort high.
+2026-09-04 15:4x  OPUS QA          Turn ended mid-run (turn boundary, NOT quota) with an interim report and no verdict. Session 1c39f0e7 resumed to finish the desktop-parity probe and land the verdict.
+                                   Interim findings reproduced on its own clean build: typecheck 0, lint 0, unit 553/553, build 15/15, Chromium 219/219, 0 standalone sub-44 tap targets across 8 routes x 6 widths,
+                                   layout invariance 0px, frozen §4 loop prints exactly 10 MOVED lines all matching the §5 ledger, M1's 12.25px derivation independently confirmed from the 13 source SVGs,
+                                   and tests are purely additive (zero deleted lines) so no assertion was weakened.
+2026-09-04 16:0x  OPUS QA          COMPLETE at 4c788b4. Verdict PASS WITH DOCUMENTED NON-BLOCKERS. Rebuilt the 180c07c baseline in its own worktree and re-ran the parity probe rather than reading the committed output,
+                                   extending it to all five case studies: 44/44 walks at parity, every case study pixel-identical with exactly +1 element, homepage geometry-identical at every step. No desktop regression.
+                                   M1-M4 independently closed at six widths. Artifacts matched committed metrics on all 48 states. Tests purely additive (0 deleted lines). Fixed docs-only defects incl. a wrong SVG
+                                   filename in the M1 derivation. Honestly recorded two unfinished checks (WebKit not re-run; reduced-motion parity walk not reproduced). Worktree removed, servers stopped.
+2026-09-04 16:1x  ORCHESTRATOR     Verdict is PASS, so the freeze is available -- but QA returned 3 items to Fable (ART-1, ART-2, A11Y-1) and Fable still owes its return doc. A11Y-1 (five identically-named INSPECT
+                                   buttons) is a genuine screen-reader defect, not polish, and ART-1 is the same class of finding as M1. Running ONE bounded Fable pass before the freeze rather than freezing over them.

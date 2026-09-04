@@ -1,7 +1,9 @@
 # AUTONOMOUS STATUS
 
-Single source of truth for machine-readable project state. Conversation history is **not** the
-source of truth — this file is. Updated at every checkpoint and every gate.
+> **Superseded for CURRENT state (2026-09-04).** `.ai/STATE.md` is now the canonical current-state
+> file; `.ai/TOKEN_POLICY.md` is canonical for model/token policy and `.ai/ACTIVE_TASK.md` for the
+> current assignment. This file is retained as the **historical** record of the V6.8→V13 track —
+> its validation tables and gate history remain valid evidence. Do not read it by default.
 
 _Last updated: 2026-09-03 (V13 gate CLOSED at `5000201` — accepted freeze candidate)_
 
