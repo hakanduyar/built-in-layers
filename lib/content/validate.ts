@@ -47,34 +47,39 @@ export function similarity(a: string, b: string): number {
   const right = stripMarkup(b);
   if (left.length === 0 && right.length === 0) return 1;
 
-  const rows = left.length + 1;
+  // Two rolling rows, not the full `rows x cols` matrix. The distance is
+  // identical — this is the same recurrence — but the matrix version
+  // allocated one `number[]` per row, which for the real layer bodies is
+  // ~67M cells across the nine pairs the gate compares. Measured at Phase 7:
+  // 1722ms for those nine pairs, essentially all of it allocation rather
+  // than arithmetic, and `getPublishedProjects()` pays it on every call.
+  // Two `Int32Array`s hold ~32KB instead. See docs/PHASE7.md.
   const cols = right.length + 1;
-  const distances: number[][] = Array.from({ length: rows }, () => new Array<number>(cols).fill(0));
+  let previous = new Int32Array(cols);
+  let current = new Int32Array(cols);
+  for (let j = 0; j < cols; j += 1) previous[j] = j;
 
-  for (let i = 0; i < rows; i += 1) {
-    const row = distances[i];
-    if (row) row[0] = i;
-  }
-  for (let j = 0; j < cols; j += 1) {
-    const row = distances[0];
-    if (row) row[j] = j;
-  }
-
-  for (let i = 1; i < rows; i += 1) {
+  for (let i = 1; i <= left.length; i += 1) {
+    current[0] = i;
+    const leftChar = left.charCodeAt(i - 1);
+    // `diagonal` is previous[j-1], `leftCell` is current[j-1], both carried
+    // forward so the inner loop reads each row cell once.
+    let diagonal = previous[0] ?? 0;
+    let leftCell = i;
     for (let j = 1; j < cols; j += 1) {
-      const cost = left[i - 1] === right[j - 1] ? 0 : 1;
-      const prevRow = distances[i - 1];
-      const currentRow = distances[i];
-      if (!prevRow || !currentRow) continue;
-      currentRow[j] = Math.min(
-        (prevRow[j] ?? 0) + 1,
-        (currentRow[j - 1] ?? 0) + 1,
-        (prevRow[j - 1] ?? 0) + cost,
-      );
+      const above = previous[j] ?? 0;
+      const cost = leftChar === right.charCodeAt(j - 1) ? 0 : 1;
+      const value = Math.min(above + 1, leftCell + 1, diagonal + cost);
+      current[j] = value;
+      diagonal = above;
+      leftCell = value;
     }
+    const spare = previous;
+    previous = current;
+    current = spare;
   }
 
-  const distance = distances[rows - 1]?.[cols - 1] ?? Math.max(left.length, right.length);
+  const distance = previous[cols - 1] ?? Math.max(left.length, right.length);
   const maxLength = Math.max(left.length, right.length, 1);
   return 1 - distance / maxLength;
 }
