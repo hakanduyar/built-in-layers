@@ -1344,3 +1344,77 @@ before any edit.
 - **Validation (final tree, single writer)**: typecheck ✓ lint ✓ (0 errors) prettier ✓ on every changed file · unit **527/527** (24 files) · build ✓ (15 routes) · **Chromium 216/216** · **WebKit 211/216** — the five failures (field-notes navigation, skip-link focus, camera focus re-centre, surface-open, break rails) fail **identically, value for value, against a separate build of HEAD `76c5660`** and touch no file of this pass: pre-existing WebKit-under-software-rendering failures, carried forward as an engineering item. Frozen loop: the five declared moves (`HowIBuild`, `SelectedSystems`, `SpatialExperience` = HEAD, `SpatialProjectScene`, `projectGround`), nothing else.
 - **Evidence**: curated before/after pairs in `docs/review/v13-fable-gate/stills/` (A–E, 28 stills), metrics in `docs/review/v13-fable-gate/metrics/{before,final}/`; full matrices, phases and route captures in `C:\Users\hakan\portfolio-review\v13-fable-gate\{before-HEAD-76c5660,final-build-VAodX66DmpweO6L6gBPZk}` with the invalid/superseded sets kept beside them under their origin.
 - **Verdict: FREEZE** for the desktop art direction of this branch; owner review of D-028/D-029 pending on `main`.
+
+### 2026-09-03 — PHASE 6 MOBILE AUDIT: the five case-study destinations measured below 1024px for the first time
+
+**Branch-only (`feature/project-architecture-v13`), audited at `7d622c1`, committed as `180c07c`.**
+Full findings: `docs/MOBILE_AUDIT.md`. Probe: `tests/tools/mobile-audit-probe.mjs`; measurements in
+`docs/review/phase6-mobile-audit/metrics/`.
+
+- **The gap that motivated the phase.** V13's five case-study destinations had never been rendered
+  below 1024px. 8 routes × 6 real device sizes = 48 measured states, `deviceScaleFactor: 2`,
+  `isMobile`, `hasTouch`.
+- **Passed, verified:** 0px horizontal overflow at all 48 states; 0 console and 0 page errors;
+  touch-drag scrolling works with no wheel dependency; `ProjectNeighbours` stacks at ≤430 and
+  returns to two columns at 768; `H1 → H2 → H3` with no skipped levels; landmarks correct.
+- **Four P1 findings, all compositional** — M1 diagram evidence unreadable on every phone
+  (labels at 5–6 CSS px), M2 tablet measure 82–95ch at 768, M3 homepage route vertically
+  expensive on mobile, M4 6–20 sub-44px tap targets per route. **0 P0, 0 objective mechanical
+  defects**, which is precisely why the phase stopped: every remaining item was a composition
+  decision, and fixing them in engineering would have been art direction under another name.
+- **Verdict: Fable Gate 4 REQUIRED**, with a bounded scope and the frozen boundary restated.
+
+### 2026-09-04 — FABLE GATE 4 (mobile art direction) checkpointed, then independently verified: verdict PASS
+
+**Branch-only (`feature/project-architecture-v13`).** Implementation by `claude-fable-5-1`
+(effort max, session `888a4bb7`) resolving all four P1 findings; decisions `docs/DECISIONS.md`
+D-030–D-033; the account is `docs/DESIGN_SYSTEM.md` §37. Committed as `b23284e` **by the
+orchestrator**, because Fable reached its session limit before it could commit — so
+`.ai/handoffs/FABLE-MOBILE-RETURN.md` does not exist and is still owed. There was therefore no
+self-report to check the work against, and the independent QA below is the only signal on this
+checkpoint: `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md`.
+
+- **M1 (D-031) — the figure is not redrawn; it opens.** `components/ui/FigureInspect.tsx`: below
+  `lg` every case-study figure carries an INSPECT control opening the same asset in a native modal
+  `<dialog>` at `INSPECT_PLATE_WIDTH = 1400`. Verified independently: all 13 verified diagrams are
+  `width="1600"` with a smallest `font-size="14"` (`jointledger/book-data-model-diagram.svg`), so
+  that label renders at **12.25px**, clearing the 12px `mono-meta` floor — measured at 1400px plate
+  width at 320/360/375/390/430/768. Nothing redrawn, cropped or summarised.
+- **M2 (D-032) — the measure is a token.** `--container-measure` (`max-w-measure`), 42rem,
+  re-declared 34rem under `@media (width < 64rem)`. Verified in the compiled CSS that the utility
+  resolves to `var(--container-measure)` rather than an inlined literal, and measured per element
+  at 768: **every leaf prose block ≤ 544px on all 8 routes, zero over the cap**, median 60–67 real
+  characters per line. The `/work` "88ch" the audit probe reports is an averaging artefact over
+  `<li>` card containers and 12px mono meta, not a line of prose.
+- **M3 (D-030) — the mobile world has its own unit.** `WORLD_UNIT_MOBILE.y = max(0.78vh, min(1vh,
+  7px))`, plus mobile legs for route two. Confirmed live in the DOM at 320/430/768; near-empty
+  route frames **1 → 0** at 390×844 and 430×932 by independent DOM ink measurement (mean ink
+  38→44% and 36→42%), page height **byte-identical** (10021 / 10541).
+- **M4 (D-033) — targets grow, layout does not.** 193 measured boxes across 8 routes × 3 widths:
+  **181 at 45.00px, 12 at 44.98px, none under 44**; **0 standalone sub-44 targets on 8 routes × 6
+  widths**, only inline-sentence links remain (WCAG 2.5.8 exempt); strip-and-recapture **0px** on
+  every route.
+- **Frozen boundary: seven files moved, all sanctioned and all proved.** The §4 loop prints exactly
+  ten `MOVED:` lines and every blob matches the `docs/FROZEN_BOUNDARY.md` §5 ledger. Desktop
+  parity re-run independently against a separate build of the baseline `180c07c`:
+  **44 route × viewport walks (11 routes × 1280×800 / 1440×900 / 1536×864 / 1920×1080), every one
+  at parity** — this extended the gate's own run to all five case studies, which were pixel-identical
+  with exactly `+1` element each (D-031's caption `<span>`). Two homepage steps were flagged by the
+  cell test and re-examined as raster jitter, the same-build floor equalling the cross-build maximum
+  in both.
+- **Also verified:** 0 horizontal overflow and 0 console errors at all 48 mobile states; heading
+  order and single `h1` clean at all 48; touch-drag advances the route with no wheel dependency;
+  no new scale transform on mobile, so no new text resampling; with JavaScript disabled the INSPECT
+  triggers are present but **0 visible** and the figures still render; the reduced-motion homepage
+  is **+6px below `lg` and 0px at 1280**, exactly the consequence §37.4 discloses.
+- **Validation (independent re-run on a clean build)**: typecheck ✓ lint ✓ (0/0) prettier ✓ on every
+  changed file · unit **553/553** (+26) · build ✓ (15 routes) · **Chromium 219/219** (+3 inspector
+  tests). Tests are **purely additive — zero deleted lines across `tests/`** — so no assertion was
+  weakened; the 8% frame-to-frame speed ceiling is untouched and the route was cut to fit it.
+- **Not re-run in this QA:** the WebKit suite (its documented five-failure software-rendering
+  baseline is unchanged by this phase's Chromium-verified work, but the +3 inspector tests are
+  unmeasured there) and the reduced-motion desktop-parity walk. Both are recorded as open in the
+  QA return.
+- **Verdict: PASS with documented non-blockers.** D-030–D-033 remain accepted under the gate's
+  delegated authority on this branch only; owner review is pending and they are **not** in force
+  on `main`.

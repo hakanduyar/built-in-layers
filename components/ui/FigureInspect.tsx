@@ -15,7 +15,7 @@ type FigureInspectProps = {
 /**
  * V13 mobile gate (M1). The width the plate is laid out at inside the
  * inspector. The 13 verified diagrams are 1600 units wide and their smallest
- * label is 14 units (jointledger/book-data-model.svg); at 1400px that label
+ * label is 14 units (jointledger/book-data-model-diagram.svg); at 1400px that label
  * renders at 12.25px, the mono-meta floor DESIGN_SYSTEM §3 sets for the
  * smallest type on the site. The screenshots are 1400-1878px wide, so they
  * sit at or just under 1:1. Nothing is drawn that is not in the source file:

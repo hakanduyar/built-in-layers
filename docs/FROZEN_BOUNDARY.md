@@ -146,8 +146,10 @@ added to or removed from the 30.
 | `components/sections/HowIBuild.tsx` | `a48126a` | `2d90924` | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; `metrics/final/lower-world.json` |
 | `components/sections/SelectedSystems.tsx` | `751aa48` | `592b79e` → see below | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; same file, label/column offset |
 
-**Mobile gate** (`.ai/handoffs/FABLE-MOBILE-RETURN.md`; metric paths relative to
-`docs/review/v13-mobile-gate/`). Every one of these moves is mobile-scoped — a `max-lg:` class, a
+**Mobile gate** (`.ai/handoffs/FABLE-MOBILE-RETURN.md` — **still owed**; the gate hit its session
+limit before committing and the orchestrator checkpointed the validated tree as `b23284e`. Until it
+is written, `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md` is the independent record for these seven moves.
+Metric paths relative to `docs/review/v13-mobile-gate/`). Every one of these moves is mobile-scoped — a `max-lg:` class, a
 `!isDesktop` branch, or a `mobileWorld` anchor — and the desktop was proved unchanged rather than
 asserted: `tests/tools/desktop-parity-probe.mjs` walked the frozen baseline (`180c07c`, the last
 commit before the gate) and the candidate build through all eight routes at 1280×800 / 1440×900 /

@@ -99,7 +99,7 @@ describe("FigureInspect — the plate", () => {
   });
 
   it("lays the 1600-unit diagrams out so their smallest label clears the 12px floor", () => {
-    // jointledger/book-data-model.svg carries the smallest label in the
+    // jointledger/book-data-model-diagram.svg carries the smallest label in the
     // verified set: 14 of 1600 units.
     expect((14 / 1600) * INSPECT_PLATE_WIDTH).toBeGreaterThanOrEqual(12);
   });

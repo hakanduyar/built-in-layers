@@ -2213,7 +2213,7 @@ Escape, focus containment and the backdrop are the platform's — on paper, with
 out at `INSPECT_PLATE_WIDTH = 1400` on a `--soft-paper` mat with the corner ticks, "Pan to read.
 Pinch to zoom." above it, panning on both axes with `overscroll-contain` so a pan that runs out of
 diagram never scrolls the case study underneath. 1400 is derived: the smallest label in the set
-(`jointledger/book-data-model.svg`, 14 units) lands at 12.25px, the `mono-meta` floor §3 sets for
+(`jointledger/book-data-model-diagram.svg`, 14 units) lands at 12.25px, the `mono-meta` floor §3 sets for
 the smallest type on the site. Screenshots sit at or just under 1:1.
 
 What was refused: redrawn "mobile diagrams" (content not in the verified source — invented

@@ -690,7 +690,7 @@ Binding conditions attached to this approval — all already true of the current
      `overscroll-contain` so a pan that runs out of diagram never scrolls the case study), the
      browser's own pinch-zoom on top, and the caption as the dialog's name.
   2. **1400 is derived, not chosen.** The 13 verified diagrams are 1600 units wide and their smallest
-     label is 14 units (`jointledger/book-data-model.svg`); at 1400 px that label is 12.25 px, the
+     label is 14 units (`jointledger/book-data-model-diagram.svg`); at 1400 px that label is 12.25 px, the
      `mono-meta` floor DESIGN_SYSTEM §3 sets for the smallest type on the site. Screenshots
      (1400–1878 px) sit at or just under 1:1.
   3. **The plate keeps its place in the argument** at column width; the page never carries a second

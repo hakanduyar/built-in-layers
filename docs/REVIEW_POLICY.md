@@ -54,7 +54,19 @@ The probes under `tests/tools/` are evidence tools, not test suites — they are
 | `still-capture.mjs` | the still matrix (writes outside the repo by default) |
 | `scroll-recording.mjs` | natural-scroll video (writes outside the repo by default) |
 | `mobile-zoom-probe.mjs` | mobile widths and browser-zoom CSS-viewport truth |
+| `fable-gate-probe.mjs` | the V13 desktop art-direction matrix (V13 Fable gate) |
+| `mobile-audit-probe.mjs` | measure, tap targets, overflow, headings and console at six device sizes (Phase 6) |
+| `mobile-route-probe.mjs` | how much of each frame carries ink, walking the mobile route in half-viewport steps (V13 mobile gate, M3) |
+| `touch-target-probe.mjs` | every hit box below `lg`, plus the strip-and-recapture proof that the layout did not move (V13 mobile gate, M4) |
+| `desktop-parity-probe.mjs` | two builds walked side by side: is the desktop provably unchanged (V13 mobile gate, `docs/FROZEN_BOUNDARY.md` §5) |
 
 Each takes `PROBE_BASE` (default `http://127.0.0.1:3000`) and most take `PROBE_W` / `PROBE_H`.
 `still-capture.mjs` and `scroll-recording.mjs` take `SHOT_OUT` / `OUT`, defaulting outside the
-repository.
+repository. The V13 mobile-gate probes take `PROBE_OUT` and, where they compare two builds,
+`PROBE_BASE_A` / `PROBE_BASE_B`; each file's header block is its own usage note.
+
+**A number of record needs a tool in Git.** `docs/review/v13-mobile-gate/after/measure-768.txt`
+cites a `measure768.mjs` that was left in the gate's out-of-repo scratch directory, so that one
+table cannot be regenerated from a clean clone. The figure it reports is corroborated by
+`mobile-audit-probe.mjs`, which is versioned — but the rule from here is that any tool whose
+output a decision cites belongs under `tests/tools/`, not beside the reviewer.
