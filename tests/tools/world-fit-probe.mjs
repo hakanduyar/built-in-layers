@@ -14,9 +14,10 @@ const BASE = process.env.PROBE_BASE ?? "http://127.0.0.1:3000";
 const OUT = process.env.PROBE_OUT ?? "docs/review/v8-responsive/baseline";
 const SHOTS = process.env.PROBE_SHOTS === "1";
 
-const VIEWPORTS = (process.env.PROBE_VIEWPORTS
-  ? process.env.PROBE_VIEWPORTS.split(",")
-  : ["1366x768", "1440x900", "1536x864", "1600x900", "1918x864", "1920x1080", "2560x1440"]
+const VIEWPORTS = (
+  process.env.PROBE_VIEWPORTS
+    ? process.env.PROBE_VIEWPORTS.split(",")
+    : ["1366x768", "1440x900", "1536x864", "1600x900", "1918x864", "1920x1080", "2560x1440"]
 ).map((name) => {
   const [width, height] = name.split("x").map(Number);
   return { name, width, height };
@@ -31,7 +32,9 @@ for (const vp of VIEWPORTS) {
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
   const page = await context.newPage();
   const consoleErrors = [];
-  page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
+  page.on("console", (m) => {
+    if (m.type() === "error") consoleErrors.push(m.text());
+  });
   page.on("pageerror", (e) => consoleErrors.push(`pageerror: ${e.message}`));
 
   await page.goto(BASE, { waitUntil: "networkidle" });
@@ -61,13 +64,18 @@ for (const vp of VIEWPORTS) {
   // best-framed sample instead, and that stopped being trustworthy the moment
   // the world-unit change put more than one scene in frame at once: a scene can
   // sit nearest the frame centre at a progress that is not its own.
-  const FOCUS = JSON.parse(readFileSync("docs/review/v8-responsive/route-focus.json", "utf8")).desktop;
+  const FOCUS = JSON.parse(
+    readFileSync("docs/review/v8-responsive/route-focus.json", "utf8"),
+  ).desktop;
   const best = new Map();
   let maxOverflow = 0;
   for (const [id, p] of Object.entries(FOCUS)) {
-    await page.evaluate(({ range, p }) => {
-      window.scrollTo(0, range.start + (range.end - range.start) * p);
-    }, { range, p });
+    await page.evaluate(
+      ({ range, p }) => {
+        window.scrollTo(0, range.start + (range.end - range.start) * p);
+      },
+      { range, p },
+    );
     // The camera runs through a two-stage lag filter, so a JUMP to a focus
     // progress is still settling for several hundred ms afterwards. Poll the
     // scene's own box until it stops moving rather than guessing a timeout --
@@ -97,7 +105,14 @@ for (const vp of VIEWPORTS) {
       const r = el ? el.getBoundingClientRect() : null;
       return {
         overflow: Math.max(0, doc.scrollWidth - doc.clientWidth),
-        box: r ? { top: Math.round(r.top), left: Math.round(r.left), w: Math.round(r.width), h: Math.round(r.height) } : null,
+        box: r
+          ? {
+              top: Math.round(r.top),
+              left: Math.round(r.left),
+              w: Math.round(r.width),
+              h: Math.round(r.height),
+            }
+          : null,
       };
     }, id);
     maxOverflow = Math.max(maxOverflow, frame.overflow);
@@ -120,9 +135,12 @@ for (const vp of VIEWPORTS) {
 
   if (SHOTS) {
     for (const stop of stops) {
-      await page.evaluate(({ range, p }) => {
-        window.scrollTo(0, range.start + (range.end - range.start) * p);
-      }, { range, p: stop.p });
+      await page.evaluate(
+        ({ range, p }) => {
+          window.scrollTo(0, range.start + (range.end - range.start) * p);
+        },
+        { range, p: stop.p },
+      );
       await page.waitForTimeout(320);
       await page.screenshot({ path: `${OUT}/${vp.name}--${stop.id}.png` });
     }

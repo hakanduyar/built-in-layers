@@ -1,7 +1,11 @@
 # AUTONOMOUS ROADMAP
 
-Execution order for the autonomous engineering supervisor. Live state is in
-`docs/AUTONOMOUS_STATUS.md`; this file is the plan, not the status.
+Execution order for the autonomous engineering supervisor. This file is the plan, not the status.
+
+> **Pointer corrected (Phase 7, 2026-09-04).** This line used to send readers to
+> `docs/AUTONOMOUS_STATUS.md` for live state. That file was superseded on 2026-09-04 and now
+> carries its own banner saying so. Current state is `.ai/STATE.md`; the current assignment is
+> `.ai/ACTIVE_TASK.md`.
 
 _Last updated: 2026-09-01 (V9)_
 

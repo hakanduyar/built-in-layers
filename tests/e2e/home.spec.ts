@@ -68,7 +68,18 @@ test.describe("Home: field notes", () => {
     const mediumLink = page.getByRole("link", { name: /hakanduyar\.medium\.com/ });
     await expect(mediumLink).toHaveAttribute("href", "https://hakanduyar.medium.com/");
 
-    await page.getByRole("link", { name: "See all notes" }).click();
+    // Bring the link into view BEFORE clicking. This section rides the
+    // scroll-driven camera, so Playwright's own auto-scroll starts the world
+    // easing again; its actionability check passes, then the anchor
+    // translates out from under the dispatch and the click lands on BODY.
+    // Measured at Phase 7 on WebKit, which renders in software here at ~14fps
+    // and so never settles inside the stability window: 0/3 navigations
+    // without this line, 4/4 in ~670ms with it. Chromium settles at 45fps and
+    // hid the race. The link itself is sound in both engines.
+    const seeAllNotes = page.getByRole("link", { name: "See all notes" });
+    await seeAllNotes.scrollIntoViewIfNeeded();
+    await seeAllNotes.click();
+    await expect(page).toHaveURL(/\/notes$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Notes");
   });
 });

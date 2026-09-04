@@ -613,6 +613,14 @@ test.describe("Work: figure inspector (V13 mobile gate, M1)", () => {
     }) => {
       await page.setViewportSize({ width: 375, height: 812 });
       await page.goto(`/work/${slug}`);
+      // The explorer ships server-rendered STACKED -- every layer's figures at
+      // once -- and mounts only the active tab once it enhances. Both are
+      // correct states of the documented progressive enhancement, so counting
+      // before hydration commits reads DropSpot's 8 controls instead of its 4.
+      // Chromium won that race; WebKit, rendering in software here, did not.
+      // The tablist exists only after `enhanced`, so it is the gate. No count
+      // below is relaxed -- this only waits for the state they describe.
+      await expect(page.getByRole("tablist")).toBeVisible();
       const triggers = page.locator("[data-figure-inspect]");
       expect(await triggers.count()).toBeGreaterThanOrEqual(2);
       const controls = await triggers.evaluateAll((buttons) =>
