@@ -2,7 +2,7 @@
 
 How visual review evidence is produced, where it lives, and what may enter Git.
 
-_Last updated: 2026-09-01 (V9)_
+_Last updated: 2026-09-04 (V13 mobile gate, bounded final pass)_
 
 ---
 
@@ -59,14 +59,19 @@ The probes under `tests/tools/` are evidence tools, not test suites — they are
 | `mobile-route-probe.mjs` | how much of each frame carries ink, walking the mobile route in half-viewport steps (V13 mobile gate, M3) |
 | `touch-target-probe.mjs` | every hit box below `lg`, plus the strip-and-recapture proof that the layout did not move (V13 mobile gate, M4) |
 | `desktop-parity-probe.mjs` | two builds walked side by side: is the desktop provably unchanged (V13 mobile gate, `docs/FROZEN_BOUNDARY.md` §5) |
+| `measure-768-probe.mjs` | per-element line length at a tablet width, and the cost of the 34rem measure alone — the page as built against the same page with the token re-declared (V13 mobile gate, M2 / ART-2) |
+| `figure-inspect-probe.mjs` | every INSPECT control's accessible name and asset per page, and the `/work` thumbnails' scale at every width (V13 mobile gate, A11Y-1 / ART-1) |
 
 Each takes `PROBE_BASE` (default `http://127.0.0.1:3000`) and most take `PROBE_W` / `PROBE_H`.
 `still-capture.mjs` and `scroll-recording.mjs` take `SHOT_OUT` / `OUT`, defaulting outside the
 repository. The V13 mobile-gate probes take `PROBE_OUT` and, where they compare two builds,
 `PROBE_BASE_A` / `PROBE_BASE_B`; each file's header block is its own usage note.
 
-**A number of record needs a tool in Git.** `docs/review/v13-mobile-gate/after/measure-768.txt`
-cites a `measure768.mjs` that was left in the gate's out-of-repo scratch directory, so that one
-table cannot be regenerated from a clean clone. The figure it reports is corroborated by
-`mobile-audit-probe.mjs`, which is versioned — but the rule from here is that any tool whose
-output a decision cites belongs under `tests/tools/`, not beside the reviewer.
+**A number of record needs a tool in Git.** Any tool whose output a decision cites belongs under
+`tests/tools/`, not beside the reviewer. The rule was written when
+`docs/review/v13-mobile-gate/after/measure-768.txt` cited a `measure768.mjs` left in the gate's
+out-of-repo scratch directory, so that one table could not be regenerated from a clean clone. The
+bounded final pass after the independent QA (ARTIFACT-1) put the tool in Git as
+`measure-768-probe.mjs` and regenerated the file with it — every paragraph row identical — and
+the pass's own listings (`after/figure-inspect.txt`, `after/tablet-length-768.txt`) were produced
+by versioned tools from the start.

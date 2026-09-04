@@ -1,22 +1,24 @@
-MEASURE AT 768 — per-element line length on the candidate build (BUILD_ID mNkR9V8fwCm0nsmFjB2N2, served on :3210)
-Tool: scratchpad measure768.mjs (Playwright Chromium, 768x1024, reducedMotion: reduce). Selector p, li with >40 chars, as the audit probe.
+MEASURE AT 768 — per-element line length on the final-pass candidate build (BUILD_ID ylJ7vp5r0If_WQBLNsV0P, served on :3210)
+Tool: tests/tools/measure-768-probe.mjs, PROBE_MODE=measure (Playwright Chromium, 768x1024, reducedMotion: reduce). Selector p, li with >40 chars, as the audit probe.
 'ch(audit)' = width / (font-size x 0.5), the audit probe's estimate; 'ch/line(real)' = characters / rendered lines from Range rects.
 Body copy (>=14px) is the number of record; the audit mean averages in <li> containers and 12px mono meta.
+Regenerated in the bounded final pass (ARTIFACT-1, V13 mobile QA): the earlier file cited a scratchpad script; this one cites the tool in Git.
+Against the checkpoint file (build mNkR9V8fwCm0nsmFjB2N2) every paragraph row is identical; only the five /work <li> container rows differ (ART-1: the card caption row now carries the INSPECT control and its closed <dialog>, whose title and hint text count toward textContent without being rendered, and the caption span wraps one line more beside the control). Those container rows were never numbers of record.
 
 
 == 768 /work  audit-mean(all)=88  body-only(>=14px)=79  meta(<14px)=120  n=13/10/3
-     16px  720w   90ch(audit)   20ch/line(real, 12 lines)  AUTONOMOUS DELIVERY SYSTEMSoftware Facto
+     16px  720w   90ch(audit)   32ch/line(real, 13 lines)  AUTONOMOUS DELIVERY SYSTEMSoftware Facto
      16px  544w   68ch(audit)   43ch/line(real, 2 lines)  An orchestration core that routes work t
-     16px  720w   90ch(audit)   23ch/line(real, 11 lines)  PERSONAL OPERATING SYSTEMKıvılcım — "Spa
+     16px  720w   90ch(audit)   36ch/line(real, 12 lines)  PERSONAL OPERATING SYSTEMKıvılcım — "Spa
      16px  544w   68ch(audit)   62ch/line(real, 1 lines)  A local-first system for planning, focus
      12px  720w  120ch(audit)   60ch/line(real, 1 lines)  React · TypeScript · Vite · Tailwind CSS
-     16px  720w   90ch(audit)   18ch/line(real, 12 lines)  SHARED FINANCE SYSTEMJointLedgerPersonal
+     16px  720w   90ch(audit)   28ch/line(real, 13 lines)  SHARED FINANCE SYSTEMJointLedgerPersonal
      16px  544w   68ch(audit)   65ch/line(real, 1 lines)  Personal accounts. Shared financial life
      12px  720w  120ch(audit)   43ch/line(real, 1 lines)  Go · Vue · TypeScript · PostgreSQL · Doc
-     16px  720w   90ch(audit)   22ch/line(real, 10 lines)  FAIR DISTRIBUTION SYSTEMDropSpotA fair c
+     16px  720w   90ch(audit)   32ch/line(real, 12 lines)  FAIR DISTRIBUTION SYSTEMDropSpotA fair c
      16px  544w   68ch(audit)   65ch/line(real, 1 lines)  A fair claim and waitlist system for lim
      12px  720w  120ch(audit)   60ch/line(real, 1 lines)  React · Vite · Tailwind CSS · Node.js · 
-     16px  720w   90ch(audit)   23ch/line(real, 10 lines)  PROFESSIONAL SYSTEMSProfessional Systems
+     16px  720w   90ch(audit)   35ch/line(real, 12 lines)  PROFESSIONAL SYSTEMSProfessional Systems
      16px  544w   68ch(audit)   42ch/line(real, 2 lines)  Designing usable interfaces within compl
 
 == 768 /work/kivilcim  audit-mean(all)=67  body-only(>=14px)=67  meta(<14px)=-  n=44/44/0

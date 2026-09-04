@@ -1418,3 +1418,55 @@ checkpoint: `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md`.
 - **Verdict: PASS with documented non-blockers.** D-030–D-033 remain accepted under the gate's
   delegated authority on this branch only; owner review is pending and they are **not** in force
   on `main`.
+
+### 2026-09-04 — FABLE GATE 4, bounded final pass: the return written, A11Y-1 / ART-1 closed, ART-2 accepted
+
+**Branch-only (`feature/project-architecture-v13`), from `4c788b4`.** `claude-fable-5-1` (effort
+max, the same session `888a4bb7`, resumed after its second session-limit pause) on an owner brief
+that named exactly four items — the return, and the three findings the QA left for the gate to
+rule on — and nothing else. Nothing frozen moved: the §4 loop prints the same ten `MOVED:` lines
+and no file under `lib/spatial/`, `components/spatial/` or `components/sections/` is in the diff.
+The account is `docs/DESIGN_SYSTEM.md` §37.8; the return is `.ai/handoffs/FABLE-MOBILE-RETURN.md`.
+
+- **A11Y-1 (D-031 addendum 2) — each INSPECT control is named for its figure.**
+  `components/ui/FigureInspect.tsx`: `aria-label="Inspect: {alt}"` — the visible label first
+  (WCAG 2.5.3), then the figure's own description, the one string that is distinct for every
+  distinct figure (captions repeat). A figure shown twice is named twice — DropSpot's hero lead is
+  its default Surface tab, so that page reads 4 controls / 3 names / 3 assets. Name only: geometry
+  and pixels unchanged (`after/figure-inspect.txt`, before and after on every case study).
+- **ART-1 (D-031 addendum 1) — the `/work` thumbnail opts into the inspector below `lg`.** The
+  reason for leaving it out — "itself a link" — was false (the card's title is the link), and the
+  index showed 1600-unit diagrams at 0.17–0.22 under a caption calling them verified evidence.
+  `components/project/ProjectCard.tsx` sets `inspect`; the card's caption row carries the control,
+  opening the same 1400px plate; at `lg` and above nothing renders and the index is what it was.
+  Five new 44px targets, no sub-44 ones (`after/tap-targets-work-final-pass.txt`); stills
+  `stills/ART-1--*`.
+- **ART-2 (D-032 addendum) — the tablet's length under the 34rem measure, measured alone and
+  accepted.** `tests/tools/measure-768-probe.mjs` (`length` mode) re-declares the token to 42rem
+  below `lg` on the built page and reads the difference: Kıvılcım **+821px (9.3%)**, DropSpot
+  +580 (7.3%), JointLedger +614 (8.1%), Software Factory +112 (3.6%), `/about` +106 (6.2%),
+  `/work` +52 (1.5%) — for a mean body line of 64 characters instead of 74–76 and a longest line
+  of 74–78 instead of 90–94 (`after/tablet-length-768.txt`). Not adjusted; the reasons are in
+  D-032.
+- **ARTIFACT-1 — every number of record has a tool in Git.** `after/measure-768.txt` regenerated
+  by the versioned `measure-768-probe.mjs` (`measure` mode): every paragraph row identical to the
+  checkpoint's; the five `/work` `<li>` container rows differ because the caption row now carries
+  the control (never numbers of record). `figure-inspect-probe.mjs` produced the A11Y-1/ART-1
+  listing. `docs/REVIEW_POLICY.md` lists both tools and records the rule as kept.
+- **Desktop parity, re-proved for the pass** against a separate build of the QA-verified `4c788b4`
+  (`after/desktop-parity-final-pass.txt`): **44 route × viewport walks, every one at parity** —
+  `/work` pixel-identical with exactly `+5` elements (the caption `<span>`s), every case study and
+  static route identical in geometry and pixels, three homepage steps flagged by the cell test and
+  re-examined as raster jitter at the same-build ceiling.
+- **Validation on the final build (`u_zSwFNQs6qbWPiQGfEeQ`)**: typecheck ✓ lint ✓ (0/0) · Prettier ✓
+  on every changed code file (checked on the LF content Git commits — ENV-1's CRLF checkout is
+  unchanged and pre-existing) · unit **556/556** (+3) · build ✓ (15 routes) · **Chromium 224/224**
+  (+5: three A11Y-1 name contracts, two ART-1 index contracts) on the gate's own `:3100` server.
+  Tests are additive: the seven removed lines in `tests/unit/` are an import widened and a
+  caption regex replaced by a helper that asserts the same strings on the same caption. WebKit
+  not run (as at the checkpoint).
+- **Docs**: `DECISIONS.md` D-031/D-032 addenda; `DESIGN_SYSTEM.md` §37.7 (index thumbnails on the
+  desktop, left as found) and §37.8; `MOBILE_AUDIT.md` and `FROZEN_BOUNDARY.md` §5 now point at
+  the return instead of saying it is owed; `REVIEW_POLICY.md` tool table and ARTIFACT-1.
+- **Verdict: FREEZE** — the gate's own, recorded in the return with what remains (§37.7 items,
+  the WebKit run, the reduced-motion parity walk not re-run this pass).

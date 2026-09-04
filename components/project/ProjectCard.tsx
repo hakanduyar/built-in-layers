@@ -53,13 +53,23 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
           title/description stay dominant, per DESIGN_SYSTEM §9's existing
           Figure frame (mat, corner ticks, honest caption). Shared with /work
           via this same component, so there is one image-selection path, not
-          two. */}
+          two.
+
+          V13 (mobile gate, ART-1 — D-031 addendum): the thumbnail opts into
+          the inspector. At 320px it shows a 1600-unit diagram at 0.2 of its
+          size under a caption that calls it verified evidence, and this
+          thumbnail is not a link (the title is), so on a phone the index was
+          the one surface where a figure the site had taught to open did not.
+          Below `lg` the caption row gains the same INSPECT control the case
+          studies carry; at `lg` and above the control does not render and the
+          index is what it was. */}
       {project.images[0] && (
         <div className="mt-4 max-w-xs">
           <Figure
             src={project.images[0].src}
             alt={project.images[0].alt}
             caption={project.images[0].caption}
+            inspect
           />
         </div>
       )}

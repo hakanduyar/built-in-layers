@@ -23,6 +23,16 @@ type FigureInspectProps = {
  */
 export const INSPECT_PLATE_WIDTH = 1400;
 
+/**
+ * The trigger's accessible name: the visible label first, then the figure's
+ * own description. "Inspect: Diagram of the claim transaction: a database
+ * transaction that row-locks ...". One rule for every call site, so a
+ * buttons list reads as a list of figures.
+ */
+export function inspectName(alt: string): string {
+  return `Inspect: ${alt}`;
+}
+
 // The mobile figure strategy. Below `lg` a case-study figure sits in a
 // 288-736px column, which puts a 1600-unit diagram at 0.18-0.46 of its
 // intrinsic size and its labels at 3-6 CSS px (docs/MOBILE_AUDIT.md, M1).
@@ -62,12 +72,24 @@ export function FigureInspect({ src, alt, title, width, height }: FigureInspectP
 
   return (
     <>
+      {/* A11Y-1 (V13 mobile QA): a case study renders up to five of these
+          controls, and their visible text is the same word, so a screen
+          reader's buttons list heard "Inspect" five times with nothing to tell
+          the figures apart. The accessible name composes that visible label
+          (WCAG 2.5.3) with the figure's own description -- the alt is the one
+          string that is distinct for every distinct figure; captions repeat
+          ("Verified architecture diagram, not a product screenshot." twice on
+          JointLedger's and DropSpot's system layers). A figure shown twice
+          (the hero lead repeats one layer figure) is named the same twice,
+          which is the truth: both controls open the same plate. Name only:
+          the rendered text, the geometry and the pixels are unchanged. */}
       <button
         ref={triggerRef}
         type="button"
         data-figure-inspect=""
         aria-haspopup="dialog"
         aria-expanded={open}
+        aria-label={inspectName(alt)}
         onClick={() => setOpen(true)}
         className="inline-flex min-h-11 shrink-0 items-center font-mono text-mono-label tracking-mono-label uppercase text-ink lg:hidden"
       >

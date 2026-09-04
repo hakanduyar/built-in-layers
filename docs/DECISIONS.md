@@ -714,6 +714,39 @@ Binding conditions attached to this approval — all already true of the current
   after, the inspector open, the inspector panned); the full case-study matrix at 320 / 375 / 390 /
   430 / 768 is outside the repository in `C:\Users\hakan\portfolio-review\v13-mobile-gate\` per
   `docs/REVIEW_POLICY.md`.
+- **Addendum (2026-09-04, bounded final pass after the independent QA;
+  `.ai/handoffs/FABLE-MOBILE-RETURN.md`):**
+  1. **The `/work` index thumbnail opts in too (ART-1).** The QA found the index rendering the same
+     verified diagrams at 0.19–0.22 with no inspector. The reason given here and in `Figure.tsx` for
+     leaving it out — that the thumbnail "is itself a link" — was false: the card's title is the
+     link; the figure never was. The card's asset is `images[0]`, which on Kıvılcım, JointLedger and
+     Professional Systems is not the case-study hero's lead (`representativeAsset` prefers a real
+     screenshot, then a system-layer diagram), so from the index the readable copy of what the card
+     shows was a tap and a tab away. Below `lg` the card's caption row now carries the same control
+     (`ProjectCard` sets `inspect`); at `lg` and above the control does not render and the index is
+     what it was (`after/desktop-parity-final-pass.txt`: `/work` +5 `<span>` in geometry, pixels
+     identical at four desktop viewports; `after/figure-inspect.txt`: the thumbnail scale at every
+     width, `after/measure-768.txt`: every paragraph row unchanged). Decision stills:
+     `stills/ART-1--{before,after}--375x667--work-kivilcim-card.png`,
+     `ART-1--after--375x667--work-kivilcim-inspector.png`. Rejected: leaving the index as the one
+     surface where a figure the site has taught to open does not; a larger thumbnail (the card's
+     `max-w-xs` cap is what keeps the title and description dominant, on every width); dropping the
+     thumbnail on phones (the card's evidence, gone).
+  2. **The control is named for its figure (A11Y-1).** The QA heard "Inspect" up to five times in a
+     case study's buttons list. `FigureInspect` now sets `aria-label={inspectName(alt)}` =
+     `"Inspect: " + alt` — the visible label first (WCAG 2.5.3, label in name), then the figure's
+     own description, the one string that is distinct for every distinct figure (captions repeat:
+     "Verified architecture diagram, not a product screenshot." twice on JointLedger's and
+     DropSpot's system layers). A figure shown twice — the hero lead repeats one layer figure, and on
+     DropSpot that layer is the default Surface tab — is named the same twice: both controls open the
+     same plate. The dialog keeps the caption as its name. Name only: rendered text, geometry and
+     pixels are unchanged (`after/desktop-parity-final-pass.txt`: every case study identical;
+     `after/figure-inspect.txt`: the names as rendered). Contracts:
+     `tests/unit/figure-inspect.test.tsx`, `tests/unit/project-card-images.test.tsx`,
+     `tests/e2e/work.spec.ts`. Rejected: numbering the controls ("Inspect figure 3" — the number is
+     not the figure, and under D-001's `blockJS` the authored `index` never reaches the caption);
+     `aria-describedby` to the caption (repeats within a page); a visually-hidden suffix inside the
+     button (the row's 44 px geometry is the figure footer, and the name is not layout).
 
 ## D-032 — The measure is a token, and below `lg` it is 34rem
 
@@ -745,6 +778,25 @@ Binding conditions attached to this approval — all already true of the current
 - **Approval:** delegated by the gate brief; the decision pair is
   `docs/review/v13-mobile-gate/stills/M2--{before,after}--768x1024--kivilcim-body.png` (the first
   overview paragraph, 672 px / 94 characters per line → 544 px / 72) with `after/measure-768.txt`.
+- **Addendum (2026-09-04, bounded final pass after the independent QA;
+  `.ai/handoffs/FABLE-MOBILE-RETURN.md`) — the tablet's length is accepted (ART-2).** The QA
+  measured Kıvılcım at 768×1024 growing from 8865 to 9618 px (+8.5%) across the whole checkpoint
+  and asked for the measure's share to be accepted with a reason or adjusted. Measured alone
+  (`tests/tools/measure-768-probe.mjs`, `length` mode: the page as built, then with
+  `--container-measure` re-declared to 42 rem below `lg` from an injected rule, the override
+  verified by the widest `max-w-measure` box going 544 → 672 px; `after/tablet-length-768.txt`),
+  the measure costs Kıvılcım +821 px (9.3%), DropSpot +580 (7.3%), JointLedger +614 (8.1%),
+  Software Factory +112 (3.6%), `/about` +106 (6.2%), `/work` +52 (1.5%) — and buys, on the same
+  pages, a mean body line of 64 characters instead of 74–76 and a longest line of 74–78 instead of
+  90–94. **Accepted, because the alternative is the finding M2 opened with:** at 42 rem the longest
+  16 px line on a tablet is 94 characters, outside the 45–75 band the audit measured against and the
+  worst measure on the site at any width; a middle value (38 rem = 608 px, ≈ 87 at the longest line
+  by the same ratio) is still outside the band and would be a third measure to maintain; larger type
+  at 768 was rejected above. A longer page at a readable line is the ordinary cost of a measure on a one-column frame —
+  a paperback is longer than a broadsheet — and the M3 route work, not the measure, is what governs
+  how far a reader scrolls to reach anything. Not adjusted; recorded here and in DESIGN_SYSTEM
+  §37.8. Regenerated in the same pass: `after/measure-768.txt` now cites the tool in Git rather than
+  a scratch script (ARTIFACT-1; `docs/REVIEW_POLICY.md`).
 
 ## D-033 — Touch targets grow without the layout moving
 

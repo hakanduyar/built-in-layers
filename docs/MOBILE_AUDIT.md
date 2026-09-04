@@ -14,10 +14,13 @@ performed; findings that require composition work are recorded for Fable Gate 4.
 > `feature/project-architecture-v13` — M1 by D-031 (the figure inspector), M2 by D-032 (the measure
 > token), M3 by D-030 (the mobile world unit and route two's mobile legs), M4 by D-033
 > (`touch-link` and the tour CTA's world-space floor); `docs/DESIGN_SYSTEM.md` §37 is the account,
-> `.ai/handoffs/FABLE-MOBILE-RETURN.md` the return — **not yet written**: the gate reached its
-> session limit before committing, the orchestrator checkpointed the validated tree as `b23284e`
-> on its behalf, and Fable still owes that document. The independent verification of this
-> checkpoint is `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md`. The gate re-ran this probe on its own builds at
+> `.ai/handoffs/FABLE-MOBILE-RETURN.md` the return. The gate reached its session limit before
+> committing, the orchestrator checkpointed the validated tree as `b23284e` on its behalf, and the
+> independent verification of that checkpoint is `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md` (PASS with
+> documented non-blockers). A bounded final pass then wrote the return and closed three of the
+> QA's findings — A11Y-1 (each INSPECT control named for its figure), ART-1 (the `/work` index
+> thumbnail opts into the inspector below `lg`), ART-2 (the tablet's length under the 34rem
+> measure, measured alone and accepted) — DESIGN_SYSTEM §37.8. The gate re-ran this probe on its own builds at
 > the starting HEAD and at the candidate — `docs/review/v13-mobile-gate/{before,after}/metrics/
 > mobile-audit.json` — so the before/after numbers in the return are the gate's own measurements,
 > not this audit's carried over. After: measure at 768 `/work` 88 / case studies 63–68 / `/about` 66 (per-element

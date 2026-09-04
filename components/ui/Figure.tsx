@@ -37,10 +37,13 @@ type FigureProps = {
    * V13 (mobile gate, M1): opt-in inspector. Below `lg` the caption row gains
    * an INSPECT control that opens the same asset in a full-screen plate at a
    * width it can be read at (components/ui/FigureInspect.tsx). The case-study
-   * figures -- the MDX layer figures and the hero lead -- opt in; a ProjectCard
-   * thumbnail, which is itself a link, does not. Strictly additive: when
-   * absent, the rendered markup is what it was before this prop existed, and
-   * at `lg` and above the control does not render at all.
+   * figures -- the MDX layer figures and the hero lead -- opt in, and so does
+   * the `/work` index's ProjectCard thumbnail (ART-1, D-031 addendum; the
+   * earlier note here that the thumbnail "is itself a link" was wrong -- the
+   * card's title is the link, the figure never was). The homepage's scenes do
+   * not opt in, so the frozen tour's markup is untouched. Strictly additive:
+   * when absent, the rendered markup is what it was before this prop existed,
+   * and at `lg` and above the control does not render at all.
    */
   inspect?: boolean;
 };

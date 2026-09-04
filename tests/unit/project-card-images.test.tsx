@@ -11,6 +11,18 @@ import { getProjectsByTier } from "@/lib/content/work";
 // real ProjectCard component -- not a hand-copied frontmatter fixture -- so
 // these tests fail the moment the live representative-image wiring breaks.
 
+// The card's caption text. Since the V13 mobile gate (D-031 addendum, ART-1)
+// the card's figure opts into the inspector, so its <figcaption> is a row:
+// the caption in the first <span>, then the INSPECT control and its closed
+// <dialog>. The assertions below are about the caption, so they read that
+// span; a figure without the control keeps the caption as the whole element.
+function cardCaption(html: string): string | null {
+  const figcaption = html.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/)?.[1];
+  if (figcaption === undefined) return null;
+  const span = figcaption.match(/^<span[^>]*>([^<]*)<\/span>/)?.[1];
+  return span ?? figcaption;
+}
+
 describe("ProjectCard — representative images, real content and real loader", () => {
   const projects = getProjectsByTier("featured");
 
@@ -82,9 +94,9 @@ describe("ProjectCard — representative images, real content and real loader", 
     expect(dropspot).toBeDefined();
     if (!dropspot) return;
     const html = renderToStaticMarkup(<ProjectCard project={dropspot} />);
-    const figcaptionMatch = html.match(/<figcaption[^>]*>([^<]*)<\/figcaption>/);
-    expect(figcaptionMatch, "expected a figcaption").not.toBeNull();
-    expect((figcaptionMatch?.[1] ?? "").toLowerCase()).not.toContain("not a");
+    const caption = cardCaption(html);
+    expect(caption, "expected a figcaption").not.toBeNull();
+    expect((caption ?? "").toLowerCase()).not.toContain("not a");
   });
 
   it("Kıvılcım, JointLedger, and Professional Systems keep their honest diagram/illustration denial caption visible on the card", () => {
@@ -93,9 +105,30 @@ describe("ProjectCard — representative images, real content and real loader", 
       expect(project, `expected to find ${slug}`).toBeDefined();
       if (!project) continue;
       const html = renderToStaticMarkup(<ProjectCard project={project} />);
-      const figcaptionMatch = html.match(/<figcaption[^>]*>([^<]*)<\/figcaption>/);
-      expect(figcaptionMatch, `expected a figcaption for ${slug}`).not.toBeNull();
-      expect((figcaptionMatch?.[1] ?? "").toLowerCase()).toMatch(/not a (product )?screenshot/);
+      const caption = cardCaption(html);
+      expect(caption, `expected a figcaption for ${slug}`).not.toBeNull();
+      expect((caption ?? "").toLowerCase()).toMatch(/not a (product )?screenshot/);
+    }
+  });
+
+  // ART-1 (V13 mobile QA, D-031 addendum): the thumbnail opts into the
+  // inspector, so the same 1400px plate the case studies open is one tap
+  // away from the index too. The control is named for its figure (A11Y-1)
+  // and hides at `lg`, where the index is what it was.
+  it("every card's thumbnail carries the inspector, named for its own figure and hidden at lg", () => {
+    for (const project of projects) {
+      const html = renderToStaticMarkup(<ProjectCard project={project} />);
+      const triggers = [
+        ...html.matchAll(/<button[^>]*data-figure-inspect[^>]*>Inspect<\/button>/g),
+      ];
+      expect(triggers, `expected one INSPECT control on ${project.slug}`).toHaveLength(1);
+      const trigger = triggers[0]?.[0] ?? "";
+      // Both attributes come out of the same renderer, so the (escaped)
+      // alt text is compared as rendered, not as authored.
+      const alt = html.match(/<img[^>]*\balt="([^"]*)"/)?.[1] ?? "";
+      expect(alt.length).toBeGreaterThan(10);
+      expect(trigger).toContain(`aria-label="Inspect: ${alt}"`);
+      expect(trigger).toMatch(/class="[^"]*lg:hidden[^"]*"/);
     }
   });
 

@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { Figure } from "@/components/ui/Figure";
-import { FigureInspect, INSPECT_PLATE_WIDTH } from "@/components/ui/FigureInspect";
+import { FigureInspect, INSPECT_PLATE_WIDTH, inspectName } from "@/components/ui/FigureInspect";
 import { compileProjectMDX } from "@/lib/content/mdx";
 
 // V13 mobile gate (M1): the figure inspector. Below `lg` every case-study
@@ -102,6 +102,60 @@ describe("FigureInspect — the plate", () => {
     // jointledger/book-data-model-diagram.svg carries the smallest label in the
     // verified set: 14 of 1600 units.
     expect((14 / 1600) * INSPECT_PLATE_WIDTH).toBeGreaterThanOrEqual(12);
+  });
+});
+
+// A11Y-1 (V13 mobile QA): a case study renders up to five INSPECT controls.
+// Their visible text is one word, and captions repeat within a page, so the
+// accessible name is composed from the visible label and the figure's own
+// description -- the one string that is distinct for every figure.
+describe("FigureInspect — each control is named for its figure", () => {
+  it("names the trigger with the visible label first, then the figure's description", () => {
+    render(
+      <FigureInspect
+        src={DIAGRAM}
+        alt="Diagram of the claim transaction."
+        title="Verified architecture diagram, not a product screenshot."
+      />,
+    );
+    const trigger = screen.getByRole("button", {
+      name: "Inspect: Diagram of the claim transaction.",
+    });
+    // WCAG 2.5.3: the visible label is contained in the name, at its start.
+    expect(trigger).toHaveTextContent("Inspect");
+    expect(inspectName("Diagram of the claim transaction.")).toMatch(/^Inspect\b/);
+  });
+
+  it("two figures with the same caption still get two different names", () => {
+    // DropSpot's system layer: both figures are captioned "Verified
+    // architecture diagram, not a product screenshot."
+    const caption = "Verified architecture diagram, not a product screenshot.";
+    const html = renderToStaticMarkup(
+      <>
+        <Figure
+          src="/images/projects/dropspot/claim-transaction-diagram.svg"
+          alt="Diagram of the claim transaction."
+          caption={caption}
+          inspect
+        />
+        <Figure
+          src="/images/projects/dropspot/priority-score-diagram.svg"
+          alt="Diagram of the priority-score formula."
+          caption={caption}
+          inspect
+        />
+      </>,
+    );
+    const names = [
+      ...html.matchAll(/<button[^>]*data-figure-inspect[^>]*aria-label="([^"]*)"/g),
+    ].map((m) => m[1]);
+    expect(names).toEqual([
+      "Inspect: Diagram of the claim transaction.",
+      "Inspect: Diagram of the priority-score formula.",
+    ]);
+    expect(new Set(names).size).toBe(2);
+    // The visible text is still the one word; the name is an attribute only.
+    expect(html.match(/>Inspect<\/button>/g)).toHaveLength(2);
   });
 });
 

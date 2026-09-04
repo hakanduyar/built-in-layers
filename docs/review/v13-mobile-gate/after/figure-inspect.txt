@@ -1,0 +1,65 @@
+FIGURE INSPECTOR — A11Y-1 names and ART-1 index thumbnails. A = 4c788b4 (the QA-verified checkpoint, built in a worktree, served on :3300); B = the final-pass candidate (BUILD_ID ylJ7vp5r0If_WQBLNsV0P, served on :3210)
+Tool: tests/tools/figure-inspect-probe.mjs (Playwright Chromium, reducedMotion: reduce; names at 375x812; thumbnails at 320/375/430/768 with a mobile context and 1024/1440 with a desktop one).
+Names: the count of controls, of distinct names and of distinct assets per page. A figure shown twice (the hero lead repeats one layer figure; on DropSpot that layer is the default Surface tab) is named twice.
+The contracts of record are tests/e2e/work.spec.ts ("named for its own figure", "index thumbnails opt into the inspector") and tests/unit/figure-inspect.test.tsx.
+
+INSPECT CONTROLS AT 375px — visible text, accessible name, asset
+
+--- A (baseline): http://127.0.0.1:3300
+/work: 0 control(s), 0 distinct name(s), 0 distinct asset(s)
+/work/software-factory: 1 control(s), 1 distinct name(s), 1 distinct asset(s)
+   factory-loop-diagram.svg  text="Inspect"  (no aria-label)
+/work/kivilcim: 2 control(s), 1 distinct name(s), 2 distinct asset(s)
+   local-first-architecture.svg  text="Inspect"  (no aria-label)
+   product-areas-map.svg  text="Inspect"  (no aria-label)
+/work/jointledger: 2 control(s), 1 distinct name(s), 2 distinct asset(s)
+   book-data-model-diagram.svg  text="Inspect"  (no aria-label)
+   upstream-extension-map.svg  text="Inspect"  (no aria-label)
+/work/dropspot: 4 control(s), 1 distinct name(s), 3 distinct asset(s)
+   browse-drops.webp  text="Inspect"  (no aria-label)
+   browse-drops.webp  text="Inspect"  (no aria-label)
+   drop-detail.webp  text="Inspect"  (no aria-label)
+   admin-panel.webp  text="Inspect"  (no aria-label)
+/work/professional-systems: 1 control(s), 1 distinct name(s), 1 distinct asset(s)
+   professional-systems-overview.svg  text="Inspect"  (no aria-label)
+
+--- B (candidate): http://127.0.0.1:3210
+/work: 5 control(s), 5 distinct name(s), 5 distinct asset(s)
+   factory-loop-diagram.svg  text="Inspect"  aria-label="Inspect: Diagram of the Software Factory's delivery loop — plan, ticket, implementation, automated test, independent review, human approval, merge/release, evidence — above a summary of the repository's integration mandate: autonomy is permitted only while every condition holds, including frozen acceptance criteria, deterministic verification, an independent reviewer pass, an unchanged repository fingerprint, and human-only production release."
+   product-areas-map.svg  text="Inspect"  aria-label="Inspect: Diagram of Kıvılcım's five product areas — Today, Plan, Mind, Focus, and Progress — shown as five labelled panels. Illustrative, not a screenshot."
+   upstream-extension-map.svg  text="Inspect"  aria-label="Inspect: Diagram showing ezBookkeeping's existing accounts, transactions, categories, tags, and full interface as the unmodified upstream foundation, with JointLedger's additions — a Book/BookMember/BookInvitation model and book-scoped permission checks — layered on top."
+   browse-drops.webp  text="Inspect"  aria-label="Inspect: Screenshot of DropSpot's home page while signed in: three drop cards with status badges, one showing an 'In Waitlist' indicator, above status filter tabs (All, Upcoming, Active, Ended)."
+   professional-systems-overview.svg  text="Inspect"  aria-label="Inspect: Editorial illustration representing selected professional systems work without showing confidential product interfaces."
+/work/software-factory: 1 control(s), 1 distinct name(s), 1 distinct asset(s)
+   factory-loop-diagram.svg  text="Inspect"  aria-label="Inspect: Diagram of the Software Factory's delivery loop — plan, ticket, implementation, automated test, independent review, human approval, merge/release, evidence — above a summary of the repository's integration mandate: autonomy is permitted only while every condition holds, including frozen acceptance criteria, deterministic verification, an independent reviewer pass, an unchanged repository fingerprint, and human-only production release."
+/work/kivilcim: 2 control(s), 2 distinct name(s), 2 distinct asset(s)
+   local-first-architecture.svg  text="Inspect"  aria-label="Inspect: Diagram of Kıvılcım's local-first architecture: a React, Vite, and TypeScript interface over Dexie and IndexedDB, a PWA/Workbox offline layer, and JSON export/import, with a separately bounded optional path for user-authorized Gemini requests."
+   product-areas-map.svg  text="Inspect"  aria-label="Inspect: Diagram of Kıvılcım's five product areas — Today, Plan, Mind, Focus, and Progress — shown as five labelled panels. Illustrative, not a screenshot."
+/work/jointledger: 2 control(s), 2 distinct name(s), 2 distinct asset(s)
+   book-data-model-diagram.svg  text="Inspect"  aria-label="Inspect: Diagram of the Book, BookMember, and BookInvitation data model: a book has many members with owner, editor, or viewer roles; BookInvitation exists as a database table and error codes but has no service or API implementation yet."
+   upstream-extension-map.svg  text="Inspect"  aria-label="Inspect: Diagram showing ezBookkeeping's existing accounts, transactions, categories, tags, and full interface as the unmodified upstream foundation, with JointLedger's additions — a Book/BookMember/BookInvitation model and book-scoped permission checks — layered on top."
+/work/dropspot: 4 control(s), 3 distinct name(s), 3 distinct asset(s)
+   browse-drops.webp  text="Inspect"  aria-label="Inspect: Screenshot of DropSpot's home page while signed in: three drop cards with status badges, one showing an 'In Waitlist' indicator, above status filter tabs (All, Upcoming, Active, Ended)."
+   browse-drops.webp  text="Inspect"  aria-label="Inspect: Screenshot of DropSpot's home page while signed in: three drop cards with status badges, one showing an 'In Waitlist' indicator, above status filter tabs (All, Upcoming, Active, Ended)."
+   drop-detail.webp  text="Inspect"  aria-label="Inspect: Screenshot of a drop's detail page showing available stock, waitlist and claimed counts, the claim window dates, and a 'Join Waitlist' button."
+   admin-panel.webp  text="Inspect"  aria-label="Inspect: Screenshot of the admin panel: a table of drops with stock, waitlist, and claimed counts, claim windows, and Edit/Delete actions, plus a 'Create New Drop' button."
+/work/professional-systems: 1 control(s), 1 distinct name(s), 1 distinct asset(s)
+   professional-systems-overview.svg  text="Inspect"  aria-label="Inspect: Editorial illustration representing selected professional systems work without showing confidential product interfaces."
+
+INDEX THUMBNAILS ON /work — rendered/intrinsic width (scale), control displayed?
+
+--- A (baseline): http://127.0.0.1:3300
+ 320px: factory-loop-diagram.svg 278/1600 (0.17) no control | product-areas-map.svg 278/1600 (0.17) no control | upstream-extension-map.svg 278/1600 (0.17) no control | browse-drops.webp 278/1400 (0.20) no control | professional-systems-overview.svg 278/1600 (0.17) no control
+ 375px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+ 430px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+ 768px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+1024px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+1440px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+
+--- B (candidate): http://127.0.0.1:3210
+ 320px: factory-loop-diagram.svg 278/1600 (0.17) INSPECT | product-areas-map.svg 278/1600 (0.17) INSPECT | upstream-extension-map.svg 278/1600 (0.17) INSPECT | browse-drops.webp 278/1400 (0.20) INSPECT | professional-systems-overview.svg 278/1600 (0.17) INSPECT
+ 375px: factory-loop-diagram.svg 310/1600 (0.19) INSPECT | product-areas-map.svg 310/1600 (0.19) INSPECT | upstream-extension-map.svg 310/1600 (0.19) INSPECT | browse-drops.webp 310/1400 (0.22) INSPECT | professional-systems-overview.svg 310/1600 (0.19) INSPECT
+ 430px: factory-loop-diagram.svg 310/1600 (0.19) INSPECT | product-areas-map.svg 310/1600 (0.19) INSPECT | upstream-extension-map.svg 310/1600 (0.19) INSPECT | browse-drops.webp 310/1400 (0.22) INSPECT | professional-systems-overview.svg 310/1600 (0.19) INSPECT
+ 768px: factory-loop-diagram.svg 310/1600 (0.19) INSPECT | product-areas-map.svg 310/1600 (0.19) INSPECT | upstream-extension-map.svg 310/1600 (0.19) INSPECT | browse-drops.webp 310/1400 (0.22) INSPECT | professional-systems-overview.svg 310/1600 (0.19) INSPECT
+1024px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control
+1440px: factory-loop-diagram.svg 310/1600 (0.19) no control | product-areas-map.svg 310/1600 (0.19) no control | upstream-extension-map.svg 310/1600 (0.19) no control | browse-drops.webp 310/1400 (0.22) no control | professional-systems-overview.svg 310/1600 (0.19) no control

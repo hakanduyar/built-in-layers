@@ -599,4 +599,90 @@ test.describe("Work: figure inspector (V13 mobile gate, M1)", () => {
     await expect(page.getByRole("button", { name: /inspect/i })).toHaveCount(0);
     await expect(page.locator("dialog[open]")).toHaveCount(0);
   });
+
+  // A11Y-1 (V13 mobile QA): a case study renders up to five INSPECT controls
+  // whose visible text is the same word. Each one's accessible name starts
+  // with that word (WCAG 2.5.3) and continues with its own figure's
+  // description, so a buttons list reads as a list of figures. A figure shown
+  // twice -- the hero lead repeats one layer figure, and on DropSpot that
+  // layer is the default Surface tab -- is named the same twice: both
+  // controls open the same plate.
+  for (const slug of ["kivilcim", "jointledger", "dropspot"] as const) {
+    test(`/work/${slug} at 375: every INSPECT control is named for its own figure`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto(`/work/${slug}`);
+      const triggers = page.locator("[data-figure-inspect]");
+      expect(await triggers.count()).toBeGreaterThanOrEqual(2);
+      const controls = await triggers.evaluateAll((buttons) =>
+        buttons.map((button) => {
+          const image = button.closest("figure")?.querySelector("img");
+          return {
+            name: button.getAttribute("aria-label") ?? "",
+            text: button.textContent?.trim() ?? "",
+            alt: image?.getAttribute("alt") ?? "",
+            src: image?.getAttribute("src") ?? "",
+          };
+        }),
+      );
+      for (const { name, text, alt } of controls) {
+        expect(text).toBe("Inspect");
+        expect(alt.length).toBeGreaterThan(10);
+        expect(name).toBe(`Inspect: ${alt}`);
+      }
+      // Distinct figures, distinct names; the same figure, the same name.
+      const names = new Set(controls.map((c) => c.name));
+      const assets = new Set(controls.map((c) => c.src));
+      expect(names.size).toBe(assets.size);
+      if (slug === "dropspot") {
+        expect(controls.length).toBe(4);
+        expect(assets.size).toBe(3);
+      }
+    });
+  }
+});
+
+// ART-1 (V13 mobile QA, D-031 addendum): the /work index thumbnail shows a
+// 1600-unit diagram at 0.19-0.22 of its size under a caption that calls it
+// verified evidence, and it is not a link (the title is). It now carries the
+// same INSPECT control the case studies do, below `lg` only.
+test.describe("Work: index thumbnails opt into the inspector (ART-1)", () => {
+  test("a phone can open any card's thumbnail at the reading width", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/work");
+    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
+    await expect(cards).toHaveCount(5);
+    const triggers = page.locator("main [data-figure-inspect]");
+    await expect(triggers).toHaveCount(5);
+    for (const trigger of await triggers.all()) {
+      await trigger.scrollIntoViewIfNeeded();
+      const box = await trigger.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    const card = cards.filter({ has: page.locator("a[href='/work/kivilcim']") });
+    await expect(card.locator("img")).toHaveCount(1);
+    const trigger = card.locator("[data-figure-inspect]");
+    await expect(trigger).toHaveAttribute("aria-label", /^Inspect: /);
+    await trigger.click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    const plate = dialog.locator('img[src*="product-areas-map.svg"]');
+    await expect(plate).toBeVisible();
+    const plateBox = await plate.boundingBox();
+    expect(plateBox?.width ?? 0).toBeGreaterThanOrEqual(1000);
+    await expect(dialog).toContainText("not a product screenshot");
+    await page.keyboard.press("Escape");
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(card.locator("img")).toHaveCount(1);
+  });
+
+  test("the desktop index shows no inspector control", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/work");
+    await expect(page.getByRole("button", { name: /inspect/i })).toHaveCount(0);
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
 });
