@@ -1,0 +1,180 @@
+MEASURE AT 768 — per-element line length on the candidate build (BUILD_ID mNkR9V8fwCm0nsmFjB2N2, served on :3210)
+Tool: scratchpad measure768.mjs (Playwright Chromium, 768x1024, reducedMotion: reduce). Selector p, li with >40 chars, as the audit probe.
+'ch(audit)' = width / (font-size x 0.5), the audit probe's estimate; 'ch/line(real)' = characters / rendered lines from Range rects.
+Body copy (>=14px) is the number of record; the audit mean averages in <li> containers and 12px mono meta.
+
+
+== 768 /work  audit-mean(all)=88  body-only(>=14px)=79  meta(<14px)=120  n=13/10/3
+     16px  720w   90ch(audit)   20ch/line(real, 12 lines)  AUTONOMOUS DELIVERY SYSTEMSoftware Facto
+     16px  544w   68ch(audit)   43ch/line(real, 2 lines)  An orchestration core that routes work t
+     16px  720w   90ch(audit)   23ch/line(real, 11 lines)  PERSONAL OPERATING SYSTEMKıvılcım — "Spa
+     16px  544w   68ch(audit)   62ch/line(real, 1 lines)  A local-first system for planning, focus
+     12px  720w  120ch(audit)   60ch/line(real, 1 lines)  React · TypeScript · Vite · Tailwind CSS
+     16px  720w   90ch(audit)   18ch/line(real, 12 lines)  SHARED FINANCE SYSTEMJointLedgerPersonal
+     16px  544w   68ch(audit)   65ch/line(real, 1 lines)  Personal accounts. Shared financial life
+     12px  720w  120ch(audit)   43ch/line(real, 1 lines)  Go · Vue · TypeScript · PostgreSQL · Doc
+     16px  720w   90ch(audit)   22ch/line(real, 10 lines)  FAIR DISTRIBUTION SYSTEMDropSpotA fair c
+     16px  544w   68ch(audit)   65ch/line(real, 1 lines)  A fair claim and waitlist system for lim
+     12px  720w  120ch(audit)   60ch/line(real, 1 lines)  React · Vite · Tailwind CSS · Node.js · 
+     16px  720w   90ch(audit)   23ch/line(real, 10 lines)  PROFESSIONAL SYSTEMSProfessional Systems
+     16px  544w   68ch(audit)   42ch/line(real, 2 lines)  Designing usable interfaces within compl
+
+== 768 /work/kivilcim  audit-mean(all)=67  body-only(>=14px)=67  meta(<14px)=-  n=44/44/0
+     18px  544w   60ch(audit)   62ch/line(real, 1 lines)  A local-first system for planning, focus
+     18px  544w   60ch(audit)   51ch/line(real, 3 lines)  I defined Kıvılcım's product idea, scope
+     16px  544w   68ch(audit)   71ch/line(real, 2 lines)  AI tools assisted parts of the planning,
+     16px  544w   68ch(audit)   72ch/line(real, 13 lines)  Kıvılcım is a personal, local-first PWA 
+     16px  544w   68ch(audit)   77ch/line(real, 9 lines)  Most task managers assume the hard part 
+     16px  524w   66ch(audit)   71ch/line(real, 2 lines)  Local-first, single-user: everything liv
+     16px  524w   66ch(audit)   53ch/line(real, 2 lines)  Mobile-first PWA: designed and used as a
+     16px  524w   66ch(audit)   53ch/line(real, 2 lines)  AI is optional, never required: no core 
+     16px  524w   66ch(audit)   54ch/line(real, 3 lines)  No automatic sync: moving data between d
+     16px  524w   66ch(audit)   56ch/line(real, 3 lines)  Turkish-language UI today: every visible
+     16px  524w   66ch(audit)   61ch/line(real, 2 lines)  Personal-use scope: built for one person
+     16px  544w   68ch(audit)   73ch/line(real, 7 lines)  The project started with the basics: a V
+     16px  544w   68ch(audit)   71ch/line(real, 10 lines)  Mind (capture and a saved-links vault) a
+     16px  544w   68ch(audit)   65ch/line(real, 6 lines)  What's held up well: the focus-timer sta
+     16px  544w   68ch(audit)   56ch/line(real, 11 lines)  What's honestly incomplete: habits/habit
+     16px  544w   68ch(audit)   66ch/line(real, 4 lines)  What's next, honestly stated rather than
+     16px  544w   68ch(audit)   74ch/line(real, 7 lines)  The interface is a single mobile-first s
+     16px  544w   68ch(audit)   72ch/line(real, 8 lines)  Progressive disclosure shows up concrete
+     16px  544w   68ch(audit)   67ch/line(real, 7 lines)  Task and focus states are always communi
+     16px  544w   68ch(audit)   68ch/line(real, 5 lines)  Life areas (Career, Health, Mind, Family
+     16px  544w   68ch(audit)   58ch/line(real, 3 lines)  Kıvılcım holds personal, sometimes sensi
+     16px  544w   68ch(audit)   56ch/line(real, 3 lines)  Choice: All data lives on-device in Inde
+     16px  544w   68ch(audit)   56ch/line(real, 2 lines)  Alternatives considered: A cloud backend
+     16px  544w   68ch(audit)   64ch/line(real, 4 lines)  Trade-off: There's no automatic multi-de
+     16px  544w   68ch(audit)   72ch/line(real, 3 lines)  The data model needed typed, indexed, qu
+     16px  544w   68ch(audit)   61ch/line(real, 5 lines)  Choice: Dexie wraps IndexedDB with 14 ty
+     16px  544w   68ch(audit)   67ch/line(real, 2 lines)  Alternatives considered: localStorage fo
+     16px  544w   68ch(audit)   78ch/line(real, 4 lines)  Trade-off: Dexie is a real dependency wi
+     16px  544w   68ch(audit)   50ch/line(real, 3 lines)  Planning, capture, focused work, and rev
+     16px  544w   68ch(audit)   68ch/line(real, 3 lines)  Choice: A fixed five-tab bottom navigati
+     16px  544w   68ch(audit)   51ch/line(real, 2 lines)  Alternatives considered: One unified das
+     16px  544w   68ch(audit)   72ch/line(real, 3 lines)  Trade-off: Some actions require an extra
+     16px  544w   68ch(audit)   65ch/line(real, 3 lines)  AI-assisted features (turning a captured
+     16px  544w   68ch(audit)   72ch/line(real, 4 lines)  Choice: Every AI code path checks for a 
+     16px  544w   68ch(audit)   62ch/line(real, 2 lines)  Alternatives considered: Bundling a shar
+     16px  544w   68ch(audit)   63ch/line(real, 4 lines)  Trade-off: Users who want the AI feature
+     16px  544w   68ch(audit)   57ch/line(real, 3 lines)  A lightweight XP/level layer rewards com
+     16px  544w   68ch(audit)   70ch/line(real, 4 lines)  Choice: Every XP grant is keyed by a uni
+     16px  544w   68ch(audit)   50ch/line(real, 2 lines)  Alternatives considered: Granting XP dir
+     16px  544w   68ch(audit)   65ch/line(real, 4 lines)  Trade-off: Every award site needs a stab
+     16px  544w   68ch(audit)   63ch/line(real, 3 lines)  Recurring commitments (like a daily habi
+     16px  544w   68ch(audit)   66ch/line(real, 4 lines)  Choice: Routines are a separate table: e
+     16px  544w   68ch(audit)   56ch/line(real, 2 lines)  Alternatives considered: Extending the e
+     16px  544w   68ch(audit)   71ch/line(real, 5 lines)  Trade-off: The original `habits`/`habitL
+
+== 768 /work/dropspot  audit-mean(all)=67  body-only(>=14px)=67  meta(<14px)=-  n=29/29/0
+     18px  544w   60ch(audit)   65ch/line(real, 1 lines)  A fair claim and waitlist system for lim
+     18px  544w   60ch(audit)   61ch/line(real, 3 lines)  I designed DropSpot's waitlist and claim
+     16px  544w   68ch(audit)   75ch/line(real, 12 lines)  DropSpot is a fair-claim and waitlist sy
+     16px  544w   68ch(audit)   68ch/line(real, 8 lines)  DropSpot was built to work through a spe
+     16px  524w   66ch(audit)   64ch/line(real, 3 lines)  No production deployment: DropSpot has n
+     16px  524w   66ch(audit)   60ch/line(real, 4 lines)  Solo-built, over two days: the entire co
+     16px  524w   66ch(audit)   46ch/line(real, 4 lines)  PostgreSQL-specific concurrency strategy
+     16px  544w   68ch(audit)   70ch/line(real, 6 lines)  What holds up under direct code reading:
+     16px  544w   68ch(audit)   57ch/line(real, 20 lines)  What's honestly weaker than the README's
+     16px  544w   68ch(audit)   67ch/line(real, 8 lines)  DropSpot's interface groups seven real r
+     16px  544w   68ch(audit)   73ch/line(real, 10 lines)  The Drop Detail page's action area chang
+     16px  544w   68ch(audit)   47ch/line(real, 10 lines)  Authentication and authorization are bot
+     16px  544w   68ch(audit)   42ch/line(real, 4 lines)  No dedicated accessibility work (landmar
+     16px  544w   68ch(audit)   75ch/line(real, 3 lines)  A claim has to check the claim window, c
+     16px  544w   68ch(audit)   72ch/line(real, 5 lines)  Choice: Every claim runs inside a single
+     16px  544w   68ch(audit)   71ch/line(real, 3 lines)  Alternatives considered: An in-applicati
+     16px  544w   68ch(audit)   75ch/line(real, 4 lines)  Trade-off: Every claim request briefly h
+     16px  544w   68ch(audit)   68ch/line(real, 3 lines)  The waitlist needed an ordering rule tha
+     16px  544w   68ch(audit)   68ch/line(real, 5 lines)  Choice: A SHA-256 hash of the git remote
+     16px  544w   68ch(audit)   62ch/line(real, 2 lines)  Alternatives considered: A single fixed 
+     16px  544w   68ch(audit)   67ch/line(real, 7 lines)  Trade-off: The coefficients differ per d
+     16px  544w   68ch(audit)   68ch/line(real, 3 lines)  The database needed a repeatable way to 
+     16px  544w   68ch(audit)   71ch/line(real, 3 lines)  Choice: One migration script drops and r
+     16px  544w   68ch(audit)   52ch/line(real, 3 lines)  Alternatives considered: A versioned mig
+     16px  544w   68ch(audit)   68ch/line(real, 4 lines)  Trade-off: This script cannot be run saf
+     16px  544w   68ch(audit)   57ch/line(real, 4 lines)  The frontend already computes and displa
+     16px  544w   68ch(audit)   61ch/line(real, 4 lines)  Choice: The claim transaction re-reads `
+     16px  544w   68ch(audit)   57ch/line(real, 2 lines)  Alternatives considered: Trusting the cl
+     16px  544w   68ch(audit)   66ch/line(real, 3 lines)  Trade-off: Every claim attempt costs one
+
+== 768 /work/software-factory  audit-mean(all)=65  body-only(>=14px)=65  meta(<14px)=-  n=6/6/0
+     18px  544w   60ch(audit)   43ch/line(real, 2 lines)  An orchestration core that routes work t
+     18px  544w   60ch(audit)   59ch/line(real, 8 lines)  I designed and built the factory core fr
+     16px  544w   68ch(audit)   68ch/line(real, 3 lines)  The factory builds itself through its ow
+     16px  544w   68ch(audit)   60ch/line(real, 4 lines)  A personal software factory: one orchest
+     16px  544w   68ch(audit)   68ch/line(real, 7 lines)  The core is deliberately small and verif
+     16px  544w   68ch(audit)   63ch/line(real, 2 lines)  The factory's first project is itself: i
+
+== 768 /work/jointledger  audit-mean(all)=68  body-only(>=14px)=67  meta(<14px)=91  n=29/28/1
+     18px  544w   60ch(audit)   65ch/line(real, 1 lines)  Personal accounts. Shared financial life
+     12px  544w   91ch(audit)   45ch/line(real, 2 lines)  A fork of ezBookkeeping ↗︎ (opens in new
+     18px  544w   60ch(audit)   59ch/line(real, 9 lines)  JointLedger is my fork of ezBookkeeping,
+     16px  544w   68ch(audit)   73ch/line(real, 12 lines)  JointLedger is my fork of ezBookkeeping 
+     16px  544w   68ch(audit)   73ch/line(real, 7 lines)  ezBookkeeping is genuinely well-built fo
+     16px  524w   66ch(audit)   38ch/line(real, 6 lines)  Unmerged feature branch: the entire Book
+     16px  524w   66ch(audit)   65ch/line(real, 4 lines)  Solo-built in a single working session: 
+     16px  524w   66ch(audit)   60ch/line(real, 3 lines)  No frontend integration yet: zero refere
+     16px  524w   66ch(audit)   41ch/line(real, 6 lines)  Transactions aren't book-scoped in reads
+     16px  544w   68ch(audit)   56ch/line(real, 12 lines)  What holds up under direct code reading:
+     16px  544w   68ch(audit)   69ch/line(real, 16 lines)  What's honestly weaker than "shared fina
+     16px  544w   68ch(audit)   74ch/line(real, 8 lines)  JointLedger's interface today is, screen
+     16px  544w   68ch(audit)   68ch/line(real, 7 lines)  What's true today is narrower and more u
+     16px  544w   68ch(audit)   61ch/line(real, 6 lines)  Every existing ezBookkeeping user needed
+     16px  544w   68ch(audit)   62ch/line(real, 5 lines)  Choice: A personal book's primary key is
+     16px  544w   68ch(audit)   73ch/line(real, 3 lines)  Alternatives considered: A separately au
+     16px  544w   68ch(audit)   73ch/line(real, 4 lines)  Trade-off: Personal and shared books sha
+     16px  544w   68ch(audit)   65ch/line(real, 3 lines)  A shared book needed to support an arbit
+     16px  544w   68ch(audit)   66ch/line(real, 4 lines)  Choice: BookMember is its own table (boo
+     16px  544w   68ch(audit)   58ch/line(real, 3 lines)  Alternatives considered: Fixed secondary
+     16px  544w   68ch(audit)   60ch/line(real, 5 lines)  Trade-off: Every book-scoped request now
+     16px  544w   68ch(audit)   73ch/line(real, 4 lines)  Four existing entities — accounts, trans
+     16px  544w   68ch(audit)   73ch/line(real, 4 lines)  Choice: Book-scoped reads, writes, and p
+     16px  544w   68ch(audit)   52ch/line(real, 2 lines)  Alternatives considered: Migrating all f
+     16px  544w   68ch(audit)   74ch/line(real, 4 lines)  Trade-off: The single most central promi
+     16px  544w   68ch(audit)   59ch/line(real, 4 lines)  The migration needed to safely run again
+     16px  544w   68ch(audit)   69ch/line(real, 5 lines)  Choice: EnsurePersonalBook wraps the per
+     16px  544w   68ch(audit)   58ch/line(real, 2 lines)  Alternatives considered: A one-shot scri
+     16px  544w   68ch(audit)   63ch/line(real, 5 lines)  Trade-off: More defensive code — an exis
+
+== 768 /work/professional-systems  audit-mean(all)=63  body-only(>=14px)=63  meta(<14px)=-  n=3/3/0
+     18px  544w   60ch(audit)   42ch/line(real, 2 lines)  Designing usable interfaces within compl
+     18px  544w   60ch(audit)   56ch/line(real, 2 lines)  I will share my specific role and contri
+     16px  544w   68ch(audit)   58ch/line(real, 2 lines)  Selected professional work is being prep
+
+== 768 /about  audit-mean(all)=66  body-only(>=14px)=66  meta(<14px)=-  n=5/5/0
+     18px  544w   60ch(audit)   57ch/line(real, 3 lines)  I build product interfaces and the syste
+     16px  544w   68ch(audit)   65ch/line(real, 5 lines)  Most of what I build starts as a system 
+     16px  544w   68ch(audit)   63ch/line(real, 5 lines)  The work on this site runs from an orche
+     16px  544w   68ch(audit)   60ch/line(real, 3 lines)  Every system here states its own provena
+     16px  544w   68ch(audit)   36ch/line(real, 3 lines)  The systems themselves are on the work i
+
+== 768 /  audit-mean(all)=74  body-only(>=14px)=68  meta(<14px)=101  n=30/24/6
+     28px  416w   30ch(audit)   15ch/line(real, 3 lines)  Interfaces on the surface. Systems under
+     22px  544w   49ch(audit)   43ch/line(real, 2 lines)  An orchestration core that routes work t
+     22px  544w   49ch(audit)   31ch/line(real, 2 lines)  A local-first system for planning, focus
+     12px  544w   91ch(audit)   60ch/line(real, 1 lines)  React · TypeScript · Vite · Tailwind CSS
+     22px  544w   49ch(audit)   33ch/line(real, 2 lines)  Personal accounts. Shared financial life
+     12px  544w   91ch(audit)   43ch/line(real, 1 lines)  Go · Vue · TypeScript · PostgreSQL · Doc
+     22px  544w   49ch(audit)   33ch/line(real, 2 lines)  A fair claim and waitlist system for lim
+     12px  544w   91ch(audit)   60ch/line(real, 1 lines)  React · Vite · Tailwind CSS · Node.js · 
+     24px  608w   51ch(audit)   34ch/line(real, 2 lines)  I design clear interfaces and build the 
+     16px  544w   68ch(audit)   54ch/line(real, 1 lines)  Professional Systems continues on the fu
+     18px  672w   75ch(audit)   54ch/line(real, 1 lines)  Not just what they look like — how they 
+     16px  683w   85ch(audit)   19ch/line(real, 10 lines)  01Software Factory↗AUTONOMOUS DELIVERY S
+     12px  666w  111ch(audit)   44ch/line(real, 1 lines)  Verified against source · Active develop
+     16px  683w   85ch(audit)   17ch/line(real, 10 lines)  02Kıvılcım↗PERSONAL OPERATING SYSTEMSurf
+     12px  666w  111ch(audit)   44ch/line(real, 1 lines)  Verified against source · Active develop
+     16px  683w   85ch(audit)   18ch/line(real, 10 lines)  03JointLedger↗SHARED FINANCE SYSTEMSurfa
+     12px  666w  111ch(audit)   44ch/line(real, 1 lines)  Verified against source · Active develop
+     16px  683w   85ch(audit)   16ch/line(real, 10 lines)  04DropSpot↗FAIR DISTRIBUTION SYSTEMSurfa
+     16px  683w   85ch(audit)   17ch/line(real, 10 lines)  05Professional Systems↗PROFESSIONAL SYST
+     16px  670w   84ch(audit)   31ch/line(real, 5 lines)  01Interfaces are built on systemsConsequ
+     18px  555w   62ch(audit)   55ch/line(real, 2 lines)  What's visible is only half the work — t
+     16px  670w   84ch(audit)   26ch/line(real, 5 lines)  02Constraints are materialConsequencePer
+     18px  555w   62ch(audit)   46ch/line(real, 2 lines)  Permissions, offline behavior, and real 
+     16px  670w   84ch(audit)   24ch/line(real, 4 lines)  03Honest by defaultConsequenceUnfinished
+     18px  555w   62ch(audit)   67ch/line(real, 1 lines)  Unfinished work says so, plainly, instea
+     16px  670w   84ch(audit)   25ch/line(real, 5 lines)  04Every element has a jobConsequenceNoth
+     18px  555w   62ch(audit)   44ch/line(real, 2 lines)  Nothing on the page is there just to loo
+     16px  544w   68ch(audit)   40ch/line(real, 2 lines)  Writing currently lives externally: haka
+     18px  544w   60ch(audit)   57ch/line(real, 3 lines)  I build product interfaces and the syste
+     16px  544w   68ch(audit)   60ch/line(real, 3 lines)  Every system here states its own provena

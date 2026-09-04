@@ -611,3 +611,178 @@ Binding conditions attached to this approval — all already true of the current
   1024 / 1280 / 1366 / 1440 / 1920 in `docs/review/v13-fable-gate/metrics/final/fable-gate-{all,work}.json`,
   key `work`); the full route captures are outside the repository in
   `C:\Users\hakan\portfolio-review\v13-fable-gate\final-build-VAodX66DmpweO6L6gBPZk\work\`.
+
+## D-030 — The mobile world has its own unit, and route two's mobile legs are sized from mobile ink
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (`docs/MOBILE_AUDIT.md` §"Fable Gate 4 decision", 2026-09-04; owner unavailable). Owner
+  review of the returned before/after evidence is still pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M3 measured the homepage at 11.3–14.8 screens on phones with
+  "roughly 67 % of the viewport empty above" an arriving project scene. Walked at 0.5 vh steps on
+  the production build (`tests/tools/mobile-route-probe.mjs`, `docs/review/v13-mobile-gate/before`),
+  the paper had two separate causes, neither of them the scenes. (1) Below `lg` the world's
+  vertical unit was pinned to `1vh` (V8, `lib/spatial/worldFit.ts`), so route one's 130-unit
+  project step — the floor at 320×568, where it keeps Software Factory's frame clear of the next
+  label — opened in exact proportion to the frame on taller phones while the px-sized scenes did
+  not grow: 7–41 vh of paper between projects at 320×568, 53–72 vh at 390×844, 60–76 vh at
+  430×932. (2) Route two's mobile anchors still carried the desktop legs' proportions
+  (98 / 128 / 124 / 58) for beats whose mobile ink is 0.13–0.45 vh tall: the 3.5–5.0 vh stretch of
+  the route rendered 1–12 % ink, `reorient` at focus was UNDERNEATH plus one sentence over 76 vh of
+  paper, `approach` had 50 vh of paper under its list. Three of the files are fingerprinted in
+  `docs/FROZEN_BOUNDARY.md` §1; the moves are recorded in its §5 with the desktop parity proof.
+- **Decisions:**
+  1. **The mobile world unit stops growing at the frame the route was composed on.**
+     `WORLD_UNIT_MOBILE = { x: "1vw", y: "max(0.78vh, min(1vh, 7px))" }` — exactly `1vh` up to a
+     700 px-tall reference (`MOBILE_WORLD_REFERENCE_HEIGHT`), 7 px above it, with a `0.78vh` floor
+     (`MOBILE_WORLD_UNIT_FLOOR`) that is the one-scene-per-frame guarantee on the tallest phones
+     and caps the densification at 22 %. The same decision as V8's `WORLD_UNIT` on desktop
+     (geometry in viewport units, content in px, neighbours retreat as fast as the room arrives),
+     made a second time from its own measurement. Position only: scene frames stay `92vw` wide,
+     their minimum height `72vh`, the camera inset `10vh`, the spacer untouched — the page is not
+     one pixel shorter.
+  2. **Route two's mobile legs are the smallest distance at which two beats' ink never overlaps at
+     320×568 while the next beat's first line is already in frame at the previous beat's focus on
+     tall phones:** `reorient → approach` 128 → 64, `approach → handoff` 124 → 90,
+     `handoff → turn` 58 → 48 (`TURN_MOBILE_WORLD` 1058 → 950). Not tighter, because the route's
+     total mobile length is what the shared speed ratios scale against and below ~945 units the
+     acquisition descent breaks the 8 % frame-to-frame speed ceiling
+     (`tests/unit/spatial-route.test.ts`): 950 measures 7.79 %, 928 fails at 8.13 %.
+  3. **`SpatialCamera` reads `WORLD_UNIT_MOBILE` on the `!isDesktop` side only.** The desktop
+     declarations are textually unchanged; route one's mobile anchors, the cut and every desktop
+     `world` anchor are byte-identical.
+- **Consequence** (`docs/review/v13-mobile-gate/{before,after}/metrics/mobile-route.json`, same
+  probe, same steps): near-empty route frames 3 → 0 at 360×800, 5 → 0 at 390×844, 5 → 2 at 430×932,
+  4 → 1 at 768×1024 (0 → 0 at 320×568 and 375×667, the frames the route was composed on); mean
+  route ink by DOM ranges 34 → 40 / 32 → 39 / 30 → 37 / 35 → 44 %, by rendered pixel rows
+  18 → 23 / 18 → 24 / 17 → 23 / 21 → 27 %; page height and screen count unchanged at every width
+  (14.8 / 12.2 / 13.1 / 11.9 / 11.3 / 10.7); the focus-to-focus steps are 1 / 0.5 × 3 / 1 / 0.5 × 3
+  vh at all six widths (768 was 0.5 / 1 before). The remaining near-empty frames are the end of the
+  route — the sticky release, where the handoff beat leaves through the top of the frame and the
+  lower world enters from the bottom, one viewport of paper that `position: sticky` makes
+  unavoidable and that the desktop composition shares (1.39 vh at 1440×900).
+- **Rejected:** stacking the scenes as cards below `lg` (the generic mobile the brief rules out);
+  shrinking the compositions to fit more per frame (miniaturisation); shortening the spacer (page
+  height is not the defect — the paper *between* beats was); a shorter route than 950 (speed
+  ceiling); moving the handoff anchor to the route's end to close the release frame (lengthens the
+  `approach → handoff` leg by the same amount, paper inside the argument instead of after it).
+- **Approval:** delegated by the gate brief; the decision pair is
+  `docs/review/v13-mobile-gate/stills/M3--{before,after}--430x932--4.00vh.png` (the same sweep
+  step, rendered ink rows 0.049 → 0.240) with the metrics above; the focus frames and the full
+  0.5 vh sweeps are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-mobile-gate\{before-HEAD-180c07c,final-build-mNkR9V8fwCm0nsmFjB2N2}\`
+  (`route-stills\`, `route-sweep\`) per `docs/REVIEW_POLICY.md`.
+
+## D-031 — A case-study figure below `lg` opens itself at reading width; nothing is redrawn
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M1 — every verified diagram rendered at 0.18–0.24 of its
+  intrinsic width on phones, its labels at 3–6 CSS px; these diagrams are the case studies' evidence,
+  present but unreadable. DESIGN_SYSTEM §9 had called this "expected, not a defect". The audit
+  named the four options: dedicated mobile artwork, a zoom/scroll affordance, a simplified variant,
+  or a "view on a larger screen" notice.
+- **Decisions:**
+  1. **One control, the same asset.** Below `lg` every case-study `Figure` (`inspect` prop; the MDX
+     `Figure` and `CaseStudyHero`'s lead plate set it) carries an **INSPECT** control in its caption
+     row. It opens a native `<dialog>` (`showModal`, so Escape, focus containment and the backdrop
+     are the platform's) on paper, with the figure laid out at `INSPECT_PLATE_WIDTH = 1400` px on a
+     `--soft-paper` mat with corner ticks, panning on both axes (`overflow: auto`,
+     `overscroll-contain` so a pan that runs out of diagram never scrolls the case study), the
+     browser's own pinch-zoom on top, and the caption as the dialog's name.
+  2. **1400 is derived, not chosen.** The 13 verified diagrams are 1600 units wide and their smallest
+     label is 14 units (`jointledger/book-data-model.svg`); at 1400 px that label is 12.25 px, the
+     `mono-meta` floor DESIGN_SYSTEM §3 sets for the smallest type on the site. Screenshots
+     (1400–1878 px) sit at or just under 1:1.
+  3. **The plate keeps its place in the argument** at column width; the page never carries a second
+     copy of the asset (the plate's `<img>` mounts only while open) and never fetches one it does not
+     show. The trigger is `lg:hidden`; a `<noscript>` rule hides it without a script, so the no-JS
+     page is the page as before.
+  4. **The homepage is untouched:** `SpatialProjectScene` renders `Figure` without `inspect`, so the
+     frozen tour's markup is byte-identical.
+- **Consequence:** at 320–768 every diagram label reads at ≥ 12.25 px inside the inspector; the figure
+  footer becomes a flex row (caption + control) with the caption's `min-w-0`, which adds one
+  `<span>` per inspectable figure to the case-study pages' geometry and nothing to the homepage's
+  (`docs/review/v13-mobile-gate/after/desktop-parity.txt`: desktop pixels identical). Contract:
+  `tests/unit/figure-inspect.test.tsx`.
+- **Rejected:** redrawn "mobile diagrams" (content that is not in the verified source SVG — invented
+  evidence); a phone-sized crop or a simplified variant (hides part of the evidence); a "view on a
+  larger screen" notice (a shrug where the evidence should be); CSS `zoom` on the in-column figure
+  (a 1400 px plate inside a 288 px column with no way to reach the rest of it); a third-party
+  lightbox (a dependency for a `<dialog>`).
+- **Approval:** delegated by the gate brief; the decision stills are
+  `docs/review/v13-mobile-gate/stills/M1--*--375x667--kivilcim-*.png` (the lead figure before and
+  after, the inspector open, the inspector panned); the full case-study matrix at 320 / 375 / 390 /
+  430 / 768 is outside the repository in `C:\Users\hakan\portfolio-review\v13-mobile-gate\` per
+  `docs/REVIEW_POLICY.md`.
+
+## D-032 — The measure is a token, and below `lg` it is 34rem
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M2 — at 768 the body copy ran 82–95 characters per line
+  (`/work` 95, case studies 82–84, `/about` 83) because the 42 rem measure is wider than the readable
+  band at `body` size (42 rem = 672 px ≈ 84 ch at 16 px Archivo) and the tablet's 720 px column let it
+  run.
+- **Decisions:**
+  1. **One token.** `--container-measure` in `@theme` (`max-w-measure`): 42 rem, re-declared 34 rem
+     under `@media (width < 64rem)`. 34 rem = 544 px = 66–68 ch at `body`, inside the 45–75 band the
+     audit used, and wide enough for the case-study evidence captions and decision rows.
+  2. **Applied to every running-text block, not to columns:** MDX `h2`/`h3`/`p`/`ul`/`ol`, `Note`,
+     `DecisionCallout`, `DecisionList`'s `dd`, `ProjectCard`'s description, `CaseStudyHero`'s lead and
+     contribution, and the page-level prose on `/about`, `/lab`, `/notes`, `/work` and the 404. A
+     figure, a heading rule or a record row is not a line of prose and is not capped.
+  3. **The case-study record uses the tablet's width:** `CaseStudyHero`'s `<dl>` is two columns from
+     `sm` to `lg` and returns to the single meta column at `lg`.
+- **Consequence:** measured per element at 768 (`docs/review/v13-mobile-gate/after/measure-768.txt`),
+  every running-text block is 544 px wide; the audit probe's own per-route mean at 768 reads
+  `/work` 88, case studies 63–68, `/about` 66, `/` 74 — the `/work` figure is inflated by the card
+  `<li>` containers and single-line 12 px mono meta the probe averages in, which is why the
+  per-element table is the number of record. At `lg` and above the token resolves to the same 42 rem
+  as before and the desktop routes are pixel-identical (`after/desktop-parity.txt`).
+- **Rejected:** a 45 ch hard cap (too narrow for the evidence captions and the decision rows at
+  768); raising the type size at 768 instead (changes the type scale for one width); capping the
+  grid columns rather than the text (the figures and record rows need the column).
+- **Approval:** delegated by the gate brief; the decision pair is
+  `docs/review/v13-mobile-gate/stills/M2--{before,after}--768x1024--kivilcim-body.png` (the first
+  overview paragraph, 672 px / 94 characters per line → 544 px / 72) with `after/measure-768.txt`.
+
+## D-033 — Touch targets grow without the layout moving
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M4 — 6–20 sub-44 px targets per route: the homepage project
+  links at 24 px tall (the primary path into the work on mobile), case-study navigation at 31 px, the
+  mobile menu's rows at 27.5 px in a 51.5 px pitch (the target smaller than the gap between targets),
+  footer links at 21 px, "See every system" at 184×43. The audit deferred the fix to composition
+  because "adding vertical hit area changes rhythm".
+- **Decisions:**
+  1. **It does not have to change rhythm.** The `touch-link` utility (`styles/globals.css`) sets
+     `padding-block: max(0px, calc((2.8125rem − 1lh) / 2))` and gives the same amount back as
+     `margin-block: min(0px, calc((1lh − 2.8125rem) / 2))`, plus `--touch-slop-x` (0.5 rem) of inline
+     padding and negative margin. The hit box becomes 45 px tall; the glyphs, the line box and every
+     neighbour stay where the type set them.
+  2. **Every standalone link below `lg` carries `max-lg:inline-block max-lg:touch-link`:** the header
+     wordmark and nav (`--touch-slop-x: 0.75rem`), the mobile menu rows (`touch-link block`, full
+     panel width), Selected Systems' titles, "See all notes", the About preview's links, `/work` card
+     titles, `ProjectNeighbours`, the case-study Repository link, the 404's links and the footer's
+     social links. Links inside running sentences are exempt (WCAG 2.5.8's inline exception; making
+     them blocks would reflow the sentence). Three of the files are fingerprinted in
+     `docs/FROZEN_BOUNDARY.md` §1 (`SelectedSystems`, `FieldNotes`, `AboutPreview`); `max-lg:` only,
+     recorded in its §5.
+  3. **The tour's "See every system" is laid out in world space, so its floor is set from the plane
+     scale it is shown at:** the scene plane holds it at 0.89–0.995 across the stretch where it is on
+     screen (0.97 at focus, 0.89 at the route's end), so 44 px measured 39–44 on screen;
+     `max-lg:min-h-12.5` (50 px in world space) is ≥ 44.6 px at every tested width. `SpatialExperience`
+     (frozen, §5) — the desktop button is untouched.
+- **Consequence** (`docs/review/v13-mobile-gate/after/tap-targets.txt`): every measured standalone
+  link box across 8 routes × 3 widths is ≥ 44.98 px tall (Chromium's 1/64 px snapping on body-size
+  links; none under 44); menu rows 27.5 → 45 px; the full-page capture with the classes stripped from
+  the live DOM is pixel-identical to the page as built on every route at 320 / 375 / 768. The tour
+  CTA at handoff focus is in `after/metrics/mobile-route.json` (`tourTargets.handoff`) at all six
+  widths.
+- **Rejected:** larger type or looser leading for the links (changes the approved rhythm — the
+  reason the audit deferred); spacing-only compliance (WCAG's 24 px + spacing exception is below the
+  site's own 44 px rule, DESIGN_SYSTEM §10); wrapping links in `ButtonLink` (turns a register into a
+  row of buttons).
+- **Approval:** delegated by the gate brief; the strip-and-recapture proof and the inventory are in
+  `after/tap-targets.txt`.

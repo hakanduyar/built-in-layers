@@ -1,4 +1,4 @@
-import type { AnchorHTMLAttributes, ReactElement, ReactNode } from "react";
+import type { AnchorHTMLAttributes, ComponentProps, ReactElement, ReactNode } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { DecisionCallout } from "@/components/ui/DecisionCallout";
 import { Figure } from "@/components/ui/Figure";
@@ -20,10 +20,19 @@ type WithChildren = { children?: ReactNode; className?: string };
 // h2 -> `heading-l` ("Page/case-study section headings"), h3 -> `heading-m`
 // ("Sub-headings, card titles"), p -> `body` ("Default text"). No new token,
 // no typography plugin, no global prose CSS.
+//
+// V13 (mobile gate, M2): running text carries `max-w-measure` -- the
+// DESIGN_SYSTEM §3 reading measure as a token (styles/globals.css). Inside
+// the 42rem case-study column it is inert on the desktop (42rem = 42rem) and
+// shortens the line to 34rem below `lg`, where the column is the whole page.
+// Figures are not running text and keep the column's full width.
 function MdxH2({ children, className, ...props }: WithChildren) {
   return (
     <h2
-      className={cn("mt-12 first:mt-0 font-display text-heading-l text-ink", className)}
+      className={cn(
+        "mt-12 max-w-measure first:mt-0 font-display text-heading-l text-ink",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -33,7 +42,10 @@ function MdxH2({ children, className, ...props }: WithChildren) {
 
 function MdxH3({ children, className, ...props }: WithChildren) {
   return (
-    <h3 className={cn("mt-8 font-display text-heading-m text-ink", className)} {...props}>
+    <h3
+      className={cn("mt-8 max-w-measure font-display text-heading-m text-ink", className)}
+      {...props}
+    >
       {children}
     </h3>
   );
@@ -41,7 +53,7 @@ function MdxH3({ children, className, ...props }: WithChildren) {
 
 function MdxP({ children, className, ...props }: WithChildren) {
   return (
-    <p className={cn("mt-4 font-display text-body text-ink", className)} {...props}>
+    <p className={cn("mt-4 max-w-measure font-display text-body text-ink", className)} {...props}>
       {children}
     </p>
   );
@@ -55,7 +67,7 @@ function MdxUl({ children, className, ...props }: WithChildren) {
   return (
     <ul
       className={cn(
-        "mt-4 list-outside list-disc space-y-2 pl-5 font-display text-body text-ink",
+        "mt-4 max-w-measure list-outside list-disc space-y-2 pl-5 font-display text-body text-ink",
         className,
       )}
       {...props}
@@ -69,7 +81,7 @@ function MdxOl({ children, className, ...props }: WithChildren) {
   return (
     <ol
       className={cn(
-        "mt-4 list-outside list-decimal space-y-2 pl-5 font-display text-body text-ink",
+        "mt-4 max-w-measure list-outside list-decimal space-y-2 pl-5 font-display text-body text-ink",
         className,
       )}
       {...props}
@@ -122,6 +134,16 @@ function MdxA({
   );
 }
 
+// V13 (mobile gate, M1): every case-study figure is a piece of evidence in a
+// 42rem reading column, which below `lg` is 288-736px wide -- too narrow to
+// read a 1600-unit diagram. The MDX `Figure` therefore opts into the
+// inspector (components/ui/Figure.tsx `inspect`); the authored MDX is
+// unchanged and cannot opt out, because an unreadable figure is never the
+// author's intent. Same name, same whitelist entry, one more prop.
+function MdxFigure(props: ComponentProps<typeof Figure>) {
+  return <Figure {...props} inspect />;
+}
+
 // Restricted component whitelist (ARCHITECTURE §6): exactly the three named
 // custom components, plus controlled styling for the plain markdown output
 // ARCHITECTURE §6 already allows (h2, h3, p, ul, ol, li, a, strong). This is
@@ -130,7 +152,7 @@ function MdxA({
 // rendering arbitrary injected markup. No new custom (PascalCase) component
 // was added to this whitelist.
 const components = {
-  Figure,
+  Figure: MdxFigure,
   Note,
   DecisionCallout,
   h2: MdxH2,

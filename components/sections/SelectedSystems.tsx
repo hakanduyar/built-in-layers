@@ -107,10 +107,16 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <div>
+                    {/* V13 (mobile gate, M4): the register's title is the route
+                        into each system and was a 24px-tall target on phones.
+                        `touch-link` (styles/globals.css) gives it a 44px hit
+                        box below `lg` and changes nothing else -- the row's
+                        rhythm and the desktop are pixel-identical
+                        (docs/FROZEN_BOUNDARY.md §5). */}
                     <h3 className="font-display text-heading-m text-ink">
                       <Link
                         href={`/work/${project.slug}`}
-                        className="group/open underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2"
+                        className="group/open underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2 max-lg:inline-block max-lg:touch-link"
                       >
                         {project.title}
                         <span

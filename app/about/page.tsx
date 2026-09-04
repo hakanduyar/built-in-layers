@@ -23,17 +23,21 @@ export default function AboutPage() {
           coming here." Assembled only from facts this repository already asserts
           — see the note on `aboutIntro` in data/copy.ts for the source of every
           claim and for what is deliberately NOT said. */}
-      <p className="mt-6 max-w-[46rem] font-display text-body-l text-ink">{aboutIntro.lead}</p>
-      <p className="mt-5 max-w-[42rem] font-display text-body text-ink-muted">
+      {/* V13 (M2): running text takes the `measure` token (34rem below `lg`,
+          42rem from `lg`). The lead keeps its approved 46rem on the desktop. */}
+      <p className="mt-6 max-w-measure font-display text-body-l text-ink lg:max-w-[46rem]">
+        {aboutIntro.lead}
+      </p>
+      <p className="mt-5 max-w-measure font-display text-body text-ink-muted">
         {aboutIntro.method}
       </p>
-      <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
+      <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
         {aboutIntro.practice}
       </p>
-      <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
+      <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
         {aboutIntro.honesty}
       </p>
-      <p className="mt-8 max-w-[42rem] font-display text-body text-ink-muted">
+      <p className="mt-8 max-w-measure font-display text-body text-ink-muted">
         The systems themselves are on the{" "}
         <TextLink href="/work">{workIndexLabel.toLowerCase()}</TextLink>. For anything else, reach
         me on{" "}

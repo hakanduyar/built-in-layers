@@ -80,6 +80,8 @@ Roles (CSS custom properties set in `styles/globals.css`, exposed as Tailwind th
 
 Prose measure: 42rem (~68ch) maximum for case-study text. Body text never justified. No font weight below 400 or above 700.
 
+The measure is one token, `--container-measure` (`max-w-measure`): **42rem at `lg` and above, 34rem below** (§37.2, D-032). Below `lg` the token, not the column, is what caps a line — a 768px tablet gives the page a 720px column, and 42rem of `body` in it ran 82–95 characters per line (`docs/MOBILE_AUDIT.md` M2); 34rem holds every running-text block at 544px, 66–68ch at `body`, 50–78 real glyphs per line across the sizes actually set.
+
 ## 4. Responsive grid
 
 | Range | Columns | Gutter | Outer padding |
@@ -103,7 +105,7 @@ Vertical rhythm: sections are separated by 96–160px on desktop and 64–96px o
 ## 6. Container widths
 
 - `--container-max: 1320px`, centered, with outer padding per §4.
-- Prose column: 42rem.
+- Prose column: `--container-measure` — 42rem at `lg` and above, 34rem below (§3, §37.2).
 - Full-bleed is allowed only for the hero background tone and horizontal rules; images never bleed beyond the container in MVP.
 
 ## 7. Border and radius rules
@@ -130,7 +132,7 @@ All are `aria-hidden` and convey nothing not present in text.
 - Every image has a mono-meta caption line: `FIG 03 — <description>`.
 - Standard aspect ratios: screenshots 16:10, mobile screenshots 9:19.5 (shown in pairs/triples), **when the screenshot is being authored/staged specifically for this site** (a deliberate capture composed to that ratio). **D-019 diagrams** (`verified-diagram`/`provisional-illustration`, `docs/DECISIONS.md`) use the same fixed 16:10 canvas (`1600×1000` viewBox) as desktop screenshots, not free height — a deliberate change from this system's original "diagrams free height inside the prose column" rule, made so a diagram's `Figure` mat behaves identically to a screenshot's regardless of which asset type actually fills a given slot, and so the two asset types can be swapped for each other later (D-019's own "pure asset swap" guarantee) without a layout change. Each diagram's `<svg>` root sets literal `width="1600" height="1000"` attributes matching its `viewBox`, not just the `viewBox` alone — since `Figure` renders these as a plain `<img>`, the browser needs the attributes themselves to reserve the correct space before load.
 - **Real screenshots sourced from an audited repository (`assetType: "real-screenshot"`) keep their true, original aspect ratio — 16:10 is a preferred authored-presentation target, not a requirement imposed on evidence.** Cropping to 16:10, letterboxing, or stretching would either remove real interface content or distort it; authenticity of the evidence takes precedence over matching an arbitrary presentation ratio. `Figure`'s `<img>` already renders at its intrinsic aspect ratio (`className="block w-full"`, no fixed `height`/`aspect-ratio` override), so this requires no component change: a screenshot simply renders taller or shorter than a 16:10 diagram slot, inside the same `--soft-paper` mat. Cropping a real screenshot is allowed only to remove irrelevant outer whitespace/chrome, never to change the product state it depicts — report exactly what was cropped and why whenever it happens.
-- **Mobile legibility for D-019 diagrams**: at 375px a diagram's internal text scales down and gets small — expected, not a defect, since the asset is vector (stays crisp at any zoom, never blurs the way a scaled-down raster screenshot would) and every fact it depicts must also already be stated in the surrounding layer prose (CONTENT_MODEL §4), so nothing is ever exclusively locked behind small diagram text. A diagram failing this bar (introducing a fact found nowhere in the prose) is a content defect, independent of font size.
+- **Mobile legibility for D-019 diagrams** — superseded by §37.1 (D-031). The earlier stance ("at 375px a diagram's internal text gets small — expected, not a defect, because the asset is vector and every fact is also in the prose") was measured at 3–6 CSS px per label at 320–430 (`docs/MOBILE_AUDIT.md` M1), which is not small type, it is no type. Below `lg` every case-study `Figure` carries an **INSPECT** control that opens the same asset in a native `<dialog>` at 1400px on paper, panning on both axes with the browser's pinch-zoom on top; the 1600-unit diagrams' smallest label (14 units) lands at 12.25px there, the `mono-meta` floor. The plate keeps its place in the argument at column width; nothing is redrawn, cropped or summarised. The prose rule still holds: a diagram introducing a fact found nowhere in the prose is a content defect, independent of size.
 - Placeholder assets are flat `--soft-paper` panels with the mono text `PLACEHOLDER — ASSET PENDING`; they must look deliberately unfinished (no fake UI inside). This remains the fallback only until either a real screenshot or a D-019 diagram exists — it is not itself an accepted permanent asset type once one of those two exists.
 - No stock photography. No screenshots that were not taken from the real project. No AI-generated or otherwise invented final screenshots, under any circumstance — D-019 does not create an exception to this; it only permits an honestly-labelled diagram to stand in for a missing real screenshot, never a fake one pretending to be real.
 
@@ -141,6 +143,7 @@ All are `aria-hidden` and convey nothing not present in text.
 - **Primary button** (`ButtonLink`): mono-label text, `--ink` background, `--paper` text, radius `--radius-1`, padding 12×24px. Hover: background `--signal`, text `--ink` (5.5:1). Active: translate down 1px, no scale.
 - **Secondary button**: transparent, 1px `--ink` border, `--ink` text. Hover: `--ink` background at 8% wash.
 - Buttons are `<a>` for navigation and `<button>` only for real actions (layer switch). Minimum target 44×44px on touch.
+- **Touch targets below `lg`** (§37.4, D-033): every standalone text link — a link that is its own line or its own item, not a word inside a sentence — carries `max-lg:inline-block max-lg:touch-link`. The `touch-link` utility grows the hit box to 45px with `padding-block: max(0px, (2.8125rem − 1lh) / 2)` and gives the same amount back as negative `margin-block`, so the glyphs, the line and every neighbour stay where the type set them: the layout with the classes stripped is pixel-identical to the layout with them. Inline padding is `--touch-slop-x` (0.5rem; the header nav sets 0.75rem). Links inside running sentences are exempt (WCAG 2.5.8's inline exception; making them blocks would reflow the sentence). A button laid out in world space (the tour's "See every system") sets its floor from the plane scale it is shown at, not from 44px: 50px in world space at the 0.89–0.995 the scene plane holds is ≥ 44.6px under the finger.
 
 ## 11. Focus states
 
@@ -1741,6 +1744,11 @@ Honest reading: the change delivers the asked-for behaviour decisively under rea
 makes no measurable difference at the common desktop sizes, where the frame is not yet much larger
 than the composed world.
 
+*Mobile (V13 mobile gate, §37.3, D-030): below `lg` the world's vertical unit is no longer the
+viewport's. `WORLD_UNIT_MOBILE.y = max(0.78vh, min(1vh, 7px))` — 1vh up to a 700px-tall reference,
+held at 7px above it with a 0.78vh floor — so a tall phone does not stretch route two's paper in
+step with its height. The desktop unit above is untouched.*
+
 ### 33.6 The two authoritative sections, developed
 
 **Selected Systems** was carrying three facts per system. The validated frontmatter already held
@@ -2176,3 +2184,202 @@ their own overhang are not drawn at all. No fill, no HUD, no coordinates, no tel
   while keeping the two failure modes the window existed to exclude explicit.
 - One settle-bound test's budget was raised because the route is now legitimately 46% slower to
   cross. No assertion touched.
+
+## 37. V13 mobile gate — the mobile composition (2026-09-04)
+
+`feature/project-architecture-v13` only. Not merged to `main`. Owner brief (Fable Gate 4): treat
+mobile as a first-class composition of the same system — not a scaled-down desktop, not stacked
+cards, not hidden content — and resolve the four P1 findings of `docs/MOBILE_AUDIT.md`. Every
+number below was measured on production builds served by the gate itself: the starting HEAD
+(`180c07c`) as **before**, the candidate as **after**, at 320×568 / 360×800 / 375×667 / 390×844 /
+430×932 / 768×1024 (`docs/review/v13-mobile-gate/{before,after}/`). Decisions: D-030 to D-033.
+
+The desktop is not reopened. Every change is mobile-scoped — a `max-lg:` class, a `!isDesktop`
+branch, a `mobileWorld` anchor, or a token re-declared under `@media (width < 64rem)` — and where
+it lives in a frozen file the desktop output was proved unchanged rather than asserted (§37.6,
+`docs/FROZEN_BOUNDARY.md` §5).
+
+### 37.1 The figure is not redrawn; it opens (M1)
+
+The case studies' evidence is thirteen verified diagrams drawn at 1600 units (the smallest label 14 units),
+plus screenshots at 1400–1878px. In a 288–398px phone column they render at 0.18–0.25 of their
+size with labels at 3–6 CSS px: present, and unreadable. §9 had recorded this as "expected". It
+is a defect, because the diagram is the argument's evidence, and evidence the reader cannot read
+is a claim.
+
+Below `lg` every case-study figure (`inspect` on `Figure`: the MDX `Figure` and the hero's lead
+plate) carries an **INSPECT** control in its caption row. It opens a native `<dialog>` — modal, so
+Escape, focus containment and the backdrop are the platform's — on paper, with the same asset laid
+out at `INSPECT_PLATE_WIDTH = 1400` on a `--soft-paper` mat with the corner ticks, "Pan to read.
+Pinch to zoom." above it, panning on both axes with `overscroll-contain` so a pan that runs out of
+diagram never scrolls the case study underneath. 1400 is derived: the smallest label in the set
+(`jointledger/book-data-model.svg`, 14 units) lands at 12.25px, the `mono-meta` floor §3 sets for
+the smallest type on the site. Screenshots sit at or just under 1:1.
+
+What was refused: redrawn "mobile diagrams" (content not in the verified source — invented
+evidence), a crop or simplified variant (hidden evidence), a "view on a larger screen" notice, a
+lightbox dependency. The plate keeps its place in the column at column width; the page never
+carries a second copy of the asset (the plate's `<img>` mounts only while open); the trigger is
+`lg:hidden` and a `<noscript>` rule hides it without a script; the homepage's scenes render
+`Figure` without `inspect`, so the frozen tour's markup is byte-identical.
+
+### 37.2 The measure is a token, and it is 34rem below `lg` (M2)
+
+At 768 the body copy ran 82–95 characters a line (`/work` 95, the case studies 82–84, `/about`
+83): the 42rem measure is a desktop decision — 672px inside a twelve-column composition — and on
+a tablet there is no composition around it, only a 720px column it fills.
+
+`--container-measure` is now a token (`max-w-measure`): 42rem, re-declared 34rem under
+`@media (width < 64rem)`. 34rem is the measure the homepage already gives its own body copy
+(FieldNotes, AboutPreview, the project scenes): 544px, 66–68 characters by the audit's rule,
+50–78 real glyphs a line by element. It is applied to running text and nothing else — MDX
+`h2`/`h3`/`p`/`ul`/`ol`, `Note`, `DecisionCallout`, `DecisionList`'s definitions, `ProjectCard`'s
+description, the hero's lead and contribution, the page-level prose on `/about`, `/lab`,
+`/notes`, `/work` and the 404. Figures keep the column; a heading rule, a record row and a
+caption are not lines of prose. Phones never reach the cap (at 430 the column is 398px), so this
+is a tablet decision that costs the phones nothing.
+
+The case-study record uses the tablet's width the same way: `CaseStudyHero`'s `<dl>` is two
+columns of rows between `sm` and `lg` — each cell about the width of the desktop meta column, so a
+tablet reads two desktop columns side by side instead of five full-width rules with one short
+value under each — and returns to the single meta column at `lg`.
+
+Measured after, per element at 768 (`after/measure-768.txt`): every running-text block is 544px.
+The audit probe's own per-route mean reads `/work` 88 because it averages the card `<li>`
+containers and the 12px mono meta lines in with the prose; the per-element table is the number of
+record.
+
+### 37.3 The mobile world unit, and route two's mobile legs (M3)
+
+The audit measured the homepage at 11.3–14.8 screens on phones with "roughly 67% of the viewport
+empty above" an arriving scene. Walked at 0.5vh steps, the paper had two causes, neither of them
+the scenes.
+
+**The mobile unit was pinned to `1vh`** (V8), so the 130-unit project step — the floor at 320×568,
+where it keeps Software Factory's frame clear of the next label — opened in exact proportion to
+the frame on taller phones while the px-sized scenes did not grow: 7–41vh of paper between
+projects at 320×568, 53–72vh at 390×844, 60–76vh at 430×932. This is the same fault V8 corrected
+on the desktop (§33.5, "the world's unit is the viewport, the content's unit is the pixel, and the
+neighbour retreats as fast as the room arrives") and it is corrected the same way:
+
+```
+WORLD_UNIT_MOBILE.y = max(0.78vh, min(1vh, 7px))
+```
+
+Exactly `1vh` up to a 700px-tall reference (the frame the route was composed on), 7px above it,
+with a `0.78vh` floor that is the one-scene-per-frame guarantee on the tallest phones and caps the
+densification at 22%. The project step is therefore 910px instead of 1040 at 360×800, 910 instead
+of 1097 at 390×844, 945 instead of 1212 at 430×932, 1039 instead of 1331 at 768×1024 — and
+unchanged at 320×568 and 375×667. Position only: scene frames stay `92vw` wide with a `72vh`
+minimum height, the camera inset stays `10vh`, the spacer is untouched, and the page is not one
+pixel shorter — the paper *between* the beats was the defect, not the page's length.
+
+**Route two's mobile anchors carried the desktop legs' proportions** (98 / 128 / 124 / 58) for
+beats whose mobile ink is 0.13–0.45vh tall: the 3.5–5.0vh stretch of the route rendered 1–12% ink,
+`reorient` at focus was UNDERNEATH plus one sentence over 76vh of paper, `approach` had 50vh of
+paper under its list. The legs are now the smallest distance at which two beats' ink never
+overlaps at 320×568 while the next beat's first line is already in frame at the previous beat's
+focus on tall phones: `reorient → approach` 128 → 64, `approach → handoff` 124 → 90,
+`handoff → turn` 58 → 48 (`TURN_MOBILE_WORLD` 1058 → 950). Not tighter: the route's total mobile
+length is what the shared speed ratios scale against, and below ~945 units the acquisition descent
+breaks the 8% frame-to-frame speed ceiling (`tests/unit/spatial-route.test.ts`) — 950 measures
+7.79%, 928 fails at 8.13%. Route one's mobile anchors, the cut, and every desktop `world` anchor
+are byte-identical; `SpatialCamera` reads the mobile unit on the `!isDesktop` side only.
+
+Result (`metrics/{before,after}/mobile-route.json`, the same probe at the same steps):
+
+| | 320×568 | 360×800 | 375×667 | 390×844 | 430×932 | 768×1024 |
+|---|---|---|---|---|---|---|
+| near-empty route frames | 0 → 0 | 3 → 0 | 0 → 0 | 5 → 0 | 5 → 2 | 4 → 1 |
+| mean route ink, DOM ranges | 52 → 54% | 34 → 40% | 42 → 43% | 32 → 39% | 30 → 37% | 35 → 44% |
+| mean route ink, rendered rows | 29 → 30% | 18 → 23% | 25 → 28% | 18 → 24% | 17 → 23% | 21 → 27% |
+| page height / screens | unchanged | unchanged | unchanged | unchanged | unchanged | unchanged |
+
+The focus-to-focus steps read 1 / 0.5 × 3 / 1 / 0.5 × 3 vh at all six widths (768 read 0.5 / 1
+before). The frames that remain near-empty are the end of the route: the sticky release, where
+the handoff beat leaves through the top of the frame and the lower world enters from the bottom —
+about 1vh of paper at every width, the same mechanism the desktop composition shows at 1.39vh
+(1440×900), and left alone deliberately (§37.7).
+
+### 37.4 Touch targets grow; the layout does not move (M4)
+
+The audit counted 6–20 sub-44px targets a route — the homepage register's project titles at
+185×24 (the primary path into the work on a phone), the mobile menu's rows at 27.5px in a 51.5px
+pitch, footer links at 21px, the tablet's primary nav at 17px, "See every system" at 184×43 — and
+deferred the fix because "adding vertical hit area changes rhythm".
+
+It does not have to. The `touch-link` utility sets `padding-block: max(0px, calc((2.8125rem − 1lh)
+/ 2))` and gives the same amount straight back as `margin-block: min(0px, calc((1lh − 2.8125rem) /
+2))`, with `--touch-slop-x` (0.5rem) doing the same trade horizontally. The hit box becomes 45px
+tall (Chromium lays out in 1/64px and a fractional line-height snaps down — at exactly 2.75rem the
+box measured 43.98); the glyphs, the line box and every neighbour stay where the type set them.
+Every standalone link below `lg` carries `max-lg:inline-block max-lg:touch-link` (the menu rows
+`touch-link block`, the whole row); links inside running sentences are left alone — WCAG 2.5.8's
+inline exception, and a block would reflow the sentence.
+
+The tour's "See every system" is laid out in world space under the scene plane's scale — 0.973 on
+entry, 0.995 near focus, 0.893 at the route's end — so its 44px minimum measured 39–44px on
+screen, the audit's "1px short". `max-lg:min-h-12.5` (50px in world space) measures 47–49px at
+handoff focus at all six widths and 44.6px at the plane's lowest on-screen scale. §10 now states
+the rule: a world-space target's floor is set from the plane scale it is shown at.
+
+Measured after (`after/tap-targets.txt`): 193 standalone boxes across 8 routes × 3 widths, 181 at
+45.00px and 12 at 44.98px, none under 44; menu rows 27.5 → 45px in the same 51.5px pitch; and the
+full-page capture with the M4 classes stripped from the live DOM is pixel-identical to the page as
+built on every route at 320, 375 and 768 — the proof that the hit box grew and nothing else did.
+One consequence to know: under `prefers-reduced-motion` the homepage renders the static tree
+(§31), where the tour CTA is in flow, so that page is 6px taller below `lg`.
+
+### 37.5 The six-width loop
+
+After the four fixes, every route was rendered and read at all six widths as contact sheets —
+the route at every focus, the case-study heroes, the record, the decision lists, the neighbours,
+the inspector open, the menu, the 404, `/about`, `/notes` — and two things were changed on what
+was seen: the inspector's hint moved from below the plate (where it waited under 1400px of
+diagram) to above it, where the eye lands on open; and the tour CTA's floor was raised from 48px
+to 50px in world space after the walk found the plane at 0.893 at the route's end, where 48
+measured 42.9. Nothing else the loop showed warranted a change; what it showed and was left is in
+§37.7. The ten decision stills (one before/after pair per finding, plus the inspector open and
+panned) are in `docs/review/v13-mobile-gate/stills/`; the contact sheets and the full matrices are
+outside the repository in `C:\Users\hakan\portfolio-review\v13-mobile-gate\` per
+`docs/REVIEW_POLICY.md`.
+
+### 37.6 Desktop parity, proved
+
+Three files of the spatial engine and one spatial component are fingerprinted in
+`docs/FROZEN_BOUNDARY.md` §1 and moved under this gate (`worldFit.ts`, `scenes.ts`,
+`SpatialCamera.tsx`, `SpatialExperience.tsx`), with three homepage sections. The brief's
+condition was that desktop output be provably identical. `tests/tools/desktop-parity-probe.mjs`
+walks the baseline build (`180c07c`) and the candidate through all eight routes at 1280×800 /
+1440×900 / 1536×864 / 1920×1080 in half-viewport steps and compares every settled frame two ways:
+by rendered geometry (every element's rect to 1/100px plus the camera world's transform) and by
+pixels, with a 4px-cell tolerance calibrated against two walks of the *same* baseline build, and
+a re-examination (three fresh captures a side) of any step the cell test flags on identical
+geometry. Result: `docs/review/v13-mobile-gate/after/desktop-parity.txt` and
+`after/desktop-parity-reduced-motion.txt` — 32 route × viewport walks, every one at parity: the
+non-spatial routes pixel-identical (the two case studies' geometry fingerprint differs only in
+element count, +1 caption `<span>` per inspectable figure per D-031, with every pixel identical);
+the spatial homepage geometry-identical at every step with the camera transform byte-equal, its
+residual pixel difference Chromium's own raster jitter — the one step the cell test flagged on the
+first pass (1920×1080 at 2160 px, 23 cells) re-examined as jitter, its cell maximum 18.7/255 being
+exactly the same-build floor — and zero under `prefers-reduced-motion: reduce` (1280×800, 24
+steps, pixel-identical).
+
+### 37.7 Left as found, on purpose
+
+- **The end-of-route release frame.** About 1vh of paper between the handoff CTA leaving the
+  frame and the lower world's first line at every mobile width (1.04–1.14vh), against 1.39vh on
+  the desktop. Closing it means moving the handoff anchor to the route's end, which lengthens the
+  `approach → handoff` leg by the same amount — paper inside the argument instead of after it —
+  or a shorter route, which breaks the speed ceiling.
+- **The audit's P2 items.** M5 (12px mono meta on phones: the register's stack lines and
+  verification lines, the fork disclosure), M6 (33ch at 320 on the homepage — the audit's own
+  rule on a 288px column; the site's floor), M7 (Kıvılcım at 23.6 screens at 320×568 — its length is
+  its evidence, five figures and a decision list; the inspector is what makes those screens worth
+  scrolling).
+- **Desktop figures at ~0.51 scale in the 42rem column** — a desktop question, outside this gate.
+- **`DecisionList`'s terms at 720px on a tablet** — the definition is capped, the term is not;
+  read as acceptable at 768 because a term is one line.
+- **MDX `index={n}` FIG numbering** never renders: `index={1}` is a JSX expression attribute and
+  `blockJS: true` (D-001) drops it before `Figure` sees it, so the captions read "Verified
+  architecture diagram." without a "FIG 01 —" prefix — pre-existing, content-side, unchanged here.

@@ -1,0 +1,4720 @@
+{
+  "base": "http://127.0.0.1:3210",
+  "generated": "phase6-mobile-audit",
+  "routes": {
+    "home": {
+      "path": "/",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 8385,
+          "screens": 14.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 33,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 276,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1285,
+          "firstFigureScreens": 2.26,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 568,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 9758,
+          "screens": 12.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 38,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 312,
+              "renderedH": 142,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1453,
+          "firstFigureScreens": 1.82,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 800,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 8736,
+          "screens": 13.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 39,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 326,
+              "renderedH": 148,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1397,
+          "firstFigureScreens": 2.09,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 667,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10021,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 339,
+              "renderedH": 154,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1413,
+          "firstFigureScreens": 1.67,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 844,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 10541,
+          "screens": 11.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 45,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 375,
+              "renderedH": 171,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.27,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1436,
+          "firstFigureScreens": 1.54,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 932,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 10917,
+          "screens": 10.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 74,
+          "h1Px": 81,
+          "h1Height": 132,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 81
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 61
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 677,
+              "renderedH": 308,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.48,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1509,
+          "firstFigureScreens": 1.47,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 1024,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        }
+      }
+    },
+    "work-index": {
+      "path": "/work",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 3396,
+          "screens": 6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 39,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 521,
+          "firstFigureScreens": 0.92,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 3537,
+          "screens": 4.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 44,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.62,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 3410,
+          "screens": 5.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 46,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.74,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 3556,
+          "screens": 4.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 48,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.59,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 3628,
+          "screens": 3.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 54,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.53,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 3529,
+          "screens": 3.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 88,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 478,
+          "firstFigureScreens": 0.47,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-software-factory": {
+      "path": "/work/software-factory",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 3433,
+          "screens": 6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.67,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 3396,
+          "screens": 4.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 39,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.47,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 3296,
+          "screens": 4.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.57,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 3421,
+          "screens": 4.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 43,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.45,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 3350,
+          "screens": 3.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 48,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 3196,
+          "screens": 3.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Verified system diagram, traced to the r"
+            }
+          ],
+          "avgMeasureChars": 65,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 334,
+          "firstFigureScreens": 0.33,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-kivilcim": {
+      "path": "/work/kivilcim",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 13389,
+          "screens": 23.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 12601,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.61,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 12347,
+          "screens": 15.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 11441,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 11940,
+          "screens": 17.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 42,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 11143,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 11892,
+          "screens": 14.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 44,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 10950,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 11195,
+          "screens": 12,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 49,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 10181,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 9618,
+          "screens": 9.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Illustrative product map based on the au"
+            }
+          ],
+          "avgMeasureChars": 67,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 662,
+              "renderedH": 414,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.41,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 588,
+                "y": 8571,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 305,
+          "firstFigureScreens": 0.3,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-jointledger": {
+      "path": "/work/jointledger",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 11361,
+          "screens": 20,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 36,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 8,
+                "y": 10479,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 8,
+                "y": 10572,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.7,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 10492,
+          "screens": 13.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 8,
+                "y": 9493,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 8,
+                "y": 9586,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.5,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 10164,
+          "screens": 15.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 43,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 8,
+                "y": 9274,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 8,
+                "y": 9367,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.6,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10064,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 45,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 8,
+                "y": 9029,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 8,
+                "y": 9122,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.47,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 9628,
+          "screens": 10.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 50,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 8,
+                "y": 8521,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 8,
+                "y": 8614,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 8211,
+          "screens": 8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            },
+            {
+              "px": 12,
+              "text": "Verified architecture diagram, not a pro"
+            },
+            {
+              "px": 12,
+              "text": "Verified extension diagram, not a produc"
+            }
+          ],
+          "avgMeasureChars": 68,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 662,
+              "renderedH": 414,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.41,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 7164,
+                "w": 112,
+                "h": 45
+              },
+              {
+                "text": "DropSpot",
+                "x": 616,
+                "y": 7164,
+                "w": 136,
+                "h": 45
+              }
+            ],
+            "stacked": false,
+            "height": 94
+          },
+          "firstFigureTop": 339,
+          "firstFigureScreens": 0.33,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-dropspot": {
+      "path": "/work/dropspot",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 11235,
+          "screens": 19.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 278,
+              "renderedH": 134,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.16,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 278,
+              "renderedH": 120,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.15,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 10446,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.61,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 10527,
+          "screens": 13.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 318,
+              "renderedH": 145,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 318,
+              "renderedH": 145,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 318,
+              "renderedH": 154,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.18,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 318,
+              "renderedH": 137,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 9621,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 10202,
+          "screens": 15.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 42,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 333,
+              "renderedH": 152,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 333,
+              "renderedH": 152,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 333,
+              "renderedH": 161,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 333,
+              "renderedH": 143,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.18,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 9405,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10063,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 44,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 348,
+              "renderedH": 158,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.25,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 348,
+              "renderedH": 158,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.25,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 348,
+              "renderedH": 168,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 348,
+              "renderedH": 150,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 9121,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 9514,
+          "screens": 10.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 49,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 388,
+              "renderedH": 177,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.28,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 388,
+              "renderedH": 177,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.28,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 388,
+              "renderedH": 188,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 388,
+              "renderedH": 167,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 8,
+                "y": 8500,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 8491,
+          "screens": 8.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Home page, signed in — browsing drops wi"
+            },
+            {
+              "px": 12,
+              "text": "Drop detail page before joining the wait"
+            },
+            {
+              "px": 12,
+              "text": "Admin panel — drop management table, vis"
+            }
+          ],
+          "avgMeasureChars": 67,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 710,
+              "renderedH": 323,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.51,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 662,
+              "renderedH": 301,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.47,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 662,
+              "renderedH": 320,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.38,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 662,
+              "renderedH": 285,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.35,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 7444,
+                "w": 164,
+                "h": 45
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 305,
+          "firstFigureScreens": 0.3,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-professional-systems": {
+      "path": "/work/professional-systems",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 2143,
+          "screens": 3.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 33,
+          "h1Px": 36,
+          "h1Height": 72,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 414,
+          "firstFigureScreens": 0.73,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 2238,
+          "screens": 2.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 38,
+          "h1Px": 36,
+          "h1Height": 72,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 414,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 2073,
+          "screens": 3.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 2227,
+          "screens": 2.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 2306,
+          "screens": 2.5,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 46,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 2387,
+          "screens": 2.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "Provisional editorial illustration based"
+            }
+          ],
+          "avgMeasureChars": 63,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 334,
+          "firstFigureScreens": 0.33,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "about": {
+      "path": "/about",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 1944,
+          "screens": 3.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 287,
+              "h": 43
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 35,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 1926,
+          "screens": 2.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 287,
+              "h": 43
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 325,
+              "h": 43
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 40,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 1764,
+          "screens": 2.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 42,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 1909,
+          "screens": 2.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 44,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 1899,
+          "screens": 2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 49,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 1807,
+          "screens": 1.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 66,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    }
+  }
+}

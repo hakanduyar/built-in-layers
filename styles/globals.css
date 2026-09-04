@@ -58,6 +58,12 @@
   --tracking-mono-label: 0.08em;
   --tracking-mono-meta: 0.04em;
 
+  /* Measure (DESIGN_SYSTEM §3, §6): the reading measure for running text,
+     as `max-w-measure`. 42rem is the desktop prose measure; below `lg` the
+     token itself is re-declared (see the V13 M2 block after @layer base),
+     so one utility reads at the right length in every frame. */
+  --container-measure: 42rem;
+
   /* Radius (DESIGN_SYSTEM §7) -- nothing larger than --radius-2 is approved */
   --radius-0: 0px;
   --radius-1: 2px;
@@ -112,6 +118,67 @@
     outline: 2px solid var(--color-ink);
     outline-offset: 2px;
   }
+}
+
+/*
+ * V13 mobile gate (M2): the measure below `lg`.
+ *
+ * The 42rem prose measure is a desktop decision: 672px of Archivo at 16px runs
+ * ~98 characters a line by glyph advance (~84 by the audit's 0.5em rule), and
+ * on the desktop it sits in a 12-column composition that was approved at that
+ * length. Below `lg` there is no composition around it -- the page is one
+ * column -- so at 768 the same 672px is simply a long line held closer to the
+ * eye (docs/MOBILE_AUDIT.md, M2: 82-95 by the audit's rule, the worst measure
+ * on the site at any width). Phones never reach it: at 430 the column is
+ * 398px wide and the cap is inert.
+ *
+ * 34rem is the measure the homepage already gives its own body copy
+ * (FieldNotes, AboutPreview, the project scenes): 544px, ~79 characters of
+ * body and ~71 of body-l by glyph advance. The token is re-declared rather
+ * than a second utility added, so `max-w-measure` means "as long as running
+ * text should be here" in every frame, and the desktop value is untouched.
+ * The COLUMN stays 42rem: figures keep their width, and the text stops short
+ * of the plate's right edge on a tablet the way it does in a printed page.
+ */
+@media (width < 64rem) {
+  :root {
+    --container-measure: 34rem;
+  }
+}
+
+/*
+ * V13 mobile gate (M4): a 44px hit box for a text link, without moving it.
+ *
+ * DESIGN_SYSTEM §10 sets a 44px minimum target, and the buttons meet it. The
+ * standalone text links do not: a project title on the homepage register is a
+ * 185x24 target, a footer social link 66x21, a primary-nav item on a tablet
+ * 35x17 (docs/MOBILE_AUDIT.md, M4). Making them taller by leading or padding
+ * would move every rule and rhythm they sit in, on every width.
+ *
+ * So the hit box grows and the layout does not. Block padding fills the
+ * difference between one line of the link's own type (`1lh`, so it works at
+ * 13px mono and 40px heading alike) and 2.8125rem, and an equal negative
+ * margin gives that space straight back to the line box, so the surrounding
+ * rhythm is pixel-identical. 45px rather than 44 because Chromium lays out in
+ * 1/64px units and a fractional line-height (26.4px at body) snaps down -- at
+ * exactly 2.75rem the measured box was 43.98px. The same trade runs
+ * horizontally with `--touch-slop-x` (default 0.5rem; a call site with a
+ * tight row gap can set its own). `max()`/`min()` keep it inert on type that
+ * is already that tall.
+ *
+ * The utility is the trade only; the call site supplies the display. An
+ * inline link pairs it with `inline-block` (vertical padding on an inline box
+ * does not make a box), a full-width row link with `block` (the whole row
+ * becomes the target). Applied as `max-lg:inline-block max-lg:touch-link` at
+ * each standalone link so the desktop composition is untouched; links inside
+ * a running sentence are left alone -- they are exempt (WCAG 2.5.8 "inline")
+ * and would reflow as blocks.
+ */
+@utility touch-link {
+  padding-block: max(0px, calc((2.8125rem - 1lh) / 2));
+  margin-block: min(0px, calc((1lh - 2.8125rem) / 2));
+  padding-inline: var(--touch-slop-x, 0.5rem);
+  margin-inline: calc(-1 * var(--touch-slop-x, 0.5rem));
 }
 
 @media (prefers-reduced-motion: reduce) {

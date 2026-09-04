@@ -524,3 +524,79 @@ test.describe("Work: responsive", () => {
     });
   }
 });
+
+// V13 mobile gate (M1): below `lg` a case-study figure renders a 1600-unit
+// diagram at 0.17-0.46 of its size, so every case-study figure carries an
+// INSPECT control that opens the same asset at a readable width in a native
+// modal dialog. The desktop column never shows the control.
+test.describe("Work: figure inspector (V13 mobile gate, M1)", () => {
+  test("a phone can open the hero plate at a readable width, pan it and close it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/work/kivilcim");
+    const hero = page.locator("main header");
+    const figure = hero.locator("figure").first();
+    const trigger = figure.getByRole("button", { name: /inspect/i });
+    await expect(trigger).toBeVisible();
+    const triggerBox = await trigger.boundingBox();
+    expect(triggerBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    // The page carries exactly one copy of the plate while the inspector is
+    // closed: the dialog's <img> is mounted only while it is open.
+    await expect(page.locator('img[src*="local-first-architecture.svg"]')).toHaveCount(1);
+
+    await trigger.click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    const plate = dialog.locator('img[src*="local-first-architecture.svg"]');
+    await expect(plate).toBeVisible();
+    // 1400px lays the smallest verified label (14 of 1600 units) out at the
+    // 12px mono-meta floor; the frame is 375px wide, so the plate pans.
+    const plateBox = await plate.boundingBox();
+    expect(plateBox?.width ?? 0).toBeGreaterThanOrEqual(1000);
+    const scroller = dialog.locator(".overflow-auto");
+    const pan = await scroller.evaluate((el) => ({
+      x: el.scrollWidth - el.clientWidth,
+      y: el.scrollHeight - el.clientHeight,
+    }));
+    expect(pan.x).toBeGreaterThan(375);
+    expect(pan.y).toBeGreaterThan(0);
+
+    await expect(dialog.getByRole("button", { name: /close/i })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(page.locator('img[src*="local-first-architecture.svg"]')).toHaveCount(1);
+  });
+
+  test("the layer figures opt in too, and every trigger meets the 44px target", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.goto("/work/kivilcim");
+    await page.getByRole("tab", { name: "Flow" }).click();
+    const panel = page.getByRole("tabpanel");
+    const triggers = panel.getByRole("button", { name: /inspect/i });
+    await expect(triggers).toHaveCount(2);
+    for (const trigger of await triggers.all()) {
+      await trigger.scrollIntoViewIfNeeded();
+      const box = await trigger.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+    await triggers.first().click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    await expect(dialog).toContainText("Verified flow diagram, not a product screenshot.");
+    await dialog.getByRole("button", { name: /close/i }).click();
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
+
+  test("the desktop column shows no inspector control", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/work/kivilcim");
+    await expect(page.getByRole("button", { name: /inspect/i })).toHaveCount(0);
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
+});

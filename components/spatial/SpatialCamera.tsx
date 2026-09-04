@@ -73,7 +73,7 @@ import {
   type ProjectGroundScene,
   type ProjectVisualBounds,
 } from "@/lib/spatial/projectGround";
-import { WORLD_UNIT, worldFit, worldX, worldY } from "@/lib/spatial/worldFit";
+import { WORLD_UNIT, WORLD_UNIT_MOBILE, worldFit, worldX, worldY } from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
 /** Composed scenes. `tail` is the near-empty beat before the cut, and its
@@ -1039,13 +1039,16 @@ export function SpatialCamera({
         // V8: the world's own unit, declared once at the top of the world and
         // read by everything positioned inside it. Pure CSS `min()`, so it
         // re-resolves on resize, on browser zoom and on a DPR change with no
-        // listener and no re-render. On mobile it is pinned to the viewport unit:
-        // the vertical route is composed against the phone's frame directly, and
-        // capping it there would shrink a world that has no excess room.
+        // listener and no re-render.
+        // V13 (mobile gate, M3): the mobile unit is capped too. V8 pinned it to
+        // `1vh` on the reasoning that a route composed against the phone's frame
+        // has no excess room; measured, that held only on the ~700px-tall phones
+        // it was composed on, and every taller frame opened 50-76vh of paper
+        // between projects. See WORLD_UNIT_MOBILE in lib/spatial/worldFit.ts.
         style={
           {
-            "--world-vw": isDesktop ? WORLD_UNIT.x : "1vw",
-            "--world-vh": isDesktop ? WORLD_UNIT.y : "1vh",
+            "--world-vw": isDesktop ? WORLD_UNIT.x : WORLD_UNIT_MOBILE.x,
+            "--world-vh": isDesktop ? WORLD_UNIT.y : WORLD_UNIT_MOBILE.y,
           } as CSSProperties
         }
       >

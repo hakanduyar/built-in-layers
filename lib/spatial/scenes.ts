@@ -163,6 +163,47 @@ export const VW_PER_VH = 1.6;
  * Mobile anchors are untouched: mobile is a vertical route where no two scenes
  * share a frame, so it never had this failure (§29).
  */
+/**
+ * V13 MOBILE GATE (M3) -- ROUTE TWO'S MOBILE LEGS ARE SIZED FROM MOBILE INK.
+ *
+ * THE MEASURED DEFECT. Route one's mobile anchors are right: a project scene's
+ * ink runs 0.57-1.13vh tall (320x568 to 768x1024), so a 130vh step is the floor
+ * at which consecutive projects do not share a frame, and every route-one frame
+ * in tests/tools/mobile-route-probe.mjs measured 21-49% rendered ink. Route two
+ * was still spaced on the desktop legs' proportions (98 / 128 / 124 / 58) for
+ * beats whose mobile ink is 0.13-0.45vh tall and pinned to the top of a 72vh
+ * frame. Measured on the built page at 0.5vh scroll steps, the 3.5-5.0vh stretch
+ * of the route rendered 1-12% ink on 360x800 / 390x844 / 430x932 / 768x1024:
+ * `reorient` at focus was UNDERNEATH plus one sentence with 76vh of paper under
+ * it, `approach` had 50vh of paper under its list, and the last frame before
+ * the surface return was empty above the marker at 78%. That is the audit's
+ * "spacing that does not earn its cost", and it lived on route two, not between
+ * the projects.
+ *
+ * THE FIX IS THE LEG LENGTH, NOT THE FRAME. Each mobile leg is now the smallest
+ * distance at which the two beats' ink never overlaps at 320x568 (the tallest
+ * ink in vh) while the next beat's first line is already inside the frame at
+ * the previous beat's focus on tall phones:
+ *
+ *   reorient -> approach  128 -> 64   reorient's ink ends at +26vh (320), the
+ *                                     Built in Layers label enters at +66vh
+ *   approach -> handoff   124 -> 90   approach's list ends at +80vh (320)
+ *   handoff  -> turn       58 -> 48   see TURN_MOBILE_WORLD
+ *
+ * Why not tighter: the route's TOTAL mobile length is what the shared speed
+ * ratios scale against, and below ~945 units the acquisition descent's ramp
+ * out of the hero exceeds the world's 8% frame-to-frame speed ceiling
+ * (tests/unit/spatial-route.test.ts) -- 1058 units measured 7.43%, 950 measures
+ * 7.79%, 940 measures 7.95%, 928 fails at 8.13%. 950 is the tightest geometry
+ * that keeps every standing contract with margin.
+ *
+ * Route one, the cut and the desktop world are byte-identical. The other half
+ * of M3 -- the 50-76vh of paper a 130-unit step opened between projects on
+ * phones taller than the ~700px the route was composed on -- is not an anchor
+ * problem and is not fixed here: the anchors are right at 320x568, where the
+ * step is the floor, so it is the UNIT that stops growing with the frame. See
+ * WORLD_UNIT_MOBILE in lib/spatial/worldFit.ts.
+ */
 export const SCENES: readonly SceneConfig[] = [
   { id: "hero", world: { x: 0, y: 0 }, mobileWorld: { x: 0, y: 0 } },
   { id: "software-factory", world: { x: 155, y: 106 }, mobileWorld: { x: 0, y: 130 } },
@@ -171,8 +212,8 @@ export const SCENES: readonly SceneConfig[] = [
   { id: "dropspot", world: { x: 620, y: 424 }, mobileWorld: { x: 0, y: 520 } },
   { id: "tail", world: { x: 775, y: 530 }, mobileWorld: { x: 0, y: 650 } },
   { id: "reorient", world: { x: -14, y: 652 }, mobileWorld: { x: 0, y: 748 } },
-  { id: "approach", world: { x: 132, y: 586 }, mobileWorld: { x: 0, y: 876 } },
-  { id: "handoff", world: { x: 264, y: 548 }, mobileWorld: { x: 0, y: 1000 } },
+  { id: "approach", world: { x: 132, y: 586 }, mobileWorld: { x: 0, y: 812 } },
+  { id: "handoff", world: { x: 264, y: 548 }, mobileWorld: { x: 0, y: 902 } },
 ] as const;
 
 export const SCENE_IDS: readonly SceneId[] = SCENES.map((scene) => scene.id);
@@ -311,8 +352,15 @@ export const ENTRY_MOBILE_WORLD: WorldPoint = { x: 0, y: 52 };
 export const TURN_WORLD: WorldPoint = { x: 292, y: 624 };
 /** Mobile has no bearing to turn -- its route is vertical throughout (§30) --
  *  so this is purely the handover run, cut in the same proportion as the desktop
- *  exit: 176vh of travel behind two deleted previews becomes 58vh. */
-export const TURN_MOBILE_WORLD: WorldPoint = { x: 0, y: 1058 };
+ *  exit: 176vh of travel behind two deleted previews becomes 58vh.
+ *
+ *  V13 MOBILE GATE (M3): 58 -> 48 units after `handoff`, i.e. 902 + 48. The run
+ *  frames nothing on a phone -- handoff's ink is 0.16-0.45vh tall and has left
+ *  the frame after ~45 units on every tested height -- so it is cut to what the
+ *  route's own contracts allow: any shorter and the total mobile length drops
+ *  below the ~945 units at which the acquisition descent's speed ramp breaks
+ *  the 8% ceiling (see the SCENES note). */
+export const TURN_MOBILE_WORLD: WorldPoint = { x: 0, y: 950 };
 
 /**
  * Where route one ends and the occlusion cut happens. A camera-only

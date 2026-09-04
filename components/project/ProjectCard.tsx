@@ -25,10 +25,15 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
   const content = (
     <>
       <MonoLabel className="text-ink-muted">{project.categoryLabel}</MonoLabel>
+      {/* V13 (mobile gate, M4): the title is the card's route and was a 24px
+          tall target on phones; `touch-link` gives it 44px below `lg` without
+          moving the rule above or the description below. */}
       <h3 className="mt-2 font-display text-heading-m text-ink">
-        <TextLink href={`/work/${project.slug}`}>{displayTitle(project)}</TextLink>
+        <TextLink href={`/work/${project.slug}`} className="max-lg:inline-block max-lg:touch-link">
+          {displayTitle(project)}
+        </TextLink>
       </h3>
-      <p className="mt-2 max-w-[42rem] font-display text-body text-ink-muted">
+      <p className="mt-2 max-w-measure font-display text-body text-ink-muted">
         {project.description}
       </p>
       {/* CONTENT_MODEL §9: upstream disclosure is mandatory in any

@@ -154,6 +154,71 @@ export const WORLD_UNIT = {
   y: `min(1vh, ${WORLD_REFERENCE.height / 100}px)`,
 } as const;
 
+/**
+ * THE MOBILE WORLD'S UNIT (V13 mobile gate, M3) -- the same decision as
+ * WORLD_UNIT, made a second time for the vertical route, from its own
+ * measurement.
+ *
+ * Below 1024px the route runs straight down and is composed against the
+ * phone's frame: every anchor step and allowance in lib/spatial/scenes.ts was
+ * tuned on 375x667 and 320x568, where the 130-unit project step is the tightest
+ * that keeps the Software Factory frame (1.10vh tall at 320, its label
+ * overhanging by another 0.10vh) clear of the next project's label. Until V13
+ * the mobile unit was pinned to `1vh` on the reasoning that a world composed
+ * against its frame has no excess room to cap away. Measured on the built page
+ * (docs/review/v13-mobile-gate/before), that is true only of the phones it was
+ * composed on. A scene's CONTENT is px-sized -- type, screenshots, labels -- so
+ * on a taller frame the same 130-unit step opens in exact proportion to the
+ * viewport while the scene it separates does not grow at all. The paper between
+ * one project's last line and the next project's label:
+ *
+ *   320x568     7-41vh
+ *   375x667    27-58vh
+ *   390x844    53-72vh
+ *   430x932    60-76vh
+ *   768x1024   50-70vh
+ *
+ * which is the mobile audit's M3 ("a scene arrives with roughly two thirds of
+ * the frame empty above it") quantified: a tall-frame defect, and exactly the
+ * defect WORLD_UNIT fixes on desktop -- geometry in viewport units, content in
+ * px, so the neighbours retreat as fast as the room to see them arrives.
+ *
+ * So the mobile unit stops growing at MOBILE_WORLD_REFERENCE_HEIGHT: 7px, the
+ * ~700px-tall phone class the route was composed on. Below that height it is
+ * exactly `1vh` and every composed frame is byte-identical. Above it the world
+ * holds the metrics it was composed at and the extra frame becomes more world.
+ *
+ * MOBILE_WORLD_UNIT_FLOOR is the one-scene-per-frame guarantee on the tallest
+ * frames. At focus the next stop's label sits 130 units below the camera inset
+ * (10vh) and overhangs its own frame by 58px, so a unit no smaller than
+ * (90vh + 58px + a label's height) / 130 keeps it outside the frame; 0.78vh
+ * clears it by ~45px on a 956px-tall phone and by more on shorter ones. The
+ * floor binds only above ~897px of height, where it also caps the densification
+ * at 22% -- a tablet is never more than that much tighter than its own frame.
+ *
+ * Position only, like WORLD_UNIT: scene frames stay `92vw` wide, their minimum
+ * height stays `72vh`, the camera inset stays `10vh`, and the 600vh spacer is
+ * untouched, so the page is not one pixel shorter -- the same scroll simply
+ * carries the same world through a denser frame, and each scene stays in view
+ * for 20-33% more finger travel on the phones that had the paper to spare.
+ */
+export const MOBILE_WORLD_REFERENCE_HEIGHT = 700;
+export const MOBILE_WORLD_UNIT_FLOOR = 0.78;
+
+export const WORLD_UNIT_MOBILE = {
+  x: "1vw",
+  y: `max(${MOBILE_WORLD_UNIT_FLOOR}vh, min(1vh, ${MOBILE_WORLD_REFERENCE_HEIGHT / 100}px))`,
+} as const;
+
+/** The mobile world unit in CSS px for a viewport height -- the JS twin of
+ *  WORLD_UNIT_MOBILE.y, so the one-scene-per-frame contract is unit-testable. */
+export function mobileWorldUnitPx(height: number): number {
+  return Math.max(
+    (MOBILE_WORLD_UNIT_FLOOR * height) / 100,
+    Math.min(height / 100, MOBILE_WORLD_REFERENCE_HEIGHT / 100),
+  );
+}
+
 /** World x (in route `vw` units) as a CSS length in the world's own unit. */
 export function worldX(vw: number): string {
   return `calc(${vw} * var(--world-vw))`;

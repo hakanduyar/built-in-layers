@@ -60,11 +60,16 @@ export function FieldNotes({ notes }: FieldNotesProps) {
                 </TextLink>
               </p>
             </div>
+            {/* V13 (mobile gate, M4): a 100x15 target on phones; `touch-link`
+                gives it 44px below `lg` with the rhythm unchanged
+                (docs/FROZEN_BOUNDARY.md §5). */}
             <nav
               aria-label="Field notes"
               className="mt-5 shrink-0 font-mono text-mono-meta tracking-mono-meta uppercase lg:mt-0"
             >
-              <TextLink href="/notes">See all notes</TextLink>
+              <TextLink href="/notes" className="max-lg:inline-block max-lg:touch-link">
+                See all notes
+              </TextLink>
             </nav>
           </div>
         </Reveal>
@@ -113,7 +118,9 @@ export function FieldNotes({ notes }: FieldNotesProps) {
                 <span className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
                   Site index
                 </span>
-                <TextLink href="/notes">See all notes</TextLink>
+                <TextLink href="/notes" className="max-lg:inline-block max-lg:touch-link">
+                  See all notes
+                </TextLink>
               </li>
             </ul>
           </div>

@@ -77,11 +77,11 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
       </div>
 
       <div className="mt-6 lg:col-span-8">
-        <p className="max-w-[42rem] font-display text-body-l text-ink">{project.description}</p>
+        <p className="max-w-measure font-display text-body-l text-ink">{project.description}</p>
         {/* CONTENT_MODEL §9: upstream disclosure is mandatory in any rendering
             of a fork-provenance project, not just metadata. */}
         {project.upstream && (
-          <p className="mt-4 max-w-[42rem] font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+          <p className="mt-4 max-w-measure font-mono text-mono-meta tracking-mono-meta text-ink-muted">
             A fork of{" "}
             <TextLink href={project.upstream.url} external>
               {project.upstream.name}
@@ -93,14 +93,20 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
 
       {lead && (
         <div className="mt-12 lg:col-span-8">
-          <Figure src={lead.src} alt={lead.alt} caption={lead.caption} priority />
+          <Figure src={lead.src} alt={lead.alt} caption={lead.caption} priority inspect />
         </div>
       )}
 
       {/* The record: the five facts Selected Systems carries for every
           system (DESIGN_SYSTEM §33.6), in the meta column. A field that does
-          not exist produces no row -- never a guessed value. */}
-      <dl className="mt-12 lg:col-span-3 lg:col-start-10">
+          not exist produces no row -- never a guessed value.
+
+          V13 (mobile gate): between `sm` and `lg` the record is two columns
+          of rows -- each cell is about the width of the desktop meta column,
+          so a tablet reads two desktop columns side by side instead of five
+          full-width rules with one short value under each. Phones keep the
+          single stack; `lg:block` returns the desktop column untouched. */}
+      <dl className="mt-12 sm:grid sm:grid-cols-2 sm:gap-x-6 lg:col-span-3 lg:col-start-10 lg:block">
         {/* The disclosure line above already links the upstream; the record
             names it without repeating the link. */}
         <RecordRow term="Provenance">
@@ -113,11 +119,19 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
         {project.tech.length > 0 && <RecordRow term="Stack">{project.tech.join(" · ")}</RecordRow>}
         {project.links.length > 0 && (
           <RecordRow term="Access">
+            {/* V13 (mobile gate, M4): the access links are the record's only
+                targets and were 17px tall on phones; `touch-link` gives them
+                44px below `lg`. `gap-x-4` is exactly two default slops, so
+                neighbouring hit boxes meet without overlapping. */}
             <ul className="flex flex-wrap gap-x-4 gap-y-1">
               {project.links.map((link) =>
                 link.visibility === "public" ? (
                   <li key={link.url}>
-                    <TextLink href={link.url} external>
+                    <TextLink
+                      href={link.url}
+                      external
+                      className="max-lg:inline-block max-lg:touch-link"
+                    >
                       {link.label}
                     </TextLink>
                   </li>
@@ -140,7 +154,7 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
           <h2 className="font-mono text-mono-label tracking-mono-label uppercase text-ink">
             Contribution
           </h2>
-          <p className="mt-4 max-w-[42rem] font-display text-body-l text-ink">
+          <p className="mt-4 max-w-measure font-display text-body-l text-ink">
             {project.contribution}
           </p>
         </div>
@@ -155,7 +169,12 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
           <h2 className="font-mono text-mono-label tracking-mono-label uppercase text-ink">
             AI assistance
           </h2>
-          <p className="mt-4 font-display text-body text-ink-muted">{project.aiDisclosure}</p>
+          {/* `max-w-measure` is inert in the desktop meta column (3 of 12
+              columns is narrower than 42rem); below `lg` the disclosure is
+              running text across the whole page and takes the measure. */}
+          <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
+            {project.aiDisclosure}
+          </p>
         </div>
       )}
     </header>

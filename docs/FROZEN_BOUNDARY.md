@@ -13,7 +13,7 @@ follows: what is frozen, how to detect that it moved, and what counts as a permi
 ## 1. Frozen surface — 30 files
 
 Any change to a blob listed here moves the frozen system and must be justified as a deliberate,
-measured change rather than a side effect. Five have moved since, each with its evidence; they are
+measured change rather than a side effect. Ten have moved since, each with its evidence; they are
 listed in §5. The fingerprints below are deliberately left at their `243db393` values — they are
 what §4 compares against.
 
@@ -129,21 +129,51 @@ The fingerprints in §1 stay written as they were at `243db393` — they are the
 moves that were granted under §4's standard, so a `MOVED:` line can be checked against a decision
 instead of being read as an undetected regression.
 
-On `feature/project-architecture-v13`, the §4 loop prints exactly these five lines. Nothing else
-under `lib/spatial/`, `components/spatial/` or `components/sections/` has moved, and no file has
-been added to or removed from the 30.
+On `feature/project-architecture-v13`, the §4 loop prints exactly these ten lines — five granted by
+the desktop art-direction gate (2026-09-03) and seven by the mobile gate (2026-09-04), two of
+which (`SpatialExperience.tsx`, `SelectedSystems.tsx`) moved under both. Nothing else under
+`lib/spatial/`, `components/spatial/` or `components/sections/` has moved, and no file has been
+added to or removed from the 30.
+
+**Desktop art-direction gate** (`.ai/handoffs/FABLE-RETURN.md`; metric paths relative to
+`docs/review/v13-fable-gate/`):
 
 | File | `243db393` | now | Granted by | Measured evidence |
 |---|---|---|---|---|
-| `components/spatial/SpatialExperience.tsx` | `fa941e8` | `8568129` | hero-clipping fix, commit `76c5660` | `FABLE-RETURN.md` §5 (defect, five frozen stills) and §11.3 A (fix, eight viewports); `metrics/final/hero-unit.txt` |
+| `components/spatial/SpatialExperience.tsx` | `fa941e8` | `8568129` → see below | hero-clipping fix, commit `76c5660` | `FABLE-RETURN.md` §5 (defect, five frozen stills) and §11.3 A (fix, eight viewports); `metrics/final/hero-unit.txt` |
 | `lib/spatial/projectGround.ts` | `aa159e9` | `6431139` | **D-028** | `FABLE-RETURN.md` §11.3 B; `metrics/{before,final}/fable-gate-all.json`, key `groundOutsideEvidence` |
 | `components/spatial/SpatialProjectScene.tsx` | `edb9cd4` | `34b48d5` | **D-029** (finding C) | `FABLE-RETURN.md` §11.3 C; same metrics, plate-bottom clearance |
 | `components/sections/HowIBuild.tsx` | `a48126a` | `2d90924` | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; `metrics/final/lower-world.json` |
-| `components/sections/SelectedSystems.tsx` | `751aa48` | `592b79e` | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; same file, label/column offset |
+| `components/sections/SelectedSystems.tsx` | `751aa48` | `592b79e` → see below | **D-029** (finding E) | `FABLE-RETURN.md` §11.3 E; same file, label/column offset |
 
-Metric paths are relative to `docs/review/v13-fable-gate/`. D-028 and D-029 are accepted on this
-branch under the art-direction gate's delegated authority and are **not in force on `main`**; the
-boundary on `main` remains all 30 blobs at `243db393`.
+**Mobile gate** (`.ai/handoffs/FABLE-MOBILE-RETURN.md`; metric paths relative to
+`docs/review/v13-mobile-gate/`). Every one of these moves is mobile-scoped — a `max-lg:` class, a
+`!isDesktop` branch, or a `mobileWorld` anchor — and the desktop was proved unchanged rather than
+asserted: `tests/tools/desktop-parity-probe.mjs` walked the frozen baseline (`180c07c`, the last
+commit before the gate) and the candidate build through all eight routes at 1280×800 / 1440×900 /
+1536×864 / 1920×1080 in half-viewport steps and compared every settled frame by rendered geometry
+(every element's rect to 1/100 px plus the camera world's transform) and by pixels. All 32
+walks are at parity. The non-spatial routes are pixel-identical (the two case studies' geometry
+fingerprint differs only in element count — one caption `<span>` per inspectable figure, D-031 —
+with every pixel identical); the spatial homepage is geometry-identical at every step, with the
+camera transform byte-equal, and its residual pixel difference is Chromium's own raster jitter
+(measured against two walks of the *same* baseline build; the one step the cell test flagged on
+the first pass, 1920×1080 at 2160 px, re-examined as jitter at exactly the same-build ceiling;
+under `prefers-reduced-motion: reduce` it is zero). Result: `after/desktop-parity.txt` and
+`after/desktop-parity-reduced-motion.txt`.
+
+| File | `243db393` | now | Granted by | Measured evidence |
+|---|---|---|---|---|
+| `lib/spatial/worldFit.ts` | `ee9eb1f` | `5e390a1` | **D-030** (M3, the mobile world unit) | `metrics/{before,after}/mobile-route.json` — paper between projects on tall phones, near-empty frames 3 → 0 (360×800), 5 → 0 (390×844), 5 → 2 (430×932), 4 → 1 (768×1024); mean route ink 34 → 40 / 32 → 39 / 30 → 37 / 35 → 44 %; page height unchanged. Desktop: `WORLD_UNIT` and the `isDesktop` branch untouched; parity file above |
+| `lib/spatial/scenes.ts` | `c09260f` | `b970524` | **D-030** (M3, route two's mobile legs) | same metrics, the 3.5–5.0vh stretch of the route (`reorient` / `approach` / `handoff` focus frames); the 8 % speed ceiling holds at 7.79 % (`tests/unit/spatial-route.test.ts`). Desktop: only `mobileWorld` values changed; `world` anchors byte-identical; parity file above |
+| `components/spatial/SpatialCamera.tsx` | `c06a140` | `601eafa` | **D-030** (M3) | the two `--world-vw` / `--world-vh` declarations read `WORLD_UNIT_MOBILE` on the `!isDesktop` side only; desktop side textually unchanged; parity file above |
+| `components/spatial/SpatialExperience.tsx` | `8568129` (after the hero-clipping fix) | `e1963af` | **D-033** (M4, the tour's CTA) | `after/tap-targets.txt` §TOUR CTA and `metrics/{before,after}/mobile-route.json`, key `tourTargets.handoff` — "See every system" is laid out in world space under a 0.89–0.995 plane scale, so its 44 px minimum measured 184×43 (the audit's "1px short") and 39–44 px across the stretch it is on screen; `max-lg:min-h-12.5` (50 px in world space) measures 47–49 px at handoff focus at all six widths and 44.6 px at the plane's lowest on-screen scale. One class, `max-lg:` only; the desktop button is untouched — parity file above |
+| `components/sections/SelectedSystems.tsx` | `592b79e` (after D-029) | `9b3063b` | **D-033** (M4, touch targets) | `after/tap-targets.txt` — the five system-title links 24 px → 45 px tall below `lg`, with the M4 classes stripped from the live DOM and the page re-captured pixel-identical (the hit box grows, the layout does not); desktop: `max-lg:` only, parity file above |
+| `components/sections/FieldNotes.tsx` | `2477ab8` | `0c2b60f` | **D-033** (M4) | same file — "See all notes" 15 px → 45 px; same strip-and-recapture proof |
+| `components/sections/AboutPreview.tsx` | `e4b4883` | `958b165` | **D-033** (M4) | same file — "Read the full introduction" and "LinkedIn" 24 px → 45 px; same proof |
+
+D-028 through D-033 are accepted on this branch under the two gates' delegated authority and are
+**not in force on `main`**; the boundary on `main` remains all 30 blobs at `243db393`.
 
 **§3.1 is resolved, not open.** The ruling it asked for was answered by D-027: Software Factory
 stays at `depth: preview`, so `SpatialProjectScene.tsx`'s `project.depth` branch still renders

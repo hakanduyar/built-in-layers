@@ -15,6 +15,10 @@ type ProjectNeighboursProps = {
  * for the type size as on the spatial scene's display titles (TextLink's 3px
  * is sized for running text). Also used by the preview-depth page's route
  * back to the work index, so both exits are set the same way.
+ *
+ * V13 (mobile gate, M4): the destination is a 31px-tall target at 375;
+ * `touch-link` (styles/globals.css) gives it 44px below `lg` and leaves the
+ * rule and the label above it where they are.
  */
 export function DestinationLink({
   label,
@@ -35,7 +39,7 @@ export function DestinationLink({
       <span className="mt-3 block font-display text-heading-l text-ink">
         <Link
           href={href}
-          className="underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2"
+          className="underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2 max-lg:inline-block max-lg:touch-link"
         >
           {children}
         </Link>

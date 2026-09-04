@@ -83,3 +83,12 @@
                                    nothing in the docs falsely claims it was implemented, and the iteration cost is not justified. No new Fable pass, no Codex/GPT review.
 2026-09-03 15:2x  GATE CLOSED      V13 accepted freeze candidate at 5000201 on feature/project-architecture-v13. Fable FREEZE; Opus QA PASS WITH DOCUMENTED NON-BLOCKERS; frozen boundary 5/30, all ledgered;
                                    no application source changed after the QA verdict (every commit since 83ebac7 touches docs/ and .ai/ only); main untouched at 16d3ec0. NOT merged to main.
+2026-09-03 23:0x  PHASE A          Roadmap reconciled against shipped V12/V13: Phase 4 PARTIALLY ABSORBED, Gate 2 SUPERSEDED by D-029, Phase 5 PARTIALLY ABSORBED, Gate 3 BLOCKED (external repo out of scope), Phase 6 NEXT, Phase 7 DEFERRED.
+2026-09-03 23:1x  PHASE 6          COMPLETE, checkpoint 180c07c. 48 measured states (8 routes x 6 device sizes) + visual inspection. 0 overflow, 0 console errors, touch verified, ProjectNeighbours stacks correctly, headings/landmarks/reduced-motion clean.
+                                   4 P1 composition findings: diagram evidence at 0.18-0.24 intrinsic scale (labels ~5-6 CSS px); 768 measure 82-95ch (/work worst at 95ch); homepage scenes with ~67% empty viewport above, 11.3-14.8 screens; 6-20 sub-44px tap targets.
+                                   0 P0 and 0 objective mechanical defects -> Fable Gate 4 REQUIRED, since fixing composition in Opus would be art direction under another name.
+2026-09-03 23:2x  ORCHESTRATOR     Single-writer verified before Fable (only own files written in 25 min; software-factory-0b gone, new software-factory-fc idle w.r.t. portfolio). Stopped own :3200 audit server so Fable owns its build -- the exact interference that damaged the V13 pass.
+2026-09-04 01:0x  FABLE/gate4      PAUSED_FOR_QUOTA. Session limit, reset 03:40 Europe/Istanbul. Work preserved uncommitted: 18 modified files + components/ui/FigureInspect.tsx (the M1 diagram strategy).
+2026-09-04 06:2x  ORCHESTRATOR     Snapshotted to C:/Users/hakan/fable-gate4-paused-20260904 (911 files, 39KB patch). Single-writer verified: ZERO portfolio writes since 01:15.
+2026-09-04 06:2x  FABLE/gate4      RESUMED SAME session 888a4bb7-e3f8-4ae3-8916-507402fe4d9c (identified by 86 refs to its own FigureInspect/MOBILE_AUDIT work). No new session. Briefed that it has touched 3 FROZEN files
+                                   (scenes.ts, worldFit.ts, SpatialCamera.tsx) which need stated reason + measured desktop-unchanged proof + §5 ledger entry, or revert.

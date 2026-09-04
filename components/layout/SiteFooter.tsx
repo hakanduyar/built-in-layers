@@ -235,7 +235,13 @@ export function SiteFooter() {
             <ul className="flex flex-wrap gap-6">
               {socialLinks.map((link) => (
                 <li key={link.url}>
-                  <TextLink href={link.url} external>
+                  {/* V13 (mobile gate, M4): 44px hit boxes below `lg`; the
+                      strip's rhythm is unchanged (styles/globals.css). */}
+                  <TextLink
+                    href={link.url}
+                    external
+                    className="max-lg:inline-block max-lg:touch-link"
+                  >
                     {link.label}
                   </TextLink>
                 </li>

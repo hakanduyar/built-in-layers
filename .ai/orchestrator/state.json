@@ -1,7 +1,13 @@
 {
-  "pipeline": ["FABLE_5_1", "OPUS_5_HIGH_FINAL_QA", "DESKTOP_FREEZE_CANDIDATE"],
-  "current_stage": "CLOSED",
-  "current_substage": "V13_ACCEPTED_FREEZE_CANDIDATE",
+  "pipeline": [
+    "PHASE_6_MOBILE_AUDIT",
+    "FABLE_GATE_4",
+    "OPUS_MOBILE_QA",
+    "MOBILE_FREEZE",
+    "PHASE_7_FINAL_ENGINEERING"
+  ],
+  "current_stage": "FABLE_GATE_4",
+  "current_substage": "PASS_2_RESUMED_AFTER_QUOTA",
   "branch": "feature/project-architecture-v13",
   "frozen_base": "243db3934d634f2c39d339cd2a267c01d86be2bd",
   "frozen_branch": "feature/spatial-portfolio-v5",
@@ -75,8 +81,8 @@
     "return_doc": ".ai/handoffs/OPUS-QA-RETURN.md"
   },
   "heads": {
-    "last_observed_local": "5000201df8db9f3ad36a6d019a42e2739a85023a",
-    "last_observed_origin": "5000201df8db9f3ad36a6d019a42e2739a85023a"
+    "last_observed_local": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4",
+    "last_observed_origin": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4"
   },
   "working_tree": "clean except intentional untracked docs/review/v12-codex-gate/codex-gate-checkpoint.bundle",
   "frozen_boundary_check": "all 30 blobs unchanged vs 243db393",
@@ -126,5 +132,29 @@
       "reason": "non-blocking, not a regression, no documentation claims otherwise, reopening the Fable gate is not justified",
       "action": "revisit only in a future art-direction pass -- no new Fable pass for this"
     }
-  ]
+  ],
+  "phase6": {
+    "status": "COMPLETE",
+    "checkpoint": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4",
+    "doc": "docs/MOBILE_AUDIT.md",
+    "result": "0 P0, 0 mechanical defects, 4 P1 composition findings; Fable Gate 4 REQUIRED"
+  },
+  "fable_gate_4": {
+    "status": "RUNNING (resumed same session)",
+    "model": "claude-fable-5-1",
+    "effort": "max",
+    "starting_head": "180c07ccc8db4def88efb63ba2e1a5ff8b3377e4",
+    "gate": "docs/MOBILE_AUDIT.md",
+    "snapshot": "C:/Users/hakan/fable-gate4-paused-20260904 (911 files)",
+    "session_id": "888a4bb7-e3f8-4ae3-8916-507402fe4d9c",
+    "paused": "session limit, reset 03:40 Europe/Istanbul",
+    "resumed": "2026-09-04 06:2x",
+    "in_flight": "18 modified files + components/ui/FigureInspect.tsx",
+    "frozen_files_touched": [
+      "lib/spatial/scenes.ts",
+      "lib/spatial/worldFit.ts",
+      "components/spatial/SpatialCamera.tsx"
+    ],
+    "frozen_requirement": "each needs stated reason + measured desktop-unchanged proof + FROZEN_BOUNDARY §5 ledger entry, or revert"
+  }
 }

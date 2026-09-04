@@ -36,7 +36,7 @@ export function DecisionList({ decisions }: DecisionListProps) {
               {decision.title}
             </span>
           </dt>
-          <dd className="max-w-[42rem] font-display text-body text-ink-muted lg:col-span-7 lg:col-start-6">
+          <dd className="max-w-measure font-display text-body text-ink-muted lg:col-span-7 lg:col-start-6">
             <p>{decision.context}</p>
             <p className="mt-3">
               <strong className="font-semibold text-ink">Choice:</strong> {decision.choice}

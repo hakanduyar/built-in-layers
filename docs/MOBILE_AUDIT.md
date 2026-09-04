@@ -10,6 +10,21 @@ performed; findings that require composition work are recorded for Fable Gate 4.
 - Measurements: [`docs/review/phase6-mobile-audit/metrics/mobile-audit.json`](review/phase6-mobile-audit/metrics/mobile-audit.json)
 - Stills: [`docs/review/phase6-mobile-audit/stills/`](review/phase6-mobile-audit/stills/)
 
+> **Status (2026-09-04): the four P1 findings are resolved by Fable Gate 4** on
+> `feature/project-architecture-v13` — M1 by D-031 (the figure inspector), M2 by D-032 (the measure
+> token), M3 by D-030 (the mobile world unit and route two's mobile legs), M4 by D-033
+> (`touch-link` and the tour CTA's world-space floor); `docs/DESIGN_SYSTEM.md` §37 is the account,
+> `.ai/handoffs/FABLE-MOBILE-RETURN.md` the return. The gate re-ran this probe on its own builds at
+> the starting HEAD and at the candidate — `docs/review/v13-mobile-gate/{before,after}/metrics/
+> mobile-audit.json` — so the before/after numbers in the return are the gate's own measurements,
+> not this audit's carried over. After: measure at 768 `/work` 88 / case studies 63–68 / `/about` 66 (per-element
+> 544px, `after/measure-768.txt`); sub-44 targets 6–20 per route → the sr-only skip link and the
+> inline-sentence links only (`after/tap-targets.txt`); homepage near-empty route frames
+> 3 / 5 / 5 / 4 → 0 / 0 / 2 / 1 at 360 / 390 / 430 / 768 with page height unchanged
+> (`after/metrics/mobile-route.json`); every diagram label ≥ 12.25px inside the inspector. The P2
+> items (M5–M7) are recorded in §37.7 as left as found. The findings below are kept as written: they
+> are the audit's evidence, at `7d622c1`.
+
 ## Viewports
 
 Real device sizes, not one artificial height. 768 is treated as tablet-class, not "large mobile".

@@ -1,0 +1,7 @@
+DESKTOP PARITY  A=http://127.0.0.1:3300 (baseline)  B=http://127.0.0.1:3210 (candidate)  motion=reduce  step=0.5  cell=4px tolerance=12/255
+1280x800 /                height 9984 -> 9984  steps 24  elements 665 -> 665  geometry identical  pixels identical  => parity
+1440x900 /                height 10245 -> 10245  steps 22  elements 665 -> 665  geometry identical  pixels identical  => parity
+1536x864 /                height 10233 -> 10233  steps 23  elements 665 -> 665  geometry identical  pixels identical  => parity
+1920x1080 /                height 10460 -> 10460  steps 19  elements 665 -> 665  geometry identical  pixels identical  => parity
+
+DESKTOP PARITY: every route at parity on every viewport

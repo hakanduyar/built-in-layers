@@ -105,9 +105,16 @@ export function AboutPreview() {
           <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted">
             {aboutIntro.honesty}
           </p>
+          {/* V13 (mobile gate, M4): 180x24 and 76x24 targets on phones;
+              `touch-link` gives each 44px below `lg`. As flex items the two
+              links are blockified, and the negative margins still cancel the
+              padding, so the row and the gap between them are unchanged
+              (docs/FROZEN_BOUNDARY.md §5). */}
           <nav aria-label="About" className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
-            <TextLink href="/about">Read the full introduction</TextLink>
-            <TextLink href={contactUrl} external>
+            <TextLink href="/about" className="max-lg:inline-block max-lg:touch-link">
+              Read the full introduction
+            </TextLink>
+            <TextLink href={contactUrl} external className="max-lg:inline-block max-lg:touch-link">
               LinkedIn
             </TextLink>
           </nav>

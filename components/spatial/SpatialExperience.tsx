@@ -459,7 +459,16 @@ export function SpatialExperience() {
               </p>
             )}
             <div className="mt-10">
-              <ButtonLink href="/work">See every system</ButtonLink>
+              {/* V13 (mobile gate, M4): the button's 44px minimum is laid out
+                  in world space, and the scene plane holds it at 0.89-0.995
+                  across the stretch where it is on screen (0.97 at focus,
+                  0.89 at the route's end), so the box the finger meets
+                  measured 39-44px (docs/MOBILE_AUDIT.md, "1px short"). 50px
+                  in world space is 44.6-49.8px on screen at every tested
+                  width. `max-lg:` only; the desktop button is untouched. */}
+              <ButtonLink href="/work" className="max-lg:min-h-12.5">
+                See every system
+              </ButtonLink>
             </div>
           </div>
         }

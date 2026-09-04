@@ -1,3 +1,4 @@
+import { FigureInspect } from "@/components/ui/FigureInspect";
 import { readIntrinsicDimensions } from "@/lib/utils/imageDimensions";
 
 type FigureProps = {
@@ -32,6 +33,16 @@ type FigureProps = {
    * other call site is unchanged.
    */
   priority?: boolean;
+  /**
+   * V13 (mobile gate, M1): opt-in inspector. Below `lg` the caption row gains
+   * an INSPECT control that opens the same asset in a full-screen plate at a
+   * width it can be read at (components/ui/FigureInspect.tsx). The case-study
+   * figures -- the MDX layer figures and the hero lead -- opt in; a ProjectCard
+   * thumbnail, which is itself a link, does not. Strictly additive: when
+   * absent, the rendered markup is what it was before this prop existed, and
+   * at `lg` and above the control does not render at all.
+   */
+  inspect?: boolean;
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
@@ -44,8 +55,14 @@ export function Figure({
   frameRatio,
   framePosition,
   priority = false,
+  inspect = false,
 }: FigureProps) {
   const dimensions = readIntrinsicDimensions(src);
+  const captionText = caption
+    ? index
+      ? `FIG ${String(index).padStart(2, "0")} — ${caption}`
+      : caption
+    : undefined;
   const image = (
     /* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */
     <img
@@ -106,10 +123,39 @@ export function Figure({
       ) : (
         image
       )}
-      {caption && (
-        <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
-          {index ? `FIG ${String(index).padStart(2, "0")} — ${caption}` : caption}
-        </figcaption>
+      {inspect ? (
+        // The caption row doubles as the plate's footer strip: the caption
+        // at the left, the control at the right, 44px tall where the control
+        // renders. Without a caption the control still needs a row, but not
+        // a <figcaption> -- "Inspect" is not the figure's caption.
+        captionText ? (
+          <figcaption className="mt-2 flex items-center justify-between gap-4 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+            <span className="min-w-0">{captionText}</span>
+            <FigureInspect
+              src={src}
+              alt={alt}
+              title={captionText}
+              width={dimensions?.width}
+              height={dimensions?.height}
+            />
+          </figcaption>
+        ) : (
+          <div className="mt-2 flex justify-end">
+            <FigureInspect
+              src={src}
+              alt={alt}
+              title={alt}
+              width={dimensions?.width}
+              height={dimensions?.height}
+            />
+          </div>
+        )
+      ) : (
+        captionText && (
+          <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+            {captionText}
+          </figcaption>
+        )
       )}
     </figure>
   );

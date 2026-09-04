@@ -22,7 +22,7 @@ export default function NotesPage() {
       <h1 className="mt-4 font-display text-heading-l text-ink">Notes</h1>
 
       {verifiedNotes.length === 0 ? (
-        <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
+        <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
           {pendingCopy.notesPrefix}{" "}
           <TextLink href="https://hakanduyar.medium.com/" external>
             hakanduyar.medium.com
@@ -33,12 +33,18 @@ export default function NotesPage() {
           {verifiedNotes.map((note) => (
             <li key={note.url} className="border-t border-line py-6">
               <MonoLabel className="text-ink-muted">{note.category}</MonoLabel>
+              {/* V13 (mobile gate, M4): same title-as-route pattern as
+                  ProjectCard, so it takes the same 44px hit box below `lg`. */}
               <h3 className="mt-2 font-display text-heading-m text-ink">
-                <TextLink href={note.url} external>
+                <TextLink
+                  href={note.url}
+                  external
+                  className="max-lg:inline-block max-lg:touch-link"
+                >
                   {note.title}
                 </TextLink>
               </h3>
-              <p className="mt-2 max-w-[42rem] font-display text-body text-ink-muted">
+              <p className="mt-2 max-w-measure font-display text-body text-ink-muted">
                 {note.description}
               </p>
             </li>
