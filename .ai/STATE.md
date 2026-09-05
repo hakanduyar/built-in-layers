@@ -2,67 +2,81 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-04_
+_Updated: 2026-09-06_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
-| Branch | `feature/project-architecture-v13` |
-| Last application checkpoint | Phase 7 — see `docs/PHASE7.md`. Verify the tip with `git rev-parse HEAD` rather than trusting a SHA written here |
-| Origin | in sync — verify with `git rev-parse origin/feature/project-architecture-v13` |
+| Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
+| Last application checkpoint | V14 Fable visual candidate — see `.ai/handoffs/FABLE-V14-RETURN.md`. Verify the tip with `git rev-parse HEAD` rather than trusting a SHA written here |
+| Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
+| V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
 | `main` | `16d3ec0` — untouched, never merged to |
-| Working tree | clean except intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) |
+| Working tree | clean except the intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) and the git-ignored `docs/review/v14-owner-visual/*/recordings/` |
+| Baseline worktree | `C:\GitHub\portfolio-baseline-5670234` — a detached, read-only checkout of `5670234`, built, for A/B on port 3300; removed after the Opus QA return |
 
 ## Frozen systems
 
-| System | Frozen at | Scope |
+| System | Frozen at | Status on this branch |
 |---|---|---|
-| Desktop spatial | 2026-09-02, `0752883` | route, spacing, grounds, scroll physics, sharpness, zoom, SYSTEMS, UNDERNEATH, lower world |
-| Case-study system | 2026-09-03, `5000201` | destinations, hero, record, derived previous/next, ordering contract |
-| Mobile | 2026-09-04, `8a24e03` | mobile world unit, figure inspector, measure token, touch targets, mobile route legs |
+| Desktop spatial | 2026-09-02, `0752883` | **Reopened by owner decision** (V14 brief §3: the owner's visual verdict overrides the model freeze). What moved and why: D-034 … D-040, `docs/FROZEN_BOUNDARY.md` §6 |
+| Case-study system | 2026-09-03, `5000201` | Frozen — untouched |
+| Mobile | 2026-09-04, `8a24e03` | Frozen — art direction untouched; regression verified by the mobile smoke (return §4 lists the deltas) |
 
-Fingerprints and the sanctioned-move ledger: `docs/FROZEN_BOUNDARY.md` (§1 list, §5 ledger).
-Ten of thirty fingerprinted blobs have moved; every one is ledgered with evidence. **Phase 7 opened
-no frozen file** — the §4 loop still prints exactly those ten.
+Fingerprints and the sanctioned-move ledger: `docs/FROZEN_BOUNDARY.md` (§1 list, §5 ledger, §6 the
+V14 reopening). On this branch the §4 loop prints more than the ten `MOVED:` lines §5 accounts for,
+by design; the standard for those moves is the owner's brief, not a measured regression.
 
 ## Current phase
 
-**Phase 7 — final engineering / console / performance. COMPLETE.** Record: `docs/PHASE7.md`.
+**V14 — owner visual acceptance recovery. FABLE VISUAL CANDIDATE READY. Owner acceptance: PENDING.**
 
-Validation at the checkpoint: typecheck 0 · lint 0 · `format:check` 0 (was 98) · unit **556/556**
-across three runs · build 15/15 · Chromium **224/224** · WebKit **222/224** (was 219/224) · frozen
-§4 exactly 10 `MOVED:` · console/runtime/hydration **0** across 10 content routes · CLS ≤ 0.0388 ·
-images 0 broken / 0 unsized / 0 empty-alt · overflow **0 of 99** route × width combinations.
+Record: `.ai/handoffs/FABLE-V14-RETURN.md` (what changed by system A–F, the measured before/after,
+the mobile deltas, the frame-time finding). Brief: `.ai/handoffs/V14-OWNER-BRIEF.md`. Owner review
+package: `docs/review/v14-owner-visual/README.md`. Engineering QA brief for the fresh Opus 5 / High
+session: `.ai/handoffs/OPUS-V14-QA.md`; its return lands at `.ai/handoffs/OPUS-V14-QA-RETURN.md`.
+
+Validation at the checkpoint (production build of the committed code): typecheck 0 · lint 0 ·
+`format:check` 0 · unit **562/562** · build 15/15 · Chromium **224/224** · WebKit **220/224**
+(two Phase 7 environment cases plus two cut-region arrival cases that fail identically on the
+baseline build today — return §3a) · console/runtime/hydration **0** across 10 content routes · CLS ≤ 0.0388 · images 0
+broken / 0 unsized / 0 empty-alt · overflow **0 of 99** · scene fit clear at 1366 / 1440 / 1536 /
+1920 / 2560 · mobile smoke 14.1 / 11.6 / 10.5 screens at 320 / 390 / 768, sharp, 0vh near-empty.
+
+Owner finding F, measured at 1440×900: the lower world **10.1s → 3.8s** at a normal wheel and
+**10.2s → 3.1s** at a hard flick; the route's own pace unchanged; reverse still one notch. Frame
+time at parity with the baseline (17.2 vs 17.3ms a frame on the reverse traverse) after D-040.
 
 ## Active blockers
 
-None. Nothing is waiting on the owner.
+None for the models. **The owner's visual acceptance is the gate.** Neither model may declare
+FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without the owner.
 
 ## Accepted non-blockers
 
-- WebKit: **two** failures remain (was five). Both proved environment, not product — Safari's
-  default "Tab highlights each item: off" for the skip-link test, and one governed-camera arrival
-  case that passes serially in 8.9s at unchanged thresholds. `docs/PHASE7.md` §3–§5.2.
+- WebKit: the two Phase 7 environment failures remain (Safari's Tab default for the skip-link
+  test; one governed-camera arrival case). Two further cut-region arrival cases (`spatial-v5`
+  "surface opens monotonically", `spatial` "every break rail closes") fail on this machine's
+  software-rendered WebKit on **both** builds — 4 of 5 baseline runs today, identical values — because
+  the camera sits still for over two seconds after a large `scrollTo` jump and the tests' settle
+  heuristic reads that as arrival. Geometry is identical on both engines; the candidate's cut
+  region renders 2.7× faster than the baseline on WebKit. ENVIRONMENT with a TEST component
+  (return §3a); a remedy would be in the tests' arrival detection.
 - Three font-preload console notices on the **404 route only**; the ten content routes are silent.
 - Decision *alternatives* render as a comma join rather than a list — owner-accepted 2026-09-03.
-- Two `<nav>`s share `aria-label="Primary"` — pre-existing, axe-clean, no measured mobile harm.
-- Software Factory sits at `depth: "preview"`, so it is outside case-study navigation until its
-  content depth rises. Blocked on `docs/CONTENT_GAPS.md` gaps 1–2, which need the external
-  repository the owner has ruled out of scope.
-- Desktop figures at ~0.51 scale have no inspector, by design.
+- Two `<nav>`s share `aria-label="Primary"` — pre-existing, axe-clean, no measured harm.
+- Software Factory sits at `depth: "preview"`, outside case-study navigation until its content
+  depth rises. Blocked on `docs/CONTENT_GAPS.md` gaps 1–2 (external repository out of scope).
+- Case-study desktop figures have no inspector, by design; the spatial scene plates gained a
+  desktop inspector button in V14 (B — evidence legibility).
 - `blockJS` drops MDX `index={n}` FIG numbering (D-001) — content-side, pre-existing.
-
-## Resolved in Phase 7 — no longer open
-
-- The unit suite's "load sensitivity" was a quadratic publication gate, now fixed and measured.
-  `similarity()` no longer allocates the full Levenshtein matrix. Suite 76.1s → 28.2s, and the
-  intermittent 5s timeout is gone.
-- ENV-1, the CRLF artefact: `.gitattributes` added, worktree normalized, **zero blobs changed**.
-  `pnpm format:check` passes for the first time.
-- The eight figure-inspector tests are now measured on WebKit. One was a genuine unguarded
-  hydration race and is fixed; the count assertions were not relaxed.
+- The recordings in the review package are git-ignored by the repository's
+  `docs/review/**/recordings/` rule and live in the working tree; `journey.json` carries their
+  numbers and `tests/tools/v14-baseline.mjs` regenerates them.
 
 ## Next action
 
-No assignment. `.ai/ACTIVE_TASK.md` is `TASK: NONE` — set the next phase there.
+1. Opus 5 / High engineering QA of the committed candidate (`.ai/handoffs/OPUS-V14-QA.md`) —
+   verify, do not redesign; classified findings to `.ai/handoffs/OPUS-V14-QA-RETURN.md`.
+2. The owner's review of `docs/review/v14-owner-visual/README.md` — the only acceptance.

@@ -18,10 +18,8 @@ import {
   type MotionStyle,
   type MotionValue,
 } from "motion/react";
-import { DirectionalField } from "@/components/spatial/DirectionalField";
 import { ProjectPlane } from "@/components/spatial/ProjectPlane";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
-import { SystemField } from "@/components/spatial/SystemField";
 import { SystemsWord } from "@/components/spatial/SystemsWord";
 import { SystemPOV } from "@/components/spatial/SystemPOV";
 import { WorldGrammar } from "@/components/spatial/WorldGrammar";
@@ -29,9 +27,10 @@ import {
   BREAK_ABORT_PX,
   BREAK_PLAYBACK_MS,
   INTENT_LEAD_VH,
-  ROUTE_MAX_RATE,
   advanceFilter,
   glideStep,
+  governorBudget,
+  pageGearing,
   type FilterState,
 } from "@/lib/spatial/cameraFilter";
 import {
@@ -43,8 +42,6 @@ import {
   ROUTE_TWO_IDS,
   SCENE_IDS,
   SCENE_MIN_HEIGHT,
-  SCENE_SCALE_FAR,
-  SCENE_SCALE_FOCUS,
   SCENE_WIDTH,
   SCENE_WIDTH_MOBILE,
   sceneAnchor,
@@ -60,10 +57,11 @@ import {
   EXIT_FROM,
   entryGlideTo,
   cameraPosition,
+  routeWorldLength,
   sceneApproach,
   sceneFocusProgress,
 } from "@/lib/spatial/sceneRoute";
-import type { SystemAnnotation } from "@/lib/spatial/systemPov";
+import { scenePresence, type SystemAnnotation } from "@/lib/spatial/systemPov";
 import {
   MOBILE_PROJECT_GROUND_GEOMETRY,
   PROJECT_GROUND_SCENES,
@@ -73,7 +71,14 @@ import {
   type ProjectGroundScene,
   type ProjectVisualBounds,
 } from "@/lib/spatial/projectGround";
-import { WORLD_UNIT, WORLD_UNIT_MOBILE, worldFit, worldX, worldY } from "@/lib/spatial/worldFit";
+import {
+  WORLD_REFERENCE,
+  WORLD_UNIT,
+  WORLD_UNIT_MOBILE,
+  worldFit,
+  worldX,
+  worldY,
+} from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 
 /** Composed scenes. `tail` is the near-empty beat before the cut, and its
@@ -644,6 +649,9 @@ function useRouteGovernor(
   spacerRef: React.RefObject<HTMLDivElement | null>,
   active: boolean,
   breakPlayingRef: React.RefObject<boolean>,
+  // V14 (F): the world's fit, because the page's gearing is measured in screen
+  // pixels and the fit is part of how large a world unit is on screen.
+  fit: number,
 ): void {
   useEffect(() => {
     if (!active) return;
@@ -680,7 +688,13 @@ function useRouteGovernor(
       if (!spacer) return null;
       const routeSpan = Math.max(spacer.offsetHeight - window.innerHeight, 1);
       const end = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
-      return { top: 0, end, routeSpan };
+      // V14 (F): where the pinned route ends -- progress 1, the point from which
+      // the sticky frame itself begins to scroll away and the page's own content
+      // is what moves on screen. The page's gearing applies from here.
+      const pinnedEnd = spacer.getBoundingClientRect().top + window.scrollY + routeSpan;
+      const unitPx = Math.min(window.innerHeight / 100, WORLD_REFERENCE.height / 100);
+      const gearing = pageGearing(routeWorldLength(false), unitPx, fit, routeSpan);
+      return { top: 0, end, routeSpan, pinnedEnd, gearing };
     };
 
     const tick = (t: number) => {
@@ -715,8 +729,12 @@ function useRouteGovernor(
         prevT = 0;
         return;
       }
-      // The ceiling is the ROUTE's, applied everywhere -- see box().
-      const maxStep = ROUTE_MAX_RATE * bounds.routeSpan * (dt / 1000);
+      // V14 (F): the ceiling is ONE screen speed. Inside the pinned route that
+      // is the route's own budget, byte-identical to V7-V11; from the pinned end
+      // onward it is the same screen speed expressed in page pixels -- see
+      // pageGearing() in lib/spatial/cameraFilter.ts for the derivation and the
+      // baseline measurement that demanded it.
+      const maxStep = governorBudget(y, bounds.pinnedEnd, bounds.routeSpan, bounds.gearing, dt);
       const step = intent - y;
       const move = Math.abs(step) <= maxStep ? step : Math.sign(step) * maxStep;
       const next = Math.round(y + move);
@@ -818,7 +836,9 @@ function useRouteGovernor(
       window.removeEventListener("wheel", onWheel);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [spacerRef, active, breakPlayingRef]);
+    // V14: `fit` is read by box() for the page gearing. It changes only on a
+    // resize, so re-binding the listener then is the correct, cheap response.
+  }, [spacerRef, active, breakPlayingRef, fit]);
 }
 
 export function SpatialCamera({
@@ -880,7 +900,7 @@ export function SpatialCamera({
   // V7 (owner §10): wheel becomes intent inside the route; progression is
   // capped at ROUTE_MAX_RATE in both directions. Desktop only — touch stays
   // native and the visual glide ceiling paces the camera there.
-  useRouteGovernor(spacerRef, enhanced && isDesktop, breakPlayingRef);
+  useRouteGovernor(spacerRef, enhanced && isDesktop, breakPlayingRef, fit);
 
   // 0..1 across the SYSTEMS opening (V6.5).
   //
@@ -1081,18 +1101,18 @@ export function SpatialCamera({
             } as MotionStyle
           }
         >
-          {/* V6 (§20.1): the world's pulse, behind every depth plane. Driven by
-              RAW progress rather than by the camera, so scroll always produces
-              visible response even inside a focus zone where the camera has
-              deliberately slowed to 0.42 of average. Desktop only -- it is
-              texture, and mobile spends its budget on the content. */}
-          {isDesktop && (
-            <SystemField
-              progress={progress}
-              routeOne={[sceneFocusProgress("hero"), BREAK_CUT]}
-              routeTwo={[BREAK_CUT, sceneFocusProgress("handoff")]}
-            />
-          )}
+          {/* V14 (owner finding A) REMOVED THE SYSTEM FIELD that stood here:
+              twenty-six seeded crosshairs and two "route vectors" drawn at
+              3-7% opacity behind every depth plane, drifting linearly with
+              raw progress. It was added in V6 so that "some part of the world
+              always answers the wheel", and it did -- but what answered was a
+              field of random crosshairs, which is the first item on the
+              owner's list of what a system mark must not be. The vectors
+              duplicated the real rails at positions the camera never travels.
+              The wheel is now answered by the route itself: WorldGrammar's
+              spine carries a travelled/ahead state that advances with the
+              filtered camera even inside a focus zone, and it is on the world
+              plane, where it describes something true. */}
 
           {/* V8 (§1-§3) REMOVED THE DEEPEST PLANE ENTIRELY. It existed for one
               reason -- to carry the deeper of the two destination surfaces that
@@ -1152,27 +1172,16 @@ export function SpatialCamera({
                 progress={progress}
               />
               {distantMaterial}
-              {/* Directional architecture (§22-23). Exactly two fields in the
-                  whole journey: one in the run into the cut and one on the far
-                  side of it, re-aimed along the new route. Not behind any scene,
-                  and not on mobile -- there is no distant plane there at all
-                  (§36).
-                  V6.4 dropped the first field's `tension` input along with the
-                  collision: the compression it drove was §24's "the route is
-                  running out of room", which was a statement about a wall. */}
-              <DirectionalField
-                at={(sceneFocusProgress("tail") + BREAK_CUT) / 2}
-                along={[sceneFocusProgress("tail"), BREAK_CUT]}
-                offset={{ x: 46, y: 20 }}
-                opacity={0.06}
-              />
-              <DirectionalField
-                at={(BREAK_CUT + sceneFocusProgress("approach")) / 2}
-                along={[BREAK_CUT, sceneFocusProgress("approach")]}
-                offset={{ x: 38, y: 16 }}
-                count={4}
-                opacity={0.05}
-              />
+              {/* V14 (owner findings A, C) REMOVED THE TWO DIRECTIONAL FIELDS:
+                  stacks of 86vw chevrons at 14px stroke, 5-9% opacity and a
+                  3-9px `filter: blur`, one in the run into the cut and one on
+                  the far side. On the baseline frames they are the dominant
+                  object in the UNDERNEATH and Built in Layers compositions --
+                  blurred grey Vs filling the right two thirds of the frame --
+                  and at 50% zoom they read as smears beside the SYSTEMS slab.
+                  A blurred layer is also the one motion technique §22 rules
+                  out. Direction is now stated by the thing that has it: the
+                  route spine, and the strata bands route two climbs through. */}
             </CameraPlane>
           )}
 
@@ -1216,7 +1225,12 @@ export function SpatialCamera({
                 onFocus={() => recenterOnScene(id)}
               >
                 {id === "tail" ? (
-                  <SystemsWord word={systemsWord} opening={opening} active={systemsActive} />
+                  <SystemsWord
+                    word={systemsWord}
+                    opening={opening}
+                    active={systemsActive}
+                    wide={isDesktop}
+                  />
                 ) : (
                   scenes[id]
                 )}
@@ -1325,7 +1339,13 @@ function SceneFrame({
   const point = sceneAnchor(id, mobile);
   const approach = useTransform(progress, (value) => sceneApproach(id, value, mobile));
   const resolve = useTransform(approach, (value) => 1 - Math.abs(value));
-  const scale = useTransform(resolve, [0, 1], [SCENE_SCALE_FAR, SCENE_SCALE_FOCUS]);
+  // V14 (owner findings B, §22): the composition's presence follows the
+  // acquisition state -- dim when detected, full when acquired, receding when
+  // released (scenePresence). The 0.972 -> 1 arrival SCALE that used to stand
+  // here is gone: it was a paint-time transform over every glyph and screenshot
+  // in the world while moving, the exact mechanism V11 measured as the blur.
+  // Desktop only; the mobile composition is the V13 gate's and is untouched.
+  const presence = useTransform(approach, (value) => scenePresence(value));
 
   return (
     <motion.div
@@ -1376,7 +1396,6 @@ function SceneFrame({
           // somewhere the scene is not.
           translateX: worldX(point.x),
           translateY: worldY(point.y),
-          scale,
           "--depth-resolve": resolve,
           // Lets a scene's evidence break its own alignment edge. Only set
           // here, where the camera frame can clip the result.
@@ -1395,7 +1414,7 @@ function SceneFrame({
           This wrapper shrink-wraps the composition, so the brackets now measure
           what they are bracketing at every viewport and every zoom level. */}
       <div className="relative w-full">
-        {children}
+        <motion.div style={isDesktop ? { opacity: presence } : undefined}>{children}</motion.div>
         {annotation && (
           <SystemPOV
             annotation={annotation}

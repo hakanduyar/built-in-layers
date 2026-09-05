@@ -1,0 +1,652 @@
+{
+  "W": 1440,
+  "H": 900,
+  "STEP": 120,
+  "total": 7737,
+  "samples": [
+    {
+      "y": 0,
+      "fill": 0.2571,
+      "items": 12,
+      "labels": [
+        "Hakan Duyar",
+        "Home",
+        "Work"
+      ]
+    },
+    {
+      "y": 120,
+      "fill": 0.2337,
+      "items": 5,
+      "labels": [
+        "Hakan",
+        "Duyar",
+        "Interfaces on the surface. Systems"
+      ]
+    },
+    {
+      "y": 240,
+      "fill": 0.0773,
+      "items": 3,
+      "labels": [
+        "Interfaces on the surface. Systems",
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 360,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 480,
+      "fill": 0.3498,
+      "items": 11,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 600,
+      "fill": 0.6657,
+      "items": 13,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 720,
+      "fill": 0.7598,
+      "items": 15,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 840,
+      "fill": 0.7534,
+      "items": 15,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 960,
+      "fill": 0.3658,
+      "items": 7,
+      "labels": [
+        "Software Factory",
+        "Verified system diagram, traced to",
+        "An orchestration core that routes "
+      ]
+    },
+    {
+      "y": 1080,
+      "fill": 0.1179,
+      "items": 15,
+      "labels": [
+        "An orchestration core that routes ",
+        "TypeScript · Node.js · SQLite",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1200,
+      "fill": 0.4483,
+      "items": 13,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM",
+        "Kıvılcım"
+      ]
+    },
+    {
+      "y": 1320,
+      "fill": 0.8226,
+      "items": 15,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM",
+        "Kıvılcım"
+      ]
+    },
+    {
+      "y": 1440,
+      "fill": 0.8257,
+      "items": 14,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM",
+        "Kıvılcım"
+      ]
+    },
+    {
+      "y": 1560,
+      "fill": 0.5849,
+      "items": 5,
+      "labels": [
+        "Verified architecture diagram.Insp",
+        "Inspect",
+        "Back on the surface"
+      ]
+    },
+    {
+      "y": 1680,
+      "fill": 0.2769,
+      "items": 14,
+      "labels": [
+        "Verified architecture diagram.Insp",
+        "Inspect",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1800,
+      "fill": 0.6186,
+      "items": 14,
+      "labels": [
+        "Verified diagram",
+        "SHARED FINANCE SYSTEM",
+        "JointLedger"
+      ]
+    },
+    {
+      "y": 1920,
+      "fill": 0.7295,
+      "items": 16,
+      "labels": [
+        "Verified diagram",
+        "SHARED FINANCE SYSTEM",
+        "JointLedger"
+      ]
+    },
+    {
+      "y": 2040,
+      "fill": 0.5779,
+      "items": 11,
+      "labels": [
+        "SHARED FINANCE SYSTEM",
+        "JointLedger",
+        "Verified architecture diagram, not"
+      ]
+    },
+    {
+      "y": 2160,
+      "fill": 0.1942,
+      "items": 14,
+      "labels": [
+        "Verified architecture diagram, not",
+        "Inspect",
+        "Personal accounts. Shared financia"
+      ]
+    },
+    {
+      "y": 2280,
+      "fill": 0.3369,
+      "items": 13,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM",
+        "DropSpot"
+      ]
+    },
+    {
+      "y": 2400,
+      "fill": 0.6642,
+      "items": 19,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM",
+        "DropSpot"
+      ]
+    },
+    {
+      "y": 2520,
+      "fill": 0.6642,
+      "items": 19,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM",
+        "DropSpot"
+      ]
+    },
+    {
+      "y": 2640,
+      "fill": 0.4805,
+      "items": 12,
+      "labels": [
+        "A fair claim and waitlist system f",
+        "React · Vite · Tailwind CSS · Node",
+        "Home page, signed in — browsing dr"
+      ]
+    },
+    {
+      "y": 2760,
+      "fill": 0.1497,
+      "items": 6,
+      "labels": [
+        "Drop detail page before joining th",
+        "Drop detail page before joining th",
+        "Inspect"
+      ]
+    },
+    {
+      "y": 2880,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3000,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3120,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3240,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3360,
+      "fill": 0.0978,
+      "items": 3,
+      "labels": [
+        "I design clear interfaces and buil",
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3480,
+      "fill": 0.0978,
+      "items": 3,
+      "labels": [
+        "I design clear interfaces and buil",
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3600,
+      "fill": 0.0902,
+      "items": 3,
+      "labels": [
+        "I design clear interfaces and buil",
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 3720,
+      "fill": 0.0929,
+      "items": 7,
+      "labels": [
+        "Built in Layers",
+        "Surface",
+        "interface and interaction"
+      ]
+    },
+    {
+      "y": 3840,
+      "fill": 0.1366,
+      "items": 9,
+      "labels": [
+        "Built in Layers",
+        "Surface",
+        "interface and interaction"
+      ]
+    },
+    {
+      "y": 3960,
+      "fill": 0.1403,
+      "items": 9,
+      "labels": [
+        "Built in Layers",
+        "Surface",
+        "interface and interaction"
+      ]
+    },
+    {
+      "y": 4080,
+      "fill": 0.1184,
+      "items": 10,
+      "labels": [
+        "Built in Layers",
+        "Flow",
+        "behavior, states, and user journey"
+      ]
+    },
+    {
+      "y": 4200,
+      "fill": 0.1424,
+      "items": 8,
+      "labels": [
+        "Built in Layers",
+        "System",
+        "architecture, data, and constraint"
+      ]
+    },
+    {
+      "y": 4320,
+      "fill": 0.1332,
+      "items": 5,
+      "labels": [
+        "These are four stops on a larger m",
+        "Professional Systems continues on ",
+        "See every system"
+      ]
+    },
+    {
+      "y": 4440,
+      "fill": 0.1233,
+      "items": 5,
+      "labels": [
+        "These are four stops on a larger m",
+        "Professional Systems continues on ",
+        "See every system"
+      ]
+    },
+    {
+      "y": 4560,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4680,
+      "fill": 0.0601,
+      "items": 2,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4800,
+      "fill": 0.1058,
+      "items": 3,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 4920,
+      "fill": 0.1348,
+      "items": 5,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 5040,
+      "fill": 0.1588,
+      "items": 13,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 5160,
+      "fill": 0.1733,
+      "items": 18,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 5280,
+      "fill": 0.186,
+      "items": 22,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 5400,
+      "fill": 0.1412,
+      "items": 23,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like — how",
+        "Resolved by layer and record"
+      ]
+    },
+    {
+      "y": 5520,
+      "fill": 0.1412,
+      "items": 23,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like — how",
+        "Resolved by layer and record"
+      ]
+    },
+    {
+      "y": 5640,
+      "fill": 0.1694,
+      "items": 24,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like — how",
+        "Resolved by layer and record"
+      ]
+    },
+    {
+      "y": 5760,
+      "fill": 0.1573,
+      "items": 25,
+      "labels": [
+        "Not just what they look like — how",
+        "Resolved by layer and record",
+        "System"
+      ]
+    },
+    {
+      "y": 5880,
+      "fill": 0.1953,
+      "items": 22,
+      "labels": [
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Personal",
+        "Verified against source · Active d"
+      ]
+    },
+    {
+      "y": 6000,
+      "fill": 0.2029,
+      "items": 20,
+      "labels": [
+        "PERSONAL OPERATING SYSTEM",
+        "Verified against source · Active d",
+        "SHARED FINANCE SYSTEM"
+      ]
+    },
+    {
+      "y": 6120,
+      "fill": 0.245,
+      "items": 19,
+      "labels": [
+        "FAIR DISTRIBUTION SYSTEM",
+        "Personal",
+        "Verified against source · Paused"
+      ]
+    },
+    {
+      "y": 6240,
+      "fill": 0.2276,
+      "items": 15,
+      "labels": [
+        "PROFESSIONAL SYSTEMS",
+        "Not yet verified",
+        "How I build"
+      ]
+    },
+    {
+      "y": 6360,
+      "fill": 0.2403,
+      "items": 15,
+      "labels": [
+        "How I build",
+        "Interfaces are built on systems",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6480,
+      "fill": 0.2183,
+      "items": 15,
+      "labels": [
+        "How I build",
+        "Interfaces are built on systems",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6600,
+      "fill": 0.1797,
+      "items": 15,
+      "labels": [
+        "Interfaces are built on systems",
+        "Consequence",
+        "What's visible is only half the wo"
+      ]
+    },
+    {
+      "y": 6720,
+      "fill": 0.1596,
+      "items": 11,
+      "labels": [
+        "What's visible is only half the wo",
+        "Permissions, offline behavior, and",
+        "Honest by default"
+      ]
+    },
+    {
+      "y": 6840,
+      "fill": 0.1645,
+      "items": 10,
+      "labels": [
+        "Honest by default",
+        "Consequence",
+        "Unfinished work says so, plainly, "
+      ]
+    },
+    {
+      "y": 6960,
+      "fill": 0.1193,
+      "items": 7,
+      "labels": [
+        "Unfinished work says so, plainly, ",
+        "Nothing on the page is there just ",
+        "Field notes"
+      ]
+    },
+    {
+      "y": 7080,
+      "fill": 0.0959,
+      "items": 6,
+      "labels": [
+        "Field notes",
+        "See all notes",
+        "I build product interfaces and the"
+      ]
+    },
+    {
+      "y": 7200,
+      "fill": 0.1595,
+      "items": 6,
+      "labels": [
+        "Field notes",
+        "See all notes",
+        "I build product interfaces and the"
+      ]
+    },
+    {
+      "y": 7320,
+      "fill": 0.2075,
+      "items": 4,
+      "labels": [
+        "I build product interfaces and the",
+        "Every system here states its own p",
+        "Read the full introduction"
+      ]
+    },
+    {
+      "y": 7440,
+      "fill": 0.2359,
+      "items": 5,
+      "labels": [
+        "I build product interfaces and the",
+        "Every system here states its own p",
+        "Read the full introduction"
+      ]
+    },
+    {
+      "y": 7560,
+      "fill": 0.2142,
+      "items": 5,
+      "labels": [
+        "I build product interfaces and the",
+        "Every system here states its own p",
+        "Read the full introduction"
+      ]
+    },
+    {
+      "y": 7680,
+      "fill": 0.1826,
+      "items": 5,
+      "labels": [
+        "Every system here states its own p",
+        "Read the full introduction",
+        "Have a complex product?"
+      ]
+    }
+  ],
+  "runs": []
+}

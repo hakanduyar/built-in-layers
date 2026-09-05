@@ -243,6 +243,86 @@ export const ROUTE_MAX_RATE = 0.105;
  */
 export const INTENT_LEAD_VH = 0.6;
 
+/* ------------------------------------------------- V14: one ceiling, two gears */
+
+/**
+ * V14 (owner finding F) -- THE PAGE'S GEARING, and why the lower world was
+ * "far too slow" without a single number in the physics being wrong.
+ *
+ * THE MEASURED FACT. V10 put the whole document under the route governor so the
+ * page would run one scroll model instead of two, and anchored the ceiling to
+ * the route's span so the world's pace stayed byte-identical. Measured on the
+ * accepted baseline `5670234` at 1440x900 (docs/review/v14-owner-visual/
+ * baseline/journey.json): the lower world is 4104px and takes 10.1s at a normal
+ * wheel and 10.2s at an aggressive one -- identical, because the ceiling binds
+ * and effort buys nothing. The route itself takes 14.8s. Half the reader's time
+ * on the page was spent below the world, in ordinary reading content held to
+ * ~500px/s.
+ *
+ * WHY THAT IS NOT ONE PHYSICS. The ceiling is expressed in SCROLL pixels per
+ * second, and a scroll pixel does not buy the same thing everywhere. Inside the
+ * world it moves the camera through `routeWorldLength / routeSpan` units of
+ * world per pixel -- at 1440x900 that is 2101.7 units x 7.8 screen px per unit
+ * over 4500px of scroll, i.e. one scroll pixel moves the world **3.6 screen
+ * pixels**. Below the world one scroll pixel moves the page exactly one screen
+ * pixel. So the same wheel input produced 3.6x less visible progress in the
+ * vertical than in the diagonal: the SAME number was two different speeds to
+ * the eye, and the eye is what the owner reviewed.
+ *
+ * THE DERIVATION, which is why this is not a per-region multiplier. The
+ * ceiling is restated in the unit the reader perceives -- screen travel per
+ * second -- and held constant. The world's cap does not change by a single
+ * pixel: it is still `ROUTE_MAX_RATE x routeSpan`, and everything V7-V11 tuned
+ * stands. The page's cap is that same screen speed divided by the page's
+ * gearing of 1, which is the world's cap multiplied by the world's gearing:
+ *
+ *   gearing  = routeWorldLength x worldUnitPx x fit / routeSpan     (world)
+ *   pageCap  = ROUTE_MAX_RATE x routeSpan x gearing                 (px/s)
+ *
+ * Nothing in it is authored. Change the route, the world unit or the fit and
+ * the page's cap follows, because it is derived from the same geometry the
+ * world's own speed is. The owner's §17 forbids `lowerWorldScrollBoost` unless
+ * "mathematically unavoidable and explicitly justified"; this is the
+ * justification, and it is arithmetic rather than taste: with gearing 1 the
+ * page is provably the slowest-moving thing on the site, slower even than a
+ * focus zone (0.42 x mean = 1.5 screen px per scroll px).
+ *
+ * What it preserves, by construction: the intent model, the lead cap
+ * (INTENT_LEAD_VH, so coast stays under a beat), sign collapse, the break
+ * event's ownership of its band, and the world's ceiling. The same input
+ * physics runs the diagonal, the turn and the vertical; only the unit the
+ * ceiling is measured in was corrected.
+ */
+export function pageGearing(
+  routeWorldLength: number,
+  worldUnitPx: number,
+  fit: number,
+  routeSpan: number,
+): number {
+  if (!(routeSpan > 0) || !(routeWorldLength > 0) || !(worldUnitPx > 0)) return 1;
+  const gearing = (routeWorldLength * worldUnitPx * Math.max(fit, 0)) / routeSpan;
+  // Never below the world's own cap: a page that scrolls slower than the world
+  // is the defect this exists to remove, not a state to fall back to.
+  return Math.max(1, gearing);
+}
+
+/**
+ * The governor's per-frame budget, in px, at a scroll position. Inside the
+ * pinned route the budget is the route's; from the moment the sticky frame
+ * begins to leave (the page's own content is what moves on screen from then
+ * on) it is the route's budget times the page gearing.
+ */
+export function governorBudget(
+  y: number,
+  pinnedEnd: number,
+  routeSpan: number,
+  gearing: number,
+  dtMs: number,
+): number {
+  const gain = y >= pinnedEnd ? gearing : 1;
+  return ROUTE_MAX_RATE * routeSpan * gain * (Math.max(dtMs, 0) / 1000);
+}
+
 /**
  * One governor step. Returns `proposed` untouched when the movement is entirely
  * past the release band or already inside the rate budget; otherwise advances

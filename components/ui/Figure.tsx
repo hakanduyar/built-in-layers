@@ -45,7 +45,7 @@ type FigureProps = {
    * when absent, the rendered markup is what it was before this prop existed,
    * and at `lg` and above the control does not render at all.
    */
-  inspect?: boolean;
+  inspect?: boolean | "desktop";
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
@@ -140,6 +140,7 @@ export function Figure({
               title={captionText}
               width={dimensions?.width}
               height={dimensions?.height}
+              where={inspect === "desktop" ? "desktop" : "below-lg"}
             />
           </figcaption>
         ) : (
@@ -150,6 +151,7 @@ export function Figure({
               title={alt}
               width={dimensions?.width}
               height={dimensions?.height}
+              where={inspect === "desktop" ? "desktop" : "below-lg"}
             />
           </div>
         )

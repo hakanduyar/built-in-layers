@@ -14,6 +14,8 @@ import {
   GLIDE_MAX_RATE,
   GLIDE_RELEASE_GAIN,
   glideStep,
+  governorBudget,
+  pageGearing,
 } from "@/lib/spatial/cameraFilter";
 import { BREAK_CUT } from "@/lib/spatial/sceneRoute";
 
@@ -289,5 +291,47 @@ describe("glideStep bounds the opening departure", () => {
 
   it("leaves sub-cap movement exactly alone (slow reading is untouched)", () => {
     expect(glideStep(0.01, 0.0101, 16.7, ZONE)).toBe(0.0101);
+  });
+});
+
+// V14 (owner finding F): one ceiling measured in the unit the reader perceives.
+// See pageGearing() for the baseline measurement and the derivation.
+describe("V14 page gearing: the ceiling is one screen speed, not one scroll speed", () => {
+  it("derives the page's gain from the world's own geometry, never from a constant", () => {
+    // 1440x900 on the accepted baseline: 2101.66 world units, 9px per unit at
+    // fit 0.865, over a 4500px route span.
+    const gearing = pageGearing(2101.66, 9, 0.865, 4500);
+    expect(gearing).toBeCloseTo((2101.66 * 9 * 0.865) / 4500, 6);
+    expect(gearing).toBeGreaterThan(3);
+    expect(gearing).toBeLessThan(4.5);
+  });
+
+  it("scales with the fit and the unit, so a larger world on screen means a faster page", () => {
+    expect(pageGearing(2101.66, 10.4, 1, 5400)).toBeGreaterThan(
+      pageGearing(2101.66, 9, 0.865, 4500),
+    );
+  });
+
+  it("never lets the page run slower than the world's own cap", () => {
+    expect(pageGearing(10, 1, 1, 100000)).toBe(1);
+    expect(pageGearing(0, 9, 1, 4500)).toBe(1);
+    expect(pageGearing(2101.66, 9, 1, 0)).toBe(1);
+  });
+
+  it("leaves the pinned route's budget byte-identical and gears only past the pinned end", () => {
+    const routeSpan = 4500;
+    const gearing = pageGearing(2101.66, 9, 0.865, routeSpan);
+    const dt = 16.7;
+    const inside = governorBudget(1000, 4561, routeSpan, gearing, dt);
+    const atEnd = governorBudget(4561, 4561, routeSpan, gearing, dt);
+    const below = governorBudget(6000, 4561, routeSpan, gearing, dt);
+    expect(inside).toBeCloseTo(ROUTE_MAX_RATE * routeSpan * (dt / 1000), 9);
+    expect(atEnd).toBeCloseTo(inside * gearing, 9);
+    expect(below).toBeCloseTo(inside * gearing, 9);
+  });
+
+  it("forfeits a negative or zero frame rather than moving", () => {
+    expect(governorBudget(6000, 4561, 4500, 3.5, 0)).toBe(0);
+    expect(governorBudget(6000, 4561, 4500, 3.5, -5)).toBe(0);
   });
 });

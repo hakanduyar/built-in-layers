@@ -31,12 +31,25 @@ import { VW_PER_VH, type SceneId } from "@/lib/spatial/scenes";
 import { cameraPosition, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 
 /** How far ahead of the content the plane enters, in vh-equivalent screen
- *  units. Sized as a legible reveal, not a slide: ~72px at 900vh. */
-export const PLANE_LEAD = 8;
+ *  units.
+ *
+ *  V14 (owner finding B, §7): 8 -> 24. V10 measured the grammar as exact --
+ *  lead 55-70px, 0px at focus, trail 96-102px -- and the owner's review of
+ *  the same frames was that "the behavior does not read visually". Both were
+ *  true: against a 1180px composition a 70px lead is below the threshold at
+ *  which a plane reads as ARRIVING rather than as attached. 24 units is ~215px
+ *  at the reference viewport: a plane visibly in place before its composition
+ *  resolves onto it. */
+export const PLANE_LEAD = 24;
 
 /** Peak trailing distance once the scene has fully departed. Roughly twice
- *  the entry lead — leaving is the half the eye tracks. */
-export const PLANE_LAG = 17;
+ *  the entry lead -- leaving is the half the eye tracks.
+ *
+ *  V14: 17 -> 56 (~500px at the reference viewport). Release has to be seen
+ *  to be believed: the composition lifts off and its ground stays behind by
+ *  close to half a scene, so the exit reads as a deliberate departure from a
+ *  place rather than as a card sliding out of frame. */
+export const PLANE_LAG = 56;
 
 /** Exit growth: >1 so the lag ACCELERATES with departure ("progressively"). */
 export const EXIT_POWER = 1.6;

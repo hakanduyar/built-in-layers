@@ -1,14 +1,7 @@
-import { footerCtaHeading, footerCtaLabel, footerCtaSubline } from "@/data/copy";
+import { footerCtaHeading, footerCtaLabel, footerCtaSubline, workIndexLabel } from "@/data/copy";
 import { contactUrl, siteName, siteOwner, socialLinks } from "@/data/site";
+import { RouteMap } from "@/components/spatial/RouteMap";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import {
-  EXIT_FROM,
-  EXIT_TURN,
-  routeScreenAngle,
-  sceneFocusProgress,
-  workBranch,
-} from "@/lib/spatial/sceneRoute";
-import { VW_PER_VH } from "@/lib/spatial/scenes";
 import { Container } from "@/components/ui/Container";
 import { TextLink } from "@/components/ui/TextLink";
 
@@ -48,74 +41,34 @@ import { TextLink } from "@/components/ui/TextLink";
 // screen where there is no journey to conclude. The route termination that hands
 // off into it lives in EditorialDrift's DriftSettle.
 /**
- * V6.8 (§12) -- THE CONVERGENCE, drawn from the journey's own geometry.
+ * V14 (owner finding §14) -- THE FINALE IS THE RESOLVED MAP.
  *
- * The finale's claim is "complex topology -> convergence -> simplicity -> action",
- * so the complexity the lines carry is the page's real topology rather than a
- * decorative fan: each incoming line enters at the mean screen bearing of one of
- * the four routes the reader actually travelled or was shown --
+ * V6.8-V13 drew four hairlines converging to a node above the headline -- one
+ * per route the reader had travelled, each in its own stroke grammar. The
+ * intent was "complex topology -> convergence -> simplicity"; the owner's
+ * reading of the frame was "four hairline scratches" over an oversized footer,
+ * and the baseline still bears it out: at 5:1 the bearings are near-parallel
+ * and the thing they converge on is a 7px square.
  *
- *   route one          hero -> the cut          (the evidence descent)
- *   route two          underneath -> handoff    (the thinking climb)
- *   the exit diagonal  handoff -> the turn      (the traverse)
- *   the work branch    the route not taken
+ * The finale now states the same claim with the thing itself. The whole
+ * journey is drawn once more (RouteMap, `resolved`) -- both routes solid,
+ * every station visited, the branch to the Work index, the terminus closed --
+ * still, complete, beside the question. Complexity mapped; the operator
+ * addressable beneath it. It is the fourth and last state of the one topology
+ * the world draws under its route, opens at SYSTEMS and shows at the handoff,
+ * so the ending is the map the reader has been travelling, finished.
  *
- * All four converge to one point; from that point a single vertical drops to the
- * headline's first character. Derived at module load from the same functions the
- * world draws its rails with, so if the route is ever re-aimed the finale re-aims
- * with it. Compressed into the panel's aspect (x0.28) so the steepest bearing
- * still fits; relative order and sign are preserved, which is what matters.
+ * The map is meaningful only where the journey exists, so it is hidden by
+ * `styles/globals.css` on pages without the spatial tour -- the same `:has()`
+ * scoping the finale's height already uses. The station indices are the route's
+ * own presentation order (ROUTE_ONE_IDS), not content.
  */
-const CONVERGE = (() => {
-  const branch = workBranch();
-  const branchBearing =
-    (Math.atan2(
-      branch[branch.length - 1]!.y - branch[0]!.y,
-      (branch[branch.length - 1]!.x - branch[0]!.x) * VW_PER_VH,
-    ) *
-      180) /
-    Math.PI;
-  const bearings = [
-    routeScreenAngle(0, sceneFocusProgress("tail")),
-    routeScreenAngle(sceneFocusProgress("reorient") + 0.01, sceneFocusProgress("handoff")),
-    routeScreenAngle(EXIT_FROM, EXIT_TURN),
-    branchBearing,
-  ];
-  // ITERATION 2. The first pass mapped each bearing to an entry ordinate by
-  // literal compressed tangent, and the capture showed why that fails as a
-  // composition: three of the four bearings are within 45 degrees of each other,
-  // so the "fan" collapsed into near-parallel hairlines and the steepest line
-  // left the panel entirely. The entry ordinates are now a MONOTONE REMAP of the
-  // real bearings onto the panel's full height -- order and sign preserved (the
-  // branch, the one negative bearing, is the one line that arrives from BELOW the
-  // axis), magnitudes normalised so the topology is legible. The data still steers
-  // the drawing; the panel no longer pretends to be a protractor.
-  const P = { x: 1.2, y: 33 };
-  const sorted = [...bearings].sort((a, b) => a - b);
-  const SPREAD_YS = [44, 22, 12, 3]; // ascending bearing -> entry ordinate
-  // ITERATION 3: each line arrives wearing ITS OWN route's registered grammar --
-  // the exact stroke vocabulary the world above draws it with. Route one is the
-  // solid ink rail; route two and the exit traverse are the dashed signal rails;
-  // the work branch is the fine-dashed ink line that was never taken. A reader who
-  // has just travelled the page can literally recognise which line is which -- the
-  // convergence is the journey's four routes arriving, not four decorative
-  // hairlines.
-  const GRAMMAR = [
-    { dash: undefined, tone: "ink", opacity: 0.5 }, // route one
-    { dash: "2.5 3", tone: "signal", opacity: 0.75 }, // route two
-    { dash: "2.5 3", tone: "signal", opacity: 0.55 }, // exit traverse
-    { dash: "1.2 3", tone: "ink", opacity: 0.4 }, // the branch not taken
-  ] as const;
-  // Ragged entry abscissae: review caught all four lines starting on one hard
-  // invisible vertical, which read as an overflow mask rather than lines arriving.
-  const ENTRY_XS = [100, 96.5, 100, 93];
-  return bearings.map((bearing, index) => {
-    const rank = sorted.indexOf(bearing);
-    return { x1: ENTRY_XS[index]!, y1: SPREAD_YS[rank]!, x2: P.x, y2: P.y, ...GRAMMAR[index]! };
-  });
-})();
-
-const CONVERGE_POINT = { x: 1.2, y: 33 };
+const FINALE_STATIONS = [
+  { id: "software-factory", index: "01" },
+  { id: "kivilcim", index: "02" },
+  { id: "jointledger", index: "03" },
+  { id: "dropspot", index: "04" },
+] as const;
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -135,94 +88,56 @@ export function SiteFooter() {
           bottom padding now only separates the finale from the strip below it,
           and the centring does the placing. Height is untouched. */}
       <Container className="spatial-finale flex min-h-[82vh] flex-col justify-center pb-20 pt-10 lg:pb-24 lg:pt-12">
-        <div className="lg:pl-[8%]">
-          {/* The journey's four routes, arriving and resolving. The vertical that
-              leaves the convergence point lands exactly on the headline's leading
-              edge -- the point ESTABLISHES the axis the conclusion is set on.
-              Height raised h-40 -> h-52 at lg: at the container cap the panel ran
-              ~7:1, flat enough that the four bearings read as near-horizontal
-              scratches; at ~5:1 the convergence is legible as an event. */}
-          <div aria-hidden="true" className="relative -mb-2 h-32 w-full lg:h-52">
-            <svg viewBox="0 0 100 44" preserveAspectRatio="none" className="h-full w-full text-ink">
-              {CONVERGE.map((line, index) => (
-                <line
-                  key={index}
-                  x1={line.x1}
-                  y1={line.y1}
-                  x2={line.x2}
-                  y2={line.y2}
-                  stroke={line.tone === "signal" ? "var(--color-signal)" : "currentColor"}
-                  strokeWidth={1}
-                  strokeOpacity={line.opacity}
-                  strokeDasharray={line.dash}
-                  vectorEffect="non-scaling-stroke"
-                />
-              ))}
-              <line
-                x1={CONVERGE_POINT.x}
-                y1={CONVERGE_POINT.y}
-                x2={CONVERGE_POINT.x}
-                y2="44"
-                stroke="currentColor"
-                strokeWidth={1}
-                strokeOpacity={0.7}
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-            {/* The node as an HTML element: `preserveAspectRatio="none"` stretches
-              the box ~9x horizontally, so an SVG circle renders as a smudged
-              ellipse (review finding). A positioned square stays crisp at any
-              width, and the filled square is the world's own terminus form
-              (DriftSettle's closed mark). Centred on the convergence point:
-              x = 1.2% of the panel, y = 33/44 of its height. */}
-            <span
-              className="absolute h-[7px] w-[7px] bg-ink"
-              style={{ left: "calc(1.2% - 3px)", top: "calc(75% - 3px)" }}
-            />
-          </div>
-
-          {/* A true system statement, not fake telemetry: the route rails end
-              here, the four lines above are the routes arriving, and the drop
-              lands on this block. The system marks its own terminus. aria-hidden:
-              the heading below is the accessible content. */}
-          <p
-            aria-hidden="true"
-            className="mb-4 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
-          >
-            End of route
-          </p>
-          {/* V9 (§14) -- THE CONVERGENCE NOW REACHES THE ACTION.
-              The owner's reading was that the geometry, the empty territory and
-              a small action did not resolve into one final state, and the frame
-              showed why: the vertical dropping out of the convergence node
-              stopped at the headline, so the last third of the composition --
-              the subline and the button, i.e. the actual decision -- stood
-              beside the drawing rather than at the end of it.
-
-              The axis now continues past the headline and terminates ON the
-              action, with the world's own closed corner at its foot. Nothing new
-              was invented: it is the same single line the four routes already
-              converge into, drawn to the place it was always pointing. */}
-          <div className="relative">
-            <span
+        <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 lg:pl-[4%]">
+          <div className="lg:col-span-7">
+            {/* A true system statement, not fake telemetry: the route rails end
+                here and the map beside this block shows them ended. aria-hidden:
+                the heading below is the accessible content. */}
+            <p
               aria-hidden="true"
-              className="absolute -left-6 top-0 hidden w-px bg-ink opacity-25 lg:block"
-              style={{ height: "calc(100% - 0.75rem)" }}
-            />
-            <span
-              aria-hidden="true"
-              className="absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
-              style={{ bottom: "0.75rem" }}
-            />
-            <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">
-              {footerCtaHeading}
-            </h2>
-            <p className="mt-8 max-w-[42rem] font-serif text-statement italic text-ink">
-              {footerCtaSubline}
+              className="mb-4 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+            >
+              End of route
             </p>
-            <ButtonLink href={contactUrl} external className="mt-12">
-              {footerCtaLabel}
-            </ButtonLink>
+            {/* V9 (§14): the axis runs past the headline and terminates ON the
+                action, with the world's own closed corner at its foot. */}
+            <div className="relative">
+              <span
+                aria-hidden="true"
+                className="absolute -left-6 top-0 hidden w-px bg-ink opacity-25 lg:block"
+                style={{ height: "calc(100% - 0.75rem)" }}
+              />
+              <span
+                aria-hidden="true"
+                className="absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
+                style={{ bottom: "0.75rem" }}
+              />
+              <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">
+                {footerCtaHeading}
+              </h2>
+              <p className="mt-8 max-w-[42rem] font-serif text-statement italic text-ink">
+                {footerCtaSubline}
+              </p>
+              <ButtonLink href={contactUrl} external className="mt-12">
+                {footerCtaLabel}
+              </ButtonLink>
+            </div>
+          </div>
+          {/* The journey, resolved: every station visited, both routes solid,
+              the branch drawn, the terminus closed. Hidden off the homepage by
+              styles/globals.css -- a map of a journey the page does not contain
+              would be decoration. */}
+          <div
+            aria-hidden="true"
+            className="finale-map mt-16 hidden lg:col-span-5 lg:col-start-8 lg:mt-3 lg:block"
+          >
+            <RouteMap
+              state="resolved"
+              stations={FINALE_STATIONS}
+              branch={[workIndexLabel]}
+              labels
+              className="w-full"
+            />
           </div>
         </div>
       </Container>

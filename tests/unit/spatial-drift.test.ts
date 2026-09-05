@@ -78,7 +78,9 @@ describe("the drift table is a fixed, deterministic composition", () => {
       "components/spatial/ProjectPlane.tsx",
       "lib/spatial/planeChoreography.ts",
       "components/spatial/WorldGrammar.tsx",
-      "components/spatial/DirectionalField.tsx",
+      // V14: DirectionalField was deleted; RouteMap builds the journey's
+      // topology drawing from `routeLegs()` and takes its place in the scan.
+      "components/spatial/RouteMap.tsx",
       "components/spatial/SystemPOV.tsx",
     ];
     for (const source of sources) {

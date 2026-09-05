@@ -3,16 +3,13 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
 import {
-  DRIFT_SETTLE,
   FIELD_MIN_BODY_PX,
   SEAM_CLEARANCE_PX,
   driftField,
   driftFieldOpacity,
   driftMeasure,
   driftPlate,
-  driftRouteRuns,
   driftSection,
-  type DriftRouteStop,
   type DriftSectionId,
 } from "@/lib/spatial/editorialDrift";
 
@@ -69,87 +66,24 @@ export function EditorialDrift({ children }: EditorialDriftProps) {
           the content planes; the foreground run comes in front of them, so the
           route reads as travelling through the space rather than as a rail drawn
           beside a list of sections (§20). */}
-      <DriftRoute layer="background" />
+      {/* V14 (owner finding D) REMOVED THE DRIFT ROUTE: the oblique zigzag
+          drawn at 10-15% behind and in front of the lower sections, with a
+          registration mark at every stop. It was generated from the blocks'
+          own entry/exit table and so described something true, but on the
+          owner's frames it read as what the brief names -- "technical lines
+          that decorate rather than explain": hairlines crossing the How I
+          Build spine at two angles, a mark floating beside Field Notes. The
+          lower page's relationship to the world is now stated once, by the
+          world: the route ends on the terminus map, and each section carries
+          its own register (SystemNode). The blocks still drift; the drift is
+          the behaviour, and it needs no diagram of itself beside it. */}
       <div className="relative">{children}</div>
-      <DriftRoute layer="foreground" />
-      <DriftSettle />
-    </div>
-  );
-}
-
-/**
- * V6 (§20.2): the route made visible.
- *
- * The container is exactly the track's FREE width -- `100vw - 2·pad - blockWidth`
- * -- positioned at the track's padding. Inside that box a fraction `f` is simply
- * `f × 100%`, and because the blocks are positioned by `pad + f × (that same
- * width)`, a stop at `f` lands precisely on the left edge of a block at `f`. One
- * coordinate system, no drift between the spine and the thing it describes, at
- * every viewport width.
- *
- * Desktop only, and at 14% opacity: on a phone the blocks barely move laterally,
- * so a spine would describe a route that is not really there.
- */
-function DriftRoute({ layer }: { layer: "background" | "foreground" }) {
-  const foreground = layer === "foreground";
-  const runs = driftRouteRuns().filter((run) => run.foreground === foreground);
-  if (runs.length === 0) return null;
-
-  // Registration marks belong to the run that owns them, so a mark in front of
-  // the content is drawn with the foreground run and never duplicated.
-  const marks: DriftRouteStop[] = runs.flatMap((run) => run.stops);
-
-  return (
-    <div
-      aria-hidden="true"
-      // Only the background run carries the test hook, so the existing
-      // "spine exists / is absent on mobile" checks keep measuring one element.
-      data-drift-route={foreground ? undefined : "true"}
-      data-drift-route-layer={layer}
-      className={`pointer-events-none absolute bottom-0 top-0 hidden lg:block ${
-        foreground ? "z-10" : ""
-      }`}
-      style={{
-        left: "var(--drift-pad)",
-        width: "calc(100vw - 2 * var(--drift-pad) - var(--drift-w))",
-      }}
-    >
-      <svg
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full text-ink"
-      >
-        {runs.map((run, index) => (
-          <polyline
-            key={index}
-            points={run.stops.map((stop) => `${stop.fraction * 100},${stop.at * 100}`).join(" ")}
-            fill="none"
-            stroke="currentColor"
-            // A run in front of the content is drawn lighter and thinner than one
-            // behind it: coming forward must not mean shouting over the text.
-            strokeWidth={foreground ? 1 : 1}
-            strokeOpacity={foreground ? 0.1 : 0.15}
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-      </svg>
-      {/* A registration mark at every stop: the system has measured this route,
-          not merely drawn it. Two strokes each, the same vocabulary the world
-          above uses for a scene anchor. */}
-      {marks.map((stop, index) => (
-        <span
-          key={index}
-          className="absolute block"
-          style={{
-            left: `${stop.fraction * 100}%`,
-            top: `${stop.at * 100}%`,
-            opacity: foreground ? 0.18 : 0.26,
-          }}
-        >
-          <span className="absolute block h-px w-3 bg-ink" style={{ left: -6, top: 0 }} />
-          <span className="absolute block w-px bg-ink" style={{ left: 0, top: -5, height: 10 }} />
-        </span>
-      ))}
+      {/* V14 (owner findings D, §14) REMOVED THE DRIFT SETTLE that closed the
+          track here: a rule, a closed square and a 64px vertical hand-off,
+          costing ~216px of travel to say "the route ends" one section before
+          the finale said it again with four converging lines. The finale now
+          carries the route's end as the resolved map (SiteFooter, RouteMap),
+          which is the terminus stated once, as the thing it is. */}
     </div>
   );
 }
@@ -173,6 +107,9 @@ function trackX(fraction: number): string {
  * SSR and there is nothing to measure there anyway.
  */
 const useSeamEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+/** V14: the section fields are measured but not drawn. See DriftBlock. */
+const DRAW_FIELDS = false;
 
 export function DriftBlock({ id, children }: { id: DriftSectionId; children: ReactNode }) {
   const section = driftSection(id);
@@ -272,7 +209,12 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
       // working case. The constant stays; it is only overridden where it is
       // demonstrably wrong.
       const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      let top = (plate.gapVh / 100) * window.innerHeight + plate.seamRem * rem;
+      // V14: the approach interval differs by breakpoint (gapVhDesktop), so the
+      // seam starts from the interval the block is actually padded by.
+      const gapVh = window.matchMedia("(min-width: 1024px)").matches
+        ? plate.gapVhDesktop
+        : plate.gapVh;
+      let top = (gapVh / 100) * window.innerHeight + plate.seamRem * rem;
       // OVERRIDE 1 — the seam may not cross a line of text. `about`'s constant is
       // registered to a heading that is `sr-only` (a 1.0px box), so it was placed
       // against nothing and cut straight through the introduction; Selected
@@ -309,10 +251,19 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
       observer.disconnect();
       window.removeEventListener("resize", measureSeam);
     };
-  }, [ref, plate.gapVh, plate.seamRem]);
+  }, [ref, plate.gapVh, plate.gapVhDesktop, plate.seamRem]);
 
   return (
-    <div ref={ref} className="relative w-full" style={{ paddingTop: `${plate.gapVh}vh` }}>
+    <div
+      ref={ref}
+      className="relative w-full pt-[var(--drift-gap)] lg:pt-[var(--drift-gap-lg)]"
+      style={
+        {
+          "--drift-gap": `${plate.gapVh}vh`,
+          "--drift-gap-lg": `${plate.gapVhDesktop}vh`,
+        } as React.CSSProperties
+      }
+    >
       {/* V11 (§24) -- THE LOWER WORLD STOPS BORROWING THE PROJECT GROUND.
           This was a filled `bg-soft-paper` rectangle: the exact material
           `ProjectPlane` uses, in a region where ProjectPlane's mechanism does not
@@ -335,7 +286,13 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
                 the one relationship the lower page actually has to the world above.
           Three marks, all of which state something. No fill, no HUD, no
           coordinates, no telemetry. */}
-      {(seam === null || seam.draw) && (
+      {/* V14 (owner finding D): the section field -- seam rule, two
+          terminating ticks and a leading hairline -- is no longer drawn. With
+          the drift route gone it was the last set of lines in the lower page
+          that described the layout rather than the content, and it doubled the
+          spine SystemNode already gives every section. The measurement stays
+          (`seam`) so the geometry is still known; the drawing is gated off. */}
+      {DRAW_FIELDS && (seam === null || seam.draw) && (
         <span
           aria-hidden="true"
           data-drift-field={id}
@@ -343,7 +300,10 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
           style={{
             left: trackX(field.left),
             width: `calc(${field.span.toFixed(4)} * (100vw - 2 * var(--drift-pad) - var(--drift-w)) + ${measure.toFixed(4)} * var(--drift-w))`,
-            top: seam === null ? `calc(${plate.gapVh}vh + ${plate.seamRem}rem)` : `${seam.top}px`,
+            top:
+              seam === null
+                ? `calc(var(--drift-gap-lg, ${plate.gapVh}vh) + ${plate.seamRem}rem)`
+                : `${seam.top}px`,
             bottom: "-3rem",
             opacity: driftFieldOpacity(id),
           }}
@@ -385,46 +345,6 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
       >
         {children}
       </motion.div>
-    </div>
-  );
-}
-
-/**
- * ROUTE TERMINATION (V6.1, §25). The CTA itself is the global footer and is not
- * duplicated here; this is the route arriving at its last coordinate and
- * resolving, so the spatial system ENDS rather than stopping because the sections
- * ran out.
- *
- * V6 closed with a single hairline and a 2x2 corner mark, which read as a rule
- * above a footer. The sequence now is: the route approaches, reaches a final
- * registration point, the geometry stabilises into a closed bracket, and a short
- * vertical hands off downward into the CTA that follows.
- *
- * Abstract by construction. §25 forbids "END OF LINE" and every other fake
- * operational label, so completion is stated only in geometry: the marks close,
- * where every other registration mark on the page stays open.
- */
-function DriftSettle() {
-  return (
-    <div
-      aria-hidden="true"
-      data-drift-terminus="true"
-      className="mt-16 lg:mt-32"
-      style={{ marginLeft: trackX(DRIFT_SETTLE), width: "var(--drift-w)" }}
-    >
-      <div className="flex items-center gap-4">
-        {/* The route's last run in, thinning as it arrives. */}
-        <span className="block h-px w-full bg-line" />
-        {/* The terminal mark: a CLOSED rectangle of four strokes, against the
-            open two-stroke corner used everywhere else. Closure is the whole
-            statement. */}
-        <span className="relative block h-3 w-3 shrink-0 border border-ink opacity-70">
-          <span className="absolute inset-[3px] block bg-ink opacity-60" />
-        </span>
-      </div>
-      {/* Handoff downward: the world stops travelling laterally and points at
-          what comes next. */}
-      <span className="mt-3 block h-10 w-px bg-line opacity-70 lg:h-16" />
     </div>
   );
 }

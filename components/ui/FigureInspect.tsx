@@ -10,6 +10,17 @@ type FigureInspectProps = {
   /** Intrinsic pixel width of the asset, when known (Figure's readIntrinsicDimensions). */
   width?: number;
   height?: number;
+  /**
+   * V14 (owner finding §9): where the control renders. `below-lg` is D-031's
+   * frozen behaviour (case-study and index figures). `desktop` is the homepage
+   * scenes' opt-in: their diagrams are 1600-unit drawings shown at 780-1050px,
+   * whose body labels land at 7-11 CSS px on a desktop -- the same legibility
+   * gap the mobile gate measured, at a larger size. The plate keeps its place
+   * in the composition; the reader who wants to read every label opens the
+   * same asset at INSPECT_PLATE_WIDTH. Desktop ONLY for those scenes: below
+   * `lg` the tour's markup stays exactly as the V13 mobile gate froze it.
+   */
+  where?: "below-lg" | "desktop" | "always";
 };
 
 /**
@@ -45,7 +56,14 @@ export function inspectName(alt: string): string {
 // there is no pre/post-hydration difference to shift layout); only the
 // plate's <img> is mounted while open, so the page never carries a second
 // copy of the figure and never fetches one it does not show.
-export function FigureInspect({ src, alt, title, width, height }: FigureInspectProps) {
+export function FigureInspect({
+  src,
+  alt,
+  title,
+  width,
+  height,
+  where = "below-lg",
+}: FigureInspectProps) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -91,7 +109,16 @@ export function FigureInspect({ src, alt, title, width, height }: FigureInspectP
         aria-expanded={open}
         aria-label={inspectName(alt)}
         onClick={() => setOpen(true)}
-        className="inline-flex min-h-11 shrink-0 items-center font-mono text-mono-label tracking-mono-label uppercase text-ink lg:hidden"
+        // The 44px minimum is a touch target; the desktop-only control (a
+        // pointer target in a caption row) drops it so the plate's footer stays
+        // one caption line tall and the flagship keeps its frame floor.
+        className={`min-h-11 shrink-0 items-center font-mono text-mono-label tracking-mono-label uppercase text-ink ${
+          where === "always"
+            ? "inline-flex"
+            : where === "desktop"
+              ? "hidden lg:inline-flex lg:min-h-0"
+              : "inline-flex lg:hidden"
+        }`}
       >
         Inspect
       </button>

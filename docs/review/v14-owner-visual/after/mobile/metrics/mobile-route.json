@@ -1,0 +1,2605 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "generated": "v13-mobile-gate/route",
+  "stepVh": 2,
+  "viewports": {
+    "320x568": {
+      "summary": {
+        "vw": 320,
+        "vh": 568,
+        "docHeight": 8034,
+        "screens": 14.1,
+        "routeScreens": 6,
+        "lowerScreens": 8,
+        "sectionTop": 77,
+        "spacerHeight": 3408,
+        "steps": 8,
+        "unsettled": 0,
+        "meanInkCoverage": {
+          "route": 0.448,
+          "lower": 0.437
+        },
+        "meanMaterialCoverage": {
+          "route": 1,
+          "lower": 0.725
+        },
+        "meanPxInkRows": {
+          "route": 0.315,
+          "lower": 0.325
+        },
+        "nearEmptyFrames": {
+          "route": 0,
+          "lower": 0
+        },
+        "nearEmptyVh": 0,
+        "focus": {
+          "hero": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 134,
+            "sceneHeight": 409,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.583,
+            "materialCoverage": 1,
+            "firstInkVh": 0.044,
+            "px": {
+              "inkRows": 0.426,
+              "materialRows": 0.84,
+              "firstInkVh": 0.051,
+              "lastInkVh": 0.734
+            }
+          },
+          "software-factory": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 872,
+            "sceneHeight": 640,
+            "sceneHeightVh": 1.13,
+            "inkCoverage": 0.583,
+            "materialCoverage": 1,
+            "firstInkVh": 0.044,
+            "px": {
+              "inkRows": 0.426,
+              "materialRows": 0.84,
+              "firstInkVh": 0.051,
+              "lastInkVh": 0.734
+            }
+          },
+          "kivilcim": {
+            "y": 1136,
+            "yVh": 2,
+            "sceneTop": -579,
+            "sceneHeight": 575,
+            "sceneHeightVh": 1.01,
+            "inkCoverage": 0.494,
+            "materialCoverage": 1,
+            "firstInkVh": 0.176,
+            "px": {
+              "inkRows": 0.335,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "jointledger": {
+            "y": 1136,
+            "yVh": 2,
+            "sceneTop": 159,
+            "sceneHeight": 623,
+            "sceneHeightVh": 1.1,
+            "inkCoverage": 0.494,
+            "materialCoverage": 1,
+            "firstInkVh": 0.176,
+            "px": {
+              "inkRows": 0.335,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "dropspot": {
+            "y": 1136,
+            "yVh": 2,
+            "sceneTop": 898,
+            "sceneHeight": 501,
+            "sceneHeightVh": 0.88,
+            "inkCoverage": 0.494,
+            "materialCoverage": 1,
+            "firstInkVh": 0.176,
+            "px": {
+              "inkRows": 0.335,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "tail": {
+            "y": 2272,
+            "yVh": 4,
+            "sceneTop": -515,
+            "sceneHeight": 409,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.401,
+            "materialCoverage": 1,
+            "firstInkVh": 0.066,
+            "px": {
+              "inkRows": 0.294,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "reorient": {
+            "y": 2272,
+            "yVh": 4,
+            "sceneTop": 42,
+            "sceneHeight": 409,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.401,
+            "materialCoverage": 1,
+            "firstInkVh": 0.066,
+            "px": {
+              "inkRows": 0.294,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "approach": {
+            "y": 2272,
+            "yVh": 4,
+            "sceneTop": 405,
+            "sceneHeight": 472,
+            "sceneHeightVh": 0.83,
+            "inkCoverage": 0.401,
+            "materialCoverage": 1,
+            "firstInkVh": 0.066,
+            "px": {
+              "inkRows": 0.294,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.991
+            }
+          },
+          "handoff": {
+            "y": 3408,
+            "yVh": 6,
+            "sceneTop": -670,
+            "sceneHeight": 376,
+            "sceneHeightVh": 0.66,
+            "inkCoverage": 0.365,
+            "materialCoverage": 0.635,
+            "firstInkVh": 0.276,
+            "px": {
+              "inkRows": 0.197,
+              "materialRows": 0.211,
+              "firstInkVh": 0.248,
+              "lastInkVh": 0.692
+            }
+          }
+        },
+        "focusSteps": [
+          {
+            "from": "hero",
+            "to": "software-factory",
+            "vh": 0
+          },
+          {
+            "from": "software-factory",
+            "to": "kivilcim",
+            "vh": 2
+          },
+          {
+            "from": "kivilcim",
+            "to": "jointledger",
+            "vh": 0
+          },
+          {
+            "from": "jointledger",
+            "to": "dropspot",
+            "vh": 0
+          },
+          {
+            "from": "dropspot",
+            "to": "tail",
+            "vh": 2
+          },
+          {
+            "from": "tail",
+            "to": "reorient",
+            "vh": 0
+          },
+          {
+            "from": "reorient",
+            "to": "approach",
+            "vh": 0
+          },
+          {
+            "from": "approach",
+            "to": "handoff",
+            "vh": 2
+          }
+        ],
+        "tourTargets": {
+          "hero": [],
+          "software-factory": [
+            {
+              "text": "Software FactoryOpen system",
+              "w": 294,
+              "h": 138
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "kivilcim": [
+            {
+              "text": "KıvılcımOpen case study",
+              "w": 169,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "jointledger": [
+            {
+              "text": "JointLedgerOpen case study",
+              "w": 185,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "dropspot": [
+            {
+              "text": "DropSpotOpen case study",
+              "w": 169,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "tail": [],
+          "reorient": [],
+          "approach": [],
+          "handoff": [
+            {
+              "text": "See every system",
+              "w": 174,
+              "h": 46
+            }
+          ]
+        },
+        "errors": []
+      },
+      "frames": [
+        {
+          "y": 0,
+          "yVh": 0,
+          "settled": true,
+          "inkCoverage": 0.583,
+          "materialCoverage": 1,
+          "firstInkVh": 0.044,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": 134,
+              "bottom": 543,
+              "height": 409,
+              "onScreen": true
+            },
+            {
+              "id": "software-factory",
+              "top": 872,
+              "bottom": 1512,
+              "height": 640,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": 1611,
+              "bottom": 2186,
+              "height": 575,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 2349,
+              "bottom": 2972,
+              "height": 623,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": 3087,
+              "bottom": 3588,
+              "height": 501,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 3826,
+              "bottom": 4235,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 4382,
+              "bottom": 4791,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 4746,
+              "bottom": 5218,
+              "height": 472,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 5257,
+              "bottom": 5666,
+              "height": 409,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.426,
+            "materialRows": 0.84,
+            "firstInkVh": 0.051,
+            "lastInkVh": 0.734
+          }
+        },
+        {
+          "y": 1136,
+          "yVh": 2,
+          "settled": true,
+          "inkCoverage": 0.494,
+          "materialCoverage": 1,
+          "firstInkVh": 0.176,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -2056,
+              "bottom": -1647,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -1317,
+              "bottom": -678,
+              "height": 640,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -579,
+              "bottom": -4,
+              "height": 575,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 159,
+              "bottom": 782,
+              "height": 623,
+              "onScreen": true
+            },
+            {
+              "id": "dropspot",
+              "top": 898,
+              "bottom": 1398,
+              "height": 501,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 1636,
+              "bottom": 2045,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 2193,
+              "bottom": 2602,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 2556,
+              "bottom": 3028,
+              "height": 472,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 3068,
+              "bottom": 3477,
+              "height": 409,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.335,
+            "materialRows": 1,
+            "firstInkVh": 0,
+            "lastInkVh": 0.991
+          }
+        },
+        {
+          "y": 2272,
+          "yVh": 4,
+          "settled": true,
+          "inkCoverage": 0.401,
+          "materialCoverage": 1,
+          "firstInkVh": 0.066,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -4207,
+              "bottom": -3798,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -3469,
+              "bottom": -2829,
+              "height": 640,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -2730,
+              "bottom": -2155,
+              "height": 575,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -1992,
+              "bottom": -1369,
+              "height": 623,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -1253,
+              "bottom": -753,
+              "height": 501,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -515,
+              "bottom": -106,
+              "height": 409,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 42,
+              "bottom": 451,
+              "height": 409,
+              "onScreen": true
+            },
+            {
+              "id": "approach",
+              "top": 405,
+              "bottom": 877,
+              "height": 472,
+              "onScreen": true
+            },
+            {
+              "id": "handoff",
+              "top": 916,
+              "bottom": 1325,
+              "height": 409,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.294,
+            "materialRows": 1,
+            "firstInkVh": 0,
+            "lastInkVh": 0.991
+          }
+        },
+        {
+          "y": 3408,
+          "yVh": 6,
+          "settled": true,
+          "inkCoverage": 0.365,
+          "materialCoverage": 0.635,
+          "firstInkVh": 0.276,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -5383,
+              "bottom": -5007,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -4704,
+              "bottom": -4115,
+              "height": 589,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -4024,
+              "bottom": -3495,
+              "height": 529,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -3345,
+              "bottom": -2772,
+              "height": 573,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -2666,
+              "bottom": -2205,
+              "height": 461,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -1986,
+              "bottom": -1610,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -1474,
+              "bottom": -1098,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -1140,
+              "bottom": -706,
+              "height": 434,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -670,
+              "bottom": -293,
+              "height": 376,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.197,
+            "materialRows": 0.211,
+            "firstInkVh": 0.248,
+            "lastInkVh": 0.692
+          }
+        },
+        {
+          "y": 4544,
+          "yVh": 8,
+          "settled": true,
+          "inkCoverage": 0.303,
+          "materialCoverage": 0.805,
+          "firstInkVh": 0.075,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -6519,
+              "bottom": -6143,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -5840,
+              "bottom": -5251,
+              "height": 589,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -5160,
+              "bottom": -4631,
+              "height": 529,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -4481,
+              "bottom": -3908,
+              "height": 573,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -3802,
+              "bottom": -3341,
+              "height": 461,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -3122,
+              "bottom": -2746,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -2610,
+              "bottom": -2234,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -2276,
+              "bottom": -1842,
+              "height": 434,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -1806,
+              "bottom": -1429,
+              "height": 376,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.234,
+            "materialRows": 0.349,
+            "firstInkVh": 0.081,
+            "lastInkVh": 0.801
+          }
+        },
+        {
+          "y": 5680,
+          "yVh": 10,
+          "settled": true,
+          "inkCoverage": 0.577,
+          "materialCoverage": 1,
+          "firstInkVh": 0.05,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -7655,
+              "bottom": -7279,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -6976,
+              "bottom": -6387,
+              "height": 589,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -6296,
+              "bottom": -5767,
+              "height": 529,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -5617,
+              "bottom": -5044,
+              "height": 573,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -4938,
+              "bottom": -4477,
+              "height": 461,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -4258,
+              "bottom": -3882,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -3746,
+              "bottom": -3370,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -3412,
+              "bottom": -2978,
+              "height": 434,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -2942,
+              "bottom": -2565,
+              "height": 376,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.44,
+            "materialRows": 0.773,
+            "firstInkVh": 0.004,
+            "lastInkVh": 0.998
+          }
+        },
+        {
+          "y": 6816,
+          "yVh": 12,
+          "settled": true,
+          "inkCoverage": 0.571,
+          "materialCoverage": 0.574,
+          "firstInkVh": 0.038,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -8791,
+              "bottom": -8415,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -8112,
+              "bottom": -7523,
+              "height": 589,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -7432,
+              "bottom": -6903,
+              "height": 529,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -6753,
+              "bottom": -6180,
+              "height": 573,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -6074,
+              "bottom": -5613,
+              "height": 461,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -5394,
+              "bottom": -5018,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -4882,
+              "bottom": -4506,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -4548,
+              "bottom": -4114,
+              "height": 434,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -4078,
+              "bottom": -3701,
+              "height": 376,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.43,
+            "materialRows": 0.451,
+            "firstInkVh": 0,
+            "lastInkVh": 0.998
+          }
+        },
+        {
+          "y": 7466,
+          "yVh": 13.14,
+          "settled": true,
+          "inkCoverage": 0.368,
+          "materialCoverage": 0.611,
+          "firstInkVh": 0.063,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -9441,
+              "bottom": -9065,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -8762,
+              "bottom": -8173,
+              "height": 589,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -8082,
+              "bottom": -7553,
+              "height": 529,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -7403,
+              "bottom": -6830,
+              "height": 573,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -6724,
+              "bottom": -6263,
+              "height": 461,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -6044,
+              "bottom": -5668,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -5532,
+              "bottom": -5156,
+              "height": 376,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -5198,
+              "bottom": -4764,
+              "height": 434,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -4728,
+              "bottom": -4351,
+              "height": 376,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.322,
+            "materialRows": 0.333,
+            "firstInkVh": 0.07,
+            "lastInkVh": 0.923
+          }
+        }
+      ]
+    },
+    "390x844": {
+      "summary": {
+        "vw": 390,
+        "vh": 844,
+        "docHeight": 9777,
+        "screens": 11.6,
+        "routeScreens": 6,
+        "lowerScreens": 5.5,
+        "sectionTop": 77,
+        "spacerHeight": 5064,
+        "steps": 7,
+        "unsettled": 0,
+        "meanInkCoverage": {
+          "route": 0.426,
+          "lower": 0.372
+        },
+        "meanMaterialCoverage": {
+          "route": 1,
+          "lower": 0.788
+        },
+        "meanPxInkRows": {
+          "route": 0.261,
+          "lower": 0.287
+        },
+        "nearEmptyFrames": {
+          "route": 0,
+          "lower": 0
+        },
+        "nearEmptyVh": 0,
+        "focus": {
+          "hero": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 161,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.321,
+            "materialCoverage": 1,
+            "firstInkVh": 0.03,
+            "px": {
+              "inkRows": 0.251,
+              "materialRows": 0.863,
+              "firstInkVh": 0.034,
+              "lastInkVh": 0.491
+            }
+          },
+          "software-factory": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 1071,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.321,
+            "materialCoverage": 1,
+            "firstInkVh": 0.03,
+            "px": {
+              "inkRows": 0.251,
+              "materialRows": 0.863,
+              "firstInkVh": 0.034,
+              "lastInkVh": 0.491
+            }
+          },
+          "kivilcim": {
+            "y": 1688,
+            "yVh": 2,
+            "sceneTop": -757,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.521,
+            "materialCoverage": 1,
+            "firstInkVh": 0.111,
+            "px": {
+              "inkRows": 0.287,
+              "materialRows": 1,
+              "firstInkVh": 0.115,
+              "lastInkVh": 0.893
+            }
+          },
+          "jointledger": {
+            "y": 1688,
+            "yVh": 2,
+            "sceneTop": 153,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.521,
+            "materialCoverage": 1,
+            "firstInkVh": 0.111,
+            "px": {
+              "inkRows": 0.287,
+              "materialRows": 1,
+              "firstInkVh": 0.115,
+              "lastInkVh": 0.893
+            }
+          },
+          "dropspot": {
+            "y": 1688,
+            "yVh": 2,
+            "sceneTop": 1063,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.521,
+            "materialCoverage": 1,
+            "firstInkVh": 0.111,
+            "px": {
+              "inkRows": 0.287,
+              "materialRows": 1,
+              "firstInkVh": 0.115,
+              "lastInkVh": 0.893
+            }
+          },
+          "tail": {
+            "y": 3376,
+            "yVh": 4,
+            "sceneTop": -659,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.332,
+            "materialCoverage": 1,
+            "firstInkVh": 0.025,
+            "px": {
+              "inkRows": 0.235,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.999
+            }
+          },
+          "reorient": {
+            "y": 3376,
+            "yVh": 4,
+            "sceneTop": 27,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.332,
+            "materialCoverage": 1,
+            "firstInkVh": 0.025,
+            "px": {
+              "inkRows": 0.235,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.999
+            }
+          },
+          "approach": {
+            "y": 3376,
+            "yVh": 4,
+            "sceneTop": 475,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.332,
+            "materialCoverage": 1,
+            "firstInkVh": 0.025,
+            "px": {
+              "inkRows": 0.235,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.999
+            }
+          },
+          "handoff": {
+            "y": 3376,
+            "yVh": 4,
+            "sceneTop": 1105,
+            "sceneHeight": 608,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.332,
+            "materialCoverage": 1,
+            "firstInkVh": 0.025,
+            "px": {
+              "inkRows": 0.235,
+              "materialRows": 1,
+              "firstInkVh": 0,
+              "lastInkVh": 0.999
+            }
+          }
+        },
+        "focusSteps": [
+          {
+            "from": "hero",
+            "to": "software-factory",
+            "vh": 0
+          },
+          {
+            "from": "software-factory",
+            "to": "kivilcim",
+            "vh": 2
+          },
+          {
+            "from": "kivilcim",
+            "to": "jointledger",
+            "vh": 0
+          },
+          {
+            "from": "jointledger",
+            "to": "dropspot",
+            "vh": 0
+          },
+          {
+            "from": "dropspot",
+            "to": "tail",
+            "vh": 2
+          },
+          {
+            "from": "tail",
+            "to": "reorient",
+            "vh": 0
+          },
+          {
+            "from": "reorient",
+            "to": "approach",
+            "vh": 0
+          },
+          {
+            "from": "approach",
+            "to": "handoff",
+            "vh": 0
+          }
+        ],
+        "tourTargets": {
+          "hero": [],
+          "software-factory": [
+            {
+              "text": "Software FactoryOpen system",
+              "w": 349,
+              "h": 92
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "kivilcim": [
+            {
+              "text": "KıvılcımOpen case study",
+              "w": 169,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "jointledger": [
+            {
+              "text": "JointLedgerOpen case study",
+              "w": 185,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "dropspot": [
+            {
+              "text": "DropSpotOpen case study",
+              "w": 169,
+              "h": 75
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "tail": [],
+          "reorient": [],
+          "approach": [],
+          "handoff": [
+            {
+              "text": "See every system",
+              "w": 189,
+              "h": 50
+            }
+          ]
+        },
+        "errors": []
+      },
+      "frames": [
+        {
+          "y": 0,
+          "yVh": 0,
+          "settled": true,
+          "inkCoverage": 0.321,
+          "materialCoverage": 1,
+          "firstInkVh": 0.03,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": 161,
+              "bottom": 769,
+              "height": 608,
+              "onScreen": true
+            },
+            {
+              "id": "software-factory",
+              "top": 1071,
+              "bottom": 1679,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": 1981,
+              "bottom": 2589,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 2891,
+              "bottom": 3499,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": 3801,
+              "bottom": 4409,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 4711,
+              "bottom": 5319,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 5397,
+              "bottom": 6005,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 5845,
+              "bottom": 6453,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 6475,
+              "bottom": 7083,
+              "height": 608,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.251,
+            "materialRows": 0.863,
+            "firstInkVh": 0.034,
+            "lastInkVh": 0.491
+          }
+        },
+        {
+          "y": 1688,
+          "yVh": 2,
+          "settled": true,
+          "inkCoverage": 0.521,
+          "materialCoverage": 1,
+          "firstInkVh": 0.111,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -2577,
+              "bottom": -1969,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -1667,
+              "bottom": -1059,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -757,
+              "bottom": -149,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 153,
+              "bottom": 761,
+              "height": 608,
+              "onScreen": true
+            },
+            {
+              "id": "dropspot",
+              "top": 1063,
+              "bottom": 1671,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 1973,
+              "bottom": 2581,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 2659,
+              "bottom": 3267,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 3107,
+              "bottom": 3715,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 3737,
+              "bottom": 4345,
+              "height": 608,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.287,
+            "materialRows": 1,
+            "firstInkVh": 0.115,
+            "lastInkVh": 0.893
+          }
+        },
+        {
+          "y": 3376,
+          "yVh": 4,
+          "settled": true,
+          "inkCoverage": 0.332,
+          "materialCoverage": 1,
+          "firstInkVh": 0.025,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -5209,
+              "bottom": -4602,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -4299,
+              "bottom": -3692,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -3389,
+              "bottom": -2782,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -2479,
+              "bottom": -1872,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -1569,
+              "bottom": -962,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -659,
+              "bottom": -52,
+              "height": 608,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 27,
+              "bottom": 634,
+              "height": 608,
+              "onScreen": true
+            },
+            {
+              "id": "approach",
+              "top": 475,
+              "bottom": 1082,
+              "height": 608,
+              "onScreen": true
+            },
+            {
+              "id": "handoff",
+              "top": 1105,
+              "bottom": 1712,
+              "height": 608,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.235,
+            "materialRows": 1,
+            "firstInkVh": 0,
+            "lastInkVh": 0.999
+          }
+        },
+        {
+          "y": 5064,
+          "yVh": 6,
+          "settled": true,
+          "inkCoverage": 0.39,
+          "materialCoverage": 0.776,
+          "firstInkVh": 0.186,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -6778,
+              "bottom": -6219,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -5940,
+              "bottom": -5381,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -5103,
+              "bottom": -4544,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -4266,
+              "bottom": -3707,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -3429,
+              "bottom": -2870,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -2592,
+              "bottom": -2033,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -1961,
+              "bottom": -1401,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -1548,
+              "bottom": -989,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -969,
+              "bottom": -410,
+              "height": 559,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.3,
+            "materialRows": 0.361,
+            "firstInkVh": 0.167,
+            "lastInkVh": 0.999
+          }
+        },
+        {
+          "y": 6752,
+          "yVh": 8,
+          "settled": true,
+          "inkCoverage": 0.456,
+          "materialCoverage": 0.763,
+          "firstInkVh": 0.18,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -8466,
+              "bottom": -7907,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -7628,
+              "bottom": -7069,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -6791,
+              "bottom": -6232,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -5954,
+              "bottom": -5395,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -5117,
+              "bottom": -4558,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -4280,
+              "bottom": -3721,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -3649,
+              "bottom": -3089,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -3236,
+              "bottom": -2677,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -2657,
+              "bottom": -2098,
+              "height": 559,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.336,
+            "materialRows": 0.526,
+            "firstInkVh": 0.161,
+            "lastInkVh": 0.999
+          }
+        },
+        {
+          "y": 8440,
+          "yVh": 10,
+          "settled": true,
+          "inkCoverage": 0.436,
+          "materialCoverage": 0.676,
+          "firstInkVh": 0.027,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -10154,
+              "bottom": -9595,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -9316,
+              "bottom": -8757,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -8479,
+              "bottom": -7920,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -7642,
+              "bottom": -7083,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -6805,
+              "bottom": -6246,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -5968,
+              "bottom": -5409,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -5337,
+              "bottom": -4777,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -4924,
+              "bottom": -4365,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -4345,
+              "bottom": -3786,
+              "height": 559,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.325,
+            "materialRows": 0.339,
+            "firstInkVh": 0,
+            "lastInkVh": 0.969
+          }
+        },
+        {
+          "y": 8933,
+          "yVh": 10.58,
+          "settled": true,
+          "inkCoverage": 0.205,
+          "materialCoverage": 0.935,
+          "firstInkVh": 0.266,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -10647,
+              "bottom": -10088,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -9809,
+              "bottom": -9250,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -8972,
+              "bottom": -8413,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -8135,
+              "bottom": -7576,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -7298,
+              "bottom": -6739,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -6461,
+              "bottom": -5902,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -5830,
+              "bottom": -5270,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -5417,
+              "bottom": -4858,
+              "height": 559,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -4838,
+              "bottom": -4279,
+              "height": 559,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.185,
+            "materialRows": 0.192,
+            "firstInkVh": 0.271,
+            "lastInkVh": 0.948
+          }
+        }
+      ]
+    },
+    "768x1024": {
+      "summary": {
+        "vw": 768,
+        "vh": 1024,
+        "docHeight": 10702,
+        "screens": 10.5,
+        "routeScreens": 6,
+        "lowerScreens": 4.4,
+        "sectionTop": 61,
+        "spacerHeight": 6144,
+        "steps": 6,
+        "unsettled": 0,
+        "meanInkCoverage": {
+          "route": 0.474,
+          "lower": 0.3
+        },
+        "meanMaterialCoverage": {
+          "route": 1,
+          "lower": 0.792
+        },
+        "meanPxInkRows": {
+          "route": 0.352,
+          "lower": 0.24
+        },
+        "nearEmptyFrames": {
+          "route": 0,
+          "lower": 0
+        },
+        "nearEmptyVh": 0,
+        "focus": {
+          "hero": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 163,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.017,
+            "px": {
+              "inkRows": 0.25,
+              "materialRows": 0.885,
+              "firstInkVh": 0.021,
+              "lastInkVh": 0.458
+            }
+          },
+          "software-factory": {
+            "y": 0,
+            "yVh": 0,
+            "sceneTop": 1201,
+            "sceneHeight": 763,
+            "sceneHeightVh": 0.75,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.017,
+            "px": {
+              "inkRows": 0.25,
+              "materialRows": 0.885,
+              "firstInkVh": 0.021,
+              "lastInkVh": 0.458
+            }
+          },
+          "kivilcim": {
+            "y": 2048,
+            "yVh": 2,
+            "sceneTop": -896,
+            "sceneHeight": 770,
+            "sceneHeightVh": 0.75,
+            "inkCoverage": 0.621,
+            "materialCoverage": 1,
+            "firstInkVh": 0.082,
+            "px": {
+              "inkRows": 0.496,
+              "materialRows": 1,
+              "firstInkVh": 0.084,
+              "lastInkVh": 0.925
+            }
+          },
+          "jointledger": {
+            "y": 2048,
+            "yVh": 2,
+            "sceneTop": 143,
+            "sceneHeight": 800,
+            "sceneHeightVh": 0.78,
+            "inkCoverage": 0.621,
+            "materialCoverage": 1,
+            "firstInkVh": 0.082,
+            "px": {
+              "inkRows": 0.496,
+              "materialRows": 1,
+              "firstInkVh": 0.084,
+              "lastInkVh": 0.925
+            }
+          },
+          "dropspot": {
+            "y": 2048,
+            "yVh": 2,
+            "sceneTop": 1181,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.621,
+            "materialCoverage": 1,
+            "firstInkVh": 0.082,
+            "px": {
+              "inkRows": 0.496,
+              "materialRows": 1,
+              "firstInkVh": 0.084,
+              "lastInkVh": 0.925
+            }
+          },
+          "tail": {
+            "y": 4096,
+            "yVh": 4,
+            "sceneTop": -785,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.096,
+            "px": {
+              "inkRows": 0.209,
+              "materialRows": 1,
+              "firstInkVh": 0.002,
+              "lastInkVh": 0.9
+            }
+          },
+          "reorient": {
+            "y": 4096,
+            "yVh": 4,
+            "sceneTop": -2,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.096,
+            "px": {
+              "inkRows": 0.209,
+              "materialRows": 1,
+              "firstInkVh": 0.002,
+              "lastInkVh": 0.9
+            }
+          },
+          "approach": {
+            "y": 4096,
+            "yVh": 4,
+            "sceneTop": 509,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.096,
+            "px": {
+              "inkRows": 0.209,
+              "materialRows": 1,
+              "firstInkVh": 0.002,
+              "lastInkVh": 0.9
+            }
+          },
+          "handoff": {
+            "y": 4096,
+            "yVh": 4,
+            "sceneTop": 1228,
+            "sceneHeight": 737,
+            "sceneHeightVh": 0.72,
+            "inkCoverage": 0.326,
+            "materialCoverage": 1,
+            "firstInkVh": 0.096,
+            "px": {
+              "inkRows": 0.209,
+              "materialRows": 1,
+              "firstInkVh": 0.002,
+              "lastInkVh": 0.9
+            }
+          }
+        },
+        "focusSteps": [
+          {
+            "from": "hero",
+            "to": "software-factory",
+            "vh": 0
+          },
+          {
+            "from": "software-factory",
+            "to": "kivilcim",
+            "vh": 2
+          },
+          {
+            "from": "kivilcim",
+            "to": "jointledger",
+            "vh": 0
+          },
+          {
+            "from": "jointledger",
+            "to": "dropspot",
+            "vh": 0
+          },
+          {
+            "from": "dropspot",
+            "to": "tail",
+            "vh": 2
+          },
+          {
+            "from": "tail",
+            "to": "reorient",
+            "vh": 0
+          },
+          {
+            "from": "reorient",
+            "to": "approach",
+            "vh": 0
+          },
+          {
+            "from": "approach",
+            "to": "handoff",
+            "vh": 0
+          }
+        ],
+        "tourTargets": {
+          "hero": [],
+          "software-factory": [
+            {
+              "text": "Software FactoryOpen system",
+              "w": 447,
+              "h": 117
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "kivilcim": [
+            {
+              "text": "KıvılcımOpen case study",
+              "w": 169,
+              "h": 79
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "jointledger": [
+            {
+              "text": "JointLedgerOpen case study",
+              "w": 197,
+              "h": 79
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "dropspot": [
+            {
+              "text": "DropSpotOpen case study",
+              "w": 169,
+              "h": 79
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Inspect",
+              "w": 0,
+              "h": 0
+            },
+            {
+              "text": "Close",
+              "w": 0,
+              "h": 0
+            }
+          ],
+          "tail": [],
+          "reorient": [],
+          "approach": [],
+          "handoff": [
+            {
+              "text": "See every system",
+              "w": 189,
+              "h": 50
+            }
+          ]
+        },
+        "errors": []
+      },
+      "frames": [
+        {
+          "y": 0,
+          "yVh": 0,
+          "settled": true,
+          "inkCoverage": 0.326,
+          "materialCoverage": 1,
+          "firstInkVh": 0.017,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": 163,
+              "bottom": 900,
+              "height": 737,
+              "onScreen": true
+            },
+            {
+              "id": "software-factory",
+              "top": 1201,
+              "bottom": 1964,
+              "height": 763,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": 2240,
+              "bottom": 3009,
+              "height": 770,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 3278,
+              "bottom": 4077,
+              "height": 800,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": 4316,
+              "bottom": 5054,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 5355,
+              "bottom": 6092,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 6137,
+              "bottom": 6875,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 6648,
+              "bottom": 7386,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 7367,
+              "bottom": 8105,
+              "height": 737,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.25,
+            "materialRows": 0.885,
+            "firstInkVh": 0.021,
+            "lastInkVh": 0.458
+          }
+        },
+        {
+          "y": 2048,
+          "yVh": 2,
+          "settled": true,
+          "inkCoverage": 0.621,
+          "materialCoverage": 1,
+          "firstInkVh": 0.082,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -2972,
+              "bottom": -2235,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -1934,
+              "bottom": -1171,
+              "height": 763,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -896,
+              "bottom": -126,
+              "height": 770,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": 143,
+              "bottom": 942,
+              "height": 800,
+              "onScreen": true
+            },
+            {
+              "id": "dropspot",
+              "top": 1181,
+              "bottom": 1918,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": 2219,
+              "bottom": 2957,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": 3002,
+              "bottom": 3739,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": 3513,
+              "bottom": 4251,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": 4232,
+              "bottom": 4969,
+              "height": 737,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.496,
+            "materialRows": 1,
+            "firstInkVh": 0.084,
+            "lastInkVh": 0.925
+          }
+        },
+        {
+          "y": 4096,
+          "yVh": 4,
+          "settled": true,
+          "inkCoverage": 0.326,
+          "materialCoverage": 1,
+          "firstInkVh": 0.096,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -5977,
+              "bottom": -5240,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -4939,
+              "bottom": -4175,
+              "height": 763,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -3900,
+              "bottom": -3131,
+              "height": 770,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -2862,
+              "bottom": -2062,
+              "height": 800,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -1824,
+              "bottom": -1086,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -785,
+              "bottom": -48,
+              "height": 737,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -2,
+              "bottom": 735,
+              "height": 737,
+              "onScreen": true
+            },
+            {
+              "id": "approach",
+              "top": 509,
+              "bottom": 1246,
+              "height": 737,
+              "onScreen": true
+            },
+            {
+              "id": "handoff",
+              "top": 1228,
+              "bottom": 1965,
+              "height": 737,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.209,
+            "materialRows": 1,
+            "firstInkVh": 0.002,
+            "lastInkVh": 0.9
+          }
+        },
+        {
+          "y": 6144,
+          "yVh": 6,
+          "settled": true,
+          "inkCoverage": 0.346,
+          "materialCoverage": 0.825,
+          "firstInkVh": 0.137,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -7814,
+              "bottom": -7136,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -6859,
+              "bottom": -6157,
+              "height": 702,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -5904,
+              "bottom": -5196,
+              "height": 708,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -4948,
+              "bottom": -4213,
+              "height": 736,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -3993,
+              "bottom": -3315,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -3038,
+              "bottom": -2359,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -2318,
+              "bottom": -1639,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -1847,
+              "bottom": -1169,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -1186,
+              "bottom": -508,
+              "height": 678,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.278,
+            "materialRows": 0.342,
+            "firstInkVh": 0.122,
+            "lastInkVh": 0.95
+          }
+        },
+        {
+          "y": 8192,
+          "yVh": 8,
+          "settled": true,
+          "inkCoverage": 0.336,
+          "materialCoverage": 0.652,
+          "firstInkVh": 0.008,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -9862,
+              "bottom": -9184,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -8907,
+              "bottom": -8205,
+              "height": 702,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -7952,
+              "bottom": -7244,
+              "height": 708,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -6996,
+              "bottom": -6261,
+              "height": 736,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -6041,
+              "bottom": -5363,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -5086,
+              "bottom": -4407,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -4366,
+              "bottom": -3687,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -3895,
+              "bottom": -3217,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -3234,
+              "bottom": -2556,
+              "height": 678,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.252,
+            "materialRows": 0.394,
+            "firstInkVh": 0.013,
+            "lastInkVh": 0.866
+          }
+        },
+        {
+          "y": 9678,
+          "yVh": 9.45,
+          "settled": true,
+          "inkCoverage": 0.218,
+          "materialCoverage": 0.9,
+          "firstInkVh": 0.002,
+          "scenes": [
+            {
+              "id": "hero",
+              "top": -11348,
+              "bottom": -10670,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "software-factory",
+              "top": -10393,
+              "bottom": -9691,
+              "height": 702,
+              "onScreen": false
+            },
+            {
+              "id": "kivilcim",
+              "top": -9438,
+              "bottom": -8730,
+              "height": 708,
+              "onScreen": false
+            },
+            {
+              "id": "jointledger",
+              "top": -8482,
+              "bottom": -7747,
+              "height": 736,
+              "onScreen": false
+            },
+            {
+              "id": "dropspot",
+              "top": -7527,
+              "bottom": -6849,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "tail",
+              "top": -6572,
+              "bottom": -5893,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "reorient",
+              "top": -5852,
+              "bottom": -5173,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "approach",
+              "top": -5381,
+              "bottom": -4703,
+              "height": 678,
+              "onScreen": false
+            },
+            {
+              "id": "handoff",
+              "top": -4720,
+              "bottom": -4042,
+              "height": 678,
+              "onScreen": false
+            }
+          ],
+          "px": {
+            "inkRows": 0.19,
+            "materialRows": 0.194,
+            "firstInkVh": 0.004,
+            "lastInkVh": 0.958
+          }
+        }
+      ]
+    }
+  }
+}

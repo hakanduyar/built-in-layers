@@ -679,6 +679,15 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     // The section drawing is one line per route, and may never be more.
     expect(cutPolylines).toBeLessThanOrEqual(2);
     await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
+    // V14: the attention group -- the wrapper whose opacity is written on every
+    // frame the camera moves -- holds SVG only. Ninety positioned tick spans in
+    // it cost ~8ms a frame on the reverse traverse (tests/tools/frame-time-probe.mjs),
+    // and the governor pays per frame, so the route ran a third slower than the
+    // baseline. The survey is a path inside the base-rail SVG for that reason.
+    await expect(
+      page.locator(`${TOUR} .sticky div:has(> svg [data-rail-base]) > :not(svg)`),
+    ).toHaveCount(0);
+    await expect(page.locator(`${TOUR} .sticky svg [data-rail-survey]`)).toHaveCount(2);
   });
 });
 

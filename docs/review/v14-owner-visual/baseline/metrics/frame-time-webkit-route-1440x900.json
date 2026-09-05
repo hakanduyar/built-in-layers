@@ -1,0 +1,36 @@
+{
+  "base": "http://127.0.0.1:3300",
+  "browser": "webkit",
+  "viewport": "1440x900",
+  "span": [
+    0,
+    1
+  ],
+  "css": null,
+  "runs": {
+    "forward-1": {
+      "notches": 244,
+      "seconds": 28.4,
+      "meanMs": 52.9,
+      "p95Ms": 95,
+      "over25ms": 514,
+      "frames": 534
+    },
+    "forward-2": {
+      "notches": 101,
+      "seconds": 11.5,
+      "meanMs": 61.7,
+      "p95Ms": 104,
+      "over25ms": 164,
+      "frames": 181
+    },
+    "reverse": {
+      "notches": 214,
+      "seconds": 25.3,
+      "meanMs": 47.2,
+      "p95Ms": 89,
+      "over25ms": 502,
+      "frames": 533
+    }
+  }
+}

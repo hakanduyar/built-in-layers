@@ -121,7 +121,10 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
           action instead of interleaving the two. */}
       <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
         {marker && <MonoLabel className="text-ink-muted">{marker}</MonoLabel>}
-        <span className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+        {/* V14 (§21): the classification was mono-meta (12px, ~10px at the
+            laptop fit) beside a mono-label marker; both rows of the register
+            now read at the label size. */}
+        <span className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:text-mono-label lg:tracking-mono-label">
           {project.categoryLabel}
         </span>
       </div>
@@ -145,27 +148,28 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
           <span className="block underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text group-hover/open:decoration-2">
             {project.title}
           </span>
+          {/* V14 (owner finding B): "OPEN CASE STUDY action too weak". The
+              affordance was a 13px register line with a 24px hairline -- the
+              faintest element in a frame whose job is to get the reader into
+              the case study. It is now a real control in the site's own
+              secondary-button vocabulary (DESIGN_SYSTEM §10): bordered, 44px
+              tall, filling on hover. Still ONE link and ONE tab stop: the box
+              is inside the title's anchor and aria-hidden, exactly as before.
+              Laid out as a block-level flex that shrinks to fit (`w-fit`), so
+              no anonymous line box inherits the heading's strut -- the V13
+              measurement that cost the flagship 80px is not reintroduced. */}
           <span
             aria-hidden="true"
             className={cn(
-              "items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
-              // V13 (Fable gate, finding C): as an inline-flex this register
-              // line sits in an anonymous line box whose strut is the heading's
-              // own line-height -- 98.8px at display-xl for an 18px label, with
-              // the label parked at its baseline. Measured on the production
-              // build, that strut alone cost the flagship 80px of the vertical
-              // budget that put its plate on the frame floor. Only the
-              // foundation variant pays that price, so only it lays the line
-              // out as a block; the three display-l scenes keep the register
-              // the V12 freeze accepted. `mt-8` keeps the register's distance
-              // from the display-xl underline in step with the display-l
-              // scenes (46px there, 25px here at mt-5, measured at 1536x864).
-              variant === "foundation" ? "mt-8 flex" : "mt-4 inline-flex",
+              // Below `lg`: the V13 register line, byte-identical. At `lg`+: the control.
+              "mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-[background-color,color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
+              "lg:flex lg:w-fit lg:min-h-11 lg:rounded-1 lg:border lg:border-ink lg:px-5 lg:text-ink lg:group-hover/open:bg-ink lg:group-hover/open:text-paper",
+              variant === "foundation" ? "lg:mt-8" : "lg:mt-6",
             )}
           >
             {/* The world's own register mark, extending on hover: the route
-                reaching toward the destination rather than a button. */}
-            <span className="block h-px w-6 bg-ink opacity-50 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10" />
+                reaching toward the destination. */}
+            <span className="block h-px w-6 bg-current opacity-60 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10 lg:w-5 lg:group-hover/open:w-8" />
             {affordanceLabel}
           </span>
         </Link>
@@ -178,14 +182,15 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
       <p className="max-w-[34rem] font-display text-heading-m text-ink">{project.description}</p>
       {project.upstream && (
         // CONTENT_MODEL §9: upstream disclosure is mandatory in any rendering
-        // of a fork-provenance project. Neither current scene is a fork, but
-        // this component must not silently drop the rule if one ever is.
-        <p className="mt-3 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+        // of a fork-provenance project.
+        <p className="mt-3 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:text-mono-label lg:tracking-mono-label">
           Fork of {project.upstream.name}
         </p>
       )}
+      {/* V14 (§21): the stack is real information and was the smallest text in
+          the frame (12px, ~10px at the laptop fit). Label size, ink-muted. */}
       {project.tech.length > 0 && (
-        <p className="mt-4 max-w-[34rem] font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+        <p className="mt-4 max-w-[34rem] font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:text-mono-label lg:tracking-mono-label">
           {project.tech.join(" · ")}
         </p>
       )}
@@ -198,7 +203,15 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   // keeps TASK-008's explicit-intrinsic-dimensions CLS fix. Only its scale
   // changes here. V7: no frame ratio anywhere — the owner reversed the Gate 1
   // crop, so every plate shows its full uncropped asset.
-  const plate = asset ? <Figure src={asset.src} alt={asset.alt} caption={asset.caption} /> : null;
+  // V14 (owner finding §9): every scene plate carries the inspector at every
+  // width. The diagrams are 1600-unit drawings; at the nine-column measure
+  // their body labels are 8-11 CSS px, legible as structure and not as text.
+  // The inspector is the honest answer the mobile gate already built -- the
+  // same asset, at a width it can be read at, in a native dialog -- and it is
+  // real UI rather than a redrawn or cropped diagram (nothing is invented).
+  const plate = asset ? (
+    <Figure src={asset.src} alt={asset.alt} caption={asset.caption} inspect="desktop" />
+  ) : null;
 
   // The `split` layout lets the evidence plate break the text column's
   // alignment edge (§16): it overhangs the block's right edge, so the scene
@@ -268,36 +281,43 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         </div>
         {plate && (
           <div className="relative mt-7 w-full" style={resolveDown}>
-            {/* V7: 76% -> 84%. The owner reversed the crop, so height comes
-                from the honest source again — width. At 84% of the px-capped
-                block the uncropped 2.2:1 surface renders ~449px tall at
-                1440x900 (was 403 at 76%), and the group below extends it. */}
+            {/* V14 (owner finding B): "DropSpot accidentally dominating because
+                of its colorful screenshot" and "real screenshots and diagrams
+                carrying inconsistent visual weight". Measured on the baseline
+                frames, this group was the route's largest evidence by far: an
+                84%-wide plate plus a 52%-wide second plate overlapping it, a
+                1130px-wide union against the diagram scenes' 780-875px plates
+                -- and it is the one photographic, saturated asset on a
+                monochrome route. Parity, not a crop (the owner's V7 decision
+                to show both shots uncropped stands): the primary is set at the
+                same nine-column measure the diagram plates now share, and the
+                detail shot is a genuinely secondary surface at 38%. */}
             <div
               data-project-ground-source={project.slug}
-              className="w-full lg:w-[84%] lg:[&_figcaption]:max-w-[56%]"
+              className="w-full lg:w-[70%] lg:[&_figcaption]:max-w-[56%]"
             >
               {plate}
             </div>
             {secondary && (
-              // The pair's geometry, in the scene's own fractions so it holds
-              // at every viewport: the detail shot registers its right edge on
-              // the scene block's right edge and overlaps the primary's
-              // lower-right quarter -- nearer evidence in front of farther
-              // evidence, extending the group downward. V7 sizes it up with
-              // the primary (44% -> 52%) so the pair reads as two real
-              // surfaces, not a stamp on a plate. Desktop only: the mobile
-              // scene keeps the single plate (§30), and its vertical budget
-              // is fixed.
+              // The detail shot registers its right edge on the scene block's
+              // right edge and overlaps the primary's lower-right corner --
+              // nearer evidence in front of farther evidence. Desktop only:
+              // the mobile scene keeps the single plate (§30).
               <div
                 data-project-ground-source={project.slug}
-                className="absolute left-[48%] top-[46%] hidden w-[52%] lg:block"
+                className="absolute left-[62%] top-[52%] hidden w-[38%] lg:block"
               >
-                <Figure src={secondary.src} alt={secondary.alt} caption={secondary.caption} />
+                <Figure
+                  src={secondary.src}
+                  alt={secondary.alt}
+                  caption={secondary.caption}
+                  inspect="desktop"
+                />
               </div>
             )}
             {/* Reserves the pair's downward extension in the block's own box,
                 so the scene's vertical centre accounts for the full group. */}
-            {secondary && <div aria-hidden="true" className="hidden lg:block lg:pb-[13%]" />}
+            {secondary && <div aria-hidden="true" className="hidden lg:block lg:pb-[9%]" />}
           </div>
         )}
       </div>
@@ -336,9 +356,14 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // `w-[76%]` gave the taller ones, where the frame had not grown).
     return (
       <div className="w-full">
-        <div className="lg:pt-7">{identity}</div>
+        {/* V14: `lg:pt-7` -> `lg:pt-4`. The flagship is the frame's binding
+            composition; the 12px here and the tighter row gap below are what
+            let the world fit rise (WORLD_REFERENCE 1040 -> 990) with the plate
+            still clear of the frame floor -- measured, not assumed
+            (tests/tools/scene-fit-probe.mjs). */}
+        <div className="lg:pt-4">{identity}</div>
         {plate && (
-          <div className="mt-7 grid gap-6 lg:mt-14 lg:grid-cols-12 lg:gap-10">
+          <div className="mt-7 grid gap-6 lg:mt-8 lg:grid-cols-12 lg:gap-10">
             {/* Below `lg` the reading column keeps its place before the
                 evidence, as in every other composition. */}
             {/* Nine columns, not eight. `spatial.spec.ts:193` holds the scene
@@ -377,7 +402,7 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // times. The plate overhangs the block's LEFT edge — the same spatial
     // device as split's right overhang, clipped by the same camera frame.
     return (
-      <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
+      <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
         {/* V10 (§A) -- THE ONE OVERHANG THAT POINTS AT ITS NEIGHBOUR.
             Kıvılcım's `split` plate overhangs its block's RIGHT edge; this
             mirrored plate overhung the LEFT. On the route those two edges face
@@ -395,33 +420,40 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
             answers from the right, which is what makes this composition the
             counter to `split`. Only the bleed past the block edge goes, and it
             goes from the one scene where it collided with a neighbour. */}
+        {/* V14 (owner finding §9): evidence first. The plate takes nine of the
+            twelve columns -- the measure the foundation scene already gave its
+            diagram -- so every diagram on the route renders at one width. The
+            identity row spans the full measure above (a display title never
+            sits in a narrow cell: in the static tree, where nothing clips the
+            world, "JointLedger" in a three-column cell ran 21px past a 1024px
+            viewport), and the reading column answers from the RIGHT, beside
+            the plate -- the mirror of `split`, which is what keeps the two
+            scenes distinct. */}
+        <div className="lg:col-span-12 lg:pt-4">{identity}</div>
         {plate && (
           <div
             data-project-ground-source={project.slug}
-            className="order-2 lg:order-1 lg:col-span-8"
+            className="order-2 lg:order-1 lg:col-span-9"
             style={resolveDown}
           >
             {plate}
           </div>
         )}
-        <div className="order-1 lg:order-2 lg:col-span-4">
-          {identity}
-          {detail}
-        </div>
+        <div className="order-1 lg:order-2 lg:col-span-3 lg:pt-1">{detail}</div>
       </div>
     );
   }
 
   return (
-    <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
-      <div className="lg:col-span-4">
-        {identity}
-        {detail}
-      </div>
+    <div className="grid w-full gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
+      {/* `split` (Kıvılcım): identity across the top, the reading column on the
+          LEFT and the plate on the right -- see the `counter` note above. */}
+      <div className="lg:col-span-12 lg:pt-4">{identity}</div>
+      <div className="lg:col-span-3 lg:pt-1">{detail}</div>
       {plate && (
         <div
           data-project-ground-source={project.slug}
-          className="lg:col-span-8"
+          className="lg:col-span-9"
           style={{ ...resolveDown, ...overhangRight }}
         >
           {plate}

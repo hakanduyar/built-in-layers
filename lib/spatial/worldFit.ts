@@ -68,7 +68,18 @@
  * everywhere else), so it is the binding constraint, and the reference is set
  * where the binding constraint actually clears.
  */
-export const WORLD_REFERENCE = { width: 1440, height: 1040 } as const;
+/**
+ * V14 (owner finding §20): 1040 -> 990. The reference height is set where
+ * the tallest composition clears its frame, and V14 made that composition
+ * shorter: the flagship's identity-to-plate gap fell 56 -> 32px and its plate
+ * holds nine columns rather than the taller branch, so the binding demand
+ * dropped by ~50 world px. The reference follows it down, which lifts every
+ * laptop by the same ratio -- 1440x900 from 0.865 to 0.909, 1536x864 from
+ * 0.831 to 0.873, 1366x768 from 0.740 to 0.776 -- without a single scene
+ * growing past its frame. Verified on the built page at 1366x768 and
+ * 1440x900 (docs/review/v14-owner-visual/after/metrics/scene-fit.json).
+ */
+export const WORLD_REFERENCE = { width: 1440, height: 990 } as const;
 
 /**
  * Floor on the fit, so the world can never scale itself into illegibility.

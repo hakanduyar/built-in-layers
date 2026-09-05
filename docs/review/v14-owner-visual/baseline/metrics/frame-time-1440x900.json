@@ -1,0 +1,31 @@
+{
+  "base": "http://127.0.0.1:3300",
+  "viewport": "1440x900",
+  "css": null,
+  "runs": {
+    "forward-1": {
+      "notches": 79,
+      "seconds": 10.2,
+      "meanMs": 17.4,
+      "p95Ms": 16.8,
+      "over25ms": 25,
+      "frames": 582
+    },
+    "forward-2": {
+      "notches": 26,
+      "seconds": 3.5,
+      "meanMs": 18.3,
+      "p95Ms": 33.4,
+      "over25ms": 18,
+      "frames": 188
+    },
+    "reverse": {
+      "notches": 84,
+      "seconds": 10.1,
+      "meanMs": 17.3,
+      "p95Ms": 16.8,
+      "over25ms": 22,
+      "frames": 578
+    }
+  }
+}

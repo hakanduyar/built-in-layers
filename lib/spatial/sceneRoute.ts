@@ -651,6 +651,22 @@ function tables(mobile: boolean) {
   return mobile ? MOBILE : DESKTOP;
 }
 
+/**
+ * V14 (F) -- THE WORLD'S TRUE LENGTH, in the same screen measure everything
+ * else here uses (vh-equivalent units, x weighted by VW_PER_VH). The sum of every
+ * segment's arc-length table across both routes, so it is the distance the
+ * camera actually travels, not a chord between anchors.
+ *
+ * Exported because the scroll governor needs it: the governor's ceiling is a
+ * fraction of the ROUTE per second, and what that buys the eye is this length
+ * times the world's unit. See PAGE_GEARING in cameraFilter.ts for the
+ * derivation it feeds.
+ */
+export function routeWorldLength(mobile = false): number {
+  const { one, two } = tables(mobile);
+  return [...one.segments, ...two.segments].reduce((sum, segment) => sum + segment.arc.length, 0);
+}
+
 /** Progress at which a scene is exactly framed. */
 export function sceneFocusProgress(id: SceneId, mobile = false): number {
   const { one, two } = tables(mobile);

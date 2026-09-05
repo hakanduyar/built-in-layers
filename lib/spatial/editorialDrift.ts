@@ -140,7 +140,18 @@ export function driftMarkOpacity(id: DriftSectionId): number {
  *  whitespace under it; About's two-line display name reaches 333px, so its
  *  seam sits at 21.5rem for the same ~11px clearance. The seam must never
  *  cross a line of text — that is the rule the numbers serve. */
-export type DriftPlate = { gapVh: number; seamRem: number };
+/**
+ * V14 (owner findings D, F): `gapVhDesktop` -- the approach interval at `lg`
+ * and above. The intervals below (22 / 14 / 14vh) were composed for the
+ * desktop and then measured there as part of the owner's "far too slow"
+ * vertical: 50vh of authored paper between four sections, at a scroll ceiling
+ * that made every viewport-height cost ~1.8s. Travel has to be proportional to
+ * narrative weight, so the desktop intervals fall to what separates one beat
+ * from the next without staging an arrival nobody is waiting for. The mobile
+ * values are UNTOUCHED: the V13 mobile gate measured that composition and
+ * froze it, and a phone's frame is what those numbers were tuned against.
+ */
+export type DriftPlate = { gapVh: number; gapVhDesktop: number; seamRem: number };
 
 const PLATES: Record<DriftSectionId, DriftPlate> = {
   // The first stable surface after the transition: shows its full edge, square on.
@@ -175,9 +186,9 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   // safe term in that stack. The arrival interval it used to buy is now bought
   // by the surface-return marker standing in the terminus frame (V9), which is
   // real content rather than distance.
-  "selected-systems": { gapVh: 0, seamRem: 16 },
+  "selected-systems": { gapVh: 0, gapVhDesktop: 0, seamRem: 16 },
   // A broader plane the route runs alongside.
-  "how-i-build": { gapVh: 22, seamRem: 16 },
+  "how-i-build": { gapVh: 22, gapVhDesktop: 6, seamRem: 16 },
   // Set back and further away: the least of its surface visible.
   //
   // V6.5: 34vh -> 20vh. This was the SECOND-largest dead run on the measured page
@@ -192,9 +203,9 @@ const PLATES: Record<DriftSectionId, DriftPlate> = {
   // a redesign of either section. Judgement, and it is worth stating plainly: the
   // frames here are SPARSE, not empty. Field Notes is a short section by design
   // and the metric's ink threshold does not distinguish the two.
-  "field-notes": { gapVh: 14, seamRem: 16 },
+  "field-notes": { gapVh: 14, gapVhDesktop: 4, seamRem: 16 },
   // Returning toward the foreground as the journey resolves.
-  about: { gapVh: 14, seamRem: 21.5 },
+  about: { gapVh: 14, gapVhDesktop: 6, seamRem: 21.5 },
 };
 
 export function driftPlate(id: DriftSectionId): DriftPlate {

@@ -838,3 +838,210 @@ Binding conditions attached to this approval — all already true of the current
   row of buttons).
 - **Approval:** delegated by the gate brief; the strip-and-recapture proof and the inventory are in
   `after/tap-targets.txt`.
+
+## D-034 — The world's decorative material is removed; every mark left states something
+
+- **Status:** V14 CANDIDATE on `feature/owner-visual-acceptance-v14` — pending the owner's visual
+  acceptance (2026-09-04). Made under the V14 brief's Fable authority. **Not** in force on `main`.
+- **Context:** the owner reviewed the accepted desktop (`5670234`) and rejected it: ghost typography
+  as noise and accidental cropping, "meaningless technical lines", "random crosshairs", a world that
+  reads as "components moving around a large canvas". On the baseline's own frames
+  (`docs/review/v14-owner-visual/baseline/stills`) every project frame carried one or two cropped
+  title fragments ("IVIL", "JOIN", "DRO", "ROFES") behind the composition; UNDERNEATH and Built in
+  Layers were dominated by blurred chevrons; twenty-six seeded crosshairs drifted behind everything.
+- **Decisions:**
+  1. **Deleted, not quietened:** the travel material (five oversized title crops on the distant
+     plane and seven near-plane hairlines — `TravelMaterial.tsx`), the hero's cropped "Surface"
+     ghost, the system field (26 crosshairs, 2 vectors — `SystemField.tsx`), both directional fields
+     (blurred chevrons — `DirectionalField.tsx`), the acquisition frame's graduated ruler, the lower
+     page's drift-route zigzag, its section fields and its settle mark. The a11y scan's one
+     exclusion (`[data-decorative="depth"]`) goes with them; the scan now runs with none.
+  2. **What replaces them is structure, drawn once:** the route as a stated topology (D-038), each
+     project's context plane (D-035), the strata route two climbs through (D-036), and the map at
+     the terminus and the finale. Nothing decorative was added.
+- **Consequence:** the world's marks are now the route, its stations, the planes, the strata, the
+  acquisition frame and the map — each derived from route geometry or real data, none authored to
+  fill space. Zoom-out frames no longer show fragments in the empty diagonal.
+- **Rejected:** lowering opacities further (the owner's objection was to what the marks *were*, not
+  how loud); keeping the hero's "Surface" as a legible word (the thesis line in the same frame
+  already states it in full ink; the world's state words are SYSTEMS and UNDERNEATH, set whole).
+
+## D-035 — A project stands on a stretch of ground laid along the route, not on a card
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the project planes: "beige cards behind projects". V10 had
+  measured the lead/register/trail grammar as exact (lead 55–70px, 0 at focus, trail 96–102px) and
+  the owner's verdict on the same frames was that "the behavior does not read visually". Both were
+  true: the plane was an axis-aligned soft-paper rectangle slightly larger than the evidence and
+  offset to one side — a card's backing — and against a 1180px composition a 70px lead is below the
+  threshold at which a surface reads as arriving rather than attached.
+- **Decisions:**
+  1. **One constructed edge.** The plane begins 0.07 scene units up-route of the whole composition
+     — a hairline rule with two registration ticks, outside the content it grounds — and runs 0.45
+     scene units past the composition down-route, where it is cut square to the route's own bearing
+     and dissolves. Its far boundary is the frame or the paper, never a second parallel edge.
+  2. **Tone, not material:** 4.5% ink over paper, a change of ground one step lighter than the old
+     fill, so it can never compete with a plate that is itself a soft-paper mat.
+  3. **Arrival and release are made visible:** `PLANE_LEAD` 8 → 24 units, `PLANE_LAG` 17 → 56
+     (~215px and ~500px at the reference viewport). The plane is in place before its composition
+     resolves onto it and stays behind by close to half a scene as the composition leaves.
+  4. **Presence** follows the scene's own acquisition exactly as before (0 outside the window, so no
+     plane can intrude on a neighbour); all geometry is static, only `transform` and `opacity`
+     animate. Mobile keeps the V13 slab.
+- **Consequence:** at focus the composition's structure (register, title, control) overhangs the
+  ground's top edge and the evidence stands on it; at zoom-out the four planes read as four
+  stretches of one track. `lib/spatial/projectGround.ts` is unchanged — the measured evidence
+  bounds still set the plane's vertical extent.
+- **Rejected:** a per-project authored shape (the freeze's registration-by-measurement principle);
+  deleting the plane (the V6.8 finding that a composition read as a place because it slid across a
+  second surface still holds — the surface just had to stop being a card).
+
+## D-036 — The surface that opens at SYSTEMS is the frame, and UNDERNEATH is its consequence
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the climax: "large SYSTEMS word + rotated gray slab". The
+  opened region was a 9.4em × 6em box filled at 5.5% ink; at 80% zoom and below its corners come
+  into view and at 50% it was the largest object in the world. UNDERNEATH then arrived as a word in
+  a corner with blurred chevrons filling the frame.
+- **Decisions:**
+  1. **The opened region spans the frame** (240vw × 200vh, centred on the word) so the seam is the
+     only constructed edge at every viewport and zoom; the recess falls to 2.5%; the mechanism is
+     unchanged (`data-systems-cut` translates along its local axis, `transform` only, the parent
+     rotated to the route's own bearing, the word untouched).
+  2. **What is revealed is the journey:** three full-width strata carrying the real
+     `layerDefinitions`, and between them the whole route drawn as a map (`RouteMap`, `revealed`) —
+     the four stations visited, the cut, and route two's climb ahead, dashed. Two polylines.
+  3. **The strata continue into route two's world** (`WorldGrammar` Strata): SYSTEM at UNDERNEATH's
+     depth, FLOW at Built in Layers, SURFACE at the handoff — each band labelled once beside the
+     scene that stands on it. The reorient rail's three duplicate labels are hidden at `lg`.
+  4. **UNDERNEATH and Built in Layers sit in the frame's middle band** (`lg:pt-[16vh]`,
+     `lg:pt-[12vh]`) rather than against its top with the rest of the frame empty.
+  5. Mobile keeps the V6.6 box construction (`SurfaceCut`) the V13 gate froze.
+- **Consequence:** SURFACE → OPENING → STRUCTURE is one event across the frame; the camera is
+  thrown to the bottom of the map it was just shown and climbs back through the layers it names.
+- **Rejected:** erosion, peel, fragment or collision effects (forbidden by the brief and already
+  retired in V6.4); a labelled map inside the reveal (the word is the only type that should be
+  read in that frame).
+
+## D-037 — The lower world is one continuous narrative, and travel is proportional to weight
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** measured on the baseline at 1440×900, the lower world was 4104px (4.6 viewports)
+  after the route ended, with a mean content fill of 0.116 against the route's 0.216; How I Build
+  alone was ~1,200px for four sentences; the terminus frame was empty; the drift zigzag, section
+  fields and settle mark added lines that described the layout rather than the content.
+- **Decisions:**
+  1. **The terminus frame is the map.** `RouteMap` (`mapped`) stands in the world at the handover
+     turn: the handoff's "These are four stops on a larger map" points down-route at it, the
+     camera's last move is onto it, and the surface-return marker sits beneath it. The work branch
+     is drawn on the map with the real Work-index names instead of as a separate branch beside the
+     handoff.
+  2. **Approach intervals at `lg`:** How I Build 22 → 6vh, Field Notes 14 → 4vh, About 14 → 6vh
+     (`gapVhDesktop`; mobile values untouched). Section top margin `lg:mt-32` → `lg:mt-20`.
+  3. **How I Build is two columns of two** — each principle registered to the same top rule with its
+     index, title and consequence arrow — read in one viewport. Copy unchanged.
+  4. **The finale is the resolved map** (`RouteMap`, `resolved`) beside the question, hidden by
+     `:has()` on pages without the journey; the four converging lines and the drift settle are
+     retired.
+  5. **Selected Systems keeps its register** (real layer coverage, provenance and verification per
+     system) with the verification line raised to label size at `lg`.
+- **Consequence:** measured in the V14 return (`docs/review/v14-owner-visual/after/metrics`):
+  lower-world height, mean fill and traverse time before/after.
+- **Rejected:** folding Field Notes into About (the section keeps its IA place and its e2e
+  contracts; its cost was the interval, not the section); a giant scene per section; decorative
+  filler to raise the fill metric.
+
+## D-038 — The route is the world's spine: stations, travelled state, survey, and one topology in four states
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the zoom-out: "scattered components on an enormous design
+  canvas", "weak route visibility", "no convincing topology connecting destinations". The rail was
+  a one-pixel polyline at 8–20% opacity — half a device pixel at 50% zoom — so the one thing that
+  connected the scenes was not legible, and the brief asks that the route explain where we came
+  from, where we are, what is next and where the system changes state, without simply thickening
+  the line.
+- **Decisions:**
+  1. **Travelled / ahead.** Each route is one faint continuous rail (the route exists) and each leg
+     carries an ink rail revealed along the real curve exactly as far as the filtered camera has
+     come (`pathLength`). Behind the reader the route is a fact; ahead it is a proposal.
+  2. **Stations** on the rail, seven units up-route of each anchor: rings that fill as the scene is
+     acquired and stay present once passed; route two's in the resolved signal tone.
+  3. **The survey:** cross-ticks at even arc length, square to the local bearing — a measured track,
+     twice as dense per screen at zoom-out. **State changes:** two strokes across the rail's end at
+     the cut; the resolved corner where route two is picked up.
+  4. **Weight follows the frame:** stroke `max(1.5px, 0.09vw)` — heavier exactly when the CSS
+     viewport grows (zoom-out, wide displays). **Attention:** the spine recedes to a quarter of its
+     weight while a scene is in frame (`1 − 0.74·focusProximity`), so it never runs across a title.
+  5. **One topology, four states** (`components/spatial/RouteMap.tsx`, pure SVG from route math):
+     latent under the route (the rails), revealed at SYSTEMS, mapped at the terminus, resolved at
+     the finale. The same geometry every time; if the route moves, all four move.
+- **Consequence:** polyline budget inside the sticky frame: 2 base + 10 travelled + 3 on the
+  terminus map = 15 (bound: legs + 10 = 20); the cut's drawing holds 2. Every mark is aria-hidden.
+- **Rejected:** a thicker constant stroke (the brief's explicit exclusion); index labels at stations
+  (the acquisition frame already states "Case 01 / 04" at focus and the two collided); a grid.
+
+## D-039 — One scroll ceiling, measured in screen travel: the page is geared to the world
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** owner finding F, "the straight vertical/lower-world portion scrolls FAR TOO SLOWLY",
+  a material acceptance blocker. Measured on `5670234` at 1440×900
+  (`docs/review/v14-owner-visual/baseline/journey.json`): the lower world took 10.1s at a normal
+  wheel and 10.2s at an aggressive one — identical, because the ceiling binds — against 14.8s for
+  the whole route. The cause is not a wrong number: V10 unified the page under the route governor
+  and anchored the ceiling to the route's span, so both regions ran at the same scroll px/s. But a
+  scroll pixel moves the world `routeWorldLength × unitPx × fit / routeSpan` screen pixels — 3.6 at
+  1440×900 — and the page exactly one. The same ceiling was two different speeds to the eye.
+- **Decisions:**
+  1. **The ceiling is restated in the unit the reader perceives, screen travel per second, and held
+     constant.** Inside the pinned route the budget is byte-identical to V7–V11
+     (`ROUTE_MAX_RATE × routeSpan`); from the pinned end it is that budget multiplied by the world's
+     gearing (`pageGearing`, `governorBudget` in `lib/spatial/cameraFilter.ts`). Nothing is
+     authored: change the route, the unit or the fit and the page's cap follows.
+  2. **Everything else in the model is untouched:** intent, sign collapse, the lead cap, the break
+     event's ownership of its band, wheel-only scope, the edge hand-backs.
+  3. The brief's steps 1–3 are taken as well (D-037): the lower world is shorter before it is
+     faster.
+- **Consequence:** measured in the V14 return: lower-world traverse time at a normal wheel
+  before/after, peak px/s in the route (unchanged) and in the page, coast after input, reverse
+  latency.
+- **Rejected:** a per-region multiplier constant (`lowerWorldScrollBoost`) — the brief forbids it
+  unless mathematically unavoidable; this derivation is the mathematical justification, and the
+  gain is a measured ratio of two gearings rather than a chosen number; raising `ROUTE_MAX_RATE`
+  globally (the upper world's pace was not the complaint); moving the lower sections into the
+  camera world (re-argues the settled Editorial Drift decision and the no-JS/semantic contracts).
+
+## D-040 — Frame time is route speed: the attention group holds SVG only
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the candidate's after-evidence showed the reverse traverse of the route at 21.0s
+  against the baseline's 12.9s at 1440×900, with forward unchanged, reverse latency still one
+  notch, and the governor's route budget byte-identical. A frame probe
+  (`tests/tools/frame-time-probe.mjs`) named the cause. The governor pays its travel budget per
+  frame and forfeits a dropped frame's share — by design since V7, so a stall is never repaid as a
+  lurch — which means a traverse runs exactly as fast as the page paints. A fresh page's first
+  forward traverse rendered at 17ms a frame; every traverse after it, reverse or forward again, at
+  25ms. The baseline held 17ms in all three cases. Hiding one suspect at a time: freezing the
+  attention opacity, or hiding the ninety survey tick spans, restored 17ms; hiding the rails, the
+  stations, the planes, the reveal layer, the images or the strata changed nothing. The D-038
+  attention wrapper writes its opacity on every frame the camera moves, and Chromium repaints
+  everything under a non-composited opacity change: ninety absolutely positioned, rotated spans
+  were the repaint. Promoting the wrapper (`will-change: opacity`) did not help — the group spans
+  the whole world, beyond what the compositor will hold as one layer.
+- **Decisions:**
+  1. **The survey is one `<path>` per route inside the base rail's SVG** (`data-rail-survey`) —
+     the same ticks at the same positions, bearings and opacities — so the attention group holds
+     twelve SVG elements and nothing else. Measured on the rebuilt candidate: reverse 17.2ms a
+     frame and 10.0s, against the baseline's 17.3ms and 10.1s; forward 17.2ms against 17.4ms.
+  2. **The rule.** Anything whose style is written per frame during travel is either
+     compositor-only (transform or opacity on an element the compositor can hold) or contains only
+     SVG, single-paint content. Guarded in `tests/e2e/spatial.spec.ts`: the attention group has
+     no non-SVG child, and the two survey paths exist.
+  3. **Frame time is part of the scroll evidence.** `frame-time-probe.mjs` joins the review-policy
+     tools; its output ships with every scroll-physics claim, baseline beside candidate, on the
+     same machine at the same load.
+- **Consequence:** no governor number moved — the fix is paint cost, and the route's time is
+  back to the baseline's. The tick is `1.1vh` in world measure rather than ten CSS pixels: the
+  same size at 1440×900, scaling with the rest of the route drawing elsewhere.
+- **Rejected:** quantising the attention so it writes less often (visible steps, and it hides the
+  cost rather than removing it); dropping the attention (the rail would run across titles again —
+  the owner's finding); per-tick opacity (the same ninety repaints).

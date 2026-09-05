@@ -101,6 +101,34 @@ export function sceneState(signedApproach: number): SceneState {
 }
 
 /**
+ * V14 (owner finding B) -- HOW PRESENT A SCENE'S COMPOSITION IS, from the same
+ * signed approach the acquisition frame reads. The state progression the brief
+ * asks for -- detected, acquired, focused, understood, released -- needs the
+ * composition itself to behave, not only the marks around it. On the accepted
+ * baseline a scene's content was at full presence from the instant its edge
+ * crossed the frame to the instant it left, so a title entered the viewport
+ * clipped mid-word at full ink and an outgoing project stayed as loud as the
+ * one arriving.
+ *
+ *   detected    approach <= -1        0.4   the station and the plane lead;
+ *                                           the composition is there but dim
+ *   acquired    -1 -> -0.35           -> 1  resolves to full as it enters
+ *   focused     -0.35 -> +0.25        1     read
+ *   released    +0.25 -> +0.9         -> 0.45  recedes as it leaves
+ *
+ * The floors are deliberate and they are what keeps this a zoom-out asset
+ * rather than a liability: at 50% zoom four scenes share a frame, and a scene
+ * two stations away must still be legible as a place on the map -- dimmer than
+ * the one in focus, never gone. Opacity only; no scale touches text (§22).
+ */
+export function scenePresence(signedApproach: number): number {
+  const a = Math.max(-1, Math.min(1, signedApproach));
+  if (a < -0.35) return 0.4 + 0.6 * Math.max(0, (a + 1) / 0.65);
+  if (a <= 0.25) return 1;
+  return 1 - 0.55 * Math.min(1, (a - 0.25) / 0.65);
+}
+
+/**
  * V6.4 renamed the middle state `collision` -> `occluded`, and moved where it
  * begins. It used to mean "the camera is being held at the wall"; it now means
  * "the surfaces are closing over the world", which is both what actually happens

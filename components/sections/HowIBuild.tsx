@@ -30,105 +30,48 @@ export function HowIBuild() {
     <SystemNode index={sectionIndex.howIBuild} label={howIBuildHeading}>
       <h2 className="mt-5 font-display text-display-l uppercase text-ink">{howIBuildHeading}</h2>
 
-      <Reveal className="mt-10">
-        {/* V6.8 (§8): the spine is now BOUNDED, and the hierarchy is pushed hard
-            enough that the four positions read as one machine before any body copy
-            is read. Three changes from V6.7, all structural:
-              - titles at heading-l, so each principle is an event rather than a
-                list item;
-              - each tick is aligned to its title's cap height and the index sits
-                ON the spine's gutter, so index -> tick -> title is one line of
-                reading;
-              - the spine CLOSES at the bottom with the world's resolved corner --
-                a bounded operating model, not a list that ran out. */}
-        <div className="relative">
-          <span
-            aria-hidden="true"
-            className="absolute left-0 top-0 hidden h-full w-px bg-ink opacity-40 lg:block"
-          />
-          {/* The model's closing mark: spine ends, deliberately. */}
-          <span
-            aria-hidden="true"
-            className="absolute -bottom-px left-0 hidden h-px w-6 bg-ink opacity-60 lg:block"
-          />
-          <span
-            aria-hidden="true"
-            className="absolute -bottom-2 left-1.5 hidden h-px w-3 bg-ink opacity-35 lg:block"
-          />
-          <ol className="lg:pl-12">
-            {howIBuildPrinciples.map((principle, i) => (
-              <li key={principle.title} className="relative py-8 first:pt-0 last:pb-10">
-                {/* FINAL REMEDIATION: title and body now share the row's full
-                    measure -- title against the spine, body in its own right
-                    column on the same cap line -- instead of both stacking in the
-                    left half with the row's right third as dead paper (measured
-                    at the owner's viewport). Four full-width registered rows read
-                    as one machine; nothing new was added to achieve it. */}
-                <div className="lg:grid lg:grid-cols-[4rem_minmax(0,5fr)_minmax(0,6fr)] lg:gap-8">
-                  {/* The tick is anchored to the NUMERAL, not to the row box, so
-                      index -> tick -> title cannot drift apart whatever the row's
-                      padding does -- review measured the box-anchored version
-                      sitting 38px above its numeral. */}
-                  <span
-                    aria-hidden="true"
-                    className="relative block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:pt-2"
-                  >
-                    <span className="absolute -left-12 top-[0.9em] hidden h-px w-7 bg-ink opacity-40 lg:block" />
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-heading-l tracking-heading-l text-ink">
-                    {principle.title}
-                    {/* V9 (§12): the CONSEQUENCE ARROW. V8 drew the relation with
-                        a short rule and the word "So", and the owner's reading
-                        was that the causality stayed too quiet — at 12px, in
-                        muted ink, beside a 40px title, the relation was the
-                        faintest thing in a row about relations. The mark now
-                        leaves the title itself and points into the consequence,
-                        so the eye reads "principle -> therefore" before it reads
-                        either half. Decorative: the relation is already carried
-                        by the reading order for assistive technology. */}
-                    {/* V13 (Fable gate, finding E): the rule now runs the title
-                        column's full measure, so the arrowhead lands at the
-                        column's edge, one grid gap from the consequence it points
-                        at. At 40px the mark stopped 338px short of the
-                        consequence column (measured at 1366-2560): an arrow
-                        pointing into empty paper, not into the consequence. */}
-                    <span aria-hidden="true" className="mt-4 hidden items-center gap-2 lg:flex">
-                      <span className="block h-px flex-1 bg-ink opacity-45" />
-                      <span className="block h-1.5 w-1.5 rotate-45 border-r border-t border-ink opacity-60" />
-                    </span>
-                  </h3>
-                  {/* V8 (§5) -- THE CONSEQUENCE IS NOW DRAWN, NOT IMPLIED.
-                      The owner's reading of V7 was that this was four isolated
-                      text rows, and the requested direction is
-                      principle -> engineering consequence. Both halves of that
-                      already existed in the approved copy: the title is the
-                      commitment, the body is what it forces on the build. What
-                      was missing was any mark saying the second follows from the
-                      first, so the eye read them as a heading and a caption.
-                      A short rule leaving the title's own column and a single
-                      relation label now carry that, and NOTHING is written here:
-                      no third column of invented consequences, no evidence
-                      claims, no restated project copy. The structure states the
-                      relationship; the words are still only the owner's. */}
-                  {/* The consequence, given the weight of a consequence. V8 set
-                      it in muted ink at body size, so the row's second half read
-                      as a caption on the first. It now carries the row: a
-                      registered label naming the relation, then the sentence in
-                      ink at body-l. Still the owner's approved copy, verbatim
-                      and unextended — the structure states the causality, the
-                      words are unchanged. */}
-                  <div className="relative mt-3 max-w-[36rem] border-l border-line pl-5 lg:mt-1.5 lg:border-l-0 lg:pl-0">
-                    <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
-                      Consequence
-                    </p>
-                    <p className="mt-2 font-display text-body-l text-ink">{principle.body}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
+      <Reveal className="mt-8">
+        {/* V14 (owner findings D, F) -- FOUR POSITIONS, ONE FRAME.
+            The V6.8-V13 form hung the four principles off one vertical spine
+            as four full-width rows: measured on the baseline at 1440x900 the
+            section was ~1,200px tall, the longest thing on the lower page, for
+            four sentences -- which is the owner's "How I Build feels like
+            filler". The copy is unchanged and still only the owner's; what
+            changes is the travel it costs. Two columns of two, each position
+            registered to the same top rule with its index, its title and the
+            arrow into its consequence, so the whole operating model is read in
+            ONE viewport instead of scrolled through. The V8/V9 relation --
+            principle -> consequence, drawn not implied -- is kept in each cell. */}
+        <ol className="lg:grid lg:grid-cols-2 lg:gap-x-12">
+          {howIBuildPrinciples.map((principle, i) => (
+            <li key={principle.title} className="relative border-t border-ink py-6 lg:py-7">
+              <div className="flex items-baseline gap-4">
+                <span
+                  aria-hidden="true"
+                  className="block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-display text-heading-l tracking-heading-l text-ink">
+                  {principle.title}
+                </h3>
+              </div>
+              {/* The consequence arrow: leaves the title's measure and points
+                  into what follows from it. Decorative; the relation is carried
+                  by the reading order for assistive technology. */}
+              <span aria-hidden="true" className="mt-4 hidden items-center gap-2 lg:flex">
+                <span className="block h-px w-16 bg-ink opacity-45" />
+                <span className="block h-1.5 w-1.5 rotate-45 border-r border-t border-ink opacity-60" />
+              </span>
+              <div className="relative mt-3 max-w-[32rem] border-l border-line pl-5 lg:mt-3 lg:border-l-0 lg:pl-0">
+                <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+                  Consequence
+                </p>
+                <p className="mt-2 font-display text-body-l text-ink">{principle.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </Reveal>
     </SystemNode>
   );

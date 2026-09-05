@@ -237,3 +237,14 @@
 body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
   min-height: 76vh;
 }
+
+/*
+ * V14 (owner finding §14): the finale's resolved map is the last state of the
+ * journey the homepage contains. On a page without that journey it would be a
+ * drawing of somewhere the reader has not been, so it is scoped exactly as the
+ * finale's height is -- one component, one CTA, and the map only where the
+ * route it resolves actually exists.
+ */
+body:not(:has(section[aria-label="Spatial system tour"])) .finale-map {
+  display: none;
+}

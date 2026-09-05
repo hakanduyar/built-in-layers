@@ -806,9 +806,11 @@ export const PLANE_NEAR = 1.13;
 // hold. A fourth transformed layer costing a paint on every frame to carry
 // nothing is not depth, it is overhead.
 
-/** Scale a scene resolves through as the camera arrives (§15). A few percent. */
-export const SCENE_SCALE_FAR = 0.972;
-export const SCENE_SCALE_FOCUS = 1;
+// V14 (§22) DELETED `SCENE_SCALE_FAR` / `SCENE_SCALE_FOCUS` (0.972 -> 1). The
+// arrival scale was a per-frame paint transform over every glyph in the world
+// while it moved -- the mechanism V11 identified as the blur -- and it bought
+// under 3% of size. Arrival is now stated by presence (lib/spatial/systemPov.ts,
+// scenePresence) and by the plane and station, none of which resample text.
 
 export function sceneById(id: SceneId): SceneConfig {
   const scene = SCENES.find((entry) => entry.id === id);

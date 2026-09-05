@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import { SpatialCamera } from "@/components/spatial/SpatialCamera";
 import { SpatialProjectScene } from "@/components/spatial/SpatialProjectScene";
-import { TravelMaterial } from "@/components/spatial/TravelMaterial";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -159,50 +158,27 @@ export function SpatialExperience() {
     <section aria-label="Spatial system tour">
       <SpatialCamera
         systemsWord={transitionWord}
-        // V6.4 (§4A): the real projects the work-route branch points at, from the
-        // same loader query the handoff paragraph below uses -- so the branch and
-        // the sentence can never name different things -- plus the site's own term
-        // for where they live.
+        // V6.4 (§4A) / V14: the real projects the Work index holds, from the
+        // same loader query the handoff sentence uses -- so the map and the
+        // sentence can never name different things -- plus the site's own term
+        // for where they live. V14 draws them on the terminus map at the end of
+        // the route (WorldGrammar's TerminusMap) instead of on a branch beside
+        // the handoff.
         branchDestinations={[...beyondTour.map((project) => project.title), workIndexLabel]}
-        // Travel material (§21). The distant plane carries oversized cropped
-        // fragments of the REAL titles of the scenes the camera is heading
-        // toward -- material derived from the world's own content, never
-        // decoration, and aria-hidden because each title is already present
-        // as a real link in the scene it names.
-        distantMaterial={
-          <TravelMaterial
-            key="distant-material"
-            plane="distant"
-            words={[
-              // V7: the two NEW stops announce themselves; Kıvılcım and
-              // DropSpot keep their existing fragments. Four route-one words
-              // across a six-leg route is the same density the two-scene
-              // route carried.
-              { word: softwareFactory.title, before: "software-factory" },
-              { word: kivilcim.title, before: "kivilcim" },
-              { word: jointledger.title, before: "jointledger" },
-              { word: dropspot.title, before: "dropspot" },
-              // Route two's material names a project the tour does NOT stage
-              // but the handoff does mention, so the second route carries its
-              // own content rather than echoing the giant word already
-              // standing at the reposition.
-              ...(beyondTour[0]
-                ? [{ word: beyondTour[0].title, before: "approach" as const }]
-                : []),
-              // V6.4 REMOVED the exit traverse's cropped-word fragment that stood
-              // here. V6.3 added it to announce the lower world during the long
-              // diagonal, which was the right instinct and the wrong object: an
-              // oversized crop of "Built for real life" says the words without
-              // saying what they are. §4B now stages that same destination as a
-              // real surface with its own index, heading and line
-              // (DestinationSurface), and the two collided in frame -- measured at
-              // progress 0.945, the crop sat directly across the How I Build
-              // plate. The better version of the idea replaced the earlier one
-              // rather than joining it.
-            ]}
-          />
-        }
-        nearMaterial={<TravelMaterial key="near-material" plane="near" words={[]} />}
+        // V14 (owner findings A, §8) REMOVED THE TRAVEL MATERIAL. The distant
+        // plane carried five oversized crops of real project titles, placed
+        // 55% along the leg into each scene, and the near plane seven
+        // hairline rules. On the accepted baseline's own frames
+        // (docs/review/v14-owner-visual/baseline/stills) every project frame
+        // showed one or two of those crops cut mid-letter by the frame edge --
+        // "IVIL", "JOIN", "DRO", "ROFES" -- behind the composition it was meant
+        // to announce, and at 50% zoom they sat in the empty diagonal between
+        // two scenes as the only thing there. They duplicated identity, filled
+        // empty space and cropped by accident, which is the owner's list of
+        // reasons to remove background typography, verbatim. What the space
+        // between scenes now carries instead is structural: the route as a
+        // stated topology (WorldGrammar) and each project's context plane
+        // (ProjectPlane). Nothing decorative replaces them.
         // What the observing system may say about each scene (§9, §12). Both
         // entries are built by systemAnnotation() from the project's own
         // validated frontmatter -- there is no slug->copy table here and no
@@ -237,19 +213,15 @@ export function SpatialExperience() {
           // (caught by the responsive check, not by eye). `clip` rather than
           // `hidden` so it never becomes a scrollable container.
           <div key="hero" className="relative w-full overflow-clip">
-            {/* The hero's own distant plane: the first noun of the approved
-                thesis, oversized and clipped by the top of the composition.
-                It is the same material language the travel space uses, so the
-                world's depth is already present before anything moves -- and
-                it is a decorative duplicate of the line stated in full below,
-                so it adds no screen-reader content. */}
-            <span
-              aria-hidden="true"
-              data-decorative="depth"
-              className="pointer-events-none absolute -top-[26vh] left-[6%] hidden select-none overflow-hidden font-display text-[22vw] leading-none tracking-[-0.05em] uppercase text-ink opacity-[0.055] lg:block"
-            >
-              Surface
-            </span>
+            {/* V14 (§8) REMOVED the hero's oversized "Surface" ghost. Set at
+                22vw and pushed 26vh above the composition, what actually
+                rendered at every desktop viewport was a band of descenders
+                across the top of the frame -- a smudge, not a word (baseline
+                still 1440x900--hero.png). The world's three state words are
+                SURFACE, SYSTEMS and UNDERNEATH; the last two are set whole and
+                legible, and the first is stated in full, in ink, by the thesis
+                line in this same frame. A cropped duplicate of it added noise
+                where the journey begins. */}
 
             <div className="relative lg:max-w-[78%]">
               <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
@@ -365,20 +337,33 @@ export function SpatialExperience() {
           // (DECOMPRESSION_REACH in scenes.ts), the indent is free to do what §7
           // actually asks -- stage the composition in the middle region of the
           // frame instead of against its left edge -- without losing the rail.
-          <div key="reorient" className="w-full lg:pl-[15vw]">
+          // V14 (owner finding C, §19): the composition sits lower in its
+          // frame on desktop. It used to hang from the frame's top with the
+          // blurred chevrons filling the rest; with those gone, the deepest
+          // point of the world read as a word in a corner over 75% paper. The
+          // word now stands in the middle third, under the SYSTEM stratum the
+          // world draws above it, with the statement below -- the negative
+          // space around it is the bottom of the world, and it is composed
+          // rather than left over.
+          <div key="reorient" className="w-full lg:pl-[15vw] lg:pt-[16vh]">
             <div className="relative pl-8">
               <span
                 aria-hidden="true"
                 className="absolute left-0 block w-px bg-line"
                 style={{ top: `${DEPTH_RAIL_TOP}vh`, height: `${-DEPTH_RAIL_TOP}vh` }}
               />
+              {/* V14 (owner finding C): the three layer labels that hung on
+                  this rail are gone. The strata now run across route two's
+                  world as bands the scenes stand on (WorldGrammar's Strata),
+                  each labelled once beside its scene, so the same three words
+                  were being stated twice in one frame. The rail itself stays:
+                  it is the descent from the surface the camera just left. On
+                  phones, where the bands do not render, the marks stay. */}
               {layerDefinitions.map((layer, index) => (
                 <span
                   key={layer.label}
-                  // Decorative repetition of the next scene's real headings,
-                  // so it stays out of the accessibility tree (§24).
                   aria-hidden="true"
-                  className="absolute left-0 flex items-center gap-3"
+                  className="absolute left-0 flex items-center gap-3 lg:hidden"
                   style={{ top: `${DEPTH_MARKS[index] ?? 0}vh` }}
                 >
                   <span className="block h-px w-6 bg-line" />
@@ -412,7 +397,10 @@ export function SpatialExperience() {
           // definition pairs, and no <li> may exist in the spatial world
           // (that is the structural contract keeping V1's rejected project
           // cards out).
-          <div key="approach" className="w-full">
+          // V14 (§19): the same vertical placement as UNDERNEATH -- the
+          // definitions sit in the frame's middle band under the FLOW stratum,
+          // not against its top edge with 60% of the frame empty below.
+          <div key="approach" className="w-full lg:pt-[12vh]">
             <SectionHeading index="03" label="Built in Layers" />
             <h2 className="mt-5 font-display text-display-l tracking-display-l uppercase text-ink">
               Built in Layers
@@ -433,39 +421,32 @@ export function SpatialExperience() {
           // The last beat inside the world, reached by one more short
           // diagonal. Only after this does the page hand off to ordinary
           // document flow (§7).
+          //
+          // V14 (owner finding D): "These are four stops on a larger map" was
+          // a sentence with nothing beside it -- the baseline frame is 70%
+          // paper -- and the owner's reading was that it is "too small for
+          // the travel it consumes". The map it names now stands in the world
+          // at the route's end (WorldGrammar's TerminusMap): it enters this
+          // frame from the lower right as the sentence is read, and the
+          // camera's last move is onto it. The sentence points at a thing the
+          // reader then arrives at.
           <div key="handoff" className="w-full">
-            {/* V9 (§P0) FIXED A FACTUAL CONTRADICTION. This line read
-                "Kıvılcım and DropSpot are two stops on a larger map" — true when
-                the tour staged two projects, and false since V7 staged four. It
-                named two of the four systems the reader had just travelled
-                through and silently erased Software Factory and JointLedger,
-                including the flagship the route deliberately opens on.
-
-                The count is now DERIVED from the tour itself rather than
-                retyped, so the sentence cannot go stale again the next time the
-                route gains or loses a scene. The approved metaphor is kept
-                verbatim; only the arithmetic changed.
-
-                Deliberately not CSS-uppercased: the systems it refers to include
-                "Kıvılcım", and text-transform destroys the dotless-ı that D-017
-                fixes as that project's primary display name. */}
+            {/* V9 (§P0): the count is DERIVED from the tour itself rather than
+                retyped, so the sentence cannot go stale when the route gains or
+                loses a scene. Deliberately not CSS-uppercased: the systems it
+                refers to include "Kıvılcım" (D-017). */}
             <p className="max-w-[44rem] font-display text-display-l tracking-display-l text-ink">
               These are {TOUR_COUNT_WORD} stops on a larger map.
             </p>
             {beyondTour.length > 0 && (
-              <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted">
+              <p className="mt-4 max-w-[34rem] font-display text-body-l text-ink-muted">
                 {beyondTour.map((project) => project.title).join(" and ")}{" "}
                 {beyondTour.length === 1 ? "continues" : "continue"} on the full {workIndexLabel}.
               </p>
             )}
             <div className="mt-10">
-              {/* V13 (mobile gate, M4): the button's 44px minimum is laid out
-                  in world space, and the scene plane holds it at 0.89-0.995
-                  across the stretch where it is on screen (0.97 at focus,
-                  0.89 at the route's end), so the box the finger meets
-                  measured 39-44px (docs/MOBILE_AUDIT.md, "1px short"). 50px
-                  in world space is 44.6-49.8px on screen at every tested
-                  width. `max-lg:` only; the desktop button is untouched. */}
+              {/* V13 (mobile gate, M4): 50px in world space is 44.6-49.8px on
+                  screen at every tested width. `max-lg:` only. */}
               <ButtonLink href="/work" className="max-lg:min-h-12.5">
                 See every system
               </ButtonLink>

@@ -91,7 +91,11 @@ export function SystemNode({ index, label, children, align = "left" }: SystemNod
   const markInset = align === "right" ? "right-1.5" : "left-1.5";
 
   return (
-    <section ref={ref} className="relative mt-16 lg:mt-32">
+    // V14 (owner findings D, F): `lg:mt-32` -> `lg:mt-20`. Four sections each
+    // opened with 128px of paper on top of their own approach interval; at the
+    // measured ceiling that was ~1s of the reader's time per section spent on
+    // nothing. The mobile value is the V13 gate's and is untouched.
+    <section ref={ref} className="relative mt-16 lg:mt-20">
       {/* THE SPINE. One rule, the section's full height, on the edge the route is
           on. This is the single element that makes the lower page read as one
           continuous journey rather than five stacked documents. */}

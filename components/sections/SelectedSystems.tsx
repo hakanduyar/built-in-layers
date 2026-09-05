@@ -168,7 +168,10 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                     {PROVENANCE_LABEL[project.provenance]}
                     {project.upstream ? ` of ${project.upstream.name}` : ""}
                   </p>
-                  <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+                  {/* V14 (§21): the verification state is the record's most
+                      important line and was its smallest (12px). Label size at
+                      `lg`; the mobile row is the V13 gate's. */}
+                  <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:text-mono-label lg:tracking-mono-label">
                     {VERIFICATION_LABEL[project.verificationStatus]}
                     {project.phase ? ` · ${humanise(project.phase)}` : ""}
                   </p>

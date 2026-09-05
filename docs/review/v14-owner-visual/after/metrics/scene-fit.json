@@ -1,0 +1,292 @@
+{
+  "1366x768": {
+    "software-factory": {
+      "fit": 0.776,
+      "inkTop": 96,
+      "inkBottom": 731,
+      "frameHeight": 768,
+      "overflowPx": -37,
+      "inkHeightWorldPx": 819
+    },
+    "kivilcim": {
+      "fit": 0.776,
+      "inkTop": 96,
+      "inkBottom": 728,
+      "frameHeight": 768,
+      "overflowPx": -40,
+      "inkHeightWorldPx": 814
+    },
+    "jointledger": {
+      "fit": 0.776,
+      "inkTop": 96,
+      "inkBottom": 691,
+      "frameHeight": 768,
+      "overflowPx": -77,
+      "inkHeightWorldPx": 767
+    },
+    "dropspot": {
+      "fit": 0.776,
+      "inkTop": 105,
+      "inkBottom": 652,
+      "frameHeight": 768,
+      "overflowPx": -116,
+      "inkHeightWorldPx": 705
+    },
+    "reorient": {
+      "fit": 0.776,
+      "inkTop": 178,
+      "inkBottom": 365,
+      "frameHeight": 768,
+      "overflowPx": -403,
+      "inkHeightWorldPx": 240
+    },
+    "approach": {
+      "fit": 0.776,
+      "inkTop": 166,
+      "inkBottom": 335,
+      "frameHeight": 768,
+      "overflowPx": -433,
+      "inkHeightWorldPx": 218
+    },
+    "handoff": {
+      "fit": 0.776,
+      "inkTop": 84,
+      "inkBottom": 283,
+      "frameHeight": 768,
+      "overflowPx": -485,
+      "inkHeightWorldPx": 258
+    }
+  },
+  "1440x900": {
+    "software-factory": {
+      "fit": 0.909,
+      "inkTop": 129,
+      "inkBottom": 888,
+      "frameHeight": 900,
+      "overflowPx": -12,
+      "inkHeightWorldPx": 835
+    },
+    "kivilcim": {
+      "fit": 0.909,
+      "inkTop": 130,
+      "inkBottom": 885,
+      "frameHeight": 900,
+      "overflowPx": -15,
+      "inkHeightWorldPx": 831
+    },
+    "jointledger": {
+      "fit": 0.909,
+      "inkTop": 129,
+      "inkBottom": 840,
+      "frameHeight": 900,
+      "overflowPx": -60,
+      "inkHeightWorldPx": 782
+    },
+    "dropspot": {
+      "fit": 0.909,
+      "inkTop": 140,
+      "inkBottom": 793,
+      "frameHeight": 900,
+      "overflowPx": -107,
+      "inkHeightWorldPx": 718
+    },
+    "reorient": {
+      "fit": 0.909,
+      "inkTop": 245,
+      "inkBottom": 474,
+      "frameHeight": 900,
+      "overflowPx": -426,
+      "inkHeightWorldPx": 252
+    },
+    "approach": {
+      "fit": 0.909,
+      "inkTop": 225,
+      "inkBottom": 423,
+      "frameHeight": 900,
+      "overflowPx": -477,
+      "inkHeightWorldPx": 218
+    },
+    "handoff": {
+      "fit": 0.909,
+      "inkTop": 115,
+      "inkBottom": 349,
+      "frameHeight": 900,
+      "overflowPx": -551,
+      "inkHeightWorldPx": 258
+    }
+  },
+  "1536x864": {
+    "software-factory": {
+      "fit": 0.873,
+      "inkTop": 120,
+      "inkBottom": 848,
+      "frameHeight": 864,
+      "overflowPx": -16,
+      "inkHeightWorldPx": 835
+    },
+    "kivilcim": {
+      "fit": 0.873,
+      "inkTop": 120,
+      "inkBottom": 845,
+      "frameHeight": 864,
+      "overflowPx": -19,
+      "inkHeightWorldPx": 831
+    },
+    "jointledger": {
+      "fit": 0.873,
+      "inkTop": 120,
+      "inkBottom": 802,
+      "frameHeight": 864,
+      "overflowPx": -62,
+      "inkHeightWorldPx": 782
+    },
+    "dropspot": {
+      "fit": 0.873,
+      "inkTop": 130,
+      "inkBottom": 756,
+      "frameHeight": 864,
+      "overflowPx": -108,
+      "inkHeightWorldPx": 718
+    },
+    "reorient": {
+      "fit": 0.873,
+      "inkTop": 226,
+      "inkBottom": 445,
+      "frameHeight": 864,
+      "overflowPx": -419,
+      "inkHeightWorldPx": 252
+    },
+    "approach": {
+      "fit": 0.873,
+      "inkTop": 207,
+      "inkBottom": 398,
+      "frameHeight": 864,
+      "overflowPx": -466,
+      "inkHeightWorldPx": 219
+    },
+    "handoff": {
+      "fit": 0.873,
+      "inkTop": 106,
+      "inkBottom": 331,
+      "frameHeight": 864,
+      "overflowPx": -533,
+      "inkHeightWorldPx": 258
+    }
+  },
+  "1920x1080": {
+    "software-factory": {
+      "fit": 1,
+      "inkTop": 168,
+      "inkBottom": 1002,
+      "frameHeight": 1080,
+      "overflowPx": -78,
+      "inkHeightWorldPx": 835
+    },
+    "kivilcim": {
+      "fit": 1,
+      "inkTop": 168,
+      "inkBottom": 999,
+      "frameHeight": 1080,
+      "overflowPx": -81,
+      "inkHeightWorldPx": 831
+    },
+    "jointledger": {
+      "fit": 1,
+      "inkTop": 167,
+      "inkBottom": 949,
+      "frameHeight": 1080,
+      "overflowPx": -131,
+      "inkHeightWorldPx": 782
+    },
+    "dropspot": {
+      "fit": 1,
+      "inkTop": 179,
+      "inkBottom": 897,
+      "frameHeight": 1080,
+      "overflowPx": -183,
+      "inkHeightWorldPx": 718
+    },
+    "reorient": {
+      "fit": 1,
+      "inkTop": 324,
+      "inkBottom": 576,
+      "frameHeight": 1080,
+      "overflowPx": -504,
+      "inkHeightWorldPx": 252
+    },
+    "approach": {
+      "fit": 1,
+      "inkTop": 295,
+      "inkBottom": 512,
+      "frameHeight": 1080,
+      "overflowPx": -568,
+      "inkHeightWorldPx": 218
+    },
+    "handoff": {
+      "fit": 1,
+      "inkTop": 151,
+      "inkBottom": 409,
+      "frameHeight": 1080,
+      "overflowPx": -671,
+      "inkHeightWorldPx": 258
+    }
+  },
+  "2560x1440": {
+    "software-factory": {
+      "fit": 1,
+      "inkTop": 218,
+      "inkBottom": 1053,
+      "frameHeight": 1440,
+      "overflowPx": -387,
+      "inkHeightWorldPx": 835
+    },
+    "kivilcim": {
+      "fit": 1,
+      "inkTop": 218,
+      "inkBottom": 1049,
+      "frameHeight": 1440,
+      "overflowPx": -391,
+      "inkHeightWorldPx": 831
+    },
+    "jointledger": {
+      "fit": 1,
+      "inkTop": 218,
+      "inkBottom": 1000,
+      "frameHeight": 1440,
+      "overflowPx": -440,
+      "inkHeightWorldPx": 782
+    },
+    "dropspot": {
+      "fit": 1,
+      "inkTop": 230,
+      "inkBottom": 947,
+      "frameHeight": 1440,
+      "overflowPx": -493,
+      "inkHeightWorldPx": 718
+    },
+    "reorient": {
+      "fit": 1,
+      "inkTop": 432,
+      "inkBottom": 684,
+      "frameHeight": 1440,
+      "overflowPx": -756,
+      "inkHeightWorldPx": 252
+    },
+    "approach": {
+      "fit": 1,
+      "inkTop": 388,
+      "inkBottom": 606,
+      "frameHeight": 1440,
+      "overflowPx": -834,
+      "inkHeightWorldPx": 218
+    },
+    "handoff": {
+      "fit": 1,
+      "inkTop": 202,
+      "inkBottom": 459,
+      "frameHeight": 1440,
+      "overflowPx": -981,
+      "inkHeightWorldPx": 258
+    }
+  }
+}

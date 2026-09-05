@@ -2,7 +2,7 @@
 
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { planeShift, sceneTravelDirection } from "@/lib/spatial/planeChoreography";
-import { PLANE_DISTANT, type SceneId } from "@/lib/spatial/scenes";
+import { PLANE_DISTANT, VW_PER_VH, type SceneId } from "@/lib/spatial/scenes";
 import type { ProjectGroundGeometry } from "@/lib/spatial/projectGround";
 import {
   cameraPosition,
@@ -15,55 +15,63 @@ import { worldX, worldY } from "@/lib/spatial/worldFit";
 // Spatial Portfolio V6.8 (feature/spatial-portfolio-v5, not merged to main --
 // see docs/DESIGN_SYSTEM.md §28). THE PROJECT FIELD PLANES.
 //
-// WHAT WAS LOST, AND WHY THIS IS NOT THE DELETED FILLER COMING BACK
+// Each project scene stands in its own field, on the DISTANT parallax plane, so
+// the project slides across it as the camera travels: the depth is enacted,
+// not asserted. Its presence follows the scene's own acquisition and its
+// position runs the supporting-plane grammar (lib/spatial/planeChoreography.ts):
+// enters before the foreground, registers exactly at focus, trails on exit.
 //
-// Through V6.6 the travel space carried seven soft-paper DENSITY rectangles,
-// authored at arbitrary progress values. The V6.7 audit deleted all seven as
-// filler, and for five of them that judgement stands: they were scattered along
-// the route to keep empty frames from reading as empty.
+// V14 (OWNER FINDING B, §7) -- THE PLANE IS A STRETCH OF GROUND, NOT A CARD.
 //
-// But two of them happened to sit near the project scenes, and deleting those
-// removed something real by accident: the second depth plane a project composition
-// was read against. V6.5-era Kivilcim was measurably stronger than V6.7's because
-// the pale plane behind it had ITS OWN world position -- the project slid across
-// it as the camera travelled, the overlap changed frame by frame, and that
-// relative motion is what made the scene read as a place rather than a layout.
-// The human review of V6.8 names this exact regression.
+// The owner's verdict on what stood here: "beige cards behind projects". The
+// verdict is right and the reason is geometric. The field was an axis-aligned
+// rectangle, filled in the mat's own soft-paper tone, sized a little larger
+// than the evidence and offset a little to one side -- which is the exact
+// description of a card's backing. Whatever the choreography did, a rectangle
+// slightly behind a rectangle reads as one object with a shadow.
 //
-// So this brings the plane back AS WHAT IT ACTUALLY WAS: one field per project
-// scene, on the DISTANT parallax plane, placed so that it is deliberately
-// misregistered with the media -- never a rectangle behind an image. The
-// difference from the deleted DENSITY fields is semantic and behavioural:
+// So the plane is now the thing the grammar always described: a piece of
+// ground the composition stands on, laid ALONG THE ROUTE.
 //
-//   - each plane belongs to a SCENE, not to a progress value: it is the field the
-//     project stands in, placed by the same `rate x cameraPosition(focus) +
-//     offset` derivation every other parallax mark uses;
-//   - it MOVES relative to its project (0.62 vs 1.0 camera rate), so the overlap
-//     between plane and media changes continuously across the scene's whole
-//     window -- the depth is enacted, not asserted;
-//   - its presence follows the scene's own acquisition: it registers as the
-//     camera arrives (sceneProximity) and quietens once the scene is passed, the
-//     same behaviour every registration mark in the world already has.
+//   ONE CONSTRUCTED EDGE. The up-route end is a real edge: a hairline rule
+//   with a registration tick, the edge the composition arrives over. The
+//   down-route end is cut square to the route's own bearing and then
+//   dissolves toward the next station, so the plane's far boundary is the
+//   frame or the paper, never a second parallel edge. A card needs four
+//   edges; this has one.
 //
-// Nothing is drawn ON the plane -- no border, no corner, no label. It is a tonal
-// field, one step off the paper, and the composition does the talking.
+//   IT RUNS ON PAST THE COMPOSITION. Half a scene measure further down-route
+//   than the evidence, so at focus it leaves the frame on the right: a
+//   surface the reader is travelling along, not a mat the project sits on.
+//   At zoom-out the four planes read as four stretches of one track.
+//
+//   IT IS TONE, NOT MATERIAL. 3.5% ink over paper -- a change of ground, one
+//   step lighter than the old fill -- so it can never compete with a plate
+//   that is itself a soft-paper mat.
+//
+//   IT ARRIVES AND IT STAYS BEHIND. PLANE_LEAD and PLANE_LAG were raised so the
+//   arrive/release choreography is visible against a 1180px composition (see
+//   planeChoreography.ts for the measurement that showed 70px did not read).
+//
+// The fill, the edge and the cut are all static geometry; only `transform` and
+// `opacity` animate, exactly as before. Mobile keeps the V13 gate's slab: the
+// vertical route has no bearing to lay a plane along, and that composition is
+// frozen.
 
 /**
  * The scene's own measure: identical to SCENE_WIDTH in scenes.ts. The plane is
- * sized and offset in FRACTIONS of this, not in raw vw/vh, and that difference
- * is what the final remediation pass fixed. Scene content is px-capped at
- * 1180px, so on the owner's real ~2552px-CSS display (seen in the review
- * screencast) a vw-authored plane grew to 1.9x its scene's media, drifted off
- * every registration the composition was tuned to at 1440, and read as exactly
- * the "random pale rectangle behind content" the plane exists to not be. In
- * scene units the plane:media relationship is the SAME GEOMETRY at 1024, 1440
- * and 2552 -- the whole composition scales as one object until the cap, then
- * holds together as one object above it.
+ * sized and offset in FRACTIONS of this, so the plane:composition relationship
+ * is the same geometry at 1024, 1440 and 2560.
  */
 const SCENE_UNIT = "min(84vw, 1180px)";
 
+/** How far past the composition the ground runs down-route, in scene units. */
+const PLANE_RUN_ON = 0.45;
+/** How far up-route of the block's own edge the ground begins: the constructed
+ *  edge stands clear of the content, ahead of it. */
+const PLANE_LEAD_IN = 0.07;
+
 type ProjectPlaneProps = {
-  /** The scene whose field this is. */
   scene: SceneId;
   /** Geometry derived from this scene's measured evidence group through the
    *  shared project-ground policy. Fractions of the scene measure. */
@@ -76,19 +84,9 @@ type ProjectPlaneProps = {
 
 export function ProjectPlane({ scene, geometry, progress, mobile = false }: ProjectPlaneProps) {
   const { offset, width, height } = geometry;
-  // Same derivation as every parallax mark: place it where this plane's
-  // coordinate space puts the scene's focal frame, plus the authored offset --
-  // the camera term stays in the plane's own vw/vh space, the offset is in the
-  // scene's px-capped space. On mobile the plane rides the world plane (rate
-  // 1) and the mobile route supplies the camera term.
   const rate = mobile ? 1 : PLANE_DISTANT;
   const camera = cameraPosition(sceneFocusProgress(scene, mobile), mobile);
 
-  // V7 — THE SUPPORTING-PLANE GRAMMAR (see lib/spatial/planeChoreography.ts).
-  // One signed displacement along the route's own local bearing: the plane
-  // enters slightly before its foreground, registers exactly at focus, and
-  // trails progressively on exit. The direction is derived from the curve at
-  // this scene's focus, so the grammar follows the route wherever it bends.
   const direction = sceneTravelDirection(scene, mobile);
   const choreographyX = useTransform(progress, (value) => {
     const shift = planeShift(sceneApproach(scene, value, mobile), direction);
@@ -99,43 +97,84 @@ export function ProjectPlane({ scene, geometry, progress, mobile = false }: Proj
     return worldY(shift.yVh);
   });
 
-  // The field registers as the system acquires its scene: faint on approach,
-  // fullest exactly at focus, quiet again once passed. Derived from the same
-  // proximity signal the registration ticks use, so the whole scene's grammar
-  // agrees about when it is being looked at.
+  // Presence decays to exactly zero outside the scene's own proximity window,
+  // so no plane can intrude on another scene's frame.
   const presence = useTransform(progress, (value) => {
     const near = sceneProximity(scene, value, mobile);
-    // The presence decays to ZERO outside the scene's own proximity window.
-    //
-    // It used to floor at 0.14 ("a whisper, not an orphaned rectangle"), and that
-    // floor was never free: `sceneProximity` returns exactly 0 once the camera is
-    // past a scene's reach, so a floored plane stayed faintly painted through the
-    // ENTIRE journey -- including inside the frozen Kivilcim frame, where the
-    // DropSpot plane was measured still on at 0.140. The DropSpot plane's x offset
-    // was then pushed 0.14 -> 0.21 specifically to dodge that intrusion, at the
-    // cost of 82px of its own ground; i.e. one plane's placement was being decided
-    // by another plane's leak rather than by its own composition.
-    //
-    // Removing the floor is strictly safer and changes nothing where it matters:
-    // at focus `near` is 1, so 0.66 * 1 == the old 0.14 + 0.52 * 1 == 0.66, exactly
-    // as before. Only the out-of-window tail changes, and it changes to nothing.
-    return 0.66 * Math.max(0, near);
+    return (mobile ? 0.66 : 0.92) * Math.max(0, near);
   });
+
+  if (mobile) {
+    return (
+      <motion.span
+        aria-hidden="true"
+        data-project-plane={scene}
+        className="absolute block bg-soft-paper"
+        style={{
+          left: `calc(${worldX(camera.x * rate)} + ${offset.x} * ${SCENE_UNIT})`,
+          top: `calc(${worldY(camera.y * rate)} + ${offset.y} * ${SCENE_UNIT})`,
+          width: `calc(${width} * ${SCENE_UNIT})`,
+          height: `calc(${height} * ${SCENE_UNIT})`,
+          opacity: presence,
+          x: choreographyX,
+          y: choreographyY,
+        }}
+      />
+    );
+  }
+
+  // The far end is cut square to the route: a line at (bearing + 90deg). Going
+  // down the plane's full height moves that edge left by height x cot(bearing
+  // + 90deg) in the same scene units, which is the shear of the polygon below.
+  const bearing = Math.atan2(direction.yVh, direction.xVw * VW_PER_VH);
+  // The ground begins up-route of the whole composition -- PLANE_LEAD_IN before
+  // the block's own edge, whichever side the evidence sits -- and runs past it
+  // down-route. Its one constructed edge is therefore always OUTSIDE the
+  // content it grounds, never a line under a plate.
+  const left = -PLANE_LEAD_IN;
+  const run = 1 + PLANE_LEAD_IN + PLANE_RUN_ON;
+  const shear = Math.max(0, Math.min(run * 0.6, -height / Math.tan(bearing + Math.PI / 2)));
+  const cutLeft = ((run - shear) / run) * 100;
 
   return (
     <motion.span
       aria-hidden="true"
       data-project-plane={scene}
-      className="absolute block bg-soft-paper"
+      className="pointer-events-none absolute block"
       style={{
-        left: `calc(${worldX(camera.x * rate)} + ${offset.x} * ${SCENE_UNIT})`,
+        left: `calc(${worldX(camera.x * rate)} + ${left} * ${SCENE_UNIT})`,
         top: `calc(${worldY(camera.y * rate)} + ${offset.y} * ${SCENE_UNIT})`,
-        width: `calc(${width} * ${SCENE_UNIT})`,
+        width: `calc(${run} * ${SCENE_UNIT})`,
         height: `calc(${height} * ${SCENE_UNIT})`,
         opacity: presence,
         x: choreographyX,
         y: choreographyY,
       }}
-    />
+    >
+      {/* The ground: a change of tone, cut square to the route at its far end
+          and dissolving toward the next station. */}
+      <span
+        className="absolute inset-0 block bg-[rgba(22,22,22,0.045)]"
+        style={{
+          clipPath: `polygon(0 0, 100% 0, ${cutLeft.toFixed(2)}% 100%, 0 100%)`,
+          WebkitMaskImage: "linear-gradient(to right, #000 58%, rgba(0,0,0,0) 100%)",
+          maskImage: "linear-gradient(to right, #000 58%, rgba(0,0,0,0) 100%)",
+        }}
+      />
+      {/* The constructed edge: the up-route side the composition arrives over. */}
+      <span className="absolute bottom-0 left-0 top-0 block w-px bg-ink opacity-30" />
+      <span className="absolute left-0 top-0 block h-px w-8 bg-ink opacity-45" />
+      <span className="absolute bottom-0 left-0 block h-px w-8 bg-ink opacity-45" />
+      {/* The far cut, drawn once as a hairline so the square end reads as an
+          end rather than as a fade. */}
+      <span
+        className="absolute bottom-0 top-0 block w-px origin-top bg-ink opacity-20"
+        style={{
+          left: "100%",
+          transform: `skewX(${((Math.atan2(shear, height) * 180) / Math.PI).toFixed(2)}deg)`,
+          transformOrigin: "top left",
+        }}
+      />
+    </motion.span>
   );
 }

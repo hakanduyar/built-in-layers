@@ -61,6 +61,11 @@ The probes under `tests/tools/` are evidence tools, not test suites — they are
 | `desktop-parity-probe.mjs` | two builds walked side by side: is the desktop provably unchanged (V13 mobile gate, `docs/FROZEN_BOUNDARY.md` §5) |
 | `measure-768-probe.mjs` | per-element line length at a tablet width, and the cost of the 34rem measure alone — the page as built against the same page with the token re-declared (V13 mobile gate, M2 / ART-2) |
 | `figure-inspect-probe.mjs` | every INSPECT control's accessible name and asset per page, and the `/work` thumbnails' scale at every width (V13 mobile gate, A11Y-1 / ART-1) |
+| `phase7-runtime-probe.mjs` | console / runtime / hydration on every route, CLS, image integrity, overflow across nine widths (Phase 7) |
+| `v14-baseline.mjs` | the journey as a reader gets it: forward, reverse and lower-world recordings under real wheel input with notch counts and seconds, plus 100 / 80 / 67 / 50 zoom stills — run once against the baseline and once against the candidate (V14, brief §24 / §30) |
+| `scene-fit-probe.mjs` | every composition's ink against its frame at five desktop viewports, and the fit it renders at — the measurement `WORLD_REFERENCE.height` is set from (V14, §20) |
+| `frame-time-probe.mjs` | mean rAF interval while the route is driven at a normal wheel — a fresh forward traverse, a second forward, a fresh reverse — run against the baseline on another port at the same load; frame time is route speed because the governor pays per frame (V14, D-040) |
+| `tests/unit/route-focus-dump.test.ts` | the `route-focus.json` every probe reads, written from the route module itself (`ROUTE_FOCUS_OUT=...`), with each route's true arc length — the number the V14 page gearing derives from |
 
 Each takes `PROBE_BASE` (default `http://127.0.0.1:3000`) and most take `PROBE_W` / `PROBE_H`.
 `still-capture.mjs` and `scroll-recording.mjs` take `SHOT_OUT` / `OUT`, defaulting outside the

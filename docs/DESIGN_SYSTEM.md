@@ -2436,3 +2436,129 @@ within its own same-build jitter floor):
   for the same reason.
 
 The gate's return is `.ai/handoffs/FABLE-MOBILE-RETURN.md`.
+
+## 38. V14 — owner visual acceptance recovery: the systemic desktop rework (2026-09-04)
+
+`feature/owner-visual-acceptance-v14` only, from the accepted technical baseline `5670234`. Not
+merged to `main`. Owner brief: `.ai/handoffs/V14-OWNER-BRIEF.md` — the owner reviewed the accepted
+desktop recording and **rejected the visual result**; the three freezes and the Phase 7 pass remain
+technical baselines but do not override that verdict. This section records what the brief's six
+systemic problems were, what was done about each system rather than each symptom, and how it was
+measured. Decisions: D-034 to D-039. Evidence: `docs/review/v14-owner-visual/{baseline,after}/`,
+captured with the same tools on the same viewports, the baseline first (`5670234`, brief §24).
+
+The mobile composition of the V13 gate is not reopened. Every V14 change is desktop-scoped (`lg:`,
+`isDesktop`, `wide`, `where="desktop"`) or verified against the mobile probes; the return lists the
+mobile deltas explicitly.
+
+### 38.1 What the baseline showed (why the freeze did not survive the owner)
+
+Read off the fresh baseline set rather than from memory:
+
+- every project frame carried one or two oversized title fragments cut mid-letter by the frame edge
+  ("IVIL", "JOIN", "DRO", "ROFES") behind the composition it was meant to announce; the hero's
+  "Surface" ghost rendered as a band of descenders;
+- each project stood on an axis-aligned soft-paper rectangle offset to one side — a card's backing;
+- UNDERNEATH and Built in Layers were dominated by blurred chevrons filling two thirds of the frame;
+- at 50% zoom two scenes sat at opposite corners of a 3840px frame connected by a half-device-pixel
+  hairline, with fragments in the empty diagonal, and the SYSTEMS "slab" was the largest object in
+  the world;
+- the terminus frame was empty above "Back on the surface"; the lower page's mean content fill was
+  0.116 against the route's 0.216; How I Build was ~1,200px for four sentences;
+- the lower world (4104px at 1440×900) took **10.1s at a normal wheel and 10.2s at an aggressive
+  one** — identical, because the scroll ceiling bound — against 14.8s for the whole route.
+
+### 38.2 A — one world language (D-034)
+
+Everything decorative is deleted rather than quietened: travel material, the hero ghost, the system
+field, both directional fields, the acquisition frame's ruler, the lower page's drift zigzag, section
+fields and settle mark. The scan's one axe exclusion goes with them. What the world is made of now:
+the route as a stated topology, each project's context plane, the strata route two climbs through,
+the acquisition frame's brackets and two real rows, and one map drawn in four states. Each is derived
+from route geometry or real data; none is authored to fill space.
+
+### 38.3 B — project scene grammar (D-035, and the scene changes)
+
+- **Detected → acquired → focused → released** is carried by the composition itself: `scenePresence`
+  (0.4 detected, 1 acquired/focused, 0.45 released) as opacity only. The 0.972 → 1 arrival scale — a
+  paint-time transform over every glyph while moving, V11's blur mechanism — is removed.
+- **The plane is a stretch of ground along the route**, not a card: one constructed edge up-route of
+  the whole composition, run-on past it, cut square to the bearing, dissolving; 4.5% tone;
+  `PLANE_LEAD` 8 → 24, `PLANE_LAG` 17 → 56 so arrival and release are visible.
+- **Evidence first and at one width:** every diagram plate is nine columns; split and counter take
+  the flagship's grammar (identity row across the top, reading column beside the plate — Kıvılcım's
+  on the left, JointLedger's on the right); DropSpot's group falls to 70% + 38% for parity with the
+  diagrams instead of an 84% + 52% union of the route's only saturated asset.
+- **The inspector on desktop** (`inspect="desktop"`): the same asset the mobile gate built the control
+  for, opened at 1400px, in the caption row of every scene plate. The 1600-unit diagrams' body labels
+  are 8–11 CSS px at nine columns — legible as structure, readable in the inspector. Nothing redrawn,
+  nothing cropped.
+- **The case-study control** is a bordered 44px register in the secondary-button vocabulary, still
+  inside the title's single link and aria-hidden; below `lg` it stays the V13 register line.
+- **Small text** (§21): category, stack, upstream and the acquisition rows go mono-meta → mono-label at
+  `lg`; Selected Systems' verification line likewise.
+- **The fit** (§20): compositions were shortened (flagship `lg:pt-7` → `lg:pt-4`, row gap 56 → 32,
+  desktop inspector row at caption height) and `WORLD_REFERENCE.height` follows 1040 → 990: 1440×900
+  renders at 0.909 instead of 0.865, 1536×864 at 0.873, 1366×768 at 0.776. Every composition clears
+  its frame at all five viewports (`after/metrics/scene-fit.json`; worst case the flagship, −12px at
+  1440).
+
+### 38.4 C — SYSTEMS / UNDERNEATH (D-036)
+
+The opened surface spans the frame (240vw × 200vh), the recess is 2.5%, and what is revealed is the
+journey: three strata carrying the real layer names and the whole route drawn between SURFACE and
+SYSTEM (`RouteMap`, `revealed`). The strata continue across route two's world so UNDERNEATH lands on
+SYSTEM, Built in Layers stands on FLOW and the handoff on SURFACE; both route-two compositions sit in
+the frame's middle band. The word is untouched, the mechanism is unchanged, the cut holds two
+polylines, and mobile keeps the V6.6 box.
+
+### 38.5 D — the lower world (D-037)
+
+The camera's last move is onto the map (`RouteMap`, `mapped`, at the handover turn with the Work
+index's real names), so the terminus frame is the thing the handoff sentence names; approach
+intervals fall 22/14/14 → 6/4/6vh at `lg`; section margins 128 → 80px; How I Build is two columns of
+two; the drift zigzag, fields and settle are retired; the finale is the resolved map beside the
+question, hidden by `:has()` where the journey does not exist.
+
+### 38.6 E — the route as spine, and one topology in four states (D-038)
+
+Travelled ink revealed along the real curve by the filtered camera; a faint continuous rail per route;
+stations that fill as scenes are acquired and stay once passed; survey ticks at even arc length; the
+cut and the landing marked; stroke `max(1.5px, 0.09vw)` so the spine gains weight exactly as the CSS
+viewport grows; the whole spine recedes to a quarter of its weight while a scene is in frame. The
+same geometry is drawn as a map at SYSTEMS (revealed), at the terminus (mapped) and at the finale
+(resolved): latent, revealed, mapped, resolved.
+
+### 38.7 F — one ceiling, measured in screen travel (D-039)
+
+The governor's ceiling was one number in scroll pixels per second applied to two regions with
+different gearing: a scroll pixel moved the world 3.6 screen pixels (1440×900) and the page one. The
+ceiling is restated in screen travel and held constant — the route's budget is byte-identical to
+V7–V11; the page's is that budget times the world's gearing (`pageGearing`, `governorBudget`),
+derived from the route's true arc length, the world unit and the fit. Intent, lead cap, sign
+collapse and the break event's ownership are untouched. The lower world is also shorter (38.5)
+before it is faster.
+
+### 38.8 Measured — baseline `5670234` against the candidate
+
+See `.ai/handoffs/FABLE-V14-RETURN.md` §3 for the full table (journeys, scroll contract, dead
+scroll, scene fit, runtime, mobile smoke), and `docs/review/v14-owner-visual/{baseline,after}/`
+for the artifacts behind every number.
+
+### 38.9 Frame time is route speed (D-040)
+
+The route governor pays its travel budget per frame and forfeits a dropped frame's share
+(`lib/spatial/cameraFilter.ts`), so a traverse runs exactly as fast as the page paints: at 25ms a
+frame the same governor is a third slower than at 17ms, and no number in it has moved. The
+candidate's first after-evidence caught exactly that — reverse through the route at 21.0s against
+the baseline's 12.9s — and the bisect put it on the D-038 attention wrapper, whose opacity is
+written every frame the camera moves, holding ninety absolutely positioned survey tick spans that
+Chromium repainted each time. The survey is now one path per route inside the base rail's SVG, the
+group holds SVG only, and the reverse traverse is back at 17.2ms a frame (baseline 17.3).
+
+The rule that follows: whatever is written per frame during travel is either compositor-only or
+holds nothing but single-paint SVG. `tests/e2e/spatial.spec.ts` guards the group's contents;
+`tests/tools/frame-time-probe.mjs` measures a fresh forward traverse, a second forward and a
+fresh reverse, and is run against the baseline on another port at the same load whenever a
+scroll-physics number is claimed. The numbers are in
+`docs/review/v14-owner-visual/{baseline,after}/metrics/frame-time-1440x900.json`.

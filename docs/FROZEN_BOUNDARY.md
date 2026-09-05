@@ -186,3 +186,17 @@ stays at `depth: preview`, so `SpatialProjectScene.tsx`'s `project.depth` branch
 "Open system" and the question of a content-driven string change inside a frozen scene did not
 arise. `isCaseStudyDestination` now reads the same `depth` field for the case-study route's exit
 (D-029), which is the same data answering the same question in a second place.
+
+---
+
+## 6. V14 — the desktop boundary reopened by owner decision
+
+On `feature/owner-visual-acceptance-v14` the owner has **reopened the desktop visual and narrative
+layer** (`.ai/handoffs/V14-OWNER-BRIEF.md` §3: "Owner visual verdict overrides model freeze"). The
+§1 fingerprints remain the reference the §4 loop compares against — they are the record of what was
+frozen, not a claim about this branch — but on V14 the loop is expected to print more than the ten
+lines §5 accounts for, and the standard for those moves is the owner's brief rather than a measured
+regression: D-034 to D-040 record what moved and why, and `.ai/handoffs/FABLE-V14-RETURN.md` carries
+the before/after evidence. The mobile composition of the V13 gate is **not** reopened; every V14
+change is desktop-scoped (`lg:`, `isDesktop`, `wide`, `where="desktop"`) or verified against the
+mobile probes, and the return lists the mobile deltas. `main` is untouched.
