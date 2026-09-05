@@ -9,7 +9,7 @@ FREEZE, OWNER ACCEPTED or READY TO MERGE.
 | Branch | `feature/owner-visual-acceptance-v14` |
 | Reviewed SHA (Fable checkpoint) | `35c2c58` — "V14: owner visual candidate — the six systems reworked" |
 | Starting baseline | `5670234` (Phase 7) |
-| QA follow-up SHA | see §8 — two non-behavioural fixes (a probe's output path, one policy row) |
+| QA follow-up SHA | `dbe21ec` — pushed; `local == origin`. Two non-behavioural fixes (a probe's output path, one policy row) plus this return and its STATE / HANDOFF rows. No product file changed |
 | `main` | `16d3ec0` — untouched, never merged to, not compared against |
 | V13 | `feature/project-architecture-v13` at `5670234` — not touched |
 | Baseline worktree | `C:\GitHub\portfolio-baseline-5670234` — served read-only on 3300; `git status` clean after every A/B; not removed (Fable's to remove) |
