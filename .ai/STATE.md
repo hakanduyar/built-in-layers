@@ -30,12 +30,14 @@ by design; the standard for those moves is the owner's brief, not a measured reg
 
 ## Current phase
 
-**V14 — owner visual acceptance recovery. FABLE VISUAL CANDIDATE READY. Owner acceptance: PENDING.**
+**V14 — owner visual acceptance recovery. FABLE VISUAL CANDIDATE READY, OPUS QA COMPLETE.
+Owner acceptance: PENDING.**
 
 Record: `.ai/handoffs/FABLE-V14-RETURN.md` (what changed by system A–F, the measured before/after,
 the mobile deltas, the frame-time finding). Brief: `.ai/handoffs/V14-OWNER-BRIEF.md`. Owner review
-package: `docs/review/v14-owner-visual/README.md`. Engineering QA brief for the fresh Opus 5 / High
-session: `.ai/handoffs/OPUS-V14-QA.md`; its return lands at `.ai/handoffs/OPUS-V14-QA-RETURN.md`.
+package: `docs/review/v14-owner-visual/README.md`. Independent engineering QA:
+`.ai/handoffs/OPUS-V14-QA-RETURN.md` — **PASS WITH DOCUMENTED NON-BLOCKERS**, its brief
+`.ai/handoffs/OPUS-V14-QA.md`.
 
 Validation at the checkpoint (production build of the committed code): typecheck 0 · lint 0 ·
 `format:check` 0 · unit **562/562** · build 15/15 · Chromium **224/224** · WebKit **220/224**
@@ -63,7 +65,14 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
   heuristic reads that as arrival. Geometry is identical on both engines; the candidate's cut
   region renders 2.7× faster than the baseline on WebKit. ENVIRONMENT with a TEST component
   (return §3a); a remedy would be in the tests' arrival detection.
-- Three font-preload console notices on the **404 route only**; the ten content routes are silent.
+- Six console messages on the **404 route only** — the route's own 404 response plus the
+  font-preload notices; the ten content routes are silent. Unchanged since Phase 7.
+- Three mobile composition deltas the Fable return does not list, found by the Opus QA and left for
+  the owner (no measured regression, so the frozen mobile layer was not reopened): every project
+  scene is 32px taller below `lg` (the scene grid gained a third child and `gap-8` is unprefixed);
+  the 0.972 → 1 arrival scale was removed on mobile as well as desktop; Software Factory's mobile
+  case action moved `mt-8 flex` → `mt-4 inline-flex`. Detail and measurements:
+  `.ai/handoffs/OPUS-V14-QA-RETURN.md` §6.1.
 - Decision *alternatives* render as a comma join rather than a list — owner-accepted 2026-09-03.
 - Two `<nav>`s share `aria-label="Primary"` — pre-existing, axe-clean, no measured harm.
 - Software Factory sits at `depth: "preview"`, outside case-study navigation until its content
@@ -77,6 +86,10 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-1. Opus 5 / High engineering QA of the committed candidate (`.ai/handoffs/OPUS-V14-QA.md`) —
-   verify, do not redesign; classified findings to `.ai/handoffs/OPUS-V14-QA-RETURN.md`.
-2. The owner's review of `docs/review/v14-owner-visual/README.md` — the only acceptance.
+1. ~~Opus 5 / High engineering QA~~ — done: `.ai/handoffs/OPUS-V14-QA-RETURN.md`, PASS WITH
+   DOCUMENTED NON-BLOCKERS. Re-measured independently on its own production build: route ceiling
+   byte-identical, lower world 9.9s → 3.9s normal and → 3.1s at a flick, frame time within 0.3ms of
+   the baseline, `route-focus.json` unchanged, Chromium 224/224, WebKit 220/224 (two of the four
+   reproduced on the baseline build).
+2. The owner's review of `docs/review/v14-owner-visual/README.md` — the only acceptance. Read
+   `OPUS-V14-QA-RETURN.md` §6.1 first: three mobile composition deltas need an owner decision.

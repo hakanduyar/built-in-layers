@@ -6,13 +6,25 @@
 // that every rendered image is sized and actually loads. This probe does those,
 // on a production build, and prints numbers rather than a verdict.
 //
-//   node tests/tools/phase7-runtime-probe.mjs [--port 3100]
+//   node tests/tools/phase7-runtime-probe.mjs [--port 3100] [--out <file>]
+//
+// `--out` exists because the default destination is a COMMITTED artifact: a
+// later gate that ran the probe to check its own build silently rewrote the
+// Phase 7 record with its own numbers, and the only sign was a dirty working
+// tree. Point a re-run somewhere else and the record it is being compared
+// against stays the record.
 
 import { chromium } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
 const port = Number(process.argv[process.argv.indexOf("--port") + 1]) || 3100;
 const base = `http://localhost:${port}`;
+const outIndex = process.argv.indexOf("--out");
+const outFile =
+  outIndex >= 0 && process.argv[outIndex + 1]
+    ? process.argv[outIndex + 1]
+    : "docs/review/phase7/runtime.txt";
 
 const ROUTES = [
   "/",
@@ -156,6 +168,6 @@ say(
 );
 
 await browser.close();
-mkdirSync("docs/review/phase7", { recursive: true });
-writeFileSync("docs/review/phase7/runtime.txt", out.join("\n") + "\n");
-console.log("\nwritten: docs/review/phase7/runtime.txt");
+mkdirSync(path.dirname(outFile), { recursive: true });
+writeFileSync(outFile, out.join("\n") + "\n");
+console.log(`\nwritten: ${outFile}`);

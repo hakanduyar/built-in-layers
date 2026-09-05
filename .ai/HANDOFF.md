@@ -7,10 +7,17 @@ What the next model needs, and nothing else. No transcripts, no test logs, no re
 **VERDICT:** `FABLE VISUAL CANDIDATE READY`. Owner acceptance **PENDING**. Do not merge. Full
 account: `.ai/handoffs/FABLE-V14-RETURN.md`; the owner's brief: `.ai/handoffs/V14-OWNER-BRIEF.md`.
 
-**NEXT MODEL:** Claude Opus 5 / High, one fresh session, engineering QA only —
-`.ai/handoffs/OPUS-V14-QA.md`. Verify, fix engineering / test / runtime / documentation defects,
-record art-direction observations for the owner, do not redesign. A read-only baseline worktree of
-`5670234` is at `C:\GitHub\portfolio-baseline-5670234` (serve on 3300 for A/B; do not modify).
+**OPUS QA: COMPLETE** — `.ai/handoffs/OPUS-V14-QA-RETURN.md`, **PASS WITH DOCUMENTED NON-BLOCKERS**.
+Independently re-measured on its own production build: the route's governor budget byte-identical,
+lower world 9.9s → 3.9s at a normal wheel and → 3.1s at a flick, frame time within 0.3ms of the
+baseline in all three traverses, `route-focus.json` regenerating byte-identical, scene fit and
+`runtime.txt` reproducing exactly, Chromium 224/224, WebKit 220/224 with two of the four reproduced
+on the **baseline** build. Two non-behavioural fixes pushed (a probe `--out` flag and its policy
+row). Three unlisted mobile composition deltas recorded for the owner, not changed (§6.1).
+
+**NEXT:** the owner's visual review of `docs/review/v14-owner-visual/README.md` — the only
+acceptance. The baseline worktree `C:\GitHub\portfolio-baseline-5670234` is still in place and
+unmodified; Fable removes it.
 
 **CHANGED** — the desktop visual and narrative layer, by owner decision (D-034 … D-040):
 
@@ -49,7 +56,12 @@ record art-direction observations for the owner, do not redesign. A read-only ba
   still for >2s after a large `scrollTo` jump and the tests' settle heuristic reads it as arrival.
   ENVIRONMENT + TEST, not a V14 regression — return §3a. If Opus takes it, the fix is the tests'
   arrival detection, not an assertion.
-- Not run by Fable: the touch-target probe and the 320–768 overflow matrix (Opus QA's list).
+  Reproduced by the Opus QA on the baseline build served on the same port: same two tests, same
+  values. The remedy (require the read value to have changed once since the jump) is written up in
+  `OPUS-V14-QA-RETURN.md` §6.2 and deliberately not taken there.
+- ~~Not run by Fable: the touch-target probe and the 320–768 overflow matrix~~ — both run by the
+  Opus QA: 0 standalone sub-44 targets across 8 pages × 6 widths, overflow 0 of 99.
+- Three unlisted mobile composition deltas, for the owner: `OPUS-V14-QA-RETURN.md` §6.1.
 - Observation, both builds identical: a forward traverse begun ~400ms after a programmatic
   `scrollTo` runs ungoverned for its first notches (return §5).
 
@@ -60,8 +72,9 @@ record art-direction observations for the owner, do not redesign. A read-only ba
 **ARTIFACTS**
 
 - `.ai/handoffs/FABLE-V14-RETURN.md` — the account, with every measurement
+- `.ai/handoffs/OPUS-V14-QA-RETURN.md` — the independent QA, its own measurements and findings
 - `docs/review/v14-owner-visual/README.md` — the owner review package index
 - `docs/review/v14-owner-visual/{baseline,after}/` — journeys, zoom, stills, metrics
 
-**NEXT:** Opus QA → `.ai/handoffs/OPUS-V14-QA-RETURN.md` → the owner reviews the package. Neither
-model declares FREEZE, OWNER ACCEPTED or READY TO MERGE.
+**NEXT:** the owner reviews the package. Neither model declares FREEZE, OWNER ACCEPTED or READY TO
+MERGE.
