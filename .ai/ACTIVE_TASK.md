@@ -2,10 +2,11 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: Fable checkpoint committed → Opus 5 /
-High engineering QA → owner review.**
+**TASK:** V14 — owner visual acceptance recovery. **Stage: owner review.** Fable checkpoint
+`35c2c58`; Opus QA checkpoint `27c4fca` (PASS WITH DOCUMENTED NON-BLOCKERS); both models done.
 
-**STATUS:** `FABLE VISUAL CANDIDATE READY`. Owner acceptance **PENDING**. Do not merge.
+**STATUS:** `FABLE VISUAL CANDIDATE READY` · `OPUS QA COMPLETE`. Owner acceptance **PENDING**.
+Do not merge.
 
 **BRIEF:** `.ai/handoffs/V14-OWNER-BRIEF.md` — the owner's instruction, verbatim, and the authority
 for this task. §28 is the Opus mandate; §29 owner acceptance; §33 the final return format.
@@ -21,14 +22,14 @@ for this task. §28 is the Opus mandate; §29 owner acceptance; §33 the final r
 - The owner review package: `docs/review/v14-owner-visual/README.md`.
 - The Opus QA brief: `.ai/handoffs/OPUS-V14-QA.md` — engineering verification only, no redesign;
   its return goes to `.ai/handoffs/OPUS-V14-QA-RETURN.md`.
-- A read-only baseline worktree for A/B: `C:\GitHub\portfolio-baseline-5670234` (port 3300).
+- The Opus QA return: `.ai/handoffs/OPUS-V14-QA-RETURN.md` — verified independently; three
+  mobile composition deltas (§6.1) and the WebKit settle-heuristic remedy (§6.2) await the owner.
 
-**FOR OPUS (this stage):** read `CLAUDE.md`, `.ai/STATE.md`, `.ai/HANDOFF.md`, then the QA brief.
-Verify scroll physics, vertical pacing, route math, frame time, desktop responsive, mobile
-regression, overflow / accessibility / runtime, tests / build, artifact identity. Fix engineering,
-test, runtime and documentation defects only; record art-direction observations for the owner.
-End with exactly one of the four verdict lines in the brief.
+**FOR THE OWNER (this stage):** review `docs/review/v14-owner-visual/README.md` — the forward,
+reverse and lower-world recordings, the zoom stills, the focus frames, the before/after by system.
+Decide on the three mobile deltas in the Opus return §6.1. Acceptance, rework or rejection is the
+owner's alone; the models have stopped.
 
-**STOP WHEN:** the Opus return is written and pushed, the final return in the brief's §33 format
-is produced with both checkpoints, origin is synced, and owner acceptance is `PENDING`. Neither
-model declares FREEZE, OWNER ACCEPTED or READY TO MERGE.
+**NEXT MODEL (only on the owner's instruction):** whatever the owner's verdict names — an
+acceptance phase (freeze, then a merge request), a bounded rework of named systems, or the
+WebKit test-heuristic repair as an engineering item. Nothing runs until then.

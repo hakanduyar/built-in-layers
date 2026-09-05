@@ -16,8 +16,8 @@ on the **baseline** build. Two non-behavioural fixes pushed (a probe `--out` fla
 row). Three unlisted mobile composition deltas recorded for the owner, not changed (§6.1).
 
 **NEXT:** the owner's visual review of `docs/review/v14-owner-visual/README.md` — the only
-acceptance. The baseline worktree `C:\GitHub\portfolio-baseline-5670234` is still in place and
-unmodified; Fable removes it.
+acceptance. The baseline worktree has been retired (`git worktree prune`); recreate it with
+`git worktree add --detach <dir> 5670234` for any further A/B.
 
 **CHANGED** — the desktop visual and narrative layer, by owner decision (D-034 … D-040):
 

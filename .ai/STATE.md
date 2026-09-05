@@ -14,7 +14,7 @@ _Updated: 2026-09-06_
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
 | `main` | `16d3ec0` — untouched, never merged to |
 | Working tree | clean except the intentional untracked `docs/review/v12-codex-gate/codex-gate-checkpoint.bundle` (22.6 MB recovery bundle, deliberately not committed) and the git-ignored `docs/review/v14-owner-visual/*/recordings/` |
-| Baseline worktree | `C:\GitHub\portfolio-baseline-5670234` — a detached, read-only checkout of `5670234`, built, for A/B on port 3300; removed after the Opus QA return |
+| Baseline worktree | retired after the Opus QA return (`git worktree prune` run); recreate with `git worktree add --detach <dir> 5670234` for any further A/B |
 
 ## Frozen systems
 

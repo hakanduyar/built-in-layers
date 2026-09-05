@@ -290,8 +290,17 @@ route probe (`after/mobile/metrics/mobile-route.json`) is in §3. The deltas tha
   only; the desktop inspector buttons are `hidden` below `lg` and the below-`lg` inspector is the
   V13 one.
 - `SystemPOV` rows and the scene's mono labels keep their base (`mono-meta`) classes below `lg`.
-- Not re-run on mobile in this pass: the touch-target probe and the 320–768 overflow matrix
-  (the Chromium e2e overflow suite, which covers 1024+, ran). Opus QA's mandate names both.
+- ~~Not re-run on mobile in this pass: the touch-target probe and the 320–768 overflow matrix~~ —
+  both run by the Opus QA: 0 standalone sub-44 targets across 8 pages × 6 widths; overflow 0 of 99.
+- **Three further mobile composition deltas, found by the Opus QA and not listed above**
+  (`.ai/handoffs/OPUS-V14-QA-RETURN.md` §6.1, with measurements). All three come from shared
+  markup rather than a mobile decision, none moved a mobile health metric, and none was changed —
+  they are the owner's call: (a) every project scene is one `gap-8` (32px) taller below `lg`,
+  because the scene grid gained the identity row as a third child and `gap-8` carries no `lg:`
+  prefix; (b) the 0.972 → 1 arrival scale was removed on mobile as well as desktop — D-035 argued
+  it for desktop sharpness, and the baseline applied it to every scene; (c) Software Factory's
+  mobile case action moved from `mt-8 flex` to `mt-4 inline-flex`. The minimal mechanical repair
+  for (a) — scoping the detail block's `mt-8` to `lg:` — is recorded there and was not taken.
 
 ## 5. Observations for Opus QA (not V14 defects; both builds behave the same)
 
