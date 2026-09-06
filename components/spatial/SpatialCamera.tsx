@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
 } from "react";
@@ -1020,7 +1021,16 @@ export function SpatialCamera({
     // Each scene keeps its full V4 composition, so this reads as a designed
     // linear page rather than a stripped dump.
     return (
-      <div className="mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
+      // V14.1: `world-fit-layer` carries the boot script's fit, so this tree --
+      // which every JS visitor sees for the frames before the world mounts --
+      // paints at the same scale the world settles at instead of 9% larger. It
+      // scales by transform rather than by `zoom` so the document's layout is
+      // untouched and the hydration swap's own layout shift does not grow; see
+      // the rule in styles/globals.css for the measurement. For the visitors
+      // this tree is FINAL rather than transient (reduced motion, no JS) the
+      // property is never set, and the CSS fallback of 1 leaves their
+      // composition exactly as it was.
+      <div className="world-fit-layer mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
         {SCENE_IDS.map((id) => {
           const annotation = annotations[id];
           return (
@@ -1533,33 +1543,47 @@ function useProjectGroundGeometries(
  * V8 -- THE WORLD'S FIT SCALE (see lib/spatial/worldFit.ts for the measurement
  * this exists to fix).
  *
- * Starts at 1 rather than at a measured value, so the server-rendered markup and
- * the first client render agree and the world can never hydrate at one scale and
- * jump to another. The real value lands on the first effect, before paint.
+ * V14.1 -- READ DURING RENDER, NOT ONE EFFECT LATER.
  *
- * `visualViewport` is listened to as well as `resize`, and it is not redundant:
- * on a pinch-zoom, and on the browser-zoom levels §11 asks to be checked, the
- * layout viewport can stay put while the visual viewport is what actually
- * changed. Both handlers read `window.innerWidth/innerHeight` -- the CSS
- * viewport truth every other unit in this world is expressed against -- so the
- * two events are two triggers for one measurement, not two measurements.
+ * This used to hold the fit in state and measure it in an effect. The server
+ * snapshot agreed with the first client render, so there was no hydration
+ * mismatch -- but the value the world renders with arrived a commit AFTER the
+ * world itself, which is one half of the owner's initial-load flash. (The other
+ * half is the pre-hydration tree, handled by the boot script generated in
+ * lib/spatial/worldFit.ts.) `useSyncExternalStore` is the same discipline
+ * lib/utils/useHasMounted.ts already uses: the server snapshot is 1, so
+ * hydration still matches the served markup exactly, and the first render in
+ * which this world exists at all already carries the measured fit. Nothing can
+ * now paint the world at one scale and correct it on the next frame.
+ *
+ * `visualViewport` is subscribed to as well as `resize`, and it is not
+ * redundant: on a pinch-zoom, and on the browser-zoom levels §11 asks to be
+ * checked, the layout viewport can stay put while the visual viewport is what
+ * actually changed. Both notify one snapshot that reads
+ * `window.innerWidth/innerHeight` -- the CSS viewport truth every other unit in
+ * this world is expressed against -- so the two events are two triggers for one
+ * measurement, not two measurements.
  */
+function subscribeToViewport(onStoreChange: () => void): () => void {
+  window.addEventListener("resize", onStoreChange);
+  const visual = window.visualViewport;
+  visual?.addEventListener("resize", onStoreChange);
+  return () => {
+    window.removeEventListener("resize", onStoreChange);
+    visual?.removeEventListener("resize", onStoreChange);
+  };
+}
+
+/** Numbers compare by value, so this is a stable snapshot in React's sense. */
+function getViewportFit(): number {
+  return worldFit(window.innerWidth, window.innerHeight);
+}
+
+function getServerFit(): number {
+  return 1;
+}
+
 function useWorldFit(active: boolean): number {
-  const [fit, setFit] = useState(1);
-  useEffect(() => {
-    // Nothing to reset when inactive: the return below already reports 1, so
-    // writing state here would only cost a cascading render to say the same
-    // thing.
-    if (!active) return;
-    const measure = () => setFit(worldFit(window.innerWidth, window.innerHeight));
-    measure();
-    window.addEventListener("resize", measure);
-    const visual = window.visualViewport;
-    visual?.addEventListener("resize", measure);
-    return () => {
-      window.removeEventListener("resize", measure);
-      visual?.removeEventListener("resize", measure);
-    };
-  }, [active]);
+  const fit = useSyncExternalStore(subscribeToViewport, getViewportFit, getServerFit);
   return active ? fit : 1;
 }

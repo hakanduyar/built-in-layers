@@ -239,3 +239,59 @@ export function worldX(vw: number): string {
 export function worldY(vh: number): string {
   return `calc(${vh} * var(--world-vh))`;
 }
+
+/* -------------------------------------------------------------- V14.1 boot */
+
+/**
+ * V14.1 (owner: "text initially appears larger and then visibly shrinks").
+ *
+ * MEASURED CAUSE. The fit is a viewport measurement, so until V14.1 it existed
+ * only after React had mounted: the server-rendered tree (the linear
+ * reduced-motion / no-JS composition, which is also what every JS visitor is
+ * shown for the few frames before hydration) painted with NO fit at all, and
+ * the spatial world then replaced it carrying one. At 1440x900 that is a step
+ * of exactly this module's own number -- the hero measured 247.97px tall, then
+ * 225.41px, a ratio of 0.909 -- held for 83ms on a warm load and 231ms on a
+ * cold one (docs/review/v14-scroll-baseline/initial-paint/before-*.json). At
+ * 1920x1080 the fit clamps to 1, which is why the same load shows no flash
+ * there at all: the defect is the fit's arrival, not the tree swap.
+ *
+ * THE FIX IS TO KNOW THE FIT BEFORE THE FIRST PAINT. This is the boot script
+ * that does it: a few hundred bytes, run synchronously in `<head>`, that
+ * publishes the same clamp this module computes as a custom property. CSS then
+ * applies it (`.world-fit-layer` in styles/globals.css) on the very first
+ * paint, so the first composition the reader sees is the settled one.
+ *
+ * It is deliberately NOT a blanket "hide until hydrated": nothing is
+ * concealed, and the page remains fully painted and readable at every moment.
+ *
+ * Three visitors are explicitly left exactly as they were, by returning before
+ * the property is ever set -- so for them CSS falls back to 1 and not one
+ * pixel moves:
+ *
+ *   - no JS at all: the script never runs
+ *   - `prefers-reduced-motion: reduce`: the linear tree is their FINAL
+ *     composition rather than a transient pre-hydration paint, and the spatial
+ *     world (the only thing the fit is composed for) never mounts for them
+ *   - below the desktop breakpoint: the fit is desktop-only by construction
+ *     (mobile is a vertical interpretation, not a compressed desktop)
+ *
+ * The source is generated from the constants above rather than hand-written,
+ * so the boot value and `worldFit()` cannot drift apart.
+ */
+export const WORLD_FIT_VAR = "--world-fit";
+
+/** The desktop breakpoint the fit is gated on -- `lg`, matching useIsDesktop. */
+export const WORLD_FIT_DESKTOP_QUERY = "(min-width: 1024px)";
+
+export function worldFitBootScript(): string {
+  return (
+    `(function(){try{` +
+    `if(!matchMedia(${JSON.stringify(WORLD_FIT_DESKTOP_QUERY)}).matches)return;` +
+    `if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;` +
+    `var f=Math.min(innerHeight/${WORLD_REFERENCE.height},innerWidth/${WORLD_FIT_WIDTH_REFERENCE});` +
+    `f=Math.min(Math.max(f,${WORLD_FIT_MIN}),${WORLD_FIT_MAX});` +
+    `document.documentElement.style.setProperty(${JSON.stringify(WORLD_FIT_VAR)},String(f));` +
+    `}catch(e){}})();`
+  );
+}

@@ -248,3 +248,36 @@ body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
 body:not(:has(section[aria-label="Spatial system tour"])) .finale-map {
   display: none;
 }
+
+/*
+ * V14.1 — THE WORLD'S FIT, APPLIED ON THE FIRST PAINT.
+ *
+ * The custom property is published synchronously in `<head>` by the boot script
+ * generated in lib/spatial/worldFit.ts, so this resolves before anything is
+ * painted rather than a commit after the world mounts.
+ *
+ * A TRANSFORM HERE, NOT `zoom`, AND THAT IS THE OPPOSITE OF THE WORLD'S OWN
+ * CHOICE ON PURPOSE. The mounted world uses `zoom` (V11): it is a layout scale,
+ * so text is laid out at its final size and painted once at native raster scale.
+ * This layer is the PRE-HYDRATION tree, and it is replaced by the world a
+ * hundred milliseconds later — so what matters here is that it is the same SIZE,
+ * and that it does not change the document's layout on its way past. `zoom`
+ * changes the element's layout box, which changed the magnitude of the shift the
+ * hydration swap already causes: measured, CLS on the homepage went 0.0388 ->
+ * 0.0777 at 1440x900 and 0.0155 -> 0.1152 at 1366x768, past the 0.1 "good"
+ * threshold. A transform is a paint operation, so the box, the document height
+ * and that shift are all untouched: CLS returns to the baseline's exactly.
+ *
+ * The paint-time resampling that V11 removed from the world is therefore
+ * accepted HERE, for the ~100ms this tree is on screen, in exchange for it
+ * being the right size for all of them. Nothing that persists is scaled.
+ *
+ * The fallback of 1 is what every visitor the boot script deliberately skips
+ * receives — no JS, `prefers-reduced-motion: reduce`, and anything below the
+ * desktop breakpoint — so their composition is byte-identical to before, with
+ * no transform at all.
+ */
+.world-fit-layer {
+  transform: scale(var(--world-fit, 1));
+  transform-origin: top center;
+}

@@ -1045,3 +1045,90 @@ Binding conditions attached to this approval — all already true of the current
 - **Rejected:** quantising the attention so it writes less often (visible steps, and it hides the
   cost rather than removing it); dropping the attention (the rail would run across titles again —
   the owner's finding); per-tick opacity (the same ninety repaints).
+
+## D-041 — The world's fit is known before the first paint, not one commit after it
+
+- **Status:** V14.1 ENGINEERING. Owner visual acceptance of V14 remains **PENDING**; this changes
+  no composition on any surface a reader keeps.
+- **Context:** the owner reported that on first load "text/elements initially appear larger and then
+  visibly shrink into final composition". Measured on the accepted baseline at 1440×900
+  (`docs/review/v14.1-engineering/initial-paint/`): the hero paints 247.97px tall, and 83ms later
+  on a warm load — 231ms on a cold one — it is 225.41px. The ratio is 0.909, which is exactly
+  `worldFit(1440, 900)`. At 1920×1080 the fit clamps to 1 and there is no flash at all, which
+  identifies the cause precisely: not the tree swap, not fonts (the computed font-size never
+  changes), but the fit's *arrival*. It was a viewport measurement that existed only after React
+  mounted, so the server-rendered tree — what every JS visitor sees for the frames before
+  hydration — painted with no fit, and the world then replaced it carrying one.
+- **Decisions:**
+  1. **A boot script publishes the fit as a custom property, synchronously, in `<head>`**
+     (`worldFitBootScript()` in `lib/spatial/worldFit.ts`). Its source is generated from that
+     module's own constants, so the booted value and `worldFit()` cannot drift apart.
+  2. **CSS applies it** (`.world-fit-layer`, `styles/globals.css`), so the first painted
+     composition is the settled one — **as a transform, and deliberately not as `zoom`.** The
+     mounted world keeps `zoom` for V11's reason (a layout scale, so text is laid out at its final
+     size and painted once at native raster scale). This layer is the pre-hydration tree, replaced
+     ~100ms later, so what matters is that it is the right SIZE without changing the document's
+     layout on its way past. `zoom` does change the layout box, and that grew the shift the
+     hydration swap already causes: measured, homepage CLS went 0.0388 → 0.0777 at 1440×900 and
+     0.0155 → **0.1152** at 1366×768, past the 0.1 "good" threshold. With a transform the document
+     height is byte-identical to the baseline at every viewport and CLS lands at 0.0418 / 0.0312 /
+     0.0442 (1440 / 1920 / 1366) against the baseline's 0.0388 / 0.1474 / 0.0155 — the worst case
+     across the matrix falls from 0.1474 to 0.0442. The paint-time resampling V11 removed from the
+     world is accepted here, for the ~100ms this tree is on screen, and nothing that persists is
+     scaled.
+  3. **The pre-hydration tree paints through that layer**, and three classes of visitor are
+     deliberately skipped so nothing they see moves by a pixel: no JS (the script never runs),
+     `prefers-reduced-motion: reduce` (the linear tree is their *final* composition, and the world
+     the fit is composed for never mounts for them), and anything below the desktop breakpoint
+     (the fit is desktop-only by construction). All three fall back to `1`.
+  4. **`useWorldFit` reads during render** via `useSyncExternalStore` — the discipline
+     `lib/utils/useHasMounted.ts` already uses — instead of measuring in an effect. The server
+     snapshot is 1, so hydration still matches the served markup exactly, and the first render in
+     which the world exists already carries the measured fit.
+- **Consequence:** measured after, at 1440×900: first paint zoom 0.909091, hero 225.41px, **zero**
+  post-paint steps, cold and warm. The pre-hydration hero now equals the settled hero at every
+  desktop viewport (225.43/225.41 at 1440×900, 249.25 at 1920×1080, 182.47 at 1366×768) and the
+  document height is unchanged at all three. Verified unchanged: reduced motion 247.97px with the
+  property unset and CLS 0, no-JS 247.97px, mobile and tablet unset.
+- **Rejected:** hiding the page until hydration (the brief forbids it, and it trades a flash for a
+  blank); expressing the clamp in pure CSS (a viewport length cannot be divided into a unitless
+  number); `useLayoutEffect` (it still runs after the server-rendered tree has painted, so it fixes
+  only the second half of the defect).
+
+## D-042 — Motion sharpness and discrete scroll: measured, and left alone
+
+- **Status:** V14.1 ENGINEERING. No product change. Evidence:
+  `docs/review/v14.1-engineering/{sharpness,discrete-scroll}/`.
+- **Context:** the owner reported softness while scrolling and suspected that an isolated wheel
+  action travels too far. Both were treated as measurements rather than intuitions, and the
+  automated V12 sharpness PASS was not treated as an answer.
+- **Sharpness — every named mechanism tested, none reproduced the report.**
+  1. Edge acutance of the flagship scene's title, cropped at rest and while the camera translates,
+     at 1440×900 and 1920×1080 and at DPR 1, 1.5 and 2: **92–108% retained while moving**. No loss.
+  2. Sub-pixel landing, controlled: the world nudged in ⅛-px steps through a whole pixel while
+     parked. Acutance is flat (±1.6% at DPR 1) and **uncorrelated** with the distance to the nearest
+     device pixel. So `round(v × dpr) / dpr` snapping cannot buy sharpness here — its only certain
+     effect would be to quantise the motion the owner likes, so it is **tested and not kept**.
+  3. `zoom` itself: the same string rendered at the same final on-screen size inside the zoomed
+     world and outside it measures **1.5% sharper inside** (both DPRs). V11's claim that the fit is
+     a layout scale holds; it is not a softening mechanism.
+  4. Structural audit (`motion-sharpness-probe.mjs`): accumulated scale on every text and image
+     ancestor is **1.0000** at rest and in motion, with no `filter` anywhere in the chain.
+  5. Not reproducible headless, and stated as such: a screenshot forces a re-raster, so it cannot
+     observe a compositor reusing a cached raster; `LayerTree` reports nothing in headless
+     Chromium. `foreground-sharpness-probe.mjs` exists so the owner can re-run it on the real
+     display, which is the only place the remaining hypothesis lives.
+- **Discrete scroll — NORMAL, so unchanged (§5 of the brief).** One notch moves the target by its
+  own raw delta and the governor walks the page to it; measured at four positions, isolated
+  impulses deliver **exactly 120px per notch, 1.000 of the raw delta, with zero coast**, settling in
+  ~0.35s. Sustained input delivers the same 120px per notch until the lead cap engages and then
+  **less** (0.76 at twelve notches), with the coast bounded at ~500px, inside the 540px the cap
+  allows. There is no regime in which an isolated impulse travels further than the same notch does
+  during sustained scrolling, so there is nothing to correct on the input side.
+- **Observation for the next art-direction gate, not acted on:** a notch buys 120 scroll px
+  everywhere, but inside the world those 120px are ~460–580 screen px of camera travel and below it
+  they are 120. That 3.8× is the world's gearing (D-039) and it is identical for isolated and
+  sustained input; shortening an isolated progression would necessarily change the sustained pace
+  the owner accepted.
+- **Rejected:** DPR snapping (no measured benefit, certain jitter cost); any per-region speed
+  constant; scroll snapping of any kind.

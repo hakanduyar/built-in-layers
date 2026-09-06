@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { SITE_URL } from "@/lib/seo/metadata";
+import { worldFitBootScript } from "@/lib/spatial/worldFit";
 import "@/styles/globals.css";
 
 const archivo = Archivo({
@@ -46,6 +47,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       className={`${archivo.variable} ${newsreader.variable} ${ibmPlexMono.variable}`}
     >
+      <head>
+        {/* V14.1 -- THE WORLD'S FIT, KNOWN BEFORE THE FIRST PAINT.
+            Synchronous and in <head> on purpose: it publishes the same clamp
+            lib/spatial/worldFit.ts computes, as a custom property, so the very
+            first painted composition is already the settled one instead of
+            shrinking into it once React mounts. It hides nothing, it is
+            generated from that module's own constants so the two cannot drift,
+            and it returns without setting anything for reduced-motion, mobile
+            and no-JS visitors -- who then keep exactly the rendering they have
+            today through the CSS fallback of 1. See worldFitBootScript(). */}
+        <script dangerouslySetInnerHTML={{ __html: worldFitBootScript() }} />
+      </head>
       <body>
         <SkipLink />
         <SiteHeader />

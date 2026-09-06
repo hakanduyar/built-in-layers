@@ -1,0 +1,46 @@
+{
+  "base": "http://127.0.0.1:3400",
+  "viewport": "1366x768",
+  "mode": "warm",
+  "frames": 239,
+  "enhancedTreeAtMs": 109.3,
+  "zoom": {
+    "firstPainted": "1",
+    "settled": "0.775758",
+    "steps": [
+      {
+        "t": 34,
+        "value": "1"
+      },
+      {
+        "t": 109.3,
+        "value": "0.775758"
+      }
+    ]
+  },
+  "heroHeight": {
+    "firstPainted": 235.22,
+    "settled": 182.47,
+    "resizeRatio": 0.7757,
+    "resizePx": 52.75,
+    "steps": [
+      {
+        "t": 34,
+        "value": 235.22
+      },
+      {
+        "t": 109.3,
+        "value": 182.47
+      }
+    ]
+  },
+  "heroFontSize": {
+    "steps": [
+      {
+        "t": 34,
+        "value": "143.43px"
+      }
+    ]
+  },
+  "verdict": "FLASH: hero 235.22 -> 182.47px (x0.7757) over 2 paints; zoom 1 -> 0.775758"
+}
