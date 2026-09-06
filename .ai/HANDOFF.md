@@ -10,7 +10,7 @@ safety tag: `safety-v14-scroll-baseline` → `35c2c58`, untouched.
 surface instead of ink (D-048); UNDERNEATH stands on the exposed section's SYSTEM line; Back on the
 surface is a rising paper plane from the SURFACE rule down. Scroll untouched, first paint and mobile
 verified. Handoff: `.ai/handoffs/V14_2_GATE_B_RETURN.md`; package `docs/review/v14.2-gate-b/`.
-Checkpoint SHA in `.ai/STATE.md`.
+Checkpoint `de538bf`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
 `V14.2 VISUAL GATE B COMPLETE`

@@ -2,8 +2,7 @@
 
 **From:** Fable 5.1 (visual gate, scoped) · **Date:** 2026-09-07 · **Branch:**
 `feature/owner-visual-acceptance-v14` · **Base:** `8c6045c` (V14.1 Fable checkpoint `f4bdab3` +
-the Opus QA record) · **Checkpoint:** the commit carrying this file; `.ai/STATE.md` records the
-SHA once pushed.
+the Opus QA record) · **Checkpoint:** `de538bf`, pushed, `local == origin`.
 
 Owner acceptance is **PENDING**. Not a freeze, not an acceptance, not a merge. `main` = `16d3ec0`.
 
