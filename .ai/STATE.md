@@ -2,14 +2,15 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-06_
+_Updated: 2026-09-06 (V14.1 engineering gate)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | V14 Fable visual candidate — see `.ai/handoffs/FABLE-V14-RETURN.md`. Verify the tip with `git rev-parse HEAD` rather than trusting a SHA written here |
+| Last application checkpoint | `c2ba26a` — V14.1 engineering stabilization (`.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`). The V14 visual candidate it sits on is `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`). Verify the tip with `git rev-parse HEAD` |
+| Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/` |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
 | `main` | `16d3ec0` — untouched, never merged to |
@@ -30,8 +31,16 @@ by design; the standard for those moves is the owner's brief, not a measured reg
 
 ## Current phase
 
-**V14 — owner visual acceptance recovery. FABLE VISUAL CANDIDATE READY, OPUS QA COMPLETE.
-Owner acceptance: PENDING.**
+**V14 — owner visual acceptance recovery. FABLE VISUAL CANDIDATE READY · OPUS QA COMPLETE ·
+V14.1 ENGINEERING COMPLETE. Owner acceptance: PENDING.**
+
+**V14.1 (engineering only, `c2ba26a`).** The owner's initial-load flash is fixed: the world's fit is
+published before the first paint instead of arriving a commit after the world mounts, so
+`FIRST PAINT == SETTLED` at 1440×900, 1920×1080 and 1366×768, cold and warm (D-041). Motion
+sharpness and discrete scroll were measured and deliberately left unchanged (D-042) — no scroll
+constant, the governor, the intent model or the wheel handler was touched, and the accepted scroll
+is tagged. Full account and the protected-scroll list:
+`.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`.
 
 Record: `.ai/handoffs/FABLE-V14-RETURN.md` (what changed by system A–F, the measured before/after,
 the mobile deltas, the frame-time finding). Brief: `.ai/handoffs/V14-OWNER-BRIEF.md`. Owner review

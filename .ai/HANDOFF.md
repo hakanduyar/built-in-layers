@@ -2,10 +2,18 @@
 
 What the next model needs, and nothing else. No transcripts, no test logs, no restated rules.
 
-**CHECKPOINT:** the V14 Fable visual candidate — the tip of `feature/owner-visual-acceptance-v14`
-(`git rev-parse HEAD`; commit subject begins `V14: owner visual candidate`). Verify `local == origin`.
-**VERDICT:** `FABLE VISUAL CANDIDATE READY`. Owner acceptance **PENDING**. Do not merge. Full
-account: `.ai/handoffs/FABLE-V14-RETURN.md`; the owner's brief: `.ai/handoffs/V14-OWNER-BRIEF.md`.
+**CHECKPOINT:** `c2ba26a` — the V14.1 engineering gate, sitting on the V14 visual candidate
+`35c2c58`. Verify `local == origin`. Scroll safety tag: `safety-v14-scroll-baseline` → `35c2c58`.
+**VERDICT:** `FABLE VISUAL CANDIDATE READY` · `OPUS QA COMPLETE` · `V14.1 ENGINEERING COMPLETE`.
+Owner acceptance **PENDING**. Do not merge. Full account: `.ai/handoffs/FABLE-V14-RETURN.md`; the
+owner's brief: `.ai/handoffs/V14-OWNER-BRIEF.md`.
+
+**V14.1 ENGINEERING (this gate):** the initial-load flash is fixed — the world's fit is published
+before the first paint (D-041); motion sharpness and discrete scroll were measured and left
+unchanged (D-042). No scroll constant, governor, intent-model or wheel-handler change. Handoff for
+the next art-direction gate: `.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`, whose §4 is the scroll
+behaviour that must not be altered. Evidence: `docs/review/v14-scroll-baseline/`,
+`docs/review/v14.1-engineering/`.
 
 **OPUS QA: COMPLETE** — `.ai/handoffs/OPUS-V14-QA-RETURN.md`, **PASS WITH DOCUMENTED NON-BLOCKERS**.
 Independently re-measured on its own production build: the route's governor budget byte-identical,

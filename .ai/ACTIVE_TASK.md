@@ -2,11 +2,18 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: owner review.** Fable checkpoint
-`35c2c58`; Opus QA checkpoint `27c4fca` (PASS WITH DOCUMENTED NON-BLOCKERS); both models done.
+**TASK:** V14 — owner visual acceptance recovery. **Stage: owner review, after the V14.1
+engineering gate.** Fable checkpoint `35c2c58`; Opus QA `27c4fca` (PASS WITH DOCUMENTED
+NON-BLOCKERS); V14.1 engineering checkpoint `c2ba26a`.
 
-**STATUS:** `FABLE VISUAL CANDIDATE READY` · `OPUS QA COMPLETE`. Owner acceptance **PENDING**.
-Do not merge.
+**STATUS:** `FABLE VISUAL CANDIDATE READY` · `OPUS QA COMPLETE` · `V14.1 ENGINEERING COMPLETE`.
+Owner acceptance **PENDING**. Do not merge.
+
+**V14.1 (engineering only, no art direction):** the initial-load flash is fixed — the world's fit is
+now known before the first paint (D-041). Motion sharpness and discrete scroll were measured and
+left alone (D-042); the scroll the owner accepted is tagged `safety-v14-scroll-baseline` at
+`35c2c58` and recorded in `docs/review/v14-scroll-baseline/`. Handoff for the next art-direction
+gate: `.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`.
 
 **BRIEF:** `.ai/handoffs/V14-OWNER-BRIEF.md` — the owner's instruction, verbatim, and the authority
 for this task. §28 is the Opus mandate; §29 owner acceptance; §33 the final return format.
@@ -30,6 +37,6 @@ reverse and lower-world recordings, the zoom stills, the focus frames, the befor
 Decide on the three mobile deltas in the Opus return §6.1. Acceptance, rework or rejection is the
 owner's alone; the models have stopped.
 
-**NEXT MODEL (only on the owner's instruction):** whatever the owner's verdict names — an
-acceptance phase (freeze, then a merge request), a bounded rework of named systems, or the
-WebKit test-heuristic repair as an engineering item. Nothing runs until then.
+**NEXT MODEL:** Fable 5.1 · Max, for the art-direction gate — its handoff is
+`.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`, whose §4 lists the scroll behaviour it must not
+alter. Anything else waits on the owner's verdict.

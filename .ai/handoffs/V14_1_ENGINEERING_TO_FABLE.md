@@ -7,7 +7,7 @@ candidate is unchanged and **owner acceptance is still PENDING**.
 |---|---|
 | Branch | `feature/owner-visual-acceptance-v14` |
 | V14 application baseline | `35c2c58` |
-| **Engineering checkpoint** | see `git rev-parse HEAD` — commit subject begins `V14.1: engineering stabilization` |
+| **Engineering checkpoint** | `c2ba26a` — pushed; `local == origin` |
 | **Scroll safety tag** | `safety-v14-scroll-baseline` → `35c2c58` (annotated, pushed) |
 | `main` | `16d3ec0` — untouched |
 | Evidence | `docs/review/v14-scroll-baseline/`, `docs/review/v14.1-engineering/` |
