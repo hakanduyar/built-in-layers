@@ -6,7 +6,9 @@ What the next model needs, and nothing else. No transcripts, no test logs, no re
 (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`), on the V14.1 engineering
 checkpoint `c2ba26a` / `fa7c72c`, on the V14 candidate `35c2c58`. Verify `local == origin`. Scroll
 safety tag: `safety-v14-scroll-baseline` → `35c2c58`, untouched.
-**VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE`. Owner acceptance **PENDING**. Do not merge.
+**VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS`
+(`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
+application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
 **THIS GATE (Fable 5.1, art direction only):** the owner's remaining findings corrected as systems,
 recorded as D-043 … D-047 and `docs/DESIGN_SYSTEM.md` §39. The route as a track; the ground drawn
@@ -61,5 +63,5 @@ mobile identical to the record · initial paint PASS · discrete scroll NORMAL �
 - `docs/review/v14.1-fable/README.md` — the owner review package index (before / after / iterations)
 - `docs/review/v14.1-fable/after/{journey.json,metrics,runtime,mobile}` — the numbers
 
-**NEXT:** Opus 5 / High engineering QA (`V14_1_FABLE_TO_OPUS.md` §9), then the owner reviews the
-package. Neither model declares FREEZE, OWNER ACCEPTED or READY TO MERGE.
+**NEXT:** the owner reviews `docs/review/v14.1-fable/README.md`. Both model gates have run and
+stopped. Neither model declares FREEZE, OWNER ACCEPTED or READY TO MERGE.

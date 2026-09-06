@@ -2,7 +2,7 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-06 (V14.1 Fable visual correction gate)_
+_Updated: 2026-09-06 (V14.1 final Opus engineering QA)_
 
 | Field | Value |
 |---|---|
@@ -32,8 +32,8 @@ regression.
 
 ## Current phase
 
-**V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE. Owner acceptance:
-PENDING. Next: Opus 5 / High engineering QA of the Fable checkpoint.**
+**V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE · FINAL OPUS QA
+COMPLETE (PASS). Owner acceptance: PENDING — the owner's visual review is the only remaining gate.**
 
 **V14.1 Fable gate (art direction only).** The owner's remaining findings were corrected as
 systems: the route as a track (ahead / travelled as different drawings, drawn only in the open;
@@ -58,6 +58,18 @@ scroll measured and left alone (D-042). `.ai/handoffs/V14_1_ENGINEERING_TO_FABLE
 Record of V14: `.ai/handoffs/FABLE-V14-RETURN.md`; brief `.ai/handoffs/V14-OWNER-BRIEF.md`; V14 owner
 package `docs/review/v14-owner-visual/README.md`; independent QA `.ai/handoffs/OPUS-V14-QA-RETURN.md`
 (PASS WITH DOCUMENTED NON-BLOCKERS).
+
+**Final Opus QA (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`), independent, on its own fresh production
+build of the application tree `f4bdab3`: PASS, no defect, no source change.** Protected invariants
+re-verified against the recorded baselines: the scroll modules byte-identical; `FIRST PAINT ==
+SETTLED` at 1440 / 1920 / 1366; every isolated wheel impulse 120px, delivered 1.000, coast 0, with
+`routeSpan` 4500 and the 540px lead cap unmoved; reverse one notch, 0 wrong-way px; frame time
+17.1 / 17.9 / 17.4ms on the route and **16.7ms with 0 frames over 25ms on the new lower page**;
+mobile identical but for one 0.001 sampling mean. Chromium 224/224, WebKit 220/224 (the documented
+four), console 0 on the content routes, hydration 0, overflow 0 of 99, CLS max 0.0418 (good).
+Documented there and not acted on: the document is 69px taller at 1440×900 (composition, not
+scroll — §3.1), and the Fable handoff's "seven break rails" is 11 in the DOM in code neither gate
+touched (§3.2).
 
 Validation at the Fable checkpoint (production build): typecheck 0 · lint 0 · `format:check` 0 ·
 unit **562/562** · build ✓ · Chromium **224/224** · console/runtime/hydration 0 on the content
@@ -97,9 +109,10 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-1. **Opus 5 / High — engineering QA of the Fable checkpoint** (`V14_1_FABLE_TO_OPUS.md` §9): verify
-   §6 independently on a fresh production build (the protected-file diff, initial paint, discrete
-   scroll, scroll contract, frame time, the mobile record), re-run WebKit, confirm the rail guard.
-   No redesign.
+1. ~~Opus 5 / High — engineering QA of the Fable checkpoint~~ — **done: PASS**,
+   `.ai/handoffs/OPUS-V14_1-QA-RETURN.md`. Verified independently on its own fresh production build:
+   protected-file diff empty, first paint settled, discrete scroll and route geometry unmoved,
+   reverse correct, frame time at parity including the new lower page, mobile unchanged,
+   Chromium 224/224, WebKit at the documented baseline. No defect, no source change.
 2. The owner's review of `docs/review/v14.1-fable/README.md` — the only acceptance. The three
    mobile deltas of `OPUS-V14-QA-RETURN.md` §6.1 still need an owner decision.

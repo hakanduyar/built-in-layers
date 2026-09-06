@@ -2,12 +2,13 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: Opus engineering QA of the V14.1 Fable
-visual correction checkpoint, then owner review.** Fable V14 checkpoint `35c2c58`; Opus QA
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER VISUAL REVIEW. The final Opus
+engineering QA of the V14.1 Fable checkpoint is complete — PASS.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
 (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`).
 
-**STATUS:** `V14.1 FABLE VISUAL GATE COMPLETE`. Owner acceptance **PENDING**. Do not merge.
+**STATUS:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS QA COMPLETE — PASS`. Owner acceptance
+**PENDING**. Do not merge.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the
@@ -32,8 +33,12 @@ in session; `.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md` §4 is the scroll behav
   problems addressed, remaining issues, the protected-scroll proof, first-paint and mobile status.
 - Earlier records: `FABLE-V14-RETURN.md`, `OPUS-V14-QA-RETURN.md`, `V14_1_ENGINEERING_TO_FABLE.md`.
 
-**NEXT MODEL:** Opus 5 · High — engineering QA only (`V14_1_FABLE_TO_OPUS.md` §9): a fresh
-production build; the protected-file diff; initial paint, discrete scroll, scroll contract, frame
-time; the mobile route probe against `docs/review/v14.1-engineering/mobile/metrics/`; WebKit; the
-rail guard. No redesign. Then the owner reviews `docs/review/v14.1-fable/README.md`. Acceptance,
-rework or rejection is the owner's alone.
+**FOR THE OWNER (this stage):** review `docs/review/v14.1-fable/README.md` — the forward, reverse
+and lower-world journeys, the zoom sets, the focus frames, the transition sheets and the
+before/after by system. Two decisions are yours and are not model decisions: the SYSTEMS →
+UNDERNEATH `SceneBreak` cut (unchanged since V4), and the three mobile deltas in
+`OPUS-V14-QA-RETURN.md` §6.1, still pending.
+
+**NEXT MODEL:** none. Both gates have run and stopped: the Fable visual correction
+(`V14_1_FABLE_TO_OPUS.md`) and the final Opus engineering QA (`OPUS-V14_1-QA-RETURN.md`, PASS).
+Acceptance, rework or rejection is the owner's alone.
