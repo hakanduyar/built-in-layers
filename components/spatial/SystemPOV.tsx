@@ -100,6 +100,7 @@ export function SystemPOV({
         state={state}
         animated={animated}
         resolved={resolved}
+        compact={compact}
       />
     </div>
   );
@@ -197,22 +198,38 @@ function Cluster({
   state,
   animated,
   resolved,
+  compact,
 }: {
   index: string;
   rows: SystemAnnotationRow[];
   state: MotionValue<number>;
   animated: boolean;
   resolved: boolean;
+  /** The compact (mobile) frame keeps the V13 gate's left-hand cluster. */
+  compact: boolean;
 }) {
   const indexOpacity = useTransform(state, [-0.7, -0.32, 0.34, 0.68], [0, 1, 1, 0]);
   const rowsOpacity = useTransform(state, [-0.42, -0.1, 0.16, 0.4], [0, 1, 1, 0]);
   const slide = useTransform(state, [-0.42, 0], [8, 0]);
 
+  // V14.1 (owner §6, scene hierarchy) -- TWO VOICES, TWO CORNERS. Through V14
+  // this cluster stood in the composition's own column, eight pixels above
+  // its register line, in the same mono type: three identical rows stacked
+  // over every title, and the observer indistinguishable from the subject. The
+  // system now speaks from the acquisition frame's far corner -- the top-RIGHT
+  // bracket -- and the composition keeps the left. Same facts, same type; a
+  // different position is what makes it a different agent's mark.
   return (
-    <div className="absolute -top-1 left-0 max-w-[22rem] -translate-y-full pl-1">
+    <div
+      className={
+        compact
+          ? "absolute -top-1 left-0 max-w-[22rem] -translate-y-full pl-1"
+          : "absolute -top-1 right-0 max-w-[26rem] -translate-y-full pr-1 text-right"
+      }
+    >
       <motion.div
         aria-hidden="true"
-        className="flex items-center gap-2"
+        className={compact ? "flex items-center gap-2" : "flex items-center justify-end gap-2"}
         style={animated ? { opacity: indexOpacity } : undefined}
       >
         {/* The single signal accent this layer is allowed (§11). Decorative,
@@ -223,7 +240,7 @@ function Cluster({
 
       {rows.length > 0 && (
         <motion.dl
-          className={`mt-1.5 flex flex-wrap gap-x-5 gap-y-0.5 pt-1.5 ${
+          className={`mt-1.5 flex flex-wrap gap-x-5 gap-y-0.5 pt-1.5 ${compact ? "" : "justify-end "}${
             resolved ? "border-t border-ink" : "border-t border-line"
           }`}
           style={animated ? { opacity: rowsOpacity, y: slide } : undefined}

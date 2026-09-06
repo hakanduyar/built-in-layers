@@ -1,4 +1,12 @@
-import { footerCtaHeading, footerCtaLabel, footerCtaSubline, workIndexLabel } from "@/data/copy";
+import {
+  footerCtaHeading,
+  footerCtaLabel,
+  footerCtaSubline,
+  howIBuildHeading,
+  sectionIndex,
+  selectedSystemsHeading,
+  workIndexLabel,
+} from "@/data/copy";
 import { contactUrl, siteName, siteOwner, socialLinks } from "@/data/site";
 import { RouteMap } from "@/components/spatial/RouteMap";
 import { ButtonLink } from "@/components/ui/ButtonLink";
@@ -70,6 +78,15 @@ const FINALE_STATIONS = [
   { id: "dropspot", index: "04" },
 ] as const;
 
+/** V14.1: the lower page's stations, so the resolved map is the whole journey
+ *  -- the sections' real IA indices and labels, in their real order. */
+const FINALE_TAIL = [
+  { index: sectionIndex.selectedSystems, label: selectedSystemsHeading },
+  { index: sectionIndex.howIBuild, label: howIBuildHeading },
+  { index: "07", label: "Field notes" },
+  { index: "08", label: "About" },
+] as const;
+
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -135,6 +152,7 @@ export function SiteFooter() {
               state="resolved"
               stations={FINALE_STATIONS}
               branch={[workIndexLabel]}
+              tail={FINALE_TAIL}
               labels
               className="w-full"
             />

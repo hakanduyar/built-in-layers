@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Figure } from "@/components/ui/Figure";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import type { ProjectFrontmatter, ProjectImageAssetType } from "@/lib/content/schemas";
+import { evidenceWindow } from "@/lib/spatial/evidenceDetail";
 import { representativeAsset } from "@/lib/spatial/systemPov";
 import { cn } from "@/lib/utils/cn";
 
@@ -158,19 +159,29 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
               Laid out as a block-level flex that shrinks to fit (`w-fit`), so
               no anonymous line box inherits the heading's strut -- the V13
               measurement that cost the flagship 80px is not reintroduced. */}
+          {/* V14.1 (owner §11): ONE ACTION VOCABULARY. V14 made this a bordered
+              44px button -- the affordance had been too weak -- and it became
+              the strongest website tell in the frame, beside an INSPECT that
+              was a bare word. Both ways out of a scene are now the same mark:
+              the world's route reaching toward the destination -- a rule that
+              extends on hover -- with the word in ink, at label size, and the
+              acquisition frame's own open corner standing at its head so it
+              reads as a bounded, clickable thing without a box. Still one
+              link and one tab stop; the 44px hit area is kept by min-height. */}
           <span
             aria-hidden="true"
             className={cn(
-              // Below `lg`: the V13 register line, byte-identical. At `lg`+: the control.
-              "mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-[background-color,color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
-              "lg:flex lg:w-fit lg:min-h-11 lg:rounded-1 lg:border lg:border-ink lg:px-5 lg:text-ink lg:group-hover/open:bg-ink lg:group-hover/open:text-paper",
-              variant === "foundation" ? "lg:mt-8" : "lg:mt-6",
+              // Below `lg`: the V13 register line, byte-identical. At `lg`+: the mark.
+              "mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
+              "lg:relative lg:flex lg:w-fit lg:min-h-11 lg:pl-4 lg:text-ink",
+              variant === "foundation" ? "lg:mt-6" : "lg:mt-5",
             )}
           >
-            {/* The world's own register mark, extending on hover: the route
-                reaching toward the destination. */}
-            <span className="block h-px w-6 bg-current opacity-60 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10 lg:w-5 lg:group-hover/open:w-8" />
-            {affordanceLabel}
+            <span className="absolute left-0 top-1/2 hidden h-3.5 w-3.5 -translate-y-1/2 border-l border-t border-current opacity-80 lg:block" />
+            <span className="block h-px w-6 bg-current opacity-60 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10 lg:w-6 lg:group-hover/open:w-10" />
+            <span className="underline decoration-1 underline-offset-4 decoration-transparent transition-[text-decoration-color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:decoration-current">
+              {affordanceLabel}
+            </span>
           </span>
         </Link>
       </h3>
@@ -209,8 +220,19 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
   // The inspector is the honest answer the mobile gate already built -- the
   // same asset, at a width it can be read at, in a native dialog -- and it is
   // real UI rather than a redrawn or cropped diagram (nothing is invented).
+  // V14.1 (owner §9): the diagram scenes frame the subsystem that is their
+  // argument (lib/spatial/evidenceDetail.ts) at the scale the window earns;
+  // the whole drawing stays one INSPECT away. A scene without a window --
+  // DropSpot's real screenshots -- renders exactly as before.
+  const window_ = asset ? evidenceWindow(asset.src) : null;
   const plate = asset ? (
-    <Figure src={asset.src} alt={asset.alt} caption={asset.caption} inspect="desktop" />
+    <Figure
+      src={asset.src}
+      alt={asset.alt}
+      caption={asset.caption}
+      inspect="desktop"
+      detail={window_ ?? undefined}
+    />
   ) : null;
 
   // The `split` layout lets the evidence plate break the text column's
@@ -354,6 +376,43 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
     // 1180 world-px scene, against the 790 world px the V12 `w-[67%]` branch
     // gave every viewport up to 1100px tall (and the 897 world px that
     // `w-[76%]` gave the taller ones, where the frame had not grown).
+    // V14.1 (owner §9, §10) -- THE FOUNDATION TAKES THE FULL MEASURE.
+    // Project 01 reads as the foundation by ROLE: its evidence -- the gated
+    // loop, the process the other three systems are built inside -- is the
+    // one plate on the route that spans the whole scene measure, framed on
+    // the loop itself (evidenceDetail.ts) so its eight stages read at 0.8 of
+    // the drawing's own scale instead of 0.55. The loop's own shallow aspect
+    // is what makes the full measure affordable: identity, plate and the
+    // reading row beneath it stand well inside the frame the 990 reference
+    // was set against (tests/tools/scene-fit-probe.mjs re-measures it).
+    if (window_) {
+      return (
+        <div className="w-full">
+          {/* The identity and the reading column share the row above the
+              plate: the title on the left, the description and the stack on
+              the right, foot-aligned with the action. A reading row beneath
+              the plate instead measured 65px past the frame floor at 1440x900
+              (tests/tools/scene-fit-probe.mjs, iteration 1). */}
+          <div className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-10 lg:pt-4">
+            <div className="lg:col-span-8">{identity}</div>
+            {/* Below lg: the reading column 28px under the identity and the
+                plate 24px under it -- the V13 foundation's own mobile rhythm
+                (the branch below), so the frozen mobile composition is
+                unchanged by the desktop row. */}
+            <div className="mt-7 lg:col-span-4 lg:mt-0 lg:pb-2">{detail}</div>
+          </div>
+          {plate && (
+            <div
+              data-project-ground-source={project.slug}
+              className="mt-6 w-full lg:[&_figcaption]:max-w-[64%]"
+              style={resolveDown}
+            >
+              {plate}
+            </div>
+          )}
+        </div>
+      );
+    }
     return (
       <div className="w-full">
         {/* V14: `lg:pt-7` -> `lg:pt-4`. The flagship is the frame's binding

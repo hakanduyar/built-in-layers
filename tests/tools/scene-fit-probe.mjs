@@ -80,8 +80,35 @@ for (const [width, height] of VIEWPORTS) {
       // The composition's ink: the union of every text/media leaf inside the scene.
       let top = Infinity;
       let bottom = -Infinity;
+      // V14.1: an element's INK is its box clipped by every overflow-hidden
+      // ancestor. The detail plates (components/ui/Figure.tsx, `detail`) lay
+      // the whole asset out inside a clipping frame, so the image's own box
+      // runs far past what is painted; measuring it unclipped reported a
+      // 73-109px overflow for plates that stood 60px clear of the frame floor.
+      const clipped = (el) => {
+        let r = el.getBoundingClientRect();
+        let node = el.parentElement;
+        while (node && node !== scene) {
+          const o = getComputedStyle(node);
+          if (/(hidden|clip)/.test(o.overflow + o.overflowY + o.overflowX)) {
+            const c = node.getBoundingClientRect();
+            r = {
+              top: Math.max(r.top, c.top),
+              bottom: Math.min(r.bottom, c.bottom),
+              left: Math.max(r.left, c.left),
+              right: Math.min(r.right, c.right),
+              width: 0,
+              height: 0,
+            };
+            r.width = Math.max(0, r.right - r.left);
+            r.height = Math.max(0, r.bottom - r.top);
+          }
+          node = node.parentElement;
+        }
+        return r;
+      };
       for (const el of scene.querySelectorAll("h3,p,img,figcaption,span,dt,dd,a,button")) {
-        const r = el.getBoundingClientRect();
+        const r = clipped(el);
         if (r.width < 2 || r.height < 2) continue;
         if (el.closest("[data-system-pov]")) continue;
         top = Math.min(top, r.top);

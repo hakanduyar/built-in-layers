@@ -121,11 +121,30 @@ export function sceneState(signedApproach: number): SceneState {
  * two stations away must still be legible as a place on the map -- dimmer than
  * the one in focus, never gone. Opacity only; no scale touches text (§22).
  */
-export function scenePresence(signedApproach: number): number {
+export function scenePresence(signedApproach: number, mobile = false): number {
   const a = Math.max(-1, Math.min(1, signedApproach));
-  if (a < -0.35) return 0.4 + 0.6 * Math.max(0, (a + 1) / 0.65);
-  if (a <= 0.25) return 1;
-  return 1 - 0.55 * Math.min(1, (a - 0.25) / 0.65);
+  // The mobile composition is the V13 gate's and V14.1 does not reopen it: below
+  // lg the V14 curve stands exactly as it was.
+  if (mobile) {
+    if (a < -0.35) return 0.4 + 0.6 * Math.max(0, (a + 1) / 0.65);
+    if (a <= 0.25) return 1;
+    return 1 - 0.55 * Math.min(1, (a - 0.25) / 0.65);
+  }
+  // V14.1 (owner §6: "acquisition sometimes reading as translation rather
+  // than a state change"; "release sometimes feeling unfinished"). V14's curve
+  // rose from 0.4 across the whole approach, so a half-visible title at the
+  // frame edge was already near full presence and nothing ever CHANGED --
+  // the scene simply slid in. Now DETECTED holds at a third, ACQUIRED is one
+  // brisk rise as the block clears the frame edge (-0.42 to -0.14), FOCUSED
+  // holds, and RELEASED sets the composition down to a third by +0.6 so the
+  // departing scene is quiet before its successor is acquired. The far value
+  // is what a neighbour reads at zoom-out: present as topology, not as a
+  // competing composition.
+  if (a < -0.42) return 0.34;
+  if (a < -0.14) return 0.34 + 0.66 * ((a + 0.42) / 0.28);
+  if (a <= 0.2) return 1;
+  if (a < 0.6) return 1 - 0.66 * ((a - 0.2) / 0.4);
+  return 0.34;
 }
 
 /**

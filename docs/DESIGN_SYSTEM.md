@@ -2562,3 +2562,95 @@ holds nothing but single-paint SVG. `tests/e2e/spatial.spec.ts` guards the group
 fresh reverse, and is run against the baseline on another port at the same load whenever a
 scroll-physics number is claimed. The numbers are in
 `docs/review/v14-owner-visual/{baseline,after}/metrics/frame-time-1440x900.json`.
+
+## 39. V14.1 — the owner visual correction gate: the world's grammar completed (2026-09-06)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.1 engineering checkpoint `c2ba26a`
+(`.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`). Not merged to `main`. The owner's verdict on the
+V14 candidate was "there are improvements, but I cannot yet say it is what I asked for", and the
+V14.1 brief asked for the remaining weaknesses to be corrected as **systems**, with the scroll
+mathematics, the boot fit, the first-paint geometry and the mobile composition protected. This
+section records what those systems are. Decisions: D-043 to D-047. Evidence:
+`docs/review/v14.1-fable/` — `before/` (the checkpoint as it stood), `iter1..iter8/` (every
+internal iteration's stills, transition sheets and zoom frames, kept so the corrections can be
+read as a sequence), `after/` (the owner package).
+
+The scroll system was not touched: `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
+planeChoreography,projectGround,editorialDrift}.ts`, `SpatialCamera.tsx` (one call gained a
+`mobile` flag, §39.6), `SceneBreak.tsx` and `SystemsWord.tsx` are byte-identical to `fa7c72c`
+except for that flag. The world's route, budgets, gearing and reverse behaviour are the tagged
+`safety-v14-scroll-baseline` behaviour; `after/metrics/scroll-contract.json` and the discrete-scroll
+probe reproduce the V14.1 engineering numbers.
+
+### 39.1 What the before set showed
+
+Read off `before/motion/*.png` (eight settled frames between each pair of beats) and the stills:
+
+- three of the eight frames between the hero and Software Factory held nothing but a hairline;
+  a departing description stood orphaned top-right while the arriving title was cut at the
+  frame's right edge — presence was one slope, so nothing ever *changed* state;
+- the constructed ground read as a pale card sliding through the empty middle of every transition,
+  in the plate's own mat tone;
+- the diagrams' body labels measured 8–11 CSS px at focus — evidence as a thumbnail;
+- the rails ran from a composition's corner through its title, hidden at focus by an attention
+  dim, and vanished at 50% zoom; the survey ticks were texture on them;
+- UNDERNEATH stood bare after the cut, the SURFACE horizon crossed the Built in Layers reveal as
+  a fourth unlabelled line, and the terminus map's branch ran into "Back on the surface";
+- below the surface return the page inherited nothing from the world: four sections, each with
+  its own spine on bare paper — "a spatial first half followed by an editorial website".
+
+### 39.2 The route as a track (D-043)
+
+AHEAD is a dotted survey path; TRAVELLED is a solid rail revealed along the real curve; a leg draws
+only in the open (`lib/spatial/railTravel.ts`), from clear of the departing composition to seven
+units short of the arriving station. Stations scale with the viewport and carry the stop's index
+while the stop is ahead. The rail group carries no per-frame opacity. `transition-sheet.mjs`
+(new, `docs/REVIEW_POLICY.md`) is how every transition was judged: on its intermediate frames.
+
+### 39.3 The ground is drawn (D-044)
+
+Datum, floor and tread — section, not slab. The floor is laid from the datum as the scene is
+acquired and runs 7–18px under the composition's own bracket feet at every review viewport
+(`FLOOR_LIFT` in `ProjectPlane.tsx`; the frozen ground policy untouched). Presence is a step:
+a third while detected, one brisk rise across acquisition, held, released to a third. The
+acquisition frame speaks from the top-right corner; the composition keeps the left; every way out
+of a scene is one mark — bracket, rule, label.
+
+### 39.4 The acquired detail (D-045)
+
+Software Factory, Kıvılcım and JointLedger frame the subsystem that is their argument — a window
+cut from the same registered asset in the asset's own units, named by the diagram's own heading,
+with the whole drawing one INSPECT away and the caption stating that a detail is shown. Nothing
+was added to any project; DropSpot's real screenshots stay whole. Desktop only: below `lg` the
+plate is the whole drawing, exactly as the V13 mobile gate froze it.
+
+### 39.5 The lower world, and the route down the page (D-046, D-047)
+
+Strata are floors at the compositions' feet, labels inside the band; UNDERNEATH stands on the
+SYSTEM line; the recess fades at both ends; the terminus map clears the surface-return header
+during its rise at 1366, 1440 and 1920. Below the junction the route continues as **one rail**
+(`LowerRoute.tsx`) at the drift track's datum with a station at every section's register and an
+arm from each register back to the rail whose length is the block's drift. Selected Systems is
+the map's index (the station glyph on every row); How I Build is four rows on rules; About is a
+station; the finale map carries the lower page as its tail — SYSTEM RESOLVED → COMPLEXITY MAPPED →
+OPERATOR ADDRESSABLE, with the CTA copy unchanged.
+
+### 39.6 Mobile: verified unchanged, not reopened
+
+Every V14.1 change is `lg:`-scoped, `compact`/`mobile`-gated or desktop-only markup. Where a
+shared component's first draft reached below `lg` (the evidence window and its caption prefix,
+the foundation row's spacing, the lower sections' rows and rules, the surface-return container,
+the presence curve, the annotation cluster), the mobile branch was restored to the V13 gate's
+markup and the mobile route probe re-run at the recorded step: `after/mobile/metrics/
+mobile-route.json` differs from `docs/review/v14.1-engineering/mobile/metrics/mobile-route.json`
+in one mean pixel-row value at 320×568 (0.325 → 0.326); every scene height, document height and
+focus position is identical. The three owner-pending mobile deltas of the Opus V14 QA (§6.1)
+remain pending and untouched.
+
+### 39.7 The cut, as found
+
+The transition sheets show black frames at p≈0.70–0.73. That is `SceneBreak` (V4): seven ink rails
+closing from alternating sides over a solid ink field that guarantees the frame is opaque at the
+instant the route jumps. Verified by DOM probe on the settled frames (`data-scene-break`,
+`data-break-rail`, the ink field), identical in the before set, and left as designed. It is
+recorded here so that no later reader of the sheets takes it for a rendering fault.

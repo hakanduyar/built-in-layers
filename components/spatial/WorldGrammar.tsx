@@ -11,17 +11,18 @@ import {
   TURN_WORLD,
   VW_PER_VH,
   sceneAnchor,
+  screenDistance,
   type SceneId,
   type WorldPoint,
 } from "@/lib/spatial/scenes";
 import {
   decompressionAnchor,
-  focusProximity,
   routeLegs,
   sceneFocusProgress,
   sceneProximity,
   type RouteLeg,
 } from "@/lib/spatial/sceneRoute";
+import { visibleLegPoints } from "@/lib/spatial/railTravel";
 import { worldX, worldY } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
@@ -91,35 +92,15 @@ type WorldGrammarProps = {
 
 export function WorldGrammar({ progress, mobile, branchDestinations = [] }: WorldGrammarProps) {
   const legs = routeLegs(mobile);
-  // V14: the spine recedes while the system has a scene in frame. The rails
-  // pass THROUGH every composition -- the route runs to each anchor, which is
-  // the block's own corner -- so at full presence the travelled rail was a
-  // line drawn across the title being read. focusProximity is 1 exactly at a
-  // scene and 0 in open travel; the rail is at full weight where there is
-  // nothing else to look at and a quarter of it under a composition.
-  const attention = useTransform(progress, (value) => 1 - 0.74 * focusProximity(value, mobile));
-
   return (
     <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
-      <motion.div
-        className="absolute left-0 top-0"
-        style={mobile ? undefined : { opacity: attention }}
-      >
-        {/* The route exists: each route as ONE continuous faint rail, with its
-            survey ticks in the same SVG. One polyline per route rather than per
-            leg, because the legs of a route are contiguous and the world's
-            sparse-structure contract counts polylines inside the frame
-            (tests/e2e/spatial.spec.ts).
-
-            This group holds SVG ONLY. Its opacity is written every frame the
-            camera moves, and Chromium repaints everything under it each time:
-            ninety absolutely positioned tick spans in here cost ~8ms a frame on
-            the reverse traverse (tests/tools/frame-time-probe.mjs), and the
-            governor pays per frame, so the whole route ran a third slower. The
-            same group with only the twelve rail SVGs is free. Guarded in
-            tests/e2e/spatial.spec.ts. */}
-        {!mobile &&
-          ([1, 2] as const).map((route) => <RouteBase key={route} route={route} legs={legs} />)}
+      {/* V14.1: the rail group. No per-frame opacity on it any more -- the rail
+          no longer runs through compositions (RouteRail draws only the open
+          travel), so nothing needs to recede at focus. It still holds SVG
+          ONLY, for the D-040 reason: anything written per frame during travel
+          is compositor-only or single-paint SVG. Guarded in
+          tests/e2e/spatial.spec.ts. */}
+      <div data-rail-group="true" className="absolute left-0 top-0">
         {legs.map((leg, index) =>
           mobile ? (
             <MobileRail key={index} leg={leg} progress={progress} />
@@ -127,7 +108,7 @@ export function WorldGrammar({ progress, mobile, branchDestinations = [] }: Worl
             <RouteRail key={index} leg={leg} progress={progress} />
           ),
         )}
-      </motion.div>
+      </div>
 
       {!mobile && <StateChanges />}
 
@@ -164,7 +145,43 @@ export function WorldGrammar({ progress, mobile, branchDestinations = [] }: Worl
  *  or a very wide display -- where more of the world is in frame. */
 const RAIL_STROKE = "max(1.5px, 0.09vw)";
 
-function legBox(leg: RouteLeg) {
+/**
+ * V14.1 (owner: the route "too faint / decorative"; the rail crossing titles)
+ * -- THE TRACK: THREE STATES, THREE CONSTRUCTIONS, AND THE RAIL STOPS AT THE
+ * STATION.
+ *
+ * V14 encoded travelled / ahead as two alphas on the same stroke, and drew
+ * every leg from anchor to anchor -- which is from a composition's own corner,
+ * straight through its title, because the route runs to the block's corner.
+ * The attention dim hid the crossing at focus and the difference collapsed at
+ * zoom-out, where a 1.5px stroke at 20% is not there.
+ *
+ * Now each state is a different drawing, which survives any zoom:
+ *
+ *   AHEAD      a dotted survey -- the route is measured, not yet travelled
+ *   TRAVELLED  a solid rail, revealed along the real curve as the camera comes
+ *   STATION    the ring on the rail, seven units short of the anchor; it fills
+ *              on acquisition and carries the stop's index while the stop is
+ *              still ahead (see Station)
+ *
+ * and the rail is drawn only in the OPEN: from where the previous composition
+ * ends (its block measure plus a margin down-route of its anchor) to the next
+ * station. Under a composition the ground carries the route (ProjectPlane);
+ * the line never runs through a title again, and nothing needs dimming.
+ *
+ * The survey ticks are gone: with the ahead state itself dotted, a second
+ * dotted mark on the same line was texture.
+ */
+// RAIL_EXIT_X, RAIL_STATION_SETBACK and visibleLegPoints live in
+// lib/spatial/railTravel.ts, shared with the e2e guard.
+
+function pathLength(points: WorldPoint[]): number {
+  let total = 0;
+  for (let i = 1; i < points.length; i += 1) total += screenDistance(points[i - 1]!, points[i]!);
+  return total;
+}
+
+function legBox(leg: { points: WorldPoint[] }) {
   const xs = leg.points.map((point) => point.x);
   const ys = leg.points.map((point) => point.y);
   const left = Math.min(...xs);
@@ -177,102 +194,84 @@ function legBox(leg: RouteLeg) {
   };
 }
 
-function legPolyline(leg: RouteLeg, box: ReturnType<typeof legBox>) {
+function legPolyline(leg: { points: WorldPoint[] }, box: ReturnType<typeof legBox>) {
   return leg.points
     .map(
       (point) =>
-        `${((point.x - box.left) / Math.max(box.width, 1e-6)) * 100},${
-          ((point.y - box.top) / Math.max(box.height, 1e-6)) * 100
-        }`,
+        ((point.x - box.left) / Math.max(box.width, 1e-6)) * 100 +
+        "," +
+        ((point.y - box.top) / Math.max(box.height, 1e-6)) * 100,
     )
     .join(" ");
 }
 
-/** A whole route, faint: the route exists, ahead and behind alike. */
-function RouteBase({ route, legs }: { route: 1 | 2; legs: RouteLeg[] }) {
-  const own = legs.filter((leg) => leg.route === route);
-  const all: WorldPoint[] = own.flatMap((leg, index) =>
-    index === 0 ? leg.points : leg.points.slice(1),
-  );
-  if (all.length < 2) return null;
-  const box = legBox({ points: all, fromProgress: 0, toProgress: 1, route });
-  const points = legPolyline({ points: all, fromProgress: 0, toProgress: 1, route }, box);
-  const routeTwo = route === 2;
+/**
+ * One travel leg on desktop: the dotted survey of what is ahead, and over it
+ * the solid rail of what has been travelled, revealed along the real curve
+ * exactly as far as the filtered camera has come.
+ *
+ * `preserveAspectRatio="none"` lets the box stretch to the leg's exact
+ * (non-uniform: vw by vh) geometry, and non-scaling-stroke keeps the stroke a
+ * CSS length regardless of that stretch. The polyline is sampled at even arc
+ * length (routeLegs), so pathLength fractions map to travelled distance; the
+ * survey's dots are measured along the same normalised length.
+ */
+function RouteRail({ leg, progress }: { leg: RouteLeg; progress: MotionValue<number> }) {
+  const visible = visibleLegPoints(leg);
+  const box = legBox({ points: visible });
+  const points = legPolyline({ points: visible }, box);
+  const routeTwo = leg.route === 2;
+  // The visible part starts some way into the leg; travelled is measured
+  // against that part, so the rail begins revealing when the camera has
+  // actually cleared the composition rather than at its anchor.
+  const full = pathLength(leg.points);
+  const shown = pathLength(visible);
+  const before = visible.length
+    ? pathLength([...leg.points.filter((p) => p.x < visible[0]!.x), visible[0]!])
+    : 0;
+  const travelled = useTransform(progress, (value) => {
+    const span = leg.toProgress - leg.fromProgress;
+    if (span <= 0 || full <= 0 || shown <= 0) return 0;
+    const along = Math.min(Math.max((value - leg.fromProgress) / span, 0), 1) * full;
+    return Math.min(Math.max((along - before) / shown, 0), 1);
+  });
+  if (visible.length < 2) return null;
+
   return (
     <svg
-      className={`absolute ${routeTwo ? "text-signal" : "text-ink"}`}
+      className={routeTwo ? "absolute text-signal" : "absolute text-ink"}
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       style={{
         left: worldX(box.left),
         top: worldY(box.top),
-        width: worldX(box.width),
-        height: worldY(box.height),
+        width: worldX(Math.max(box.width, 0.01)),
+        height: worldY(Math.max(box.height, 0.01)),
         overflow: "visible",
       }}
     >
-      <polyline
-        data-rail-base={route}
-        points={points}
+      {/* AHEAD: the survey. Dots along the normalised path length, so their
+          spacing is the same on every leg however the box is stretched. */}
+      <path
+        data-rail-ahead={leg.route}
+        d={"M" + points.split(" ").join(" L")}
+        pathLength={1}
         fill="none"
         stroke="currentColor"
         style={{ strokeWidth: RAIL_STROKE }}
-        strokeOpacity={routeTwo ? 0.3 : 0.2}
-        vectorEffect="non-scaling-stroke"
-        strokeDasharray={routeTwo ? "7 9" : undefined}
-      />
-      <path
-        data-rail-survey={route}
-        d={surveyPath(own, box)}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1}
-        strokeOpacity={routeTwo ? 0.34 : 0.26}
+        strokeOpacity={routeTwo ? 0.5 : 0.42}
+        strokeLinecap="round"
+        strokeDasharray="0.002 0.014"
         vectorEffect="non-scaling-stroke"
       />
-    </svg>
-  );
-}
-
-/**
- * One travel leg on desktop: the travelled part of it in ink, revealed along
- * the real curve exactly as far as the filtered camera has come.
- *
- * `preserveAspectRatio="none"` lets the box stretch to the leg's exact
- * (non-uniform: vw by vh) geometry, and `non-scaling-stroke` keeps the stroke
- * a CSS length regardless of that stretch. The polyline is sampled at even arc
- * length (routeLegs), so `pathLength` fractions map to travelled distance.
- */
-function RouteRail({ leg, progress }: { leg: RouteLeg; progress: MotionValue<number> }) {
-  const box = legBox(leg);
-  const points = legPolyline(leg, box);
-  const routeTwo = leg.route === 2;
-  const travelled = useTransform(progress, (value) => {
-    const span = leg.toProgress - leg.fromProgress;
-    if (span <= 0) return 0;
-    return Math.min(Math.max((value - leg.fromProgress) / span, 0), 1);
-  });
-
-  return (
-    <svg
-      className={`absolute ${routeTwo ? "text-signal" : "text-ink"}`}
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      style={{
-        left: worldX(box.left),
-        top: worldY(box.top),
-        width: worldX(box.width),
-        height: worldY(box.height),
-        overflow: "visible",
-      }}
-    >
+      {/* TRAVELLED: the rail, a fact behind the reader. */}
       <motion.polyline
         data-rail-travelled={leg.route}
         points={points}
         fill="none"
         stroke="currentColor"
         style={{ strokeWidth: RAIL_STROKE, pathLength: travelled }}
-        strokeOpacity={routeTwo ? 0.78 : 0.6}
+        strokeOpacity={routeTwo ? 0.82 : 0.66}
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
       />
@@ -296,47 +295,6 @@ function MobileRail({ leg, progress }: { leg: RouteLeg; progress: MotionValue<nu
       style={{ left: worldX(box.left), top: worldY(box.top), height: worldY(box.height), opacity }}
     />
   );
-}
-
-/* ----------------------------------------------------------------- survey */
-
-/** Half a tick, in the route's vh measure: a 1.1vh mark, the ten CSS pixels
- *  the V14 span drew at 1440x900, now scaling with the world like the rest of
- *  the route drawing does. */
-const SURVEY_HALF = 0.55;
-
-/** Cross-ticks along a route at even arc length: the route as a measured track.
- *  Every second sample of the eighteen each leg is drawn from, so nine per leg
- *  -- dense enough to read as a track at zoom-out, sparse enough never to read
- *  as a ruler at focus. Each tick is set square to the route's local bearing,
- *  measured between its neighbouring samples in the same screen measure the
- *  route's own angles use.
- *
- *  One path per route, drawn inside the base rail's SVG, rather than one
- *  positioned span per tick: see the attention group's note in WorldGrammar.
- *  The perpendicular is taken in screen measure (x scaled by VW_PER_VH) and
- *  brought back to world units, exactly as the span's rotate() did. */
-function surveyPath(legs: RouteLeg[], box: ReturnType<typeof legBox>): string {
-  const px = (x: number) => ((x - box.left) / Math.max(box.width, 1e-6)) * 100;
-  const py = (y: number) => ((y - box.top) / Math.max(box.height, 1e-6)) * 100;
-  const parts: string[] = [];
-  for (const leg of legs) {
-    const points = leg.points;
-    for (let i = 2; i < points.length - 1; i += 2) {
-      const before = points[i - 1]!;
-      const after = points[i + 1]!;
-      const at = points[i]!;
-      const angle = Math.atan2(after.y - before.y, (after.x - before.x) * VW_PER_VH);
-      const dx = (-Math.sin(angle) * SURVEY_HALF) / VW_PER_VH;
-      const dy = Math.cos(angle) * SURVEY_HALF;
-      parts.push(
-        `M${px(at.x - dx).toFixed(3)} ${py(at.y - dy).toFixed(3)}L${px(at.x + dx).toFixed(3)} ${py(
-          at.y + dy,
-        ).toFixed(3)}`,
-      );
-    }
-  }
-  return parts.join("");
 }
 
 /* --------------------------------------------------------------- stations */
@@ -372,6 +330,23 @@ function stationPoint(id: SceneId, legs: RouteLeg[]): WorldPoint {
   return leg.points[0]!;
 }
 
+/** The station's index on route one: the same "01".."04" the acquisition
+ *  frame states at focus and the terminus map draws, so one stop has one name
+ *  everywhere it appears. Route two's stops are not counted: they are the
+ *  system's own framework, not cases. */
+const STATION_INDEX: Partial<Record<SceneId, string>> = {
+  "software-factory": "01",
+  kivilcim: "02",
+  jointledger: "03",
+  dropspot: "04",
+};
+
+/** A station's diameter: 10px at every normal viewport and growing with the
+ *  CSS viewport past ~1900px, so at 67% and 50% zoom the stops stay legible
+ *  as stops instead of shrinking to device-pixel specks. */
+const STATION_SIZE = "max(10px, 0.52vw)";
+const STATION_SIZE_RESOLVED = "max(12px, 0.62vw)";
+
 function Station({
   id,
   legs,
@@ -386,33 +361,66 @@ function Station({
   const resolved = ROUTE_TWO_IDS.some((routeTwoId) => routeTwoId === id);
   const opacity = useTransform(progress, (value) => {
     const near = sceneProximity(id, value);
-    const passed = value > focus ? 0.62 : 0;
-    return Math.max(0.24, near * 0.9, passed);
+    const passed = value > focus ? 0.7 : 0;
+    return Math.max(0.42, near * 0.95, passed);
   });
   // The ring fills as the scene is acquired: an open coordinate becomes a
   // visited one. Scale only, on a 10px element -- no text is involved.
   const fill = useTransform(progress, (value) => Math.max(0, sceneProximity(id, value)));
-  const size = resolved ? 12 : 10;
+  // V14.1 -- DETECTED, stated at the station. The stop's index is legible
+  // beside the ring while the stop is still ahead or already behind, and
+  // hands over to the acquisition frame's "Case 01 / 04" exactly as the
+  // system acquires the scene: the same fact, stated by the station in
+  // travel and by the frame at focus, never by both at once.
+  const label = STATION_INDEX[id];
+  const labelOpacity = useTransform(progress, (value) => {
+    const near = sceneProximity(id, value);
+    return 0.9 * Math.max(0, 1 - near * 1.6);
+  });
+  const size = resolved ? STATION_SIZE_RESOLVED : STATION_SIZE;
 
   return (
-    <motion.span
-      data-route-station={id}
-      className={`absolute block rounded-full border ${resolved ? "border-signal" : "border-ink"}`}
-      style={{
-        left: worldX(at.x),
-        top: worldY(at.y),
-        width: size,
-        height: size,
-        marginLeft: -size / 2,
-        marginTop: -size / 2,
-        opacity,
-      }}
-    >
+    <>
       <motion.span
-        className={`absolute inset-[2px] block rounded-full ${resolved ? "bg-signal" : "bg-ink"}`}
-        style={{ scale: fill }}
-      />
-    </motion.span>
+        data-route-station={id}
+        className={
+          resolved
+            ? "absolute block -translate-x-1/2 -translate-y-1/2 rounded-full border border-signal"
+            : "absolute block -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink"
+        }
+        style={{
+          left: worldX(at.x),
+          top: worldY(at.y),
+          width: size,
+          height: size,
+          opacity,
+        }}
+      >
+        <motion.span
+          className={
+            resolved
+              ? "absolute inset-[18%] block rounded-full bg-signal"
+              : "absolute inset-[18%] block rounded-full bg-ink"
+          }
+          style={{ scale: fill }}
+        />
+      </motion.span>
+      {label && (
+        <motion.span
+          data-route-station-index={id}
+          className="absolute block whitespace-nowrap font-mono text-mono-label tracking-mono-label text-ink"
+          style={{
+            left: worldX(at.x),
+            top: worldY(at.y),
+            marginLeft: "calc(" + STATION_SIZE + " * 0.9)",
+            marginTop: "calc(" + STATION_SIZE + " * -2.4)",
+            opacity: labelOpacity,
+          }}
+        >
+          {label}
+        </motion.span>
+      )}
+    </>
   );
 }
 
@@ -470,7 +478,7 @@ function StateChanges() {
  * ten travelled rails and two base rails that is fifteen polylines in the
  * frame, inside the sparse-structure bound (tests/e2e/spatial.spec.ts).
  */
-const TERMINUS_MAP_OFFSET: WorldPoint = { x: 8, y: 1 };
+const TERMINUS_MAP_OFFSET: WorldPoint = { x: 28, y: -14 };
 const TERMINUS_MAP_WIDTH_VW = 60;
 
 function TerminusMap({ branch }: { branch: readonly string[] }) {
@@ -505,17 +513,79 @@ function TerminusMap({ branch }: { branch: readonly string[] }) {
  * is labelled once, beside the scene that stands on it, with the real layer
  * name. Static hairlines; nothing animates.
  */
-const STRATA_FROM_VW = -60;
+// Far enough left that no zoom level the owner reviews (down to 50%) sees the
+// bands or the recess begin: a hairline that starts mid-paper is an edge, and
+// an edge is a panel.
+const STRATA_FROM_VW = -260;
 const STRATA_TO_VW = 400;
 const STRATA_SCENES: readonly SceneId[] = ["handoff", "approach", "reorient"];
 
+/**
+ * V14.1 (owner: UNDERNEATH "a sparse title after the climax"; the sequence
+ * must be one causal event) -- THE BANDS ARE FLOORS, AND THE WORLD HAS ONE
+ * HORIZON.
+ *
+ * V14 drew each band six units ABOVE its scene's anchor, so every route-two
+ * composition HUNG from a hairline at the top of its frame and the deepest
+ * point of the world was made of the same paper as the surface. The cut's own
+ * frame does the opposite -- the word SYSTEMS stands with its foot on the
+ * SURFACE line -- and the landing broke that rule the moment it mattered.
+ *
+ * Three moves, one convention:
+ *
+ *   FEET, NOT CEILINGS. Each band now sits at the foot of its composition's
+ *   display line (measured on the built page at 1440x900: the reorient word,
+ *   the approach heading, the handoff sentence), so UNDERNEATH stands on
+ *   SYSTEM, Built in Layers on FLOW and the handoff on SURFACE, with the
+ *   label INSIDE the band below the line, as the reveal already draws it.
+ *
+ *   ONE SURFACE HORIZON. The SURFACE band's foot lands at y = 563 -- which is
+ *   the cut's own y (CUT_WORLD). So the surface line is extended under all of
+ *   route one: the evidence descent is a descent TOWARD the surface line, the
+ *   cut opens it exactly where the route reaches it, and at zoom-out route one
+ *   finally has a ground under it rather than paper.
+ *
+ *   THE RECESS IS WORLD MATERIAL. Below the surface line, across route two,
+ *   the ground is one shade darker -- the 2.5% ink the opened surface already
+ *   shows inside the cut, now the actual floor the reader lands on. Static,
+ *   one element, on the world plane.
+ */
+const STRATA_FOOT_VH: Record<string, number> = { handoff: 15, approach: 31, reorient: 42 };
+// To just before the SYSTEMS station: from there the opened surface's own
+// section drawing (SystemsWord's RevealedStructure) owns the strata, and a
+// second surface line running through it read as a fourth, unlabelled band.
+const SURFACE_HORIZON_TO_VW = 760;
+const RECESS_DEPTH_VH = 320;
+// The recess runs under the whole surface line, to the cut's far side, and
+// dissolves over its last stretch: at 50% zoom a recess that stopped at the
+// strata's own right edge showed as a hard vertical boundary in mid-paper --
+// a panel again. Below the surface is recess everywhere the surface exists.
+const RECESS_TO_VW = 960;
+const RECESS_FADE_VW = 140;
+
 function Strata() {
+  const surfaceY = sceneAnchor("handoff").y + STRATA_FOOT_VH.handoff!;
   return (
     <>
+      {/* The recess: the ground below the surface, across route two. */}
+      <span
+        aria-hidden="true"
+        data-recess="true"
+        className="absolute block bg-[rgba(22,22,22,0.025)]"
+        style={{
+          left: worldX(STRATA_FROM_VW),
+          top: worldY(surfaceY),
+          width: worldX(RECESS_TO_VW - STRATA_FROM_VW),
+          height: worldY(RECESS_DEPTH_VH),
+          WebkitMaskImage: `linear-gradient(to right, rgba(0,0,0,0), #000 ${worldX(RECESS_FADE_VW)}, #000 calc(100% - ${worldX(RECESS_FADE_VW)}), rgba(0,0,0,0) 100%)`,
+          maskImage: `linear-gradient(to right, rgba(0,0,0,0), #000 ${worldX(RECESS_FADE_VW)}, #000 calc(100% - ${worldX(RECESS_FADE_VW)}), rgba(0,0,0,0) 100%)`,
+        }}
+      />
       {STRATA_SCENES.map((id, index) => {
         const anchor = sceneAnchor(id);
         const layer = layerDefinitions[index]!;
-        const y = anchor.y - 6;
+        const y = anchor.y + (STRATA_FOOT_VH[id] ?? 0);
+        const surface = index === 0;
         return (
           <span key={id} aria-hidden="true" data-stratum={layer.label.toLowerCase()}>
             <span
@@ -523,13 +593,13 @@ function Strata() {
               style={{
                 left: worldX(STRATA_FROM_VW),
                 top: worldY(y),
-                width: worldX(STRATA_TO_VW - STRATA_FROM_VW),
-                opacity: 0.16 + index * 0.06,
+                width: worldX((surface ? SURFACE_HORIZON_TO_VW : STRATA_TO_VW) - STRATA_FROM_VW),
+                opacity: 0.2 + index * 0.06,
               }}
             />
             <span
               className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
-              style={{ left: worldX(anchor.x - 1.6), top: worldY(y), marginTop: -22 }}
+              style={{ left: worldX(anchor.x - 5.6), top: worldY(y), marginTop: 8 }}
             >
               {layer.label}
             </span>

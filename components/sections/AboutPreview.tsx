@@ -60,12 +60,15 @@ export function AboutPreview() {
           frame's right two-thirds was bare paper. The layout now does what the
           design intent stated: name resolving left, introduction and the lower
           page's one signal accent on the right, hung at the name's cap line. */}
-      <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-10">
+      <div className="lg:mt-5 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10">
         <Reveal className="lg:col-span-6">
           {/* The resolution: the name the whole page has been evidence for. */}
           <div ref={ref} aria-hidden="true">
             <motion.p
-              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink"
+              // V14.1 (owner §17): a station, not a second hero. The hero states
+              // the name at 9.5rem; the operator's reveal at the last station
+              // states it at the world's display-l scale, resolving as before.
+              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink lg:text-[clamp(2.25rem,5vw,4.25rem)] lg:leading-[0.9]"
               style={
                 reduceMotion
                   ? { letterSpacing: "-0.035em" }

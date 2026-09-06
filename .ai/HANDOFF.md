@@ -2,87 +2,64 @@
 
 What the next model needs, and nothing else. No transcripts, no test logs, no restated rules.
 
-**CHECKPOINT:** `c2ba26a` — the V14.1 engineering gate, sitting on the V14 visual candidate
-`35c2c58`. Verify `local == origin`. Scroll safety tag: `safety-v14-scroll-baseline` → `35c2c58`.
-**VERDICT:** `FABLE VISUAL CANDIDATE READY` · `OPUS QA COMPLETE` · `V14.1 ENGINEERING COMPLETE`.
-Owner acceptance **PENDING**. Do not merge. Full account: `.ai/handoffs/FABLE-V14-RETURN.md`; the
-owner's brief: `.ai/handoffs/V14-OWNER-BRIEF.md`.
+**CHECKPOINT:** the V14.1 Fable visual correction gate — the commit that carries
+`.ai/handoffs/V14_1_FABLE_TO_OPUS.md` (SHA recorded in `.ai/STATE.md`), on the V14.1 engineering
+checkpoint `c2ba26a` / `fa7c72c`, on the V14 candidate `35c2c58`. Verify `local == origin`. Scroll
+safety tag: `safety-v14-scroll-baseline` → `35c2c58`, untouched.
+**VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE`. Owner acceptance **PENDING**. Do not merge.
 
-**V14.1 ENGINEERING (this gate):** the initial-load flash is fixed — the world's fit is published
-before the first paint (D-041); motion sharpness and discrete scroll were measured and left
-unchanged (D-042). No scroll constant, governor, intent-model or wheel-handler change. Handoff for
-the next art-direction gate: `.ai/handoffs/V14_1_ENGINEERING_TO_FABLE.md`, whose §4 is the scroll
-behaviour that must not be altered. Evidence: `docs/review/v14-scroll-baseline/`,
-`docs/review/v14.1-engineering/`.
+**THIS GATE (Fable 5.1, art direction only):** the owner's remaining findings corrected as systems,
+recorded as D-043 … D-047 and `docs/DESIGN_SYSTEM.md` §39. The route as a track; the ground drawn
+and presence as a state change; the acquired detail on three diagrams; strata as floors with
+UNDERNEATH on its line and the terminus map clear of the surface return; the route continued down
+the page with a station at every section, the map's index, rows, the finale tail. Full account,
+files, proofs: `.ai/handoffs/V14_1_FABLE_TO_OPUS.md`.
 
-**OPUS QA: COMPLETE** — `.ai/handoffs/OPUS-V14-QA-RETURN.md`, **PASS WITH DOCUMENTED NON-BLOCKERS**.
-Independently re-measured on its own production build: the route's governor budget byte-identical,
-lower world 9.9s → 3.9s at a normal wheel and → 3.1s at a flick, frame time within 0.3ms of the
-baseline in all three traverses, `route-focus.json` regenerating byte-identical, scene fit and
-`runtime.txt` reproducing exactly, Chromium 224/224, WebKit 220/224 with two of the four reproduced
-on the **baseline** build. Two non-behavioural fixes pushed (a probe `--out` flag and its policy
-row). Three unlisted mobile composition deltas recorded for the owner, not changed (§6.1).
+**SCROLL CODE CHANGED: NO.** `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
+planeChoreography,projectGround,editorialDrift}.ts`, `SceneBreak.tsx`, `SystemsWord.tsx`, `app/` are
+byte-identical to `fa7c72c`. `SpatialCamera.tsx` gained one argument on one call
+(`scenePresence(value, mobile)`). Initial paint `FIRST PAINT == SETTLED`; discrete scroll 120px per
+notch, delivered 1.000, coast 0; frame time 16.7 / 16.8 / 16.8ms a frame against the recorded
+17.2–17.3; journeys in `docs/review/v14.1-fable/after/journey.json`.
 
-**NEXT:** the owner's visual review of `docs/review/v14-owner-visual/README.md` — the only
-acceptance. The baseline worktree has been retired (`git worktree prune`); recreate it with
-`git worktree add --detach <dir> 5670234` for any further A/B.
+**MOBILE:** not reopened. The mobile route probe at the recorded step is identical to
+`docs/review/v14.1-engineering/mobile/metrics/mobile-route.json` but for one 0.001 pixel-row mean at
+320×568. The three owner-pending deltas of `OPUS-V14-QA-RETURN.md` §6.1 remain pending.
 
-**CHANGED** — the desktop visual and narrative layer, by owner decision (D-034 … D-040):
+**CHANGED** — desktop only:
 
-- Removed: `SystemField`, `DirectionalField`, `TravelMaterial`, the hero SURFACE ghost,
-  `MeasureScale`, CONVERGE, `DriftRoute`, `DriftSettle`. One structural motif remains — the route's
-  topology in four states (`components/spatial/RouteMap.tsx`, new).
-- `WorldGrammar.tsx` (rails travelled / ahead, stations, survey as one path per route, state
-  changes, strata, terminus map, attention), `SystemsWord.tsx` (the surface opens beside an intact
-  word), `ProjectPlane.tsx` (constructed edge instead of an offset rectangle),
-  `SpatialProjectScene.tsx` (four compositions recomposed; desktop inspector buttons),
-  `SpatialCamera.tsx` (presence by opacity, no scale; page gearing in the governor),
-  `SpatialExperience.tsx`, `EditorialDrift.tsx`, `SystemPOV.tsx`, `HowIBuild.tsx`, `SiteFooter.tsx`.
-- `lib/spatial/cameraFilter.ts` — `pageGearing`, `governorBudget` (D-039); `sceneRoute.ts` —
-  `routeWorldLength`; `systemPov.ts` — `scenePresence`; `worldFit.ts` — reference height 990;
-  `planeChoreography.ts`, `editorialDrift.ts` (desktop gaps only), `scenes.ts` (scale constants
-  deleted).
-- Tests: `spatial-filter` (gearing), `route-focus-dump` (new), `spatial-drift` (scan list),
-  `a11y` (no axe exclusion; decorative-depth marker must be absent), `spatial` (attention group
-  holds SVG only). Tools: `v14-baseline.mjs`, `scene-fit-probe.mjs`, `frame-time-probe.mjs`.
-- Docs: `DECISIONS.md` D-034 … D-040, `DESIGN_SYSTEM.md` §38, `FROZEN_BOUNDARY.md` §6,
-  `REVIEW_POLICY.md`; the review package `docs/review/v14-owner-visual/` (recordings git-ignored).
-
-**RESOLVED**
-
-- Owner findings A–F addressed as systems, not screenshots; F measured: lower world **10.1s →
-  3.8s** normal, **10.2s → 3.1s** aggressive at 1440×900, route pace unchanged, reverse one notch.
-- D-040: the first after-evidence caught the reverse traverse a third slower (25ms frames); the
-  survey ticks moved from ninety spans under a per-frame opacity into one SVG path per route;
-  frame time back at parity (17.2 vs 17.3ms).
+- Frozen surface: `WorldGrammar.tsx` (track rails, stations, strata, recess, map offset),
+  `ProjectPlane.tsx` (drawn ground), `SpatialProjectScene.tsx` (action mark; the foundation's detail
+  column), `SystemPOV.tsx` (cluster top-right; `compact` keeps V13), `SpatialExperience.tsx`
+  (reorient/approach on their strata; the junction on the rail's datum at `lg`), `EditorialDrift.tsx`
+  and `SystemNode.tsx` (arms, register hooks, lateral-only clip), `lib/spatial/systemPov.ts`
+  (presence curve; mobile branch keeps V14), `SpatialCamera.tsx` (one argument).
+- New: `components/spatial/LowerRoute.tsx`, `lib/spatial/railTravel.ts`,
+  `lib/spatial/evidenceDetail.ts`, `tests/tools/transition-sheet.mjs`.
+- Also: `RouteMap.tsx` (`tail`), `SiteFooter.tsx`, `Figure.tsx` (`detail`, lg-only),
+  `FigureInspect.tsx`, `SelectedSystems.tsx`, `HowIBuild.tsx`, `AboutPreview.tsx`.
+- Tests / tools: `tests/e2e/spatial.spec.ts` (D-040 guard restated for the track markup, derived
+  count), `tests/tools/scene-fit-probe.mjs` (clips to overflow ancestors).
+- Docs: `DECISIONS.md`, `DESIGN_SYSTEM.md` §39, `FROZEN_BOUNDARY.md` §6.1, `REVIEW_POLICY.md`, the
+  package `docs/review/v14.1-fable/`.
 
 **OPEN** (none blocking the QA; the owner's acceptance is the gate)
 
-- WebKit 220/224: the two Phase 7 environment failures, plus two cut-region arrival cases
-  (`spatial-v5` "surface opens monotonically", `spatial` "every break rail closes") that fail
-  identically on the **baseline** build on this machine today (4 of 5 runs): WebKit's camera sits
-  still for >2s after a large `scrollTo` jump and the tests' settle heuristic reads it as arrival.
-  ENVIRONMENT + TEST, not a V14 regression — return §3a. If Opus takes it, the fix is the tests'
-  arrival detection, not an assertion.
-  Reproduced by the Opus QA on the baseline build served on the same port: same two tests, same
-  values. The remedy (require the read value to have changed once since the jump) is written up in
-  `OPUS-V14-QA-RETURN.md` §6.2 and deliberately not taken there.
-- ~~Not run by Fable: the touch-target probe and the 320–768 overflow matrix~~ — both run by the
-  Opus QA: 0 standalone sub-44 targets across 8 pages × 6 widths, overflow 0 of 99.
-- Three unlisted mobile composition deltas, for the owner: `OPUS-V14-QA-RETURN.md` §6.1.
-- Observation, both builds identical: a forward traverse begun ~400ms after a programmatic
-  `scrollTo` runs ungoverned for its first notches (return §5).
+- The SYSTEMS → UNDERNEATH cut is the V4 `SceneBreak`, unchanged; its ink frames are what the
+  transition sheets show at p≈0.70–0.73 (D-046). Re-authoring it would be an owner decision.
+- WebKit not re-run on this gate; the four known cases are in `FABLE-V14-RETURN.md` §3a and the Opus
+  return §6.2.
+- Three mobile deltas for the owner, `OPUS-V14-QA-RETURN.md` §6.1.
 
-**VALIDATION:** typecheck 0 · lint 0 · format:check 0 · unit 562/562 · build 15/15 · Chromium
-224/224 · WebKit 220/224 · console/hydration 0 across 10 content routes · CLS ≤ 0.0388 · overflow
-0 of 99 · scene fit clear at five viewports · mobile smoke 14.1 / 11.6 / 10.5 screens, sharp.
+**VALIDATION:** typecheck 0 · lint 0 · format:check 0 · unit 562/562 · build ✓ · Chromium 224/224 ·
+console/hydration 0 on the content routes · overflow 0 of 99 · scene fit clear at five viewports ·
+mobile identical to the record · initial paint PASS · discrete scroll NORMAL · frame time at parity.
 
 **ARTIFACTS**
 
-- `.ai/handoffs/FABLE-V14-RETURN.md` — the account, with every measurement
-- `.ai/handoffs/OPUS-V14-QA-RETURN.md` — the independent QA, its own measurements and findings
-- `docs/review/v14-owner-visual/README.md` — the owner review package index
-- `docs/review/v14-owner-visual/{baseline,after}/` — journeys, zoom, stills, metrics
+- `.ai/handoffs/V14_1_FABLE_TO_OPUS.md` — the account, the proofs, the files
+- `docs/review/v14.1-fable/README.md` — the owner review package index (before / after / iterations)
+- `docs/review/v14.1-fable/after/{journey.json,metrics,runtime,mobile}` — the numbers
 
-**NEXT:** the owner reviews the package. Neither model declares FREEZE, OWNER ACCEPTED or READY TO
-MERGE.
+**NEXT:** Opus 5 / High engineering QA (`V14_1_FABLE_TO_OPUS.md` §9), then the owner reviews the
+package. Neither model declares FREEZE, OWNER ACCEPTED or READY TO MERGE.

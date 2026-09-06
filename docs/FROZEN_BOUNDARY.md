@@ -200,3 +200,40 @@ regression: D-034 to D-040 record what moved and why, and `.ai/handoffs/FABLE-V1
 the before/after evidence. The mobile composition of the V13 gate is **not** reopened; every V14
 change is desktop-scoped (`lg:`, `isDesktop`, `wide`, `where="desktop"`) or verified against the
 mobile probes, and the return lists the mobile deltas. `main` is untouched.
+
+
+### 6.1 V14.1 — the Fable visual correction gate (2026-09-06)
+
+The same reopening, continued under the owner's V14.1 brief (`.ai/ACTIVE_TASK.md` names it; the
+verdict was "improvements, but not yet what I asked for"). What moved, why, and how it was measured
+is D-043 to D-047 and `docs/DESIGN_SYSTEM.md` §39; the evidence is `docs/review/v14.1-fable/`.
+
+**Frozen-surface files that moved on this gate**, all desktop-scoped:
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/spatial/WorldGrammar.tsx` | rails as track states, stations, strata as floors, recess, terminus map offset (D-043, D-046) | transition sheets, zoom 50/67/80, e2e rail guard |
+| `components/spatial/ProjectPlane.tsx` | drawn ground: datum, floor at the composition's foot, tread (D-044) | stills at 1366/1440/1920, scene fit |
+| `lib/spatial/systemPov.ts` | presence as a state change; the mobile branch keeps the V14 curve (D-044) | transition sheets; mobile route probe |
+| `components/spatial/SystemPOV.tsx` | the cluster at the top-right corner on desktop; `compact` keeps the V13 placement (D-044) | stills; mobile route probe |
+| `components/spatial/SpatialProjectScene.tsx` | one action vocabulary; the foundation's detail column beside the identity (D-044, D-045) | scene fit at five viewports |
+| `components/spatial/SpatialExperience.tsx` | reorient/approach stand on their strata; the junction on the rail's datum at `lg` (D-046) | stills, handoff→1 sheets |
+| `components/spatial/EditorialDrift.tsx`, `SystemNode.tsx` | the lower rail's arms and register hooks; lateral-only clip (D-047) | stills at 1366/1440/1920/50% |
+| `components/spatial/SpatialCamera.tsx` | one call: `scenePresence(value, mobile)` — no other line | mobile route probe identical to the record |
+| `components/sections/{SelectedSystems,HowIBuild,AboutPreview}.tsx` | the map's index, rows, the station scale — `lg:` only (D-047) | stills; mobile route probe |
+
+New, not frozen: `components/spatial/LowerRoute.tsx`, `lib/spatial/railTravel.ts`,
+`lib/spatial/evidenceDetail.ts`, `tests/tools/transition-sheet.mjs`. Also changed outside the
+frozen surface: `components/ui/Figure.tsx`, `FigureInspect.tsx`, `RouteMap.tsx`,
+`components/layout/SiteFooter.tsx`, `tests/e2e/spatial.spec.ts` (the D-040 guard restated for the
+track markup), `tests/tools/scene-fit-probe.mjs` (clips to overflow ancestors).
+
+**Untouched, byte for byte, against `fa7c72c`:** `lib/spatial/{cameraFilter,sceneRoute,scenes,
+worldFit,planeChoreography,projectGround,editorialDrift}.ts`, `SceneBreak.tsx`, `SystemsWord.tsx`,
+`SystemField.tsx`, `DirectionalField.tsx`, `TravelMaterial.tsx`, everything under `app/`. The
+scroll contract, the discrete-scroll table and the first-paint probe reproduce the V14.1
+engineering numbers (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md` §6).
+
+**Mobile:** the V13 composition is not reopened. The mobile route probe at the recorded step
+differs from the V14.1 engineering record in one mean pixel-row value at 320×568 (0.325 → 0.326);
+scene heights, document heights and focus positions are identical at 320, 390 and 768.

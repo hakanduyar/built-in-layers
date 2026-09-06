@@ -60,6 +60,14 @@ type RouteMapProps = {
    *  the only type that should be read. */
   labels?: boolean;
   className?: string;
+  /**
+   * V14.1 (owner §18): the fourth state contains the lower page. The
+   * resolved map draws the route continued past the terminus -- the lower
+   * page's rail with its stations -- so the ending is the WHOLE journey
+   * mapped, including where the reader has just been, and is a genuinely
+   * different drawing from the terminus map at the handoff.
+   */
+  tail?: readonly { index: string; label: string }[];
 };
 
 /* --------------------------------------------------------------- geometry */
@@ -139,8 +147,12 @@ export function RouteMap({
   branch = [],
   labels = true,
   className,
+  tail,
 }: RouteMapProps) {
   const g = GEOMETRY;
+  const tailStep = 44;
+  const tailHeight = tail && tail.length > 0 ? tail.length * tailStep + 12 : 0;
+  const height = g.height + tailHeight;
   const showBranch = state !== "revealed" && branch.length > 0;
   const indexOf = new Map(stations.map((station) => [station.id, station.index]));
   const complete = state === "resolved";
@@ -153,7 +165,7 @@ export function RouteMap({
     // default and reduced-motion trees (caught by five e2e overflow checks).
     // Every mark and label is placed inside the viewBox, so nothing is lost.
     <svg
-      viewBox={`0 0 ${WIDTH} ${g.height.toFixed(1)}`}
+      viewBox={`0 0 ${WIDTH} ${height.toFixed(1)}`}
       className={className}
       aria-hidden="true"
       data-route-map={state}
@@ -293,6 +305,49 @@ export function RouteMap({
         fill="var(--color-ink)"
         fillOpacity={complete ? 1 : 0.7}
       />
+      {tail && tail.length > 0 && (
+        <g data-route-map-tail="true">
+          <line
+            x1={g.terminus[0]}
+            y1={g.terminus[1] + 4}
+            x2={g.terminus[0]}
+            y2={g.terminus[1] + tail.length * tailStep + 4}
+            stroke="var(--color-ink)"
+            strokeOpacity={0.8}
+            style={{ strokeWidth: 1.5 }}
+            vectorEffect="non-scaling-stroke"
+          />
+          {tail.map((stop, index) => {
+            const y = g.terminus[1] + (index + 1) * tailStep;
+            return (
+              <g key={stop.index}>
+                <circle cx={g.terminus[0]} cy={y} r={6} fill="var(--color-ink)" fillOpacity={0.9} />
+                {labels && (
+                  <text
+                    x={g.terminus[0] + 16}
+                    y={y + 7}
+                    fill="var(--color-ink)"
+                    fillOpacity={0.8}
+                    fontSize={21}
+                    fontFamily="var(--font-mono)"
+                    letterSpacing="0.08em"
+                    style={{ textTransform: "uppercase" }}
+                  >
+                    {stop.index} {stop.label}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+          <rect
+            x={g.terminus[0] - 4}
+            y={g.terminus[1] + tail.length * tailStep + 4}
+            width={8}
+            height={2}
+            fill="var(--color-ink)"
+          />
+        </g>
+      )}
 
       {/* The branch not taken, and the real names at its end. */}
       {showBranch && (

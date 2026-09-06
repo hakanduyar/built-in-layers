@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { legHasOpenTravel } from "@/lib/spatial/railTravel";
 // V6.3: two route constants are imported rather than restated, so the windows
 // these tests search inside cannot drift out of the region they are meant to
 // cover when the route is retuned. Both are plain numbers from a module with no
@@ -679,15 +680,21 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     // The section drawing is one line per route, and may never be more.
     expect(cutPolylines).toBeLessThanOrEqual(2);
     await expect(page.locator(`${TOUR} canvas`)).toHaveCount(0);
-    // V14: the attention group -- the wrapper whose opacity is written on every
-    // frame the camera moves -- holds SVG only. Ninety positioned tick spans in
+    // V14 (D-040): the rail group -- the wrapper everything per-frame about the
+    // route is written under -- holds SVG only. Ninety positioned tick spans in
     // it cost ~8ms a frame on the reverse traverse (tests/tools/frame-time-probe.mjs),
     // and the governor pays per frame, so the route ran a third slower than the
-    // baseline. The survey is a path inside the base-rail SVG for that reason.
-    await expect(
-      page.locator(`${TOUR} .sticky div:has(> svg [data-rail-base]) > :not(svg)`),
-    ).toHaveCount(0);
-    await expect(page.locator(`${TOUR} .sticky svg [data-rail-survey]`)).toHaveCount(2);
+    // baseline. V14.1 redrew the rails as track states (docs/DECISIONS.md, the
+    // V14.1 entries): every leg is one SVG holding a dotted AHEAD path and a
+    // TRAVELLED polyline whose pathLength is the only thing written per frame.
+    // Same guard, same reason: no positioned HTML in the group, and exactly one
+    // survey path per leg that has open travel to draw (lib/spatial/railTravel.ts
+    // -- the acquisition descent, the cut and the turn have none, by the same
+    // geometry the component renders from).
+    await expect(page.locator(`${TOUR} .sticky [data-rail-group] > :not(svg)`)).toHaveCount(0);
+    await expect(page.locator(`${TOUR} .sticky svg [data-rail-ahead]`)).toHaveCount(
+      routeLegs().filter(legHasOpenTravel).length,
+    );
   });
 });
 

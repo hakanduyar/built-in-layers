@@ -112,7 +112,7 @@ export function FigureInspect({
         // The 44px minimum is a touch target; the desktop-only control (a
         // pointer target in a caption row) drops it so the plate's footer stays
         // one caption line tall and the flagship keeps its frame floor.
-        className={`min-h-11 shrink-0 items-center font-mono text-mono-label tracking-mono-label uppercase text-ink ${
+        className={`group/inspect min-h-11 shrink-0 items-center gap-2 font-mono text-mono-label tracking-mono-label uppercase text-ink transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text ${
           where === "always"
             ? "inline-flex"
             : where === "desktop"
@@ -120,6 +120,14 @@ export function FigureInspect({
               : "inline-flex lg:hidden"
         }`}
       >
+        {/* V14.1 (owner §11): the same route mark the scene's case-study action
+            carries -- one vocabulary for both ways out of a scene. */}
+        {where === "desktop" && (
+          <span
+            aria-hidden="true"
+            className="block h-px w-4 bg-current opacity-70 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/inspect:w-7"
+          />
+        )}
         Inspect
       </button>
 

@@ -345,7 +345,11 @@ export function SpatialExperience() {
           // world draws above it, with the statement below -- the negative
           // space around it is the bottom of the world, and it is composed
           // rather than left over.
-          <div key="reorient" className="w-full lg:pl-[15vw] lg:pt-[16vh]">
+          // V14.1 (owner §12): lower again -- the word's foot now stands ON the
+          // SYSTEM stratum (WorldGrammar's Strata draws the band at the
+          // composition's foot), at mid-frame, with the depth rail's descent
+          // above it as the visible consequence of the cut. 16vh -> 28vh.
+          <div key="reorient" className="w-full lg:pl-[15vw] lg:pt-[28vh]">
             <div className="relative pl-8">
               <span
                 aria-hidden="true"
@@ -400,7 +404,9 @@ export function SpatialExperience() {
           // V14 (§19): the same vertical placement as UNDERNEATH -- the
           // definitions sit in the frame's middle band under the FLOW stratum,
           // not against its top edge with 60% of the frame empty below.
-          <div key="approach" className="w-full lg:pt-[12vh]">
+          // V14.1: the heading stands on the FLOW stratum at mid-frame; the
+          // three definitions sit inside the stratum beneath it. 12vh -> 20vh.
+          <div key="approach" className="w-full lg:pt-[20vh]">
             <SectionHeading index="03" label="Built in Layers" />
             <h2 className="mt-5 font-display text-display-l tracking-display-l uppercase text-ink">
               Built in Layers
@@ -492,8 +498,13 @@ export function SpatialExperience() {
  * the frame that needed them.
  */
 function SurfaceReturn() {
+  // V14.1 (owner §5, §13): the junction stands on the LOWER RAIL'S DATUM. The
+  // dashed signal route arrives from the frame's left edge, terminates at the
+  // node exactly where the lower page's rail will descend (EditorialDrift's
+  // --drift-pad: 3vw, 4vw at lg), and continues right as the page's solid
+  // rule. One event, and the rail below is literally its continuation.
   return (
-    <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:relative lg:mx-0 lg:max-w-none lg:pl-[4vw] lg:pr-8">
       {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
           removed. Route two is drawn dashed and signal-toned everywhere in the
           world above -- that is its registered grammar. Here that exact line
@@ -503,9 +514,9 @@ function SurfaceReturn() {
           rules only; everything above used world grammar. The label is now a
           caption on the event rather than the event. */}
       <div className="relative">
-        <div aria-hidden="true" className="flex items-center">
-          <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:w-32" />
-          <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+        <div aria-hidden="true" className="relative flex items-center">
+          <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:absolute lg:right-full lg:top-1/2 lg:w-[4vw] lg:-translate-y-1/2" />
+          <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink lg:mx-0 lg:-translate-x-1/2" />
           <span className="block h-px flex-1 bg-ink" />
         </div>
         {/* V9 (§P0): SET AS A STATEMENT, NOT AS A CAPTION. Measured, the moment

@@ -1354,8 +1354,9 @@ function SceneFrame({
   // released (scenePresence). The 0.972 -> 1 arrival SCALE that used to stand
   // here is gone: it was a paint-time transform over every glyph and screenshot
   // in the world while moving, the exact mechanism V11 measured as the blur.
-  // Desktop only; the mobile composition is the V13 gate's and is untouched.
-  const presence = useTransform(approach, (value) => scenePresence(value));
+  // Desktop only; the mobile composition is the V13 gate's and is untouched --
+  // V14.1 passes the flag so its re-cut curve (systemPov.ts) is desktop-only.
+  const presence = useTransform(approach, (value) => scenePresence(value, mobile));
 
   return (
     <motion.div

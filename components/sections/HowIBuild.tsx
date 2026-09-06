@@ -42,32 +42,39 @@ export function HowIBuild() {
             arrow into its consequence, so the whole operating model is read in
             ONE viewport instead of scrolled through. The V8/V9 relation --
             principle -> consequence, drawn not implied -- is kept in each cell. */}
-        <ol className="lg:grid lg:grid-cols-2 lg:gap-x-12">
+        {/* V14.1 (owner §15): FOUR ROWS OF ONE METHOD, NOT FOUR CARDS. The
+            2x2 grid read as principle cards, and the rule-and-chevron under
+            each title was a mark that stated nothing (its own comment said
+            so). Each principle is now one row of the same register the rest of
+            the lower page uses: the index in the gutter, the title, and what
+            follows from it on the same line at `lg`, on one rule. The copy is
+            unchanged; the relation is carried by the row, not by an arrow. */}
+        <ol className="lg:border-b lg:border-ink">
           {howIBuildPrinciples.map((principle, i) => (
-            <li key={principle.title} className="relative border-t border-ink py-6 lg:py-7">
-              <div className="flex items-baseline gap-4">
+            <li
+              key={principle.title}
+              className="border-t border-ink py-6 lg:grid lg:grid-cols-12 lg:items-baseline lg:gap-8"
+            >
+              {/* Below lg this is the V13 mobile composition unchanged: index and
+                  title on one baseline, the consequence in its own ruled block.
+                  At lg the wrapper dissolves (contents) and the four pieces
+                  become one grid row. */}
+              <div className="flex items-baseline gap-4 lg:contents">
                 <span
                   aria-hidden="true"
-                  className="block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+                  className="block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:col-span-1"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-display text-heading-l tracking-heading-l text-ink">
+                <h3 className="font-display text-heading-l tracking-heading-l text-ink lg:col-span-5">
                   {principle.title}
                 </h3>
               </div>
-              {/* The consequence arrow: leaves the title's measure and points
-                  into what follows from it. Decorative; the relation is carried
-                  by the reading order for assistive technology. */}
-              <span aria-hidden="true" className="mt-4 hidden items-center gap-2 lg:flex">
-                <span className="block h-px w-16 bg-ink opacity-45" />
-                <span className="block h-1.5 w-1.5 rotate-45 border-r border-t border-ink opacity-60" />
-              </span>
-              <div className="relative mt-3 max-w-[32rem] border-l border-line pl-5 lg:mt-3 lg:border-l-0 lg:pl-0">
-                <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+              <div className="relative mt-3 max-w-[32rem] border-l border-line pl-5 lg:col-span-6 lg:mt-0 lg:border-l-0 lg:pl-0">
+                <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:hidden">
                   Consequence
                 </p>
-                <p className="mt-2 font-display text-body-l text-ink">{principle.body}</p>
+                <p className="mt-2 font-display text-body-l text-ink lg:mt-0">{principle.body}</p>
               </div>
             </li>
           ))}

@@ -8,6 +8,7 @@ import {
   selectedSystemsSubheading,
 } from "@/data/copy";
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
+import { ROUTE_ONE_IDS } from "@/lib/spatial/scenes";
 
 type LayerKey = "surface" | "flow" | "system";
 
@@ -72,8 +73,15 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
         </p>
       </div>
 
+      {/* V14.1 (owner §14): THE REGISTER IS THE MAP'S INDEX, NOT A TABLE.
+          The four systems the route visited carry the world's own station
+          glyph -- the filled ring the map draws for a visited stop -- and the
+          system that continues on the Work index carries the branch's signal
+          ring, exactly as the terminus map above drew it. Same five stops,
+          same five symbols. The table's outer box is gone; the rows stand on
+          rules, as everything in the world does. */}
       <Reveal className="mt-10 lg:mt-8">
-        <div className="border-y border-ink">
+        <div className="border-y border-ink lg:border-t-0">
           <div className="hidden border-b border-line py-4 lg:grid lg:grid-cols-12 lg:gap-8">
             <span className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:col-span-4">
               System
@@ -99,12 +107,21 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                 key={project.slug}
                 className="border-b border-line py-6 last:border-b-0 lg:grid lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-3"
               >
-                <div className="flex items-start gap-5 lg:col-span-4">
-                  <span
-                    aria-hidden="true"
-                    className="pt-1 font-mono text-mono-label tracking-mono-label text-ink-muted"
-                  >
-                    {String(index + 1).padStart(2, "0")}
+                <div className="flex items-start gap-5 lg:col-span-4 lg:gap-4">
+                  <span aria-hidden="true" className="flex items-center pt-1 lg:gap-3">
+                    <span
+                      data-station-glyph={
+                        ROUTE_ONE_IDS.some((id) => id === project.slug) ? "visited" : "branch"
+                      }
+                      className={
+                        ROUTE_ONE_IDS.some((id) => id === project.slug)
+                          ? "hidden h-2.5 w-2.5 rounded-full border border-ink bg-ink lg:block"
+                          : "hidden h-2.5 w-2.5 rounded-full border border-signal bg-paper lg:block"
+                      }
+                    />
+                    <span className="font-mono text-mono-label tracking-mono-label text-ink-muted">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </span>
                   <div>
                     {/* V13 (mobile gate, M4): the register's title is the route

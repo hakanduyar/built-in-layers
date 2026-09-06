@@ -1,0 +1,186 @@
+{
+  "base": "http://127.0.0.1:3300",
+  "focusFile": "docs/review/v14-owner-visual/after/metrics/route-focus.json",
+  "viewports": {
+    "1440x900": {
+      "journeys": {
+        "forward": {
+          "route": {
+            "notches": 108,
+            "seconds": 20.7,
+            "from": 0,
+            "to": 5137,
+            "px": 5137,
+            "peakPxPerSec": 418,
+            "coastPxAfterInput": 449
+          },
+          "lower": {
+            "notches": 22,
+            "seconds": 4.1,
+            "from": 5137,
+            "to": 7737,
+            "px": 2600,
+            "peakPxPerSec": 1200,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1440x900--forward.webm"
+        },
+        "reverse": {
+          "lower": {
+            "notches": 27,
+            "seconds": 4.8,
+            "from": 7737,
+            "to": 4497,
+            "px": 3240,
+            "peakPxPerSec": 1342,
+            "coastPxAfterInput": -44
+          },
+          "route": {
+            "notches": 101,
+            "seconds": 21.3,
+            "from": 4497,
+            "to": 0,
+            "px": 4497,
+            "peakPxPerSec": 303,
+            "coastPxAfterInput": -47
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1440x900--reverse.webm"
+        },
+        "lower-world": {
+          "normal": {
+            "notches": 27,
+            "seconds": 4.9,
+            "from": 4561,
+            "to": 7737,
+            "px": 3176,
+            "peakPxPerSec": 1409,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1440x900--lower-world.webm"
+        },
+        "lower-world-aggressive": {
+          "aggressive": {
+            "notches": 27,
+            "seconds": 4.2,
+            "from": 4561,
+            "to": 7737,
+            "px": 3176,
+            "peakPxPerSec": 1398,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1440x900--lower-world-aggressive.webm"
+        }
+      },
+      "geom": {
+        "routeStart": 61,
+        "routeEnd": 4561,
+        "docMax": 7737,
+        "vh": 900,
+        "vw": 1440
+      }
+    },
+    "1920x1080": {
+      "journeys": {
+        "forward": {
+          "route": {
+            "notches": 123,
+            "seconds": 30.2,
+            "from": 0,
+            "to": 6149,
+            "px": 6149,
+            "peakPxPerSec": 0,
+            "coastPxAfterInput": 574
+          },
+          "lower": {
+            "notches": 23,
+            "seconds": 5.4,
+            "from": 6149,
+            "to": 8802,
+            "px": 2653,
+            "peakPxPerSec": 771,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1920x1080--forward.webm"
+        },
+        "reverse": {
+          "lower": {
+            "notches": 29,
+            "seconds": 6.3,
+            "from": 8802,
+            "to": 5322,
+            "px": 3480,
+            "peakPxPerSec": 0,
+            "coastPxAfterInput": -91
+          },
+          "route": {
+            "notches": 121,
+            "seconds": 30.9,
+            "from": 5322,
+            "to": 0,
+            "px": 5322,
+            "peakPxPerSec": 286,
+            "coastPxAfterInput": -44
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1920x1080--reverse.webm"
+        },
+        "lower-world": {
+          "normal": {
+            "notches": 28,
+            "seconds": 6.3,
+            "from": 5461,
+            "to": 8802,
+            "px": 3341,
+            "peakPxPerSec": 584,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1920x1080--lower-world.webm"
+        },
+        "lower-world-aggressive": {
+          "aggressive": {
+            "notches": 23,
+            "seconds": 4.9,
+            "from": 5461,
+            "to": 8802,
+            "px": 3341,
+            "peakPxPerSec": 1175,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "C:/Users/hakan/AppData/Local/Temp/claude/c--GitHub-portfolio/75854813-d017-4de6-8aa6-0b27d946a546/scratchpad/ab-baseline-fa7c72c/recordings/1920x1080--lower-world-aggressive.webm"
+        }
+      },
+      "geom": {
+        "routeStart": 61,
+        "routeEnd": 5461,
+        "docMax": 8802,
+        "vh": 1080,
+        "vw": 1920
+      }
+    }
+  },
+  "zoom": {
+    "1920x1080@100": {
+      "cssViewport": "1920x1080",
+      "worldUnitPx": null
+    },
+    "1920x1080@80": {
+      "cssViewport": "2400x1350",
+      "worldUnitPx": null
+    },
+    "1920x1080@67": {
+      "cssViewport": "2866x1612",
+      "worldUnitPx": null
+    },
+    "1920x1080@50": {
+      "cssViewport": "3840x2160",
+      "worldUnitPx": null
+    }
+  }
+}

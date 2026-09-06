@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
+import { LowerRoute } from "@/components/spatial/LowerRoute";
 import {
   FIELD_MIN_BODY_PX,
   SEAM_CLEARANCE_PX,
@@ -60,7 +61,7 @@ export function EditorialDrift({ children }: EditorialDriftProps) {
       // space the widened drift fractions spend. At 1440px it takes the track's
       // free width from 245px to 305px, and combined with the wider fractions
       // roughly doubles real lateral travel.
-      className="relative w-full overflow-clip [--drift-pad:3vw] [--drift-w:min(92vw,1020px)] lg:[--drift-pad:4vw] lg:[--drift-w:min(72vw,1020px)]"
+      className="relative w-full overflow-x-clip [--drift-pad:3vw] [--drift-w:min(92vw,1020px)] lg:[--drift-pad:4vw] lg:[--drift-w:min(72vw,1020px)]"
     >
       {/* V6.1: the spine now runs at two depths. The background runs sit behind
           the content planes; the foreground run comes in front of them, so the
@@ -77,6 +78,10 @@ export function EditorialDrift({ children }: EditorialDriftProps) {
           world: the route ends on the terminus map, and each section carries
           its own register (SystemNode). The blocks still drift; the drift is
           the behaviour, and it needs no diagram of itself beside it. */}
+      {/* V14.1 (owner §5, §13, §19): the route, continued down the page as one
+          rail with a station at each section -- the lower world's spine, and
+          the datum the blocks drift from. See LowerRoute. */}
+      <LowerRoute />
       <div className="relative">{children}</div>
       {/* V14 (owner findings D, §14) REMOVED THE DRIFT SETTLE that closed the
           track here: a rule, a closed square and a 64px vertical hand-off,
@@ -90,6 +95,11 @@ export function EditorialDrift({ children }: EditorialDriftProps) {
 
 function trackX(fraction: number): string {
   return `calc(var(--drift-pad) + ${fraction} * (100vw - 2 * var(--drift-pad) - var(--drift-w)))`;
+}
+
+/** How far the block's left edge stands from the rail at --drift-pad. */
+function trackArm(fraction: number): string {
+  return `calc(${fraction} * (100vw - 2 * var(--drift-pad) - var(--drift-w)))`;
 }
 
 /**
@@ -131,6 +141,15 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
   // load tests/e2e/spatial-v5.spec.ts measured 91.44px of travel through it. CSS
   // has neither problem.
   const x = useTransform(scrollYProgress, [0, 1], [trackX(section.entry), trackX(section.exit)]);
+  // V14.1: the block's distance from the lower rail (which stands at
+  // --drift-pad), as a custom property. SystemNode's arm reads it, so the
+  // section's register is drawn back to the rail at every drift position --
+  // the drift becomes displacement FROM the rail, stated by a line.
+  const arm = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [trackArm(section.entry), trackArm(section.exit)],
+  );
 
   // V6.8 (JOB 3) DELETED TWO MARKS THAT STOOD HERE, and the test was the brief's
   // own: can a viewer perceive what the element represents without reading the
@@ -339,6 +358,7 @@ export function DriftBlock({ id, children }: { id: DriftSectionId; children: Rea
             // styles/globals.css; identical on server and client, so it can never
             // cause a mismatch.
             "--drift-parked": trackX((section.entry + section.exit) / 2),
+            "--drift-arm": arm,
             x,
           } as MotionStyle
         }

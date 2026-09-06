@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { FigureInspect } from "@/components/ui/FigureInspect";
 import { readIntrinsicDimensions } from "@/lib/utils/imageDimensions";
 
@@ -46,6 +47,17 @@ type FigureProps = {
    * and at `lg` and above the control does not render at all.
    */
   inspect?: boolean | "desktop";
+  /**
+   * V14.1 (owner §9, evidence legibility): an ACQUIRED DETAIL. When set, the
+   * figure frames this window of the asset -- given in the asset's own
+   * intrinsic units -- at the scale the window earns inside the figure's
+   * width, instead of the whole drawing at a thumbnail's scale. The caption
+   * states that a detail is shown and names the region in the diagram's own
+   * words; the inspector still opens the whole asset. Static geometry: no
+   * transform, no object-fit, nothing animates. Strictly additive -- absent,
+   * the markup is byte-identical to before.
+   */
+  detail?: { x: number; y: number; width: number; height: number; label: string };
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
@@ -59,13 +71,42 @@ export function Figure({
   framePosition,
   priority = false,
   inspect = false,
+  detail,
 }: FigureProps) {
   const dimensions = readIntrinsicDimensions(src);
-  const captionText = caption
+  const baseCaption = caption
     ? index
       ? `FIG ${String(index).padStart(2, "0")} — ${caption}`
       : caption
     : undefined;
+  // The detail is stated in the caption so the plate never claims to be the
+  // whole drawing: "Detail: <the diagram's own heading>. <caption>". Desktop
+  // only, like the window itself: below lg the whole drawing is shown, as the
+  // frozen mobile composition (V13) shows it, so the prefix is lg-only markup
+  // and the string every other consumer sees is the registered caption.
+  const captionText = baseCaption;
+  const captionNode = detail ? (
+    <>
+      <span className="hidden lg:inline">{`Detail: ${detail.label}. `}</span>
+      {baseCaption}
+    </>
+  ) : (
+    baseCaption
+  );
+  // The window: at lg and above the asset is laid out at (intrinsic width /
+  // window width) of the frame and offset so the window's top-left sits at the
+  // frame's -- left a fraction of the frame's width, top a fraction of its
+  // height -- through custom properties the lg: utilities read. Below lg the
+  // same markup is the plain responsive image.
+  const detailVars =
+    detail && dimensions
+      ? ({
+          "--detail-ar": `${detail.width} / ${detail.height}`,
+          "--detail-w": `${((dimensions.width / detail.width) * 100).toFixed(4)}%`,
+          "--detail-x": `${(-(detail.x / detail.width) * 100).toFixed(4)}%`,
+          "--detail-y": `${(-(detail.y / detail.height) * 100).toFixed(4)}%`,
+        } as CSSProperties)
+      : undefined;
   const image = (
     /* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */
     <img
@@ -73,8 +114,16 @@ export function Figure({
       alt={alt}
       fetchPriority={priority ? "high" : "low"}
       decoding="async"
-      className={frameRatio ? "block h-full w-full object-cover" : "block h-auto w-full"}
-      style={frameRatio && framePosition ? { objectPosition: framePosition } : undefined}
+      className={
+        detailVars
+          ? "block h-auto w-full lg:absolute lg:left-[var(--detail-x)] lg:top-[var(--detail-y)] lg:w-[var(--detail-w)] lg:max-w-none"
+          : frameRatio
+            ? "block h-full w-full object-cover"
+            : "block h-auto w-full"
+      }
+      style={
+        !detailVars && frameRatio && framePosition ? { objectPosition: framePosition } : undefined
+      }
       {...dimensions}
     />
   );
@@ -119,7 +168,14 @@ export function Figure({
           aspect ratio; dimensions is null (attributes omitted) only for a
           format readIntrinsicDimensions doesn't recognize -- unchanged
           prior behavior, not a regression. */}
-      {frameRatio ? (
+      {detailVars ? (
+        <div
+          className="relative w-full lg:overflow-hidden lg:[aspect-ratio:var(--detail-ar)]"
+          style={detailVars}
+        >
+          {image}
+        </div>
+      ) : frameRatio ? (
         <div className="relative w-full overflow-hidden" style={{ aspectRatio: `${frameRatio}` }}>
           {image}
         </div>
@@ -133,7 +189,7 @@ export function Figure({
         // a <figcaption> -- "Inspect" is not the figure's caption.
         captionText ? (
           <figcaption className="mt-2 flex items-center justify-between gap-4 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
-            <span className="min-w-0">{captionText}</span>
+            <span className="min-w-0">{captionNode}</span>
             <FigureInspect
               src={src}
               alt={alt}
@@ -158,7 +214,7 @@ export function Figure({
       ) : (
         captionText && (
           <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
-            {captionText}
+            {captionNode}
           </figcaption>
         )
       )}

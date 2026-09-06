@@ -81,7 +81,6 @@ export function SystemNode({ index, label, children, align = "left" }: SystemNod
   const presence = useTransform(scrollYProgress, [0.04, 0.34], [0.28, 1]);
   // Hoisted: every derived opacity is a hook, so none of them may live inside a
   // JSX expression or behind a conditional.
-  const spineOpacity = useTransform(presence, (v) => 0.1 + v * 0.22);
   const armOpacity = useTransform(presence, (v) => 0.2 + v * 0.45);
   const insetOpacity = useTransform(presence, (v) => 0.12 + v * 0.28);
   const stateOpacity = useTransform(presence, (v) => 0.35 + v * 0.45);
@@ -96,18 +95,28 @@ export function SystemNode({ index, label, children, align = "left" }: SystemNod
     // measured ceiling that was ~1s of the reader's time per section spent on
     // nothing. The mobile value is the V13 gate's and is untouched.
     <section ref={ref} className="relative mt-16 lg:mt-20">
-      {/* THE SPINE. One rule, the section's full height, on the edge the route is
-          on. This is the single element that makes the lower page read as one
-          continuous journey rather than five stacked documents. */}
-      <motion.span
-        aria-hidden="true"
-        className={`absolute top-0 hidden h-full w-px bg-ink lg:block ${edge}`}
-        style={{ opacity: reduceMotion ? 0.22 : spineOpacity }}
-      />
+      {/* V14.1 (owner §5): THE SPINE IS GONE FROM HERE. Each section drew its
+          own full-height rule, so four sections were four documents each
+          re-opening the same chrome. The lower page now has ONE rail -- the
+          route continued, with a station at every section -- drawn once by
+          LowerRoute at the drift track's datum. The register below keeps the
+          arm and the inset mark: the section's own corner, which the rail's
+          station sits level with. `data-node-register` and `data-node-index`
+          are what the rail measures to place that station. */}
 
       {/* THE REGISTER. The world's resolved corner form, and the state the system
           is currently in with respect to this section. */}
-      <div aria-hidden="true" className={`relative ${pad}`}>
+      <div aria-hidden="true" className={`relative ${pad}`} data-node-register="true">
+        {/* V14.1: the arm back to the lower rail. Its length is the block's
+            drift, published by DriftBlock as --drift-arm; the rail's station
+            for this section sits at its far end. Left-aligned sections only,
+            which is every section on this page. */}
+        {align === "left" && (
+          <motion.span
+            className="absolute right-full top-0 hidden h-px bg-ink lg:block"
+            style={{ width: "var(--drift-arm, 0px)", opacity: reduceMotion ? 0.45 : armOpacity }}
+          />
+        )}
         <motion.span
           className={`absolute top-0 block h-px w-10 bg-ink ${edge}`}
           style={{ opacity: reduceMotion ? 0.5 : armOpacity }}
@@ -117,7 +126,10 @@ export function SystemNode({ index, label, children, align = "left" }: SystemNod
           style={{ opacity: reduceMotion ? 0.3 : insetOpacity }}
         />
         <div className="flex items-baseline gap-4 pt-4">
-          <span className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+          <span
+            className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+            data-node-index={index}
+          >
             {index} / {label}
           </span>
           {!reduceMotion && (

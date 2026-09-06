@@ -1132,3 +1132,151 @@ Binding conditions attached to this approval — all already true of the current
   the owner accepted.
 - **Rejected:** DPR snapping (no measured benefit, certain jitter cost); any per-region speed
   constant; scroll snapping of any kind.
+
+## D-043 — The route is a track: ahead and travelled are different drawings, drawn only in the open
+
+- **Status:** V14.1 FABLE VISUAL CORRECTION — pending owner visual acceptance. **Not** in force on
+  `main`. Evidence: `docs/review/v14.1-fable/{before,iter1..iter6,after}/`.
+- **Context:** the owner's V14.1 verdict — improvements, "but not yet what I asked for" — and the
+  brief's finding F: route hierarchy (travelled / current / ahead / stations / transitions) had to
+  read without a global stroke increase. Measured on the before set, D-038's rail encoded the two
+  states as two alphas on one stroke, drawn anchor to anchor: from a composition's own corner
+  straight through its title (hidden at focus by the attention dim), and at 50% zoom a 1.5px
+  stroke at 20% is not there. The survey cross-ticks were texture on top of it.
+- **Decisions:**
+  1. **Two drawings, not two alphas.** AHEAD is a dotted survey path (`pathLength={1}`, a fixed
+     dash rhythm per unit of arc, so the spacing is identical on every leg however the SVG box is
+     stretched); TRAVELLED is a solid polyline whose `pathLength` follows the filtered camera. The
+     difference survives any zoom because it is a difference of form.
+  2. **Only in the open.** `lib/spatial/railTravel.ts` — a leg draws from clear of the departing
+     composition (its anchor plus `RAIL_EXIT_X`) to seven screen units short of the arriving
+     station. Under a composition the ground carries the route (D-044). Legs with no open run — the
+     acquisition descent, the cut, the turn — draw nothing, and the e2e guard counts exactly the
+     legs that do.
+  3. **Stations scaled with the viewport** (`max(10px, 0.52vw)`, resolved `0.62vw`) with the
+     stop's index beside the ring while the stop is ahead; the label recedes as the ring fills.
+  4. **The rail group has no per-frame opacity any more**: nothing crosses a title, so nothing
+     needs to recede. The D-040 guard keeps its reason (SVG only in the rail group) and its bound.
+- **Rejected:** thickening every stroke; the survey ticks; keeping a dim-at-focus on the rails.
+
+## D-044 — The ground is drawn, not filled; presence is a change of state, not a fade
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** the owner, on D-036's constructed edge: it "can still read like a large pale
+  background card". The frames agreed: a filled region has as many edges as its silhouette, and in
+  the empty middle of every transition the only thing in frame was a pale parallelogram sliding by,
+  in the plate's own mat tone. Separately, a scene's presence ramped as one opacity, so a departing
+  description was left orphaned top-right while the arriving title was cut at the right edge.
+- **Decisions:**
+  1. **Section, not slab** (`ProjectPlane.tsx`, desktop): a DATUM (the up-route hairline with two
+     registration ticks), a FLOOR (a level hairline at the datum's foot, running under the
+     composition and on down-route to a cut square to the route's bearing) and a TREAD (three per
+     cent ink below the floor only, dissolving in a few viewport-hundredths). No fill above the
+     floor. The floor is **laid by acquisition** — a compositor-only `scaleX` from the datum
+     outward as proximity rises — so DETECTED shows an edge, ACQUIRED lays the ground, FOCUSED has
+     the tread under the composition, RELEASED leaves it behind for a moment.
+  2. **The floor is drawn 0.02 scene units above the ground box's foot** (`FLOOR_LIFT`): the frozen
+     ground policy (`projectGround.ts`, D-028) pads 0.05 below the evidence, which was right for a
+     slab and a 40–53px gap for a floor. Lifted, the line runs 7–18px under the composition's own
+     bracket feet at 1366, 1440 and 1920. The policy file is untouched.
+  3. **Presence as state** (`lib/spatial/systemPov.ts` `scenePresence`): a 0.34 floor while
+     detected, a short ramp to 1 across acquisition, held through focus, released to 0.34 — a step,
+     not a slope, so the arriving scene is already legible when the departing one lets go.
+  4. **Two voices at acquisition** (`SystemPOV.tsx`): the meta cluster (case index, layer, phase)
+     sits above the composition's top-right corner, right-aligned, so the identity owns the left
+     and the record the right at every viewport. **One action vocabulary**
+     (`SpatialProjectScene.tsx`, `FigureInspect.tsx`): a corner bracket, a rule and the label;
+     hover extends the rule and underlines the label — no CTA card, on the scene and on the
+     inspector trigger alike.
+- **Rejected:** any fill above the floor; a second mat tone; scaling the arriving composition.
+
+## D-045 — The acquired detail: a diagram frames the subsystem that is its argument
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding C, evidence legibility. Software Factory, Kıvılcım and JointLedger
+  stage 1600×1000-unit diagrams at a nine-column measure, which puts their body labels at 8–11
+  CSS px: a thumbnail of a document. The brief rules out scaling every diagram and inventing
+  anything, and lists what is allowed: focus a meaningful subsystem, crop to the relevant evidence,
+  make one fragment dominant.
+- **Decisions:**
+  1. `lib/spatial/evidenceDetail.ts` — an **evidence window** per asset path, in the asset's own
+     units, named by the diagram's **own heading** for that region (present in the SVG text, never
+     a new claim): Software Factory "The delivery loop" (the gated path; the integration mandate
+     beneath it reads in the inspector); Kıvılcım "On-device — no mandatory backend" (right edge at
+     944, the inner rows' border, because the dashed arrow to the optional external request starts
+     there); JointLedger "Book, BookMember, BookInvitation".
+  2. `Figure.tsx` takes `detail`: the frame is the window's aspect, the image is laid out at
+     (intrinsic ÷ window) of the frame and offset to the window's origin; the caption states
+     `Detail: <heading>.` before the registered caption, and INSPECT opens the whole drawing.
+     Presentation geometry keyed by path: a project with no window renders as before (DropSpot's
+     real screenshots stay whole, per the owner's V7 decision).
+  3. **The detail column stands beside the identity** (`lg:grid-cols-12`, identity 8 / detail 4)
+     above a full-width plate, so the plate earns the whole measure; scene fit stays clear at all
+     five viewports (`after/metrics/scene-fit.json`).
+  4. `scene-fit-probe.mjs` now clips a composition's ink to its overflow ancestors: the window's
+     image box legitimately extends past its clipping frame and produced a false 73–109px
+     overflow on the first run.
+- **Measured:** Kıvılcım's core labels ≈1.7× their V14 size at 1440; the delivery loop's stage
+  labels read at the full measure; nothing added to any project.
+- **Rejected:** scaling every diagram up; a "zoomed" second asset; any window whose name is not
+  in the drawing.
+
+## D-046 — Strata are floors; UNDERNEATH stands on the SYSTEM line; the terminus map clears the surface return
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding D, SYSTEMS→UNDERNEATH as one causal event, and E, the lower world
+  as a narrative. On the before set UNDERNEATH stood bare after the cut, the SURFACE horizon
+  crossed the Built in Layers reveal as a fourth unlabelled line, the recess showed a hard
+  vertical edge at 50% zoom, and the terminus map's branch labels ran into "Back on the surface"
+  during the map's rise (p≈0.98, all three viewports).
+- **Decisions:**
+  1. **Strata as floors** (`WorldGrammar.tsx`): the three bands sit at the compositions' feet
+     (`STRATA_FOOT_VH` per scene) with their labels inside the band, so UNDERNEATH is a
+     composition standing on the SYSTEM line, not a heading floating between rules. The recess
+     below the SURFACE horizon spans the lower route with both ends faded; the horizon stops at
+     x=760 so it never enters the reveal.
+  2. **Reorient and approach pad down** (`lg:pt-[28vh]`, `lg:pt-[20vh]`) to stand on their bands.
+     No route distance, no scroll math, no world height was changed: these are paddings inside
+     compositions the camera already frames.
+  3. **The terminus map** sits at `TERMINUS_MAP_OFFSET = {x: 28, y: −14}` world units from the
+     turn: its rise past the fixed surface-return header no longer crosses the header's text at
+     1366, 1440 or 1920 (`iter6/motion/*--handoff--to--1.png`), and at the terminus the map reads
+     whole above the junction.
+  4. **The surface-return junction stands on the lower rail's datum** (`SpatialExperience.tsx`):
+     the dashed signal route arrives from the frame's left edge and terminates exactly where the
+     page's rail will descend (`--drift-pad`), so D-047's rail is literally its continuation.
+- **On the cut itself, unchanged:** the V4 `SceneBreak` — seven ink rails closing from alternating
+  sides over a solid ink field that guarantees the frame is opaque at the instant the route jumps
+  — is what the transition sheets show as black frames at p≈0.70–0.73. Verified by DOM probe
+  (`data-scene-break`, `data-break-rail`), identical in the before set, and left as designed.
+- **Rejected:** lengthening the lower world; a second cut device; per-region speed.
+
+## D-047 — The route continues down the page: one rail, stations at every section, the map's index
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding E: "a spatial first half followed by an editorial website". Below the
+  surface return nothing inherited the world's structure; each lower section re-opened its own
+  hairline spine on bare paper, so four sections read as four documents wearing the same chrome,
+  and the drift read as misalignment because its datum had been removed (D-037) and nothing
+  replaced it.
+- **Decisions:**
+  1. **`LowerRoute.tsx`** (new, desktop): the route turns the corner at the junction and runs down
+     the page as one rail at the drift track's datum — dotted AHEAD, solid TRAVELLED laid by the
+     page's own scroll (`scaleY`), a station ring per section at its register line carrying the
+     section's real index (05–08) and filling on arrival, a closed corner at the foot. It measures
+     the sections it draws (`data-node-register`, `data-node-index`) and draws nothing that is not
+     true. Reduced motion renders it resolved. The drift container clips laterally only
+     (`overflow-x-clip`) so the first station is whole.
+  2. **Arms** (`SystemNode.tsx`, `EditorialDrift.tsx`): each register carries a hairline back to
+     the rail whose length is the block's own drift (`--drift-arm`, published by the block), so the
+     drift is displacement *from* something, stated.
+  3. **Selected Systems is the map's index**: each row's index carries the station glyph (visited
+     = filled ink ring, the branch = signal ring), the same symbol as the world's stations and the
+     map's dots. **How I Build is four rows** (index / principle / consequence) on rules, not four
+     paragraphs with arrows. **About is a station**: the name at display-l, resolving as before,
+     with the register's spacing.
+  4. **The finale map carries the lower page** (`RouteMap.tsx` `tail`, `SiteFooter.tsx`): below the
+     branch, a vertical from the terminus with filled dots 05–08 and a closing bar — SYSTEM
+     RESOLVED → COMPLEXITY MAPPED → OPERATOR ADDRESSABLE, with the CTA copy unchanged.
+- **Rejected:** a second spine per section; any new copy; any change to the lower world's length
+  or pacing (D-039 gearing untouched).

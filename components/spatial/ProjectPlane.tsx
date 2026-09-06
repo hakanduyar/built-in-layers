@@ -21,55 +21,72 @@ import { worldX, worldY } from "@/lib/spatial/worldFit";
 // position runs the supporting-plane grammar (lib/spatial/planeChoreography.ts):
 // enters before the foreground, registers exactly at focus, trails on exit.
 //
-// V14 (OWNER FINDING B, §7) -- THE PLANE IS A STRETCH OF GROUND, NOT A CARD.
+// V14 (OWNER FINDING B, §7) made the plane a stretch of ground laid along the
+// route -- one constructed edge, cut square to the bearing, dissolving down-
+// route -- instead of an axis-aligned mat behind the evidence.
 //
-// The owner's verdict on what stood here: "beige cards behind projects". The
-// verdict is right and the reason is geometric. The field was an axis-aligned
-// rectangle, filled in the mat's own soft-paper tone, sized a little larger
-// than the evidence and offset a little to one side -- which is the exact
-// description of a card's backing. Whatever the choreography did, a rectangle
-// slightly behind a rectangle reads as one object with a shadow.
+// V14.1 (OWNER §7, again: it "can STILL read like a large pale background
+// card") -- THE GROUND IS DRAWN, NOT FILLED.
 //
-// So the plane is now the thing the grammar always described: a piece of
-// ground the composition stands on, laid ALONG THE ROUTE.
+// The V14 note claimed "a card needs four edges; this has one", and the frames
+// disagreed: a filled region has as many edges as its silhouette, so a filled
+// parallelogram with one decorated side was still a pale panel -- most
+// visibly in the empty middle of every transition, where the departing scene
+// had left and the arriving one had not yet come, and the only thing in frame
+// was a large pale rectangle sliding by. Its tone was also the plate's own mat
+// tone, so the plate dissolved into it instead of standing on it.
 //
-//   ONE CONSTRUCTED EDGE. The up-route end is a real edge: a hairline rule
-//   with a registration tick, the edge the composition arrives over. The
-//   down-route end is cut square to the route's own bearing and then
-//   dissolves toward the next station, so the plane's far boundary is the
-//   frame or the paper, never a second parallel edge. A card needs four
-//   edges; this has one.
+// So the ground is now structure in section, in the world's own vocabulary of
+// hairlines and ticks, and its fill is gone:
 //
-//   IT RUNS ON PAST THE COMPOSITION. Half a scene measure further down-route
-//   than the evidence, so at focus it leaves the frame on the right: a
-//   surface the reader is travelling along, not a mat the project sits on.
-//   At zoom-out the four planes read as four stretches of one track.
+//   THE DATUM. The up-route edge, exactly as before: a vertical hairline with
+//   two registration ticks, standing clear of the composition, at the point
+//   the composition arrives over. It is the first thing the camera meets and
+//   it resolves as the station does -- opacity with proximity.
 //
-//   IT IS TONE, NOT MATERIAL. 3.5% ink over paper -- a change of ground, one
-//   step lighter than the old fill -- so it can never compete with a plate
-//   that is itself a soft-paper mat.
+//   THE FLOOR. A level hairline at the datum's foot, running under the
+//   evidence and on past it down-route, then cut square to the route's bearing
+//   and ended. This is what the composition stands on. It is DRAWN BY
+//   ACQUISITION: as proximity rises the floor extends from the datum outward
+//   (a compositor-only scaleX on a hairline -- no text, no layout), so
+//   DETECTED shows an edge, ACQUIRED lays the ground, FOCUSED has the whole
+//   tread under the composition, and RELEASED leaves the floor behind for a
+//   moment before it lets go. Acquisition is now a change of what is drawn,
+//   not a change of opacity on a slab.
 //
-//   IT ARRIVES AND IT STAYS BEHIND. PLANE_LEAD and PLANE_LAG were raised so the
-//   arrive/release choreography is visible against a 1180px composition (see
-//   planeChoreography.ts for the measurement that showed 70px did not read).
+//   THE TREAD. Between datum and cut, a wedge of tone under the floor line
+//   only -- three per cent ink from the floor down, dissolving within a few
+//   viewport-hundredths -- so the floor reads as the top of ground rather than
+//   as a rule floating in paper. Nothing is filled above the floor: the
+//   composition stands on the ground, it is not backed by it.
 //
-// The fill, the edge and the cut are all static geometry; only `transform` and
-// `opacity` animate, exactly as before. Mobile keeps the V13 gate's slab: the
-// vertical route has no bearing to lay a plane along, and that composition is
-// frozen.
+// The datum, the floor and the cut are static geometry; only `transform` and
+// `opacity` animate. Mobile keeps the V13 gate's slab: the vertical route has
+// no bearing to lay a floor along, and that composition is frozen.
 
 /**
- * The scene's own measure: identical to SCENE_WIDTH in scenes.ts. The plane is
- * sized and offset in FRACTIONS of this, so the plane:composition relationship
+ * The scene's own measure: identical to SCENE_WIDTH in scenes.ts. The ground is
+ * sized and offset in FRACTIONS of this, so the ground:composition relationship
  * is the same geometry at 1024, 1440 and 2560.
  */
 const SCENE_UNIT = "min(84vw, 1180px)";
 
-/** How far past the composition the ground runs down-route, in scene units. */
+/** How far past the composition the floor runs down-route, in scene units. */
 const PLANE_RUN_ON = 0.45;
-/** How far up-route of the block's own edge the ground begins: the constructed
- *  edge stands clear of the content, ahead of it. */
+/** How far up-route of the block's own edge the datum stands. */
 const PLANE_LEAD_IN = 0.07;
+/** The tread's depth below the floor line, in scene units. */
+const TREAD_DEPTH = 0.09;
+/**
+ * How far above the ground box's foot the floor is drawn, in scene units. The
+ * ground policy (lib/spatial/projectGround.ts, frozen at D-028) pads the box
+ * 0.05 below the measured evidence, which was right for a slab and is a gap
+ * for a floor: measured on the V14.1 iteration-five frames the plate hung
+ * 40-53px above the line at 1366-1440. Lifting the drawn floor by 0.02 puts
+ * it 7-18px under the composition's own bracket feet at every review
+ * viewport, so the composition stands on it. The policy itself is untouched.
+ */
+const FLOOR_LIFT = 0.02;
 
 type ProjectPlaneProps = {
   scene: SceneId;
@@ -98,10 +115,19 @@ export function ProjectPlane({ scene, geometry, progress, mobile = false }: Proj
   });
 
   // Presence decays to exactly zero outside the scene's own proximity window,
-  // so no plane can intrude on another scene's frame.
+  // so no ground can intrude on another scene's frame.
   const presence = useTransform(progress, (value) => {
     const near = sceneProximity(scene, value, mobile);
-    return (mobile ? 0.66 : 0.92) * Math.max(0, near);
+    return (mobile ? 0.66 : 1) * Math.max(0, near);
+  });
+  // The floor is LAID as the scene is acquired: nothing at detection, the
+  // whole tread by the time the composition is framed, and it stays laid
+  // while the scene recedes so release leaves ground behind, not a hole.
+  const laid = useTransform(progress, (value) => {
+    const a = sceneApproach(scene, value, mobile);
+    if (a <= -0.95) return 0;
+    if (a <= -0.3) return (a + 0.95) / 0.65;
+    return 1;
   });
 
   if (mobile) {
@@ -123,18 +149,13 @@ export function ProjectPlane({ scene, geometry, progress, mobile = false }: Proj
     );
   }
 
-  // The far end is cut square to the route: a line at (bearing + 90deg). Going
-  // down the plane's full height moves that edge left by height x cot(bearing
-  // + 90deg) in the same scene units, which is the shear of the polygon below.
+  // The far end is cut square to the route: a line at (bearing + 90deg). Over
+  // the tread's depth that edge moves left by depth x cot(bearing + 90deg) in
+  // the same scene units, which is the skew of the cut below.
   const bearing = Math.atan2(direction.yVh, direction.xVw * VW_PER_VH);
-  // The ground begins up-route of the whole composition -- PLANE_LEAD_IN before
-  // the block's own edge, whichever side the evidence sits -- and runs past it
-  // down-route. Its one constructed edge is therefore always OUTSIDE the
-  // content it grounds, never a line under a plate.
   const left = -PLANE_LEAD_IN;
   const run = 1 + PLANE_LEAD_IN + PLANE_RUN_ON;
-  const shear = Math.max(0, Math.min(run * 0.6, -height / Math.tan(bearing + Math.PI / 2)));
-  const cutLeft = ((run - shear) / run) * 100;
+  const cutSkewDeg = (Math.atan2(1, Math.tan(bearing + Math.PI / 2)) * 180) / Math.PI;
 
   return (
     <motion.span
@@ -151,30 +172,52 @@ export function ProjectPlane({ scene, geometry, progress, mobile = false }: Proj
         y: choreographyY,
       }}
     >
-      {/* The ground: a change of tone, cut square to the route at its far end
-          and dissolving toward the next station. */}
+      {/* THE DATUM: the constructed up-route edge, with its two registration
+          ticks. The first thing the camera meets. */}
       <span
-        className="absolute inset-0 block bg-[rgba(22,22,22,0.045)]"
-        style={{
-          clipPath: `polygon(0 0, 100% 0, ${cutLeft.toFixed(2)}% 100%, 0 100%)`,
-          WebkitMaskImage: "linear-gradient(to right, #000 58%, rgba(0,0,0,0) 100%)",
-          maskImage: "linear-gradient(to right, #000 58%, rgba(0,0,0,0) 100%)",
-        }}
+        className="absolute left-0 top-0 block w-px bg-ink opacity-40"
+        style={{ bottom: `calc(${FLOOR_LIFT} * ${SCENE_UNIT})` }}
       />
-      {/* The constructed edge: the up-route side the composition arrives over. */}
-      <span className="absolute bottom-0 left-0 top-0 block w-px bg-ink opacity-30" />
-      <span className="absolute left-0 top-0 block h-px w-8 bg-ink opacity-45" />
-      <span className="absolute bottom-0 left-0 block h-px w-8 bg-ink opacity-45" />
-      {/* The far cut, drawn once as a hairline so the square end reads as an
-          end rather than as a fade. */}
+      <span className="absolute left-0 top-0 block h-px w-8 bg-ink opacity-50" />
       <span
-        className="absolute bottom-0 top-0 block w-px origin-top bg-ink opacity-20"
-        style={{
-          left: "100%",
-          transform: `skewX(${((Math.atan2(shear, height) * 180) / Math.PI).toFixed(2)}deg)`,
-          transformOrigin: "top left",
-        }}
+        className="absolute left-0 block h-px w-8 bg-ink opacity-50"
+        style={{ bottom: `calc(${FLOOR_LIFT} * ${SCENE_UNIT})` }}
       />
+
+      {/* THE FLOOR AND THE TREAD, laid from the datum outward as the scene is
+          acquired. One transform on the pair; the hairline and the wedge are
+          static drawings under it. */}
+      <motion.span
+        data-project-floor={scene}
+        // The floor line is the datum's foot, FLOOR_LIFT above the box's
+        // bottom, and the tread hangs below it. (Placed inside the box with
+        // bottom-0 the line sat one tread-depth up, crossing every plate's
+        // caption row -- iteration-four frames, all three review viewports.)
+        className="absolute left-0 block w-full origin-left"
+        style={{
+          top: `calc(100% - ${FLOOR_LIFT} * ${SCENE_UNIT})`,
+          height: `calc(${TREAD_DEPTH} * ${SCENE_UNIT})`,
+          scaleX: laid,
+        }}
+      >
+        <span className="absolute left-0 right-0 top-0 block h-px bg-ink opacity-45" />
+        <span
+          className="absolute inset-0 block bg-[rgba(22,22,22,0.03)]"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(to bottom, #000, rgba(0,0,0,0) 100%), linear-gradient(to right, #000 62%, rgba(0,0,0,0) 100%)",
+            WebkitMaskComposite: "source-in",
+            maskImage:
+              "linear-gradient(to bottom, #000, rgba(0,0,0,0) 100%), linear-gradient(to right, #000 62%, rgba(0,0,0,0) 100%)",
+            maskComposite: "intersect",
+          }}
+        />
+        {/* The far cut: the floor ends square to the route, as a hairline. */}
+        <span
+          className="absolute right-0 top-0 block h-full w-px origin-top bg-ink opacity-35"
+          style={{ transform: `skewX(${cutSkewDeg.toFixed(2)}deg)` }}
+        />
+      </motion.span>
     </motion.span>
   );
 }
