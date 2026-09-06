@@ -6,7 +6,14 @@ What the next model needs, and nothing else. No transcripts, no test logs, no re
 (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`), on the V14.1 engineering
 checkpoint `c2ba26a` / `fa7c72c`, on the V14 candidate `35c2c58`. Verify `local == origin`. Scroll
 safety tag: `safety-v14-scroll-baseline` → `35c2c58`, untouched.
-**VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS`
+**V14.2 GATE B (2026-09-07, Fable, scoped):** the SYSTEMS → UNDERNEATH cut is the underside of the
+surface instead of ink (D-048); UNDERNEATH stands on the exposed section's SYSTEM line; Back on the
+surface is a rising paper plane from the SURFACE rule down. Scroll untouched, first paint and mobile
+verified. Handoff: `.ai/handoffs/V14_2_GATE_B_RETURN.md`; package `docs/review/v14.2-gate-b/`.
+Checkpoint SHA in `.ai/STATE.md`.
+
+**VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
+`V14.2 VISUAL GATE B COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 

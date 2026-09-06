@@ -318,115 +318,119 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
   // from a cold jump. It has been inside the default 30s budget only by margin,
   // and V8's shorter route (ROUTE_LENGTH_VH 640 -> 600) moved BREAK_CUT, which
   // moved every sample. The budget is raised; not one assertion is touched.
-  test("every break rail closes onto the frame at the cut, so no gap exposes the jump", async ({
-    page,
-  }) => {
+  test("the cover is fully opaque at the cut, so no gap exposes the jump", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     test.setTimeout(120_000);
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    // The break is built from converging rails, not one sweeping panel
-    // (V2's most conventional device). Several rails, closing from
-    // alternating sides -- and at the cut all of them must be home.
-    const rails = page.locator(`${TOUR} [data-break-rail]`);
-    expect(await rails.count()).toBeGreaterThan(3);
-
-    // The cut is DERIVED from route geometry in V4, so the test locates it
-    // rather than hardcoding a progress value that silently goes stale when
-    // the route is retuned. Sweep the collision region and take the frame
-    // where the rails are closest to home.
-    //
-    // V6.3: the SEARCH WINDOW was itself hardcoded at [0.55, 0.70] -- which is
-    // precisely the staleness the comment above set out to avoid, one level up.
-    // The exit traverse moved BREAK_CUT from 0.577 to 0.506, the sweep no longer
-    // contained the cut at all, and the test reported a 1440px gap at a point in
-    // the route where the rails are legitimately wide open. The window is now
-    // derived from the same constant the implementation uses, so it tracks any
-    // future retune automatically.
-    //
-    // V6.6: the per-sample wait is a SETTLE POLL rather than a fixed 120ms. The rail
-    // positions are a function of FILTERED progress, and the filter is a two-stage
-    // lag driven from rAF -- so on a loaded machine (this was caught at a load
-    // average of ~10, where rAF itself is starved) 120ms is not enough for the
-    // filter to arrive, every sample reads a position the camera is still
-    // travelling through, and the test reports a 1440px gap at the exact progress
-    // where the rails are in fact home. That is the test measuring the filter's
-    // convergence rate, not the geometry it exists to protect. The assertion below
-    // is unchanged.
-    const readWorst = () =>
+    // V14.2 Gate B: on desktop the break is no longer ink rails but THE
+    // UNDERSIDE OF THE SURFACE -- one opaque plane in the recess's own tone
+    // (lib/spatial/surfaceCover.ts). The contract the rails carried is the
+    // same: at the cut the frame is genuinely covered. It is read as the
+    // plane's opacity and its box, on the same derived sweep and the same
+    // settle poll the rail version used (see its notes: the value is a
+    // function of FILTERED progress, and the filter arrives in its own time).
+    const cover = page.locator(`${TOUR} [data-surface-cover]`);
+    await expect(cover).toHaveCount(1);
+    const read = () =>
       page.evaluate((selector) => {
-        const offsets = [...document.querySelectorAll(`${selector} [data-break-rail]`)].map(
-          (rail) => {
-            const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
-            return Math.abs(m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0);
-          },
-        );
-        return offsets.length ? Math.max(...offsets) : Number.POSITIVE_INFINITY;
+        const el = document.querySelector(`${selector} [data-surface-cover]`) as HTMLElement | null;
+        if (!el) return { opacity: 0, covers: false };
+        const r = el.getBoundingClientRect();
+        return {
+          opacity: Number.parseFloat(getComputedStyle(el).opacity),
+          covers: r.left <= 0 && r.top <= 0 && r.right >= innerWidth && r.bottom >= innerHeight,
+        };
       }, TOUR);
 
-    let best = Number.POSITIVE_INFINITY;
+    let best = 0;
+    let coversAtBest = false;
     for (let p = BREAK_CUT - 0.04; p <= BREAK_CUT + 0.04; p += 0.005) {
       await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
-      let worst = await readWorst();
+      let state = await read();
       let stable = 0;
       for (let attempt = 0; attempt < 80; attempt += 1) {
         await page.waitForTimeout(120);
-        const next = await readWorst();
-        stable = Math.abs(next - worst) < 0.5 ? stable + 1 : 0;
-        worst = next;
-        // V7: the route-wide progression ceiling means arrival can take a few
-        // seconds from a cold jump, and near-arrival rail motion can dip under
-        // the threshold briefly; require a longer proven-stable run before
-        // trusting a sample. Assertion unchanged.
+        const next = await read();
+        stable = Math.abs(next.opacity - state.opacity) < 0.002 ? stable + 1 : 0;
+        state = next;
         if (stable >= 5 && attempt >= 8) break;
       }
-      best = Math.min(best, worst);
+      if (state.opacity > best) {
+        best = state.opacity;
+        coversAtBest = state.covers;
+      }
     }
-    // At the cut every rail is home, so the route's jump happens behind an
-    // opaque frame and is never witnessed.
-    expect(best).toBeLessThan(80);
+    // At the cut the plane is opaque and spans the frame, so the route's jump
+    // happens behind it and is never witnessed.
+    expect(best).toBeGreaterThan(0.999);
+    expect(coversAtBest).toBe(true);
   });
 
-  test("rails converge from alternating sides rather than sweeping one way", async ({ page }) => {
+  test("the cover is the world's own ground, not a wipe: tone-matched, and it fades", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    // V6.7: DERIVED from the break window instead of the literal 0.7375 it used to
-    // be. That literal predates two route retunes and had drifted to a progress
-    // WELL PAST the reveal, where every rail is simply parked at its off-frame
-    // resting offset -- so the test passed on parked geometry rather than on the
-    // convergence its own name describes. Sampling 40% of the way through the
-    // closing measures the rails actually converging, which is strictly what this
-    // contract is about, and it tracks any future retune.
+    // Sampled 40% of the way through the closing, as the rail-convergence
+    // contract this replaces was: the plane must be mid-arrival there --
+    // neither absent nor already home -- and it must arrive by opacity alone.
+    // No transform, no clip-path: the cover is a change of material in the
+    // frame, not a shape crossing it. Its ground is the page's paper token
+    // (the recess tint the world already draws sits on it), and the section
+    // it carries is the world's three strata and one descent -- nothing
+    // decorative.
     const closing = BREAK_COVER_START + (BREAK_CUT - BREAK_COVER_START) * 0.4;
     await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * closing);
-
-    // V6.7: settle-poll instead of a fixed 350ms, for the same reason the other two
-    // break tests already do. The rails' transforms are written by Motion from a
-    // rAF pipeline; under load on WebKit they had not been written at all when this
-    // read, so `matrix(...)` did not match and every rail reported 0 -- which reads
-    // as "no rail is off-frame on either side" and fails a contract about parked
-    // geometry that was never actually violated. The assertions are unchanged.
     const read = () =>
       page.evaluate((selector) => {
-        return [...document.querySelectorAll(`${selector} [data-break-rail]`)].map((rail) => {
-          const m = /matrix\(([^)]+)\)/.exec(getComputedStyle(rail).transform);
-          return m ? Number.parseFloat(m[1]!.split(",")[4]!) : 0;
-        });
+        const el = document.querySelector(`${selector} [data-surface-cover]`) as HTMLElement | null;
+        if (!el) return null;
+        const style = getComputedStyle(el);
+        const paper = getComputedStyle(
+          document.querySelector(`${selector} .sticky`)!,
+        ).backgroundColor;
+        // The camera's own transform is read alongside: the settle poll below
+        // waits on IT, not on the opacity, because an opacity of exactly 0 for
+        // the whole approach is identical read after read and would end the
+        // poll before the camera has arrived.
+        const world = document.querySelector(`${selector} [data-camera-plane="world"]`);
+        return {
+          camera: world ? getComputedStyle(world).transform : "",
+          opacity: Number.parseFloat(style.opacity),
+          transform: style.transform,
+          clip: style.clipPath,
+          background: style.backgroundColor,
+          paper,
+          strata: el.querySelectorAll("[data-cover-stratum]").length,
+          descent: el.querySelectorAll("[data-cover-descent]").length,
+        };
       }, TOUR);
-    let offsets = await read();
+    let state = await read();
     let stable = 0;
-    for (let attempt = 0; attempt < 80; attempt += 1) {
+    for (let attempt = 0; attempt < 120; attempt += 1) {
       await page.waitForTimeout(120);
       const next = await read();
-      stable = JSON.stringify(next) === JSON.stringify(offsets) ? stable + 1 : 0;
-      offsets = next;
-      if (stable >= 2) break;
+      stable = next && state && next.camera === state.camera ? stable + 1 : 0;
+      state = next;
+      if (stable >= 4 && attempt >= 8) break;
     }
-    expect(offsets.some((value) => value > 1)).toBe(true);
-    expect(offsets.some((value) => value < -1)).toBe(true);
+    expect(state).not.toBeNull();
+    if (!state) return;
+    expect(state.opacity).toBeGreaterThan(0.02);
+    expect(state.opacity).toBeLessThan(0.98);
+    expect(["none", ""]).toContain(state.transform);
+    expect(["none", "auto", ""]).toContain(state.clip);
+    expect(state.background).toBe(state.paper);
+    expect(state.strata).toBe(3);
+    expect(state.descent).toBe(1);
+    // The V4 rails are the mobile composition's and never render on desktop.
+    for (const rail of await page.locator(`${TOUR} [data-break-rail]`).all()) {
+      await expect(rail).toBeHidden();
+    }
   });
 });
 
@@ -722,6 +726,7 @@ test.describe("Spatial V4: reduced motion", () => {
     await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
     await expect(page.locator("[data-destination-surface]")).toHaveCount(0);
     await expect(tour.locator("[data-break-rail]")).toHaveCount(0);
+    await expect(tour.locator("[data-surface-cover]")).toHaveCount(0);
     // No parallax planes and therefore no depth motion at all.
     await expect(tour.locator("[data-camera-plane]")).toHaveCount(0);
     // Still a composed scene, not a stripped dump: the evidence plates and

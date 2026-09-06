@@ -2654,3 +2654,52 @@ closing from alternating sides over a solid ink field that guarantees the frame 
 instant the route jumps. Verified by DOM probe on the settled frames (`data-scene-break`,
 `data-break-rail`, the ink field), identical in the before set, and left as designed. It is
 recorded here so that no later reader of the sheets takes it for a rendering fault.
+
+## 40. V14.2 Gate B — SYSTEMS → UNDERNEATH, and back to the surface (2026-09-07)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.1 Fable checkpoint `f4bdab3` after the Opus
+QA `8c6045c`. Not merged to `main`. Scope by the owner's brief: the SYSTEMS → UNDERNEATH transition,
+the UNDERNEATH landing, the return to the surface — nothing else. Decision: D-048. Evidence:
+`docs/review/v14.2-gate-b/` — `before/` (twelve-frame sheets both ways), `iterations/` (every
+pass), `after/` (the candidate, forward and reverse at 1440, 1920 smoke, full-size frames).
+
+### 40.1 What the black was, and what replaces it
+
+The V4 `SceneBreak` closed eleven raked ink rails over the frame so the route's one discontinuity
+happened behind genuine opacity. It did that job; the owner read it as a render glitch, and in
+reverse as an interruption. The timing it ran on — `BREAK_COVER_START … BREAK_REVEAL_END`, the
+guarded playback, the dwell either side of the cut — is scroll behaviour and is untouched. What
+changed is the material: the cover is now **the underside of the surface**. The SYSTEMS surface is
+already cut along the route's bearing and the camera is already descending into the recess beneath
+it; the cover is that recess in the frame's own space — paper under 2.5% ink, the same two tokens
+the opened surface and route two's floor use — carrying the section the reveal drew, at rest: three
+strata with their names and the descent to SYSTEM. It arrives by opacity because a plane of the
+ground's own tone has no edge worth drawing; the reader watches the world's own seam finish rising,
+then the structure standing still, then UNDERNEATH standing on the same line.
+
+### 40.2 The sequence, as built
+
+Forward at 1440×900 (`after/motion/1440--tail--to--reorient.png`): SYSTEMS on its opened surface;
+the word recedes up-left with its seam as the camera descends; the frame becomes recess; the
+section stands (SURFACE at the frame's top, FLOW, SYSTEM at 49.5%, the descent from the surface
+line to SYSTEM); UNDERNEATH fades in at the foot of the descent, its own SYSTEM stratum and depth
+rail taking over the cover's line and descent within a few pixels; the section dissolves as the
+camera settles. Reverse (`1440--REVERSE--reorient--to--tail.png`) is the same event backwards.
+No frame is black; no letter is touched.
+
+### 40.3 The return to the surface
+
+The junction (`SurfaceReturn`) is a plane: the rule is the SURFACE stratum, labelled once inside
+the band; from the rule down, the page's paper, opaque, running to the frame's foot and on into the
+lower page without a seam; and it rises 24vh into the frame over the window its opacity already
+resolved in, so the terminus map climbs out from behind it (`after/motion/1440--handoff--to--1.png`,
+`1440--REVERSE--1--to--handoff.png`). Above the line, the world's recess; below it, the surface.
+
+### 40.4 Protected, verified
+
+Scroll modules byte-identical (`git diff --name-only 8c6045c -- lib/spatial/{cameraFilter,
+sceneRoute,scenes,worldFit,planeChoreography,projectGround,editorialDrift}.ts app/` → empty);
+`SpatialCamera.tsx` gained one compositor-only `y` on the existing surface-return wrapper and
+nothing else. First paint, discrete scroll, scroll contract and frame time re-run on the
+candidate (`.ai/handoffs/V14_2_GATE_B_RETURN.md` §4). Mobile keeps the V4 rails below `lg` and the
+mobile route probe at the recorded step is identical to the engineering record.

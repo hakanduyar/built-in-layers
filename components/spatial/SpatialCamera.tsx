@@ -984,6 +984,18 @@ export function SpatialCamera({
     [EXIT_FROM + (1 - EXIT_FROM) * 0.18, EXIT_FROM + (1 - EXIT_FROM) * 0.72],
     [0, 1],
   );
+  // V14.2 Gate B (owner: "Back on the surface is too weak to communicate a
+  // meaningful state change"): the junction is now a PLANE -- the page's
+  // paper surface, carrying the rule and the words -- and it rises into the
+  // frame from below over the same window its opacity resolves in, so the
+  // terminus map climbs out from behind it and the state change is a change
+  // of ground, not a caption fading in. Compositor-only (y), same window,
+  // nothing else in the exit moves.
+  const surfaceReturnRise = useTransform(
+    progress,
+    [EXIT_FROM + (1 - EXIT_FROM) * 0.18, EXIT_FROM + (1 - EXIT_FROM) * 0.72],
+    ["24vh", "0vh"],
+  );
 
   // V9 (§18): gone by the time the acquisition descent has finished, which is
   // the beat at which the world has visibly answered the question the cue was
@@ -1271,7 +1283,8 @@ export function SpatialCamera({
         {surfaceReturn && (
           <motion.div
             className="pointer-events-none absolute inset-x-0 bottom-[13vh]"
-            style={{ opacity: surfaceReturnOpacity }}
+            // Desktop only: the mobile junction is the V13 gate's and does not rise.
+            style={{ opacity: surfaceReturnOpacity, y: isDesktop ? surfaceReturnRise : 0 }}
           >
             {surfaceReturn}
           </motion.div>

@@ -1280,3 +1280,74 @@ Binding conditions attached to this approval — all already true of the current
      RESOLVED → COMPLEXITY MAPPED → OPERATOR ADDRESSABLE, with the CTA copy unchanged.
 - **Rejected:** a second spine per section; any new copy; any change to the lower world's length
   or pacing (D-039 gearing untouched).
+
+## D-048 — The cut is the underside of the surface: the world opens, the ground is exposed, UNDERNEATH stands on it, the surface comes back up
+
+- **Status:** V14.2 GATE B (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.2-gate-b/{before,iterations,after}/`.
+- **Context:** the owner's reading of the SYSTEMS → UNDERNEATH sequence as it stood through V14.1:
+  the black `SceneBreak` "reads like a glitch / render transition rather than the world
+  structurally opening", reverse traversal makes the black block more disruptive, SYSTEMS' momentum
+  is broken, UNDERNEATH arrives as a sparse heading rather than as the consequence of the revealed
+  system, and "Back on the surface" is too weak to read as a state change. The desired sequence:
+  SYSTEMS → the world changes state → the surface opens → the underlying structure is exposed →
+  UNDERNEATH is the consequence → the return to the surface is clear. Constraints: SYSTEMS
+  typography intact, no peel, no damaged letters, no collision / recoil / shock, the scroll
+  mathematics and the guarded break timing untouched, first paint untouched, mobile untouched.
+- **What was measured first** (`before/motion/`, twelve settled frames each way at 1440×900):
+  forward, the seam SYSTEMS stands on rises up-left with the word as the camera descends toward
+  the cut, and at p≈0.709 eleven raked ink rails snap shut over a world that is already 70% recess;
+  two frames of solid ink; rails open onto UNDERNEATH. Reverse, the same ink block interrupts
+  UNDERNEATH before SYSTEMS is back. The ink was doing one job — guaranteeing opacity at the
+  jump — in a material the world never uses anywhere else.
+- **Decisions:**
+  1. **The cover is the recess** (`components/spatial/SceneBreak.tsx`, `lib/spatial/surfaceCover.ts`).
+     On desktop the frame is covered by an opaque plane in the ground's own material — the page's
+     paper token under the same 2.5% ink the opened surface already shows beneath the seam and the
+     world lays under route two. Same timing constants, same contract (fully opaque from
+     `BREAK_COVER_CLOSED` to `BREAK_REVEAL_START`, nothing outside the window), different material
+     — and therefore no wipe: a plane of the ground's own tone has no edge worth drawing, so it
+     arrives by opacity while the world's own seam finishes rising past the frame. What the reader
+     watches is the opening the world was already making, completing.
+  2. **The exposed structure is the section at rest.** On the plane: the three strata with their
+     names, at the reveal's own stratum step in the SYSTEMS word's em (0.96em, two hundredths
+     tighter than the reveal's 0.98 so SURFACE and its name stay inside a 900px frame), the SYSTEM
+     line at the screen height where UNDERNEATH's own SYSTEM stratum arrives (49.5%, measured
+     48.6vh / 50.3vh at 1440 / 1920), and **the descent** — a hairline from the surface line to
+     SYSTEM at the x where UNDERNEATH's depth rail arrives, fitted through the world fit the boot
+     script publishes (`calc(47.3vw · fit − 292px)`, 24.5vw → 22.7vw at 1440, 33.6 → 32.1 at 1920).
+     The section travels with the landing as the cover lets go (13 world-vw, the measured
+     decompression of the reorient composition), so its line and the world's rail coincide within
+     a few pixels through the crossfade; the labels lead out within the first quarter of the
+     reveal so the world's SYSTEM label never doubles theirs; SURFACE and FLOW stay with the field
+     (the world has no such line in the landing frame) so UNDERNEATH is read standing at the foot
+     of a section that is still there.
+  3. **Reverse is the same event backwards** — UNDERNEATH lets go under the section, the section
+     stands, the surface closes down over it as SYSTEMS returns with its seam — because every
+     value is a pure function of progress, as everything else in the world is.
+  4. **Back on the surface is a plane** (`SpatialExperience.tsx` `SurfaceReturn`,
+     `SpatialCamera.tsx`): the junction's rule is the SURFACE stratum, labelled once inside the band
+     in the strata's grammar; from the rule down the frame is the page's paper, an opaque plane
+     that runs to the frame's foot and continues without a seam into the lower page; and the plane
+     **rises** 24vh into the frame over the same window its opacity resolves in, so the terminus map
+     climbs out from behind it. Above the rule the world's recess; below it the surface. One
+     compositor-only `y` on the existing wrapper; nothing else in the exit moves.
+  5. **Mobile keeps the V4 rails** exactly as the V13 gate froze them (`lg:hidden`); the cover is
+     `hidden lg:block`. The mobile route probe at the recorded step is identical to the engineering
+     record.
+- **Tests:** `tests/e2e/spatial.spec.ts` — the two rail contracts restated for the cover without
+  loss of intent: *fully opaque at the cut, spanning the frame* (same derived sweep, same settle
+  poll) and *the world's own ground, not a wipe* (mid-arrival by opacity alone at 40% of the
+  closing; no transform, no clip-path; background equals the frame's paper; three strata and one
+  descent; the rails hidden on desktop). Reduced motion asserts `[data-surface-cover]` absent as
+  well as `[data-break-rail]`. `tests/unit/surface-cover.test.ts` — the curves' contract (absent
+  outside the window, exactly 1 through the dwell, monotone each side, labels out by a quarter).
+- **Not changed, by the brief:** `lib/spatial/sceneRoute.ts` (its `breakBandOffset` /
+  `breakWipeOffset` now drive the mobile rails only), every scroll constant, the guarded playback,
+  the reorient and approach compositions, Built in Layers (it now reads as the definition of the
+  strata the section just exposed, and was left as it was), the lower page.
+- **Rejected:** a rising opaque plane with a drawn edge (it passed over the word's last letters
+  ahead of the world's own seam — an occlusion the word's principle forbids); the route map on the
+  cover (a static copy of the drawing the reader had just watched move); mirroring the landing's
+  4vh vertical settle (it lifted the SURFACE line off the frame through the dwell); darkening the
+  recess to make the surface plane read (out of scope, and a panel at zoom-out).

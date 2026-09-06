@@ -237,3 +237,21 @@ engineering numbers (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md` §6).
 **Mobile:** the V13 composition is not reopened. The mobile route probe at the recorded step
 differs from the V14.1 engineering record in one mean pixel-row value at 320×568 (0.325 → 0.326);
 scene heights, document heights and focus positions are identical at 320, 390 and 768.
+
+
+### 6.2 V14.2 Gate B — the cut as the underside of the surface (2026-09-07)
+
+The reopening continued under the owner's V14.2 Gate B brief (SYSTEMS → UNDERNEATH, the UNDERNEATH
+landing, the return to the surface; nothing else). D-048 and `docs/DESIGN_SYSTEM.md` §40 record
+what moved and why; the evidence is `docs/review/v14.2-gate-b/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/spatial/SceneBreak.tsx` | the desktop cover is the recess plane carrying the section at rest; the V4 rails stay below `lg` (D-048) | twelve-frame sheets both ways at 1440, 1920 smoke; the two restated e2e contracts; mobile route probe identical |
+| `components/spatial/SpatialExperience.tsx` (`SurfaceReturn`) | the junction is a paper plane from the SURFACE rule down, labelled in the strata's grammar (D-048 §4) | handoff→terminus sheets both ways at 1440 and 1920 |
+| `components/spatial/SpatialCamera.tsx` | one compositor-only `y` on the existing surface-return wrapper, the same window as its opacity — nothing else | first-paint, discrete-scroll, scroll-contract and frame-time probes reproduce the record |
+
+New, not frozen: `lib/spatial/surfaceCover.ts`, `tests/unit/surface-cover.test.ts`,
+`tests/tools/progress-stills.mjs`. Untouched, byte for byte, against `8c6045c`:
+`lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,planeChoreography,projectGround,
+editorialDrift}.ts`, `SystemsWord.tsx`, every project scene, the lower page, `app/`.

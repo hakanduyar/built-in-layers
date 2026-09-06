@@ -503,8 +503,22 @@ function SurfaceReturn() {
   // node exactly where the lower page's rail will descend (EditorialDrift's
   // --drift-pad: 3vw, 4vw at lg), and continues right as the page's solid
   // rule. One event, and the rail below is literally its continuation.
+  // V14.2 Gate B (owner): the junction is a change of GROUND. Above the rule
+  // the frame is the world's recess (the terminus map still climbing through
+  // FLOW toward the surface); from the rule down it is the page's paper --
+  // an opaque plane that runs to the frame's foot and continues, without a
+  // seam, into the lower page the sticky frame hands over to. The rule is
+  // therefore the SURFACE stratum itself, and carries the stratum's own name
+  // in the strata's grammar, exactly as every band in the world is labelled
+  // once inside it. Desktop only: the mobile junction is the V13 gate's.
   return (
     <div className="mx-auto w-full max-w-[var(--container-max)] px-4 md:px-6 lg:relative lg:mx-0 lg:max-w-none lg:pl-[4vw] lg:pr-8">
+      <span
+        aria-hidden="true"
+        data-surface-plane="true"
+        className="absolute inset-x-0 top-[3px] hidden bg-paper lg:block"
+        style={{ bottom: "-13vh" }}
+      />
       {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
           removed. Route two is drawn dashed and signal-toned everywhere in the
           world above -- that is its registered grammar. Here that exact line
@@ -527,6 +541,12 @@ function SurfaceReturn() {
             device was added: the same four words are simply set at the scale of
             the event they name. */}
         <div className="pt-5">
+          <span
+            aria-hidden="true"
+            className="absolute left-0 top-[11px] hidden font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:block"
+          >
+            {layerDefinitions[0]!.label}
+          </span>
           <p className="font-display text-heading-l tracking-heading-l uppercase text-ink">
             Back on the surface
           </p>

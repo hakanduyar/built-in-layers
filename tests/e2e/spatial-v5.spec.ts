@@ -526,6 +526,7 @@ test.describe("Spatial V5: reduced motion disables motion, not design (D-020)", 
     await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
     await expect(page.locator("[data-destination-surface]")).toHaveCount(0);
     await expect(page.locator("[data-break-rail]")).toHaveCount(0);
+    await expect(page.locator("[data-surface-cover]")).toHaveCount(0);
     // ...but the word itself survives as a real compositional element.
     await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
   });

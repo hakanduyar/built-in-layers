@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-06 (V14.1 final Opus engineering QA)_
+_Updated: 2026-09-07 (V14.2 Gate B — SYSTEMS → UNDERNEATH, back to the surface)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `f4bdab3` — the V14.1 Fable visual correction gate (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`; verify the tip with `git rev-parse HEAD`). It sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | the V14.2 Gate B commit carrying `.ai/handoffs/V14_2_GATE_B_RETURN.md` (SHA recorded below once pushed; verify the tip with `git rev-parse HEAD`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -33,7 +33,20 @@ regression.
 ## Current phase
 
 **V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE · FINAL OPUS QA
-COMPLETE (PASS). Owner acceptance: PENDING — the owner's visual review is the only remaining gate.**
+COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE. Owner acceptance: PENDING.**
+
+**V14.2 Gate B (Fable, scoped to SYSTEMS → UNDERNEATH, the landing, the return to the surface;
+D-048, `docs/DESIGN_SYSTEM.md` §40, `.ai/handoffs/V14_2_GATE_B_RETURN.md`).** On desktop the cut is
+no longer ink: the frame is covered by the underside of the surface — the recess, in the frame's own
+space, carrying the section the reveal drew at rest (three strata, the descent to SYSTEM) — on the
+same protected timing and opacity contract, arriving by opacity while the world's seam finishes
+rising; UNDERNEATH stands on the same SYSTEM line; reverse is the same event backwards. Back on
+the surface is a paper plane from the SURFACE rule down, rising into the frame as it resolves.
+Mobile keeps the V4 rails. Scroll modules byte-identical; first paint, discrete scroll, scroll
+contract, frame time and the mobile route probe reproduce the records; focused Chromium 99/99.
+Package: `docs/review/v14.2-gate-b/README.md`. The full matrix was not run (targeted gate).
+
+Record of V14.1:
 
 **V14.1 Fable gate (art direction only).** The owner's remaining findings were corrected as
 systems: the route as a track (ahead / travelled as different drawings, drawn only in the open;
@@ -109,6 +122,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
+0. **The owner's review of `docs/review/v14.2-gate-b/README.md`** (Gate B), or V14.2 Gate C by the
+   owner's instruction. Neither is started automatically.
 1. ~~Opus 5 / High — engineering QA of the Fable checkpoint~~ — **done: PASS**,
    `.ai/handoffs/OPUS-V14_1-QA-RETURN.md`. Verified independently on its own fresh production build:
    protected-file diff empty, first paint settled, discrete scroll and route geometry unmoved,
