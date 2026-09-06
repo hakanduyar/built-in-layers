@@ -2,8 +2,8 @@
 
 What the next model needs, and nothing else. No transcripts, no test logs, no restated rules.
 
-**CHECKPOINT:** the V14.1 Fable visual correction gate — the commit that carries
-`.ai/handoffs/V14_1_FABLE_TO_OPUS.md` (SHA recorded in `.ai/STATE.md`), on the V14.1 engineering
+**CHECKPOINT:** `f4bdab3` — the V14.1 Fable visual correction gate
+(`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`), on the V14.1 engineering
 checkpoint `c2ba26a` / `fa7c72c`, on the V14 candidate `35c2c58`. Verify `local == origin`. Scroll
 safety tag: `safety-v14-scroll-baseline` → `35c2c58`, untouched.
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE`. Owner acceptance **PENDING**. Do not merge.

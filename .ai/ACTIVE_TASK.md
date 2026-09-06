@@ -4,8 +4,8 @@ One assignment. Replace it when it completes, or set `TASK: NONE`.
 
 **TASK:** V14 — owner visual acceptance recovery. **Stage: Opus engineering QA of the V14.1 Fable
 visual correction checkpoint, then owner review.** Fable V14 checkpoint `35c2c58`; Opus QA
-`27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate: the commit carrying
-`.ai/handoffs/V14_1_FABLE_TO_OPUS.md` (SHA in `.ai/STATE.md`).
+`27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
+(`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`).
 
 **STATUS:** `V14.1 FABLE VISUAL GATE COMPLETE`. Owner acceptance **PENDING**. Do not merge.
 

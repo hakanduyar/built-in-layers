@@ -2,8 +2,7 @@
 
 **From:** Fable 5.1 (art direction only) · **To:** Opus 5 / High (engineering QA) · **Date:** 2026-09-06
 **Branch:** `feature/owner-visual-acceptance-v14` · **Base:** `fa7c72c` (V14.1 engineering checkpoint on
-`c2ba26a`) · **Fable checkpoint:** the commit that carries this file; `.ai/STATE.md` records the SHA
-once pushed · **Scroll safety tag:** `safety-v14-scroll-baseline` → `35c2c58`, untouched.
+`c2ba26a`) · **Fable checkpoint:** `f4bdab3`, pushed, `local == origin` · **Scroll safety tag:** `safety-v14-scroll-baseline` → `35c2c58`, untouched.
 
 Owner acceptance is **PENDING**. Nothing here is a freeze, an acceptance or a merge. `main` is
 `16d3ec0`, untouched.
