@@ -17,9 +17,15 @@ entry, About as the operator in the systems' grammar, the finale as the resolved
 datum (D-049). Scroll untouched, page 245 px shorter at 1440×900, first paint and mobile verified.
 Handoff: `.ai/handoffs/V14_2_GATE_C_RETURN.md`; package `docs/review/v14.2-gate-c/`. Checkpoint
 `5a4147d`.
+**V14.3 GATE D (2026-09-07, Fable, scoped):** one corner per corner (no registration tick under a
+bracket, no plate ticks inside the brackets, no borrowed affordance corner); the signal tokens
+retired and every orange usage ink or graphite, the owned diagrams included; the map under the
+opened SYSTEMS surface removed and the branch junction ring gone (D-050). Scroll untouched, first
+paint and mobile geometry verified, Chromium 224/224. Handoff: `.ai/handoffs/V14_3_GATE_D_RETURN.md`;
+package `docs/review/v14.3-gate-d/`. Checkpoint `5bbccb6`. Gate E not started.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 

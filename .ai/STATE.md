@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-07 (V14.2 Gate C — the lower world as one system)_
+_Updated: 2026-09-07 (V14.3 Gate D — one mark, one meaning; no orange; every line a fact)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `5a4147d` — V14.2 Gate C (`.ai/handoffs/V14_2_GATE_C_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `5bbccb6` — V14.3 Gate D (`.ai/handoffs/V14_3_GATE_D_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -22,7 +22,7 @@ _Updated: 2026-09-07 (V14.2 Gate C — the lower world as one system)_
 | System | Frozen at | Status on this branch |
 |---|---|---|
 | Desktop spatial | 2026-09-02, `0752883` | **Reopened by owner decision** (V14 brief §3; V14.1 brief). What moved and why: D-034 … D-040 (V14), D-043 … D-047 (V14.1), `docs/FROZEN_BOUNDARY.md` §6 and §6.1. The scroll files are byte-identical to `fa7c72c` |
-| Case-study system | 2026-09-03, `5000201` | Frozen — untouched |
+| Case-study system | 2026-09-03, `5000201` | Frozen — reopened for colour only on the owner's Gate D instruction (no orange): hover tones, the active dot, the card boundary, the diagrams' accent strokes, one attribute on `Figure`; no layout touched (`docs/FROZEN_BOUNDARY.md` §6.4) |
 | Mobile | 2026-09-04, `8a24e03` | Frozen — art direction untouched; the mobile route probe at the recorded step is identical to the V14.1 engineering record but for one 0.001 pixel-row mean at 320 (`V14_1_FABLE_TO_OPUS.md` §6) |
 
 Fingerprints and the sanctioned-move ledger: `docs/FROZEN_BOUNDARY.md` (§1 list, §5 ledger, §6 the
@@ -33,8 +33,20 @@ regression.
 ## Current phase
 
 **V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE · FINAL OPUS QA
-COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE. Owner acceptance:
-PENDING.**
+COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
+COMPLETE. Owner acceptance: PENDING.**
+
+**V14.3 Gate D (Fable, scoped to duplicated corner marks, all visible orange, generic node-network
+graphics; D-050, `docs/DESIGN_SYSTEM.md` §42, `.ai/handoffs/V14_3_GATE_D_RETURN.md`).** One corner
+per corner: the registration tick is not drawn under a bracket on desktop, the plate ticks inside
+the brackets are hidden on the tour, the affordance's borrowed corner is gone. The signal tokens
+are retired and every usage is ink or graphite, the owned diagrams' accent strokes included; no
+bright accent replaces them. The map under the opened SYSTEMS surface is removed (the strata and
+the Gate B descent remain) and the branch junction ring is gone from the two maps that stay.
+Scroll modules byte-identical; first paint, isolated impulses, runtime and the mobile geometry
+reproduce the records (mobile pixel-row ink +0.001–0.005 where orange became ink); Chromium
+224/224; unit 569/569. Package: `docs/review/v14.3-gate-d/README.md`. WebKit and the full matrix
+not run (targeted gate). Gate E not started.
 
 **V14.2 Gate C (Fable, scoped to Selected Systems, How I Build, Field Notes, About, the final CTA;
 D-049, `docs/DESIGN_SYSTEM.md` §41, `.ai/handoffs/V14_2_GATE_C_RETURN.md`).** The lower world is
@@ -136,9 +148,10 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.2-gate-c/README.md`** (Gate C) and
-   `docs/review/v14.2-gate-b/README.md` (Gate B). No further gate and no final Opus QA is started
-   automatically; nothing merges.
+0. **The owner's review of `docs/review/v14.3-gate-d/README.md`** (Gate D), with Gate C
+   (`docs/review/v14.2-gate-c/README.md`) and Gate B (`docs/review/v14.2-gate-b/README.md`). Gate E
+   (earlier-section clarity, breathing room, microtext/contrast) only on the owner's instruction. No
+   final Opus QA is started automatically; nothing merges.
 1. ~~Opus 5 / High — engineering QA of the Fable checkpoint~~ — **done: PASS**,
    `.ai/handoffs/OPUS-V14_1-QA-RETURN.md`. Verified independently on its own fresh production build:
    protected-file diff empty, first paint settled, discrete scroll and route geometry unmoved,
