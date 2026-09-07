@@ -2,10 +2,9 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER VISUAL REVIEW of V14.3 Gate E
-(readable on arrival: earlier presence, breathing room, microtext), with Gate D (one mark one
-meaning, no orange, every line a fact), Gate C (the lower world as one system) and Gate B (SYSTEMS →
-UNDERNEATH, the landing, back to the surface).** Fable V14 checkpoint `35c2c58`; Opus QA
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER VISUAL REVIEW of the V14.4 owner visual correction
+(SYSTEMS as a decisive black state, the operator reveal owning its frame, registers instead of
+maps), with Gates E, D, C and B.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
 (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`).
 

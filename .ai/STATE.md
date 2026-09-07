@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-07 (V14.3 Gate E — readable on arrival)_
+_Updated: 2026-09-08 (V14.4 owner visual correction — the black state, the operator's frame, registers)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `51b3387` — V14.3 Gate E (`.ai/handoffs/V14_3_GATE_E_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `f9b0a72` — V14.4 owner visual correction (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -34,7 +34,20 @@ regression.
 
 **V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE · FINAL OPUS QA
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
-COMPLETE · V14.3 VISUAL GATE E COMPLETE. Owner acceptance: PENDING.**
+COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE. Owner acceptance:
+PENDING.**
+
+**V14.4 owner visual correction (Fable-only; D-052, `docs/DESIGN_SYSTEM.md` §44,
+`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`).** SYSTEMS is read whole a tenth into its approach
+and held until the black state takes the frame; the cover is ink, decisive, carrying the underlying
+system in paper; nothing is drawn beneath the word before the cut (the desktop seam, recess and
+rising strata removed; the world's strata exist from the cut on; the cut strokes and landing corner
+gone). The terminus and finale maps are typographic route registers; `RouteMap.tsx` is deleted.
+Major beats open with 160px, About is a 64vh stage with the name at 7vw, the finale waits 80px,
+How I Build's second floors drawing is gone (lower world 3194 → 3556 px at 1440×900). Scroll modules
+byte-identical; first paint, isolated impulses, scroll contract, runtime and the mobile probe
+reproduce the records; Chromium 111 passed (two seam tests skipped with reason); unit 569/569.
+Package: `docs/review/v14.4-owner-correction/README.md`. WebKit and the full matrix not run.
 
 **V14.3 Gate E (Fable, scoped to earlier clarity, lower-world breathing room, microtext; D-051,
 `docs/DESIGN_SYSTEM.md` §43, `.ai/handoffs/V14_3_GATE_E_RETURN.md`).** On desktop a scene's
@@ -159,10 +172,10 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.3-gate-e/README.md`** (Gate E), with Gate D
-   (`docs/review/v14.3-gate-d/README.md`), Gate C (`docs/review/v14.2-gate-c/README.md`) and Gate B
-   (`docs/review/v14.2-gate-b/README.md`). No further visual gate and no final Opus QA is started
-   automatically; nothing merges.
+0. **The owner's review of `docs/review/v14.4-owner-correction/README.md`**, with Gate E
+   (`docs/review/v14.3-gate-e/README.md`), Gate D, Gate C and Gate B. No further visual gate and no
+   final Opus QA is started automatically; Codex only as a separate engineering gate on the owner's
+   instruction; nothing merges.
 1. ~~Opus 5 / High — engineering QA of the Fable checkpoint~~ — **done: PASS**,
    `.ai/handoffs/OPUS-V14_1-QA-RETURN.md`. Verified independently on its own fresh production build:
    protected-file diff empty, first paint settled, discrete scroll and route geometry unmoved,

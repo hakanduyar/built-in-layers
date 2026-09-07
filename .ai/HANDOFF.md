@@ -28,9 +28,16 @@ present a short travel after they enter (desktop curves only), 128px above the t
 32px above the finale, the state word gone and secondary text at a readable weight (D-051). Scroll
 untouched, first paint and mobile verified, Chromium 112/112. Handoff:
 `.ai/handoffs/V14_3_GATE_E_RETURN.md`; package `docs/review/v14.3-gate-e/`. Checkpoint `51b3387`.
+**V14.4 OWNER VISUAL CORRECTION (2026-09-08, Fable-only):** SYSTEMS read whole before the centre and
+then a decisive black state carrying the underlying system, nothing drawn beneath the word; the
+terminus and finale maps replaced by typographic route registers; 160px major intervals, About a
+64vh stage at 7vw, the finale 80px later, How I Build simplified (D-052). Scroll untouched, first
+paint and mobile verified, Chromium 111 passed (two seam tests skipped). Handoff:
+`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`; package `docs/review/v14.4-owner-correction/`.
+Checkpoint `f9b0a72`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
