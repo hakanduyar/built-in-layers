@@ -77,7 +77,7 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
   );
 
   return (
-    <li className="border-t border-line py-6 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:border-signal-ui focus-within:border-signal-ui">
+    <li className="border-t border-line py-6 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:border-ink focus-within:border-ink">
       {revealDelayMs !== undefined ? <Reveal delayMs={revealDelayMs}>{content}</Reveal> : content}
     </li>
   );

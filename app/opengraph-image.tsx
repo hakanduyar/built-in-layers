@@ -10,7 +10,7 @@ import { ImageResponse } from "next/og";
 // tool available in this environment to produce a real raster asset (no
 // design software, no `sharp`/`canvas` — installing either would violate
 // this task's "no runtime dependency" constraint). Colors are the exact
-// approved DESIGN_SYSTEM §2 tokens; `--signal` is used only decoratively
+// approved DESIGN_SYSTEM §2 tokens; the accent rule is graphite (V14.3 Gate D)
 // (a thin accent bar, never text), matching its "graphic use only" rule.
 // Font families use the platform's generic sans-serif/serif-italic/
 // monospace faces rather than self-hosting Archivo/Newsreader/IBM Plex
@@ -31,7 +31,7 @@ function LayerRegistrationMark() {
   const bars = [
     { width: 96, color: "#161616" },
     { width: 72, color: "#504e48" },
-    { width: 48, color: "#ff4f1f" },
+    { width: 48, color: "#504e48" },
   ];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

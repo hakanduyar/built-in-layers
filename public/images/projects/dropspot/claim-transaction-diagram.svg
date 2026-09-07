@@ -24,7 +24,7 @@
   <path d="M 544 400 L 584 400" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
 
   <!-- Step 2 -->
-  <rect x="588" y="336" width="440" height="130" fill="none" stroke="#e04413" stroke-width="2" />
+  <rect x="588" y="336" width="440" height="130" fill="none" stroke="#504e48" stroke-width="2" />
   <text x="612" y="372" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">2. Lock the drop</text>
   <text x="612" y="400" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="15" fill="#504e48">SELECT ... FOR UPDATE</text>
   <text x="612" y="426" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">WHERE NOW() is inside the</text>

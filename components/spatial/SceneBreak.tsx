@@ -224,7 +224,7 @@ function BoundarySection() {
       />
       <span
         aria-hidden="true"
-        className="absolute left-[31%] top-[46%] block h-px w-[6vw] bg-signal opacity-50"
+        className="absolute left-[31%] top-[46%] block h-px w-[6vw] bg-line opacity-50"
       />
       {CONTACT_BUNDLE.map((offset) => (
         <span
@@ -254,7 +254,7 @@ const CONTACT_BUNDLE = [-3.4, -1.6, 1.9, 4.2];
 function BreakRail({ index, progress }: { index: number; progress: MotionValue<number> }) {
   const x = useTransform(progress, (value) => `${breakBandOffset(value, index)}%`);
   // Even rails close from the right, odd from the left; the leading edge
-  // carries the signal hairline so the direction of each rail is readable
+  // carries a paper-toned hairline so the direction of each rail is readable
   // for the fraction of a second it is in motion.
   const fromRight = index % 2 === 0;
 
@@ -273,8 +273,9 @@ function BreakRail({ index, progress }: { index: number; progress: MotionValue<n
         clipPath: fromRight
           ? `polygon(${RAKE}% 0, 100% 0, 100% 100%, 0 100%)`
           : `polygon(0 0, 100% 0, ${100 - RAKE}% 100%, 0 100%)`,
-        // The signal hairline runs ALONG the rake, as part of the fill.
-        backgroundImage: `linear-gradient(${fromRight ? 108 : 252}deg, var(--color-signal) 0 2px, var(--color-ink) 2px 100%)`,
+        // The hairline runs ALONG the rake, as part of the fill (V14.3 Gate D:
+        // the line token, not signal -- no orange anywhere in the portfolio).
+        backgroundImage: `linear-gradient(${fromRight ? 108 : 252}deg, var(--color-line) 0 2px, var(--color-ink) 2px 100%)`,
         x,
       }}
     />

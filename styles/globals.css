@@ -9,14 +9,11 @@
  * the standard relative-luminance formula:
  *   ink          on paper       15.73:1
  *   ink-muted    on paper        7.23:1  (secondary text, >= 4.5:1)
- *   signal-text  on paper        5.06:1  (accent text,    >= 4.5:1)
- *   signal-ui    on paper        3.65:1  (control/indicator boundaries, >= 3:1)
- *   signal       on paper        2.86:1  (FAILS 4.5:1 and 3:1 -- decorative
- *                                          use only; never text, never a
- *                                          meaningful indicator, never the
- *                                          sole signal of state)
- *   ink          on signal       5.51:1  (text on signal-filled elements)
  *   line         on paper        1.78:1  (decorative rules only)
+ *
+ * V14.3 Gate D (D-050): the signal accent (#ff4f1f and its text / ui tints)
+ * is retired. The palette is paper, soft paper, line, ink-muted and ink; a
+ * hover is ink-muted, a state is ink, a route is ink. No orange anywhere.
  */
 
 @theme {
@@ -25,9 +22,6 @@
   --color-ink: #161616;
   --color-soft-paper: #e5e2d8;
   --color-line: #b8b5ac;
-  --color-signal: #ff4f1f;
-  --color-signal-text: #b8380e;
-  --color-signal-ui: #e04413;
   --color-ink-muted: #504e48;
 
   /* Typography roles (DESIGN_SYSTEM §3) -- size + paired line-height via
@@ -320,5 +314,15 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
   body:has(section[aria-label="Spatial system tour"]) .finale-axis[style*="height"] {
     top: -100vh;
     height: calc(100% + 100vh - 0.75rem) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* V14.3 Gate D (D-050): inside the spatial tour the acquisition frame's
+     brackets are the plate's corners; the Figure primitive's own ticks made a
+     second corner at each of the four. Off the tour (the case studies, the
+     Work index) the Figure is unchanged. */
+  section[aria-label="Spatial system tour"] [data-figure-tick] {
+    display: none;
   }
 }

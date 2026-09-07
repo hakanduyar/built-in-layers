@@ -1438,3 +1438,63 @@ Binding conditions attached to this approval — all already true of the current
   state); an input → decision → implementation → validation arc (fake stages); the statements at
   the finale's `statement` scale (they ran to eleven lines and lengthened the page); a second
   `nav` for the About links (duplicated in the DOM).
+
+## D-050 — One mark, one meaning; no orange; every line a fact
+
+- **Status:** V14.3 GATE D (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.3-gate-d/{before,after,metrics}/`.
+- **Context:** the owner's three findings on the Gate C checkpoint. Duplicated project/frame corner
+  marks, especially a redundant second top-left corner — rule: one mark = one semantic meaning. All
+  visible orange to go, replaced only with the existing neutral system, no new bright accent. And an
+  audit of the visible portfolio for generic connected-dot / node-network graphics, especially at
+  SYSTEMS and the finale: every remaining line, dot or bracket must represent a real route/station,
+  state, boundary, dependency, registration, classification, handoff or surface/layer relationship —
+  restrained Person of Interest / The Machine system language, not AI/network/HUD decoration.
+  Preserved: scroll physics and pacing, the first-paint fix, presence/fade timing, vertical spacing,
+  project evidence and content, the Gate B transition, the Gate C lower-world IA, the mobile art
+  direction.
+- **What was measured first** (`before/stills/`, 3× crops of the Software Factory frame): at every
+  project scene the world's registration tick (`WorldGrammar`) and the acquisition frame's top-left
+  bracket (`SystemPOV`) stood nested at one point — two corners, one meaning; inside the four
+  brackets the evidence plate's own `Figure` ticks made a third corner at each; the scene's OPEN
+  affordance borrowed the bracket glyph for a fourth meaning. Orange in twenty-three places: route
+  two's rails, stations and landing corner in the world and on both maps, the surface-return dash,
+  the case-index dash, the branch ring in Selected Systems, the About bar below `lg`, the mobile
+  break rails, every link and button hover, the Layer Explorer's active dot, the Work index card's
+  hover boundary, the OG image, and the accent strokes inside thirteen owned D-019 diagrams. And the
+  same route map drawn three times — under the opened SYSTEMS surface, at the handoff, at the finale
+  — with a ring at the branch junction where nothing stops.
+- **Decisions:**
+  1. **One corner per corner.** On desktop the registration tick is not drawn at the four project
+     scenes — the bracket is the mark there; it stays at the hero, SYSTEMS and route two, where
+     nothing else registers the anchor, and everywhere on mobile as the V13 gate froze it. Inside
+     the spatial tour the `Figure` primitive's four ticks are hidden at `lg` (`data-figure-tick`,
+     one homepage-scoped rule in `styles/globals.css`); off the tour the primitive is unchanged. The
+     OPEN affordance's open corner is gone: the rule that extends on hover and the word in ink are
+     the affordance.
+  2. **Signal retired.** `--color-signal`, `--color-signal-text` and `--color-signal-ui` are removed
+     from the theme and from every usage. The palette is paper, soft paper, line, ink-muted (the
+     graphite) and ink. Route two is ink like route one, told apart by construction — the strata it
+     climbs through, its larger resolved stations, its dashed ahead state. Hovers are ink-muted on
+     text and ink-muted under paper on the primary button; the Layer Explorer's active dot, the
+     Work index card's hover boundary and the OG image's rule are ink / graphite. Below `lg` the
+     colour swaps are colour only — the mobile break rails' hairline is the line token, the About
+     bar is ink — and the mobile route probe at the recorded step is identical. The thirteen owned
+     diagrams' accent strokes are graphite (`#504e48`): the diagrams' content and geometry are
+     untouched; only the emphasis tone changed, and it is still an emphasis.
+  3. **Every line a fact.** The route map under the opened SYSTEMS surface is removed: what the
+     surface exposes is the structure — the strata, and the descent the Gate B cover draws to
+     SYSTEM — not a third copy of the map the handoff sentence names and the finale resolves. On the
+     two maps that remain, the ring at the branch junction is gone (nothing stops there; the dotted
+     branch leaves the route and the corner at its end registers the Work index). Kept, each with
+     its meaning: the rails (route), the station rings (station / visited), the dotted ahead state
+     (state), the cut's two strokes (boundary), the landing corner (registration), the brackets
+     (classification: in frame), the strata (surface/layer relationship), the branch (handoff), the
+     lower rail's stations and terminus, Selected Systems' descents and marks.
+- **Tests:** the SYSTEMS cut's polyline ceiling (≤ 2) holds at 0; every other contract unchanged.
+  Focused Chromium and the full Chromium project on the checkpoint build; unit suite unchanged.
+- **Not changed, by the brief:** every scroll module, `SceneBreak`'s cover and timing, the surface
+  return's geometry, the lower world's IA and composition, the case-study layouts, `app/`.
+- **Rejected:** darkening route two to a second ink tone (a second accent by another name); keeping
+  the SYSTEMS map in ink (the finding was the drawing, not its colour); keeping the affordance's
+  corner as "the bounded thing" (a fourth meaning for one glyph).

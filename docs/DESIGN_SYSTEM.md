@@ -10,7 +10,7 @@ This defines the system and component contracts, not every component. Implementa
 1. **Editorial, not dashboard.** The reference is a well-set technical journal: strong typography, hairline rules, generous whitespace — not SaaS cards.
 2. **The grid is visible on purpose.** Measurement details (index numbers, rules, corner ticks) express the "built in layers" idea; they are a small fixed vocabulary, not free decoration.
 3. **Asymmetric but disciplined.** Compositions are offset on the grid; nothing floats off it.
-4. **One accent, spent carefully.** `--signal` orange appears at most a few times per viewport; it marks the signal, never the noise.
+4. **No accent.** The palette is neutral end to end (V14.3 Gate D, D-050, §42): paper, soft paper, line, graphite (`--ink-muted`) and ink. Where a distinction was once carried by orange it is carried by the drawing -- state, construction, weight.
 5. **Motion explains, never performs.** Every animation states hierarchy, state change, or the layer concept — otherwise it is deleted.
 6. **Honest by default.** Placeholder or pending content is visibly labelled; nothing is styled to look more finished than it is.
 7. **Works flat first.** Every page must be complete and understandable with zero JavaScript and zero motion.
@@ -24,33 +24,29 @@ Approved seed (from PROJECT_SPEC — must not change without a documented reason
 --ink:        #161616;  /* primary text */
 --soft-paper: #e5e2d8;  /* inset/raised panels, code blocks, image mats */
 --line:       #b8b5ac;  /* hairline rules, decorative borders */
---signal:     #ff4f1f;  /* accent — GRAPHIC USE ONLY, see contrast rules */
 ```
+
+`--signal: #ff4f1f` was part of the seed and is **retired** (V14.3 Gate D, D-050); it is no longer defined in `styles/globals.css`.
 
 Approved accessible additions (D-004, accepted with changes 2026-07-17; exact hex values open to visual tuning as long as the ratios hold):
 
 ```css
 --ink-muted:   #504e48; /* secondary text — ≈7.1:1 on paper (AA/AAA body) */
---signal-text: #b8380e; /* accent used AS TEXT — ≈5.1:1 on paper (AA body) */
---signal-ui:   #e04413; /* accent for MEANINGFUL control boundaries and
-                           indicators — ≈3.6:1 on paper (≥3:1 required) */
 ```
+
+`--signal-text` (#b8380e) and `--signal-ui` (#e04413) were approved with D-004 and are **retired** with the accent (D-050). Their roles are carried by `--ink-muted` (hover text, the graphite rule) and `--ink` (state indicators).
 
 ### Contrast requirements (binding, per approved D-004)
 
 - Normal text must meet at least **4.5:1**.
-- Meaningful control boundaries and indicators must meet at least **3:1** (use `--signal-ui`, `--ink`, or stronger).
+- Meaningful control boundaries and indicators must meet at least **3:1** (use `--ink-muted`, `--ink`, or stronger).
 - Color must **never be the only indication** of selection, focus, status, or interaction — always pair with underline, weight, outline, text, or shape.
-- `--signal` may remain decorative wherever it does not carry meaning.
 
 | Pair | Ratio | Allowed use |
 |---|---|---|
 | `--ink` on `--paper` / `--soft-paper` | ≈15:1 | All text |
 | `--ink-muted` on `--paper` | ≈7:1 | Secondary text, captions |
-| `--signal-text` on `--paper` | ≈5:1 | Accent text, links, active labels |
-| `--signal-ui` on `--paper` | ≈3.6:1 | Meaningful control boundaries and indicators (selection dots, active markers, control outlines) — never body text |
-| `--signal` on `--paper` | ≈2.9:1 | **Never text, never a meaningful indicator, never sole state indication.** Decorative marks, thick rules, large fills where meaning is duplicated by text |
-| `--ink` on `--signal` | ≈5.5:1 | Text on signal-filled elements (e.g. button hover) |
+| `--paper` on `--ink-muted` | ≈6.9:1 | Primary button hover (D-050) |
 | `--paper` on `--ink` | ≈15:1 | Inverted elements (primary button) |
 | `--line` on `--paper` | ≈1.8:1 | Decorative rules only — never functional boundaries, never focus indication |
 
@@ -110,8 +106,8 @@ Vertical rhythm: sections are separated by 96–160px on desktop and 64–96px o
 
 ## 7. Border and radius rules
 
-- Radius tokens: `--radius-0: 0`, `--radius-1: 2px`, `--radius-2: 4px`. Nothing larger. No pills, no circles except a 6px signal dot used as a status/tick mark.
-- Rules and borders: 1px solid `--line`. Emphasis rules (under active tab, hero baseline): 2px solid `--ink` or `--signal`.
+- Radius tokens: `--radius-0: 0`, `--radius-1: 2px`, `--radius-2: 4px`. Nothing larger. No pills, no circles except a 6px ink dot used as a status/tick mark, and the route's station rings.
+- Rules and borders: 1px solid `--line`. Emphasis rules (under active tab, hero baseline): 2px solid `--ink`.
 - Panels (`--soft-paper`) have either no border or a 1px `--line` border — never shadows. Box-shadow is forbidden except a focus ring fallback.
 
 ## 8. Grid/measurement detail vocabulary (fixed)
@@ -121,7 +117,7 @@ The only approved decorative elements — anything else needs approval:
 1. **Section index**: mono-meta number + label, e.g. `02 / SELECTED SYSTEMS`, sitting on the section's top rule.
 2. **Hairline rules**: horizontal 1px `--line`, full container width.
 3. **Corner ticks**: 8px L-shaped marks at image/diagram corners, `--line` or `--ink`.
-4. **Signal dot**: 6px square or circle, paired with text (never alone). Purely decorative dots use `--signal`; dots that indicate state (selection, status) use `--signal-ui` (≥3:1 — D-004).
+4. **State dot**: 6px square or circle, paired with text (never alone), in `--ink` (D-050; formerly the signal dot).
 5. **Layer registration mark**: three stacked 2px bars (the visual shorthand for Surface/Flow/System) used in the layer explorer and case-study layer nav.
 
 All are `aria-hidden` and convey nothing not present in text.
@@ -138,9 +134,9 @@ All are `aria-hidden` and convey nothing not present in text.
 
 ## 10. Link and button behavior
 
-- **Text links**: `--ink`, underlined (`text-underline-offset: 3px`, 1px thickness). Hover: color `--signal-text`, thickness 2px. Never color-only differentiation.
+- **Text links**: `--ink`, underlined (`text-underline-offset: 3px`, 1px thickness). Hover: color `--ink-muted`, thickness 2px (D-050). Never color-only differentiation.
 - **External links** (Medium, GitHub, LinkedIn): suffixed with a small `↗` glyph and visually distinguishable; `target="_blank"` + `rel="noopener noreferrer"`, with visually-hidden "(opens in new tab)".
-- **Primary button** (`ButtonLink`): mono-label text, `--ink` background, `--paper` text, radius `--radius-1`, padding 12×24px. Hover: background `--signal`, text `--ink` (5.5:1). Active: translate down 1px, no scale.
+- **Primary button** (`ButtonLink`): mono-label text, `--ink` background, `--paper` text, radius `--radius-1`, padding 12×24px. Hover: background `--ink-muted`, text `--paper` (≈6.9:1; D-050). Active: translate down 1px, no scale.
 - **Secondary button**: transparent, 1px `--ink` border, `--ink` text. Hover: `--ink` background at 8% wash.
 - Buttons are `<a>` for navigation and `<button>` only for real actions (layer switch). Minimum target 44×44px on touch.
 - **Touch targets below `lg`** (§37.4, D-033): every standalone text link — a link that is its own line or its own item, not a word inside a sentence — carries `max-lg:inline-block max-lg:touch-link`. The `touch-link` utility grows the hit box to 45px with `padding-block: max(0px, (2.8125rem − 1lh) / 2)` and gives the same amount back as negative `margin-block`, so the glyphs, the line and every neighbour stay where the type set them: the layout with the classes stripped is pixel-identical to the layout with them. Inline padding is `--touch-slop-x` (0.5rem; the header nav sets 0.75rem). Links inside running sentences are exempt (WCAG 2.5.8's inline exception; making them blocks would reflow the sentence). A button laid out in world space (the tour's "See every system") sets its floor from the plane scale it is shown at, not from 44px: 50px in world space at the 0.89–0.995 the scene plane holds is ≥ 44.6px under the finger.
@@ -161,7 +157,7 @@ Semantics: WAI-ARIA Tabs pattern as a progressive enhancement, with **manual act
 | Inactive tab | mono-label in `--ink-muted`, transparent underline slot (2px) |
 | Hover | text `--ink`, underline `--line` |
 | Focused (not yet activated) | standard focus ring on the focused tab — activation only on Enter/Space |
-| Active tab | text `--ink`, 2px `--ink` underline, `--signal-ui` dot before the label (state indicator ≥3:1 — D-004), `aria-selected="true"` |
+| Active tab | text `--ink`, 2px `--ink` underline, `--ink` dot before the label (state indicator; D-004, D-050), `aria-selected="true"` |
 | Focus-visible | standard focus ring in addition to the state above |
 | Disabled | does not exist — all three layers always available |
 
@@ -225,7 +221,7 @@ A page passes only if all are true:
 
 1. The hero is set on the asymmetric grid — not horizontally centered, no avatar photo, no gradient text.
 2. At least one composition per page places content off-axis on explicit grid columns.
-3. Every decorative element belongs to the §8 vocabulary; count of `--signal` appearances per viewport ≤ 3.
+3. Every decorative element belongs to the §8 vocabulary; no accent colour anywhere (D-050).
 4. No section is a grid of more than 4 visually identical cards.
 5. Serif statements appear at most twice per page; mono labels appear on every section (index vocabulary).
 6. All copy is specific to Hakan's real work — zero phrases from the forbidden template list; project descriptions name concrete mechanisms ("transactional inventory claims"), not adjectives ("blazing fast").
@@ -2751,3 +2747,43 @@ Scroll modules byte-identical; first paint `FIRST PAINT == SETTLED` at 1440 and 
 wheel impulse identical to the record; scroll contract geometry identical, reverse one notch, 0
 wrong-way px; mobile route probe identical to the engineering record at the recorded step; the lower
 world 245 px shorter at 1440×900. Details: `.ai/handoffs/V14_2_GATE_C_RETURN.md` §4.
+
+## 42. V14.3 Gate D — one mark, one meaning; no orange; every line a fact (2026-09-07)
+
+`feature/owner-visual-acceptance-v14` only, on the Gate C checkpoint `5a4147d` / `2eb06c1`. Not
+merged to `main`. Scope by the owner's brief: duplicated corner marks, all visible orange, generic
+node-network graphics — nothing else. Decision: D-050. Evidence: `docs/review/v14.3-gate-d/`.
+
+### 42.1 The palette, from this gate
+
+`--signal`, `--signal-text` and `--signal-ui` are retired from the theme and from §1 principle 4,
+§2, §8 and §10 of this document. What remains is the neutral system: `--paper`, `--soft-paper`,
+`--line`, `--ink-muted` (the graphite), `--ink`. Hover on a text link: `--ink-muted` with the 2px
+underline. Hover on the primary button: `--ink-muted` background, `--paper` text (≈6.9:1). State
+indicators (the Layer Explorer's active dot, station fills) are `--ink`. Nothing bright replaces
+the accent; where orange carried a distinction the drawing carries it now.
+
+### 42.2 The mark vocabulary, one meaning each
+
+| Mark | Meaning | Where |
+|---|---|---|
+| open corner bracket, four per frame | classification — the system has this composition in frame | `SystemPOV` (desktop four, mobile two) |
+| open corner tick, one per anchor | registration — a coordinate exists here | `WorldGrammar` at the hero, SYSTEMS, route two; every scene on mobile |
+| closed corner with inset mark | resolved registration | route two's anchors, the landing, the section registers, the rail's terminus |
+| ring on the rail (filled when passed) | station / visited | `WorldGrammar`, `LowerRoute`, both maps, Selected Systems |
+| dotted line | route ahead / a branch | rails, maps, the surface-return arrival |
+| solid line | route travelled | rails, maps, the lower rail |
+| two short strokes across the rail | boundary — the cut | the world at the cut, both maps |
+| horizontal rule with a name under it | a stratum — surface/layer relationship | route two, the cover, Selected Systems, How I Build |
+| square | origin / terminus | the maps' hero and handover marks |
+
+Removed as duplicates: the registration tick under a bracket, the plate ticks inside the brackets,
+the affordance's borrowed corner. Removed as meaningless: the map under the opened SYSTEMS surface
+(a third copy), the ring at the branch junction (nothing stops there).
+
+### 42.3 Preserved, verified
+
+Scroll modules byte-identical; first paint, isolated wheel impulses and the mobile route probe
+reproduce the records; the Gate B cover and timing untouched (`SceneBreak`'s hairline token only);
+the Gate C lower world untouched but for the branch station's ring colour. Details:
+`.ai/handoffs/V14_3_GATE_D_RETURN.md` §4.

@@ -146,7 +146,7 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
         )}
       >
         <Link href={`/work/${project.slug}`} className="group/open block max-w-fit">
-          <span className="block underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text group-hover/open:decoration-2">
+          <span className="block underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-ink-muted group-hover/open:decoration-2">
             {project.title}
           </span>
           {/* V14 (owner finding B): "OPEN CASE STUDY action too weak". The
@@ -172,12 +172,15 @@ export function SpatialProjectScene({ project, variant }: SpatialProjectScenePro
             aria-hidden="true"
             className={cn(
               // Below `lg`: the V13 register line, byte-identical. At `lg`+: the mark.
-              "mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-signal-text",
-              "lg:relative lg:flex lg:w-fit lg:min-h-11 lg:pl-4 lg:text-ink",
+              "mt-4 inline-flex items-center gap-3 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:text-ink",
+              "lg:relative lg:flex lg:w-fit lg:min-h-11 lg:text-ink",
               variant === "foundation" ? "lg:mt-6" : "lg:mt-5",
             )}
           >
-            <span className="absolute left-0 top-1/2 hidden h-3.5 w-3.5 -translate-y-1/2 border-l border-t border-current opacity-80 lg:block" />
+            {/* V14.3 Gate D: the open corner that stood at the head of this
+                mark is gone -- the same glyph as the acquisition bracket two
+                lines above it, meaning something else. The rule that extends
+                on hover and the word in ink are the affordance. */}
             <span className="block h-px w-6 bg-current opacity-60 transition-[width] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:w-10 lg:w-6 lg:group-hover/open:w-10" />
             <span className="underline decoration-1 underline-offset-4 decoration-transparent transition-[text-decoration-color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover/open:decoration-current">
               {affordanceLabel}

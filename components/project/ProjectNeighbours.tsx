@@ -39,7 +39,7 @@ export function DestinationLink({
       <span className="mt-3 block font-display text-heading-l text-ink">
         <Link
           href={href}
-          className="underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2 max-lg:inline-block max-lg:touch-link"
+          className="underline decoration-1 underline-offset-[5px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-ink-muted hover:decoration-2 max-lg:inline-block max-lg:touch-link"
         >
           {children}
         </Link>

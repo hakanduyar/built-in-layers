@@ -116,7 +116,13 @@ export function WorldGrammar({ progress, mobile, branchDestinations = [] }: Worl
 
       {!mobile && <TerminusMap branch={branchDestinations} />}
 
-      {SCENE_IDS.map((id) => (
+      {/* V14.3 Gate D (owner: "one mark = one semantic meaning"): on desktop
+          the four project scenes carry the acquisition frame's brackets at
+          the same corner the world's tick registered, so the tick was a second
+          top-left corner saying the same thing. The bracket is the mark there;
+          the tick stays where nothing else marks the anchor (the hero, SYSTEMS,
+          route two) and everywhere on mobile, as the V13 gate froze it. */}
+      {SCENE_IDS.filter((id) => mobile || !(id in STATION_INDEX)).map((id) => (
         <RegistrationTick
           key={id}
           at={sceneAnchor(id, mobile)}
@@ -239,7 +245,10 @@ function RouteRail({ leg, progress }: { leg: RouteLeg; progress: MotionValue<num
 
   return (
     <svg
-      className={routeTwo ? "absolute text-signal" : "absolute text-ink"}
+      // V14.3 Gate D: one ink. Route two is told apart by construction --
+      // the strata it climbs through, its larger resolved stations -- not by
+      // a colour the palette no longer carries.
+      className="absolute text-ink"
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       style={{
@@ -291,7 +300,7 @@ function MobileRail({ leg, progress }: { leg: RouteLeg; progress: MotionValue<nu
   const box = legBox(leg);
   return (
     <motion.div
-      className={`absolute w-px ${leg.route === 1 ? "bg-ink" : "bg-signal"}`}
+      className="absolute w-px bg-ink"
       style={{ left: worldX(box.left), top: worldY(box.top), height: worldY(box.height), opacity }}
     />
   );
@@ -383,11 +392,7 @@ function Station({
     <>
       <motion.span
         data-route-station={id}
-        className={
-          resolved
-            ? "absolute block -translate-x-1/2 -translate-y-1/2 rounded-full border border-signal"
-            : "absolute block -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink"
-        }
+        className="absolute block -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink"
         style={{
           left: worldX(at.x),
           top: worldY(at.y),
@@ -397,11 +402,7 @@ function Station({
         }}
       >
         <motion.span
-          className={
-            resolved
-              ? "absolute inset-[18%] block rounded-full bg-signal"
-              : "absolute inset-[18%] block rounded-full bg-ink"
-          }
+          className="absolute inset-[18%] block rounded-full bg-ink"
           style={{ scale: fill }}
         />
       </motion.span>
@@ -451,9 +452,9 @@ function StateChanges() {
         className="absolute block"
         style={{ left: worldX(landing.x), top: worldY(landing.y) }}
       >
-        <span className="absolute left-0 top-0 block h-px w-6 bg-signal opacity-70" />
-        <span className="absolute left-0 top-0 block h-6 w-px bg-signal opacity-70" />
-        <span className="absolute left-1.5 top-1.5 block h-px w-2.5 bg-signal opacity-50" />
+        <span className="absolute left-0 top-0 block h-px w-6 bg-ink opacity-70" />
+        <span className="absolute left-0 top-0 block h-6 w-px bg-ink opacity-70" />
+        <span className="absolute left-1.5 top-1.5 block h-px w-2.5 bg-ink opacity-50" />
       </span>
     </>
   );

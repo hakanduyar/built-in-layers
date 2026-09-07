@@ -22,7 +22,7 @@
   <path d="M 504 380 L 564 380" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
 
   <!-- Coefficients -->
-  <rect x="568" y="290" width="400" height="180" fill="none" stroke="#e04413" stroke-width="2" />
+  <rect x="568" y="290" width="400" height="180" fill="none" stroke="#504e48" stroke-width="2" />
   <text x="592" y="326" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Coefficients</text>
   <line x1="592" y1="346" x2="944" y2="346" stroke="#b8b5ac" stroke-width="1" />
   <text x="592" y="378" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">A = 7–11 (from seed)</text>
@@ -39,7 +39,7 @@
   <text x="1056" y="378" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">signup_latency_ms</text>
   <text x="1056" y="404" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">account_age_days</text>
   <text x="1056" y="430" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" fill="#504e48">rapid_actions (last 10 min)</text>
-  <text x="1056" y="456" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="15" fill="#b8380e">latency term ≈ 0ms in the current frontend</text>
+  <text x="1056" y="456" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="15" fill="#504e48">latency term ≈ 0ms in the current frontend</text>
 
   <path d="M 292 470 L 292 530" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#ah)" />
   <path d="M 768 470 L 768 530" stroke="#161616" stroke-width="1.5" fill="none" />
@@ -59,7 +59,7 @@
   <text x="800" y="812" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="22" font-weight="600" fill="#161616">Waitlist priority score</text>
   <text x="800" y="838" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="16" fill="#504e48">Orders who can claim first</text>
 
-  <text x="64" y="890" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#b8380e">
+  <text x="64" y="890" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">
     <tspan x="64" dy="0">In the current frontend, signup_latency_ms is measured between two Date.now() calls issued back to</tspan>
     <tspan x="64" dy="24">back, so it contributes almost nothing — account age and the rapid-action penalty do the real work.</tspan>
   </text>

@@ -42,7 +42,11 @@ import { decompressionAnchor, routeLegs, workBranch } from "@/lib/spatial/sceneR
 // why `revealed` omits the branch: the structure under the surface is the
 // route the camera takes.
 
-export type RouteMapState = "revealed" | "mapped" | "resolved";
+// V14.3 Gate D: the `revealed` state is gone with its only caller -- the
+// drawing under the opened SYSTEMS surface is the strata and the descent
+// (Gate B), not a third copy of this map. Two states remain: the map the
+// handoff sentence names, and the finale's resolved one.
+export type RouteMapState = "mapped" | "resolved";
 
 export type RouteMapStation = {
   id: SceneId;
@@ -129,10 +133,6 @@ function stationState(id: SceneId, state: RouteMapState): "ahead" | "visited" | 
   const one = ROUTE_ONE_IDS.indexOf(id as (typeof ROUTE_ONE_IDS)[number]);
   const two = ROUTE_TWO_IDS.indexOf(id as (typeof ROUTE_TWO_IDS)[number]);
   if (state === "resolved") return "visited";
-  if (state === "revealed") {
-    if (id === "tail") return "current";
-    return one >= 0 ? "visited" : "ahead";
-  }
   // mapped: the reader stands at the handoff.
   if (id === "handoff") return "current";
   if (one >= 0 || two >= 0) return "visited";
@@ -153,7 +153,7 @@ export function RouteMap({
   const tailStep = 44;
   const tailHeight = tail && tail.length > 0 ? tail.length * tailStep + 12 : 0;
   const height = g.height + tailHeight;
-  const showBranch = state !== "revealed" && branch.length > 0;
+  const showBranch = branch.length > 0;
   const indexOf = new Map(stations.map((station) => [station.id, station.index]));
   const complete = state === "resolved";
 
@@ -181,13 +181,15 @@ export function RouteMap({
         vectorEffect="non-scaling-stroke"
         strokeLinejoin="round"
       />
-      {/* Route two: the climb back. Dashed signal while it is still ahead;
-          solid once the journey is complete. */}
+      {/* Route two: the climb back. Dashed while it is still ahead; solid
+          once the journey is complete. V14.3 Gate D: ink, like route one --
+          the two routes are told apart by where they run and by their state,
+          not by colour. */}
       <polyline
         points={g.routeTwo}
         fill="none"
-        stroke="var(--color-signal)"
-        strokeOpacity={state === "revealed" ? 0.62 : 0.82}
+        stroke="var(--color-ink)"
+        strokeOpacity={0.8}
         style={{ strokeWidth: 1.5 }}
         strokeDasharray={complete ? undefined : "6 7"}
         vectorEffect="non-scaling-stroke"
@@ -217,7 +219,7 @@ export function RouteMap({
       </g>
       {/* Where the route is picked up again: the world's resolved corner. */}
       <g
-        stroke="var(--color-signal)"
+        stroke="var(--color-ink)"
         strokeOpacity={0.8}
         style={{ strokeWidth: 1.25 }}
         vectorEffect="non-scaling-stroke"
@@ -231,7 +233,7 @@ export function RouteMap({
         const [x, y] = g.place(sceneAnchor(id));
         const status = stationState(id, state);
         const routeTwo = ROUTE_TWO_IDS.some((two) => two === id);
-        const tone = routeTwo ? "var(--color-signal)" : "var(--color-ink)";
+        const tone = "var(--color-ink)";
         const index = indexOf.get(id);
         if (id === "hero") {
           return <rect key={id} x={x - 4} y={y - 4} width={8} height={8} fill={tone} />;
@@ -349,19 +351,12 @@ export function RouteMap({
         </g>
       )}
 
-      {/* The branch not taken, and the real names at its end. */}
+      {/* The branch not taken, and the real names at its end. V14.3 Gate D:
+          the ring at the junction is gone -- nothing stops there; the branch
+          leaves the route where the dotted line leaves it, and the corner at
+          its end registers the destination. */}
       {showBranch && (
         <g>
-          <circle
-            cx={g.branchJunction[0]}
-            cy={g.branchJunction[1]}
-            r={4}
-            fill="none"
-            stroke="var(--color-ink)"
-            strokeOpacity={0.7}
-            style={{ strokeWidth: 1.25 }}
-            vectorEffect="non-scaling-stroke"
-          />
           <g
             stroke="var(--color-ink)"
             strokeOpacity={0.7}

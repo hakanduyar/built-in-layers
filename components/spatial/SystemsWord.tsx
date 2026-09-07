@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useTransform, type MotionValue } from "motion/react";
-import { RouteMap } from "@/components/spatial/RouteMap";
 import { layerDefinitions } from "@/data/copy";
 import { routeLegs, routeScreenAngle, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 
@@ -241,19 +240,11 @@ function RevealedStructure() {
           </span>
         </span>
       ))}
-      {/* The journey, between SURFACE and SYSTEM. Two polylines, no labels:
-          the word is the only type that should be read in this frame. */}
-      <span
-        className="absolute block"
-        style={{
-          left: "calc(50% - 1.35em)",
-          top: `${STRATA_TOP_EM + 0.08}em`,
-          height: `${STRATA_STEP_EM * 2 - 0.16}em`,
-          aspectRatio: "1000 / 487",
-        }}
-      >
-        <RouteMap state="revealed" labels={false} className="h-full w-full" />
-      </span>
+      {/* V14.3 Gate D (owner: generic connected-dot graphics at SYSTEMS):
+          the route map that stood between SURFACE and SYSTEM is gone. What the
+          opened surface exposes is the STRUCTURE -- the three strata, and the
+          descent the Gate B cover then draws to SYSTEM -- not a third copy of
+          the map the handoff and the finale already carry. */}
     </span>
   );
 }

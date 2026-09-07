@@ -49,14 +49,14 @@
     <path d="M 1328 386 L 1328 442" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
 
     <!-- Independent review (gate: signal-ui) -->
-    <rect x="1168" y="446" width="320" height="96" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="1168" y="446" width="320" height="96" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="1192" y="486" font-size="24" font-weight="600" fill="#161616">5. Independent review</text>
     <text x="1192" y="516" font-size="16" fill="#504e48">separate reviewer; PASS required</text>
 
     <path d="M 1164 494 L 1124 494" stroke="#161616" stroke-width="2" fill="none" marker-end="url(#sfah)" />
 
     <!-- Human approval (gate: signal-ui) -->
-    <rect x="800" y="446" width="320" height="96" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="800" y="446" width="320" height="96" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="824" y="486" font-size="24" font-weight="600" fill="#161616">6. Human approval</text>
     <text x="824" y="516" font-size="16" fill="#504e48">release and deploy stay human-only</text>
 

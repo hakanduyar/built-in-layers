@@ -520,7 +520,7 @@ function SurfaceReturn() {
         style={{ bottom: "-13vh" }}
       />
       {/* V6.8 (§11): THE REGIME CHANGE, stated so it survives with its label
-          removed. Route two is drawn dashed and signal-toned everywhere in the
+          removed. Route two is drawn dashed everywhere in the
           world above -- that is its registered grammar. Here that exact line
           arrives from the left, terminates at a junction node, and continues as
           a solid ink editorial rule: the system's route becoming the page's
@@ -529,7 +529,7 @@ function SurfaceReturn() {
           caption on the event rather than the event. */}
       <div className="relative">
         <div aria-hidden="true" className="relative flex items-center">
-          <span className="block h-0 w-20 border-t border-dashed border-signal opacity-80 lg:absolute lg:right-full lg:top-1/2 lg:w-[4vw] lg:-translate-y-1/2" />
+          <span className="block h-0 w-20 border-t border-dashed border-ink opacity-80 lg:absolute lg:right-full lg:top-1/2 lg:w-[4vw] lg:-translate-y-1/2" />
           <span className="mx-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-ink lg:mx-0 lg:-translate-x-1/2" />
           <span className="block h-px flex-1 bg-ink" />
         </div>

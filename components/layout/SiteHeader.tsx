@@ -29,7 +29,7 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="font-mono text-mono-label tracking-mono-label uppercase text-ink hover:text-signal-text max-lg:inline-block max-lg:touch-link max-lg:[--touch-slop-x:0.75rem]"
+                  className="font-mono text-mono-label tracking-mono-label uppercase text-ink hover:text-ink-muted max-lg:inline-block max-lg:touch-link max-lg:[--touch-slop-x:0.75rem]"
                 >
                   {item.label}
                 </Link>

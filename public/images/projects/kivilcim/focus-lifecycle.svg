@@ -22,7 +22,7 @@
 
   <!-- Running -->
   <g>
-    <rect x="348" y="420" width="220" height="130" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="348" y="420" width="220" height="130" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="458" y="475" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Running</text>
     <text x="458" y="505" text-anchor="middle" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">timer counting down</text>
   </g>

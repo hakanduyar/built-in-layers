@@ -131,18 +131,22 @@ export function Figure({
     <figure className="relative border border-line bg-soft-paper p-1 rounded-1">
       <span
         aria-hidden="true"
+        data-figure-tick="tl"
         className="absolute left-0 top-0 h-2 w-2 border-l border-t border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="tr"
         className="absolute right-0 top-0 h-2 w-2 border-r border-t border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="bl"
         className="absolute bottom-0 left-0 h-2 w-2 border-b border-l border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="br"
         className="absolute bottom-0 right-0 h-2 w-2 border-b border-r border-ink"
       />
       {/* TASK-008 (Lighthouse-measured, 2026-08-11): every Figure usage

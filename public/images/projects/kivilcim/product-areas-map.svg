@@ -52,7 +52,7 @@
 
   <!-- Panel 4: Focus (signal-ui accent — the one meaningful indicator on this diagram) -->
   <g>
-    <rect x="898" y="300" width="278" height="600" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="898" y="300" width="278" height="600" fill="none" stroke="#504e48" stroke-width="2" />
     <line x1="898" y1="340" x2="1176" y2="340" stroke="#b8b5ac" stroke-width="1" />
     <text x="922" y="326" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="20" letter-spacing="2" fill="#504e48">04</text>
     <text x="922" y="400" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="34" font-weight="600" fill="#161616">Focus</text>

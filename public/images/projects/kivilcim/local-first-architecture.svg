@@ -52,8 +52,8 @@
   </text>
 
   <!-- Optional Gemini box — clearly separated, dashed border, outside the core boundary -->
-  <rect x="1040" y="350" width="496" height="428" fill="none" stroke="#e04413" stroke-width="2" stroke-dasharray="8 6" />
-  <text x="1064" y="392" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" letter-spacing="2" fill="#b8380e">OPTIONAL — NOT PART OF THE CORE</text>
+  <rect x="1040" y="350" width="496" height="428" fill="none" stroke="#504e48" stroke-width="2" stroke-dasharray="8 6" />
+  <text x="1064" y="392" font-family="ui-monospace, 'IBM Plex Mono', monospace" font-size="16" letter-spacing="2" fill="#504e48">OPTIONAL — NOT PART OF THE CORE</text>
   <text x="1064" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">Gemini requests</text>
   <text x="1064" y="480" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">
     <tspan x="1064" dy="0">Made only if the person</tspan>
@@ -61,14 +61,14 @@
     <tspan x="1064" dy="28">The app functions fully</tspan>
     <tspan x="1064" dy="28">without it.</tspan>
   </text>
-  <path d="M 944 500 L 1030 500" stroke="#b8380e" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#arrowhead-orange)" />
+  <path d="M 944 500 L 1030 500" stroke="#504e48" stroke-width="1.5" stroke-dasharray="6 6" fill="none" marker-end="url(#arrowhead-orange)" />
 
   <defs>
     <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="5" refY="8" orient="auto">
       <path d="M 0 0 L 10 0 L 5 10 z" fill="#161616" />
     </marker>
     <marker id="arrowhead-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b8380e" />
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#504e48" />
     </marker>
   </defs>
 

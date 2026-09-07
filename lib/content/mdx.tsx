@@ -124,7 +124,7 @@ function MdxA({
   return (
     <a
       className={cn(
-        "underline decoration-1 underline-offset-[3px] hover:text-signal-text hover:decoration-2",
+        "underline decoration-1 underline-offset-[3px] hover:text-ink-muted hover:decoration-2",
         className,
       )}
       {...props}

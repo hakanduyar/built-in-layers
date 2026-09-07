@@ -275,3 +275,23 @@ New, not frozen: `tests/tools/lower-world-sheet.mjs`, the `projectDepth` cases i
 `tests/unit/selected-systems.test.ts`. Untouched, byte for byte, against `816b408`:
 `lib/spatial/*`, `SceneBreak.tsx`, `SpatialCamera.tsx`, `SpatialExperience.tsx`, `LowerRoute.tsx`,
 `WorldGrammar.tsx`, `SystemsWord.tsx`, `RouteMap.tsx`, every project scene, `app/`.
+
+### 6.4 V14.3 Gate D — one mark, one meaning; no orange; every line a fact (2026-09-07)
+
+The reopening continued under the owner's V14.3 Gate D brief (duplicated corner marks, all
+visible orange, generic node-network graphics; nothing else). D-050 and `docs/DESIGN_SYSTEM.md`
+§42 record what moved and why; the evidence is `docs/review/v14.3-gate-d/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/spatial/WorldGrammar.tsx` | no registration tick at desktop project scenes; route two, its stations and the landing corner in ink; the mobile rail in ink (colour only) | stills; transition sheets at the cut both ways; mobile route probe identical |
+| `components/spatial/RouteMap.tsx` | one ink; the `revealed` state removed with its caller; no junction ring | stills at the handoff, the surface return and the finale |
+| `components/spatial/SystemsWord.tsx` | the map under the opened surface removed | the cut's polyline ceiling (0 ≤ 2); transition sheets |
+| `components/spatial/SceneBreak.tsx` | the mobile rails' hairline and the boundary section's mark on the line token (colour only) | mobile route probe identical; cover contracts unchanged |
+| `components/spatial/SystemPOV.tsx`, `SpatialProjectScene.tsx`, `SpatialExperience.tsx` | the case-index dash in graphite; the affordance's corner removed and its hover in ink; the surface-return dash in ink | stills at the project scenes and the surface return |
+| `components/sections/{SelectedSystems,AboutPreview}.tsx` | the branch ring and the mobile bar in ink (colour only) | stills; mobile route probe identical |
+| **Case-study system** (frozen `5000201`): `components/ui/{Figure,FigureInspect,TextLink,ButtonLink}.tsx`, `components/project/{ProjectCard,LayerExplorer,ProjectNeighbours}.tsx`, `lib/content/mdx.tsx`, `components/layout/SiteHeader.tsx`, `app/opengraph-image.tsx`, thirteen `public/images/projects/**/*.svg` | reopened on the owner's explicit instruction ("remove ALL visible orange"): hover colours, the active dot, the card boundary, the OG rule and the diagrams' accent strokes to ink / graphite; `Figure` gained a `data-figure-tick` attribute (rendering identical off the tour) | full Chromium project (`work`, `shell`, `seo`, `a11y` included); unit suite; no geometry touched |
+| `styles/globals.css` | the three signal tokens removed; one homepage-scoped rule hiding the plate ticks inside the tour at `lg` | build (no unresolved utilities); runtime probe |
+
+Untouched, byte for byte, against `2eb06c1`: `lib/spatial/*`, `SpatialCamera.tsx`, `LowerRoute.tsx`,
+`SystemNode.tsx`, `ProjectPlane.tsx`, every case-study layout, `app/` but for the OG rule's colour.

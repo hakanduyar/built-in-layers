@@ -112,7 +112,7 @@ export function FigureInspect({
         // The 44px minimum is a touch target; the desktop-only control (a
         // pointer target in a caption row) drops it so the plate's footer stays
         // one caption line tall and the flagship keeps its frame floor.
-        className={`group/inspect min-h-11 shrink-0 items-center gap-2 font-mono text-mono-label tracking-mono-label uppercase text-ink transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text ${
+        className={`group/inspect min-h-11 shrink-0 items-center gap-2 font-mono text-mono-label tracking-mono-label uppercase text-ink transition-[color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-ink-muted ${
           where === "always"
             ? "inline-flex"
             : where === "desktop"

@@ -112,7 +112,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
       {/* V14.1 (owner §14): THE REGISTER IS THE MAP'S INDEX, NOT A TABLE.
           The four systems the route visited carry the world's own station
           glyph -- the filled ring the map draws for a visited stop -- and the
-          system that continues on the Work index carries the branch's signal
+          system that continues on the Work index carries the branch's hollow
           ring, exactly as the terminus map above drew it. Same five stops,
           same five symbols. */}
       <Reveal className="mt-10 lg:mt-12">
@@ -155,7 +155,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                         className={
                           visited
                             ? "relative z-[1] hidden h-2.5 w-2.5 rounded-full border border-ink bg-ink lg:block"
-                            : "relative z-[1] hidden h-2.5 w-2.5 rounded-full border border-signal bg-paper lg:block"
+                            : "relative z-[1] hidden h-2.5 w-2.5 rounded-full border border-ink bg-paper lg:block"
                         }
                       />
                       <span className="font-mono text-mono-label tracking-mono-label text-ink-muted">
@@ -175,7 +175,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                       <h3 className="font-display text-heading-m text-ink lg:text-[clamp(1.0625rem,1.5vw,1.375rem)] lg:leading-[1.2]">
                         <Link
                           href={`/work/${project.slug}`}
-                          className="group/open underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-signal-text hover:decoration-2 max-lg:inline-block max-lg:touch-link"
+                          className="group/open underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-ink-muted hover:decoration-2 max-lg:inline-block max-lg:touch-link"
                         >
                           {project.title}
                           <span

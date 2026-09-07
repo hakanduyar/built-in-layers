@@ -126,7 +126,7 @@ export function AboutPreview() {
         <div className="mt-10 lg:contents">
           {/* Below lg the V13 accent bar and body-scale lead; at lg the
               operator's statement in the site's own voice. */}
-          <span aria-hidden="true" className="mb-5 block h-0.5 w-12 bg-signal lg:hidden" />
+          <span aria-hidden="true" className="mb-5 block h-0.5 w-12 bg-ink lg:hidden" />
           <p className="max-w-[34rem] font-display text-body-l text-ink lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:max-w-[30rem] lg:font-serif lg:text-[1.375rem] lg:italic lg:leading-[1.45]">
             {aboutIntro.lead}
           </p>

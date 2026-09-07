@@ -13,7 +13,7 @@ type ButtonLinkProps = {
 // DESIGN_SYSTEM.md §10: mono-label text, radius-1, 12x24 padding, 44px
 // minimum target, active state translates down 1px (no scale).
 const variantClassName: Record<"primary" | "secondary", string> = {
-  primary: "bg-ink text-paper hover:bg-signal hover:text-ink",
+  primary: "bg-ink text-paper hover:bg-ink-muted hover:text-paper",
   secondary: "border border-ink text-ink hover:bg-ink/8",
 };
 

@@ -232,9 +232,9 @@ function Cluster({
         className={compact ? "flex items-center gap-2" : "flex items-center justify-end gap-2"}
         style={animated ? { opacity: indexOpacity } : undefined}
       >
-        {/* The single signal accent this layer is allowed (§11). Decorative,
-            so --signal's 2.9:1 is permitted (DESIGN_SYSTEM §2). */}
-        <span className="block h-px w-3 bg-signal" />
+        {/* V14.3 Gate D: the dash before the case index is graphite, not
+            signal -- the portfolio carries no orange. */}
+        <span className="block h-px w-3 bg-ink-muted" />
         <MonoLabel className="text-ink-muted">Case {index}</MonoLabel>
       </motion.div>
 
