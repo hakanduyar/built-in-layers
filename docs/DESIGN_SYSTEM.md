@@ -2703,3 +2703,51 @@ sceneRoute,scenes,worldFit,planeChoreography,projectGround,editorialDrift}.ts ap
 nothing else. First paint, discrete scroll, scroll contract and frame time re-run on the
 candidate (`.ai/handoffs/V14_2_GATE_B_RETURN.md` §4). Mobile keeps the V4 rails below `lg` and the
 mobile route probe at the recorded step is identical to the engineering record.
+
+## 41. V14.2 Gate C — the lower world as one system (2026-09-07)
+
+`feature/owner-visual-acceptance-v14` only, on the Gate B checkpoint `de538bf` / `816b408`. Not
+merged to `main`. Scope by the owner's brief: Selected Systems, How I Build, Field Notes, About, the
+final CTA — as one continuous system, without increasing page length or changing scroll physics.
+Decision: D-049. Evidence: `docs/review/v14.2-gate-c/` — `before/` (stills and lower-world sheets
+at `816b408`), `iterations/`, `after/` (stills at 1440 and 1920; forward and reverse sheets at
+1440, the 1920 smoke), `metrics/`.
+
+### 41.1 What the lower world was
+
+After D-047 the route ran down the page as one rail with a station at every section, and the
+content beside it was still four documents: a coverage table, four ruled rows, a heading for one
+sentence, a two-column bio, a footer with a map. The rail said "the world continues"; nothing the
+reader could read said so.
+
+### 41.2 The grammar, carried into the content
+
+The world's own drawing of a layer is the section: three strata as floors, named once inside the
+band, and a descent from the surface to SYSTEM (the cut, D-048; Built in Layers; route two's
+floors). The lower world now uses that drawing, and only that drawing, for what each section says:
+
+- **Selected Systems** — the systems against the strata. Five stations on the surface, five
+  descents to the deepest documented layer, marks on the floors, the record as the footing. The
+  question it answers is unchanged (which layers can this portfolio substantiate?); the form is the
+  world's, not a table's. Professional Systems stands on the surface, unsurveyed.
+- **How I Build** — the operator working through the same strata. The method statement in the
+  site's serif voice, the floors with the descent ending on the resolved corner at SYSTEM, the four
+  commitments beside it.
+- **Field Notes** — one entry on one rule: a branch to an external archive, at a branch's weight.
+- **About** — the operator at the last station, set as the systems were set: classification, name,
+  routes out; the statement in the serif voice; the honesty rule as the record.
+- **The finale** — the resolved state on the rail's own datum: the axis from the footer's top to
+  the action, the caption naming the three clauses, the map beside, the action beneath. No
+  page-wide rule opens it on the homepage.
+
+Type: the operator's voice enters at 1.375rem serif italic in two places and at full `statement`
+scale once, at the end. Microtext removed: the five-name column header. Microtext kept because it
+states something: the register lines, the strata names, the records, "Resolved by layer and
+record", "The systems, indexed".
+
+### 41.3 Preserved, verified
+
+Scroll modules byte-identical; first paint `FIRST PAINT == SETTLED` at 1440 and 1920; every isolated
+wheel impulse identical to the record; scroll contract geometry identical, reverse one notch, 0
+wrong-way px; mobile route probe identical to the engineering record at the recorded step; the lower
+world 245 px shorter at 1440×900. Details: `.ai/handoffs/V14_2_GATE_C_RETURN.md` §4.

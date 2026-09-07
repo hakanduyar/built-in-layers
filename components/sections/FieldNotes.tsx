@@ -34,6 +34,16 @@ const ARCHIVE_LABEL = "hakanduyar.medium.com";
 // place in the IA, and it stops claiming the vertical territory of a section
 // that has three articles in it.
 //
+// V14.2 GATE C (owner) -- COMPRESSED TO ONE ENTRY ON THE ROUTE. Even as a
+// bridge, at `lg` the empty state still opened with a heading at scene
+// scale, a rule and a sentence, and the owner read it as too weak to
+// justify a scene of its own. It is now what it is: a station on the rail
+// (the register, unchanged) and ONE LINE on ONE RULE -- the heading at the
+// register's own heading scale, the sentence, and the site's index, on a
+// single baseline. The writing is a branch off the route to an external
+// archive, and the entry says so at the weight of a branch. The mobile
+// composition below `lg` is the V13 gate's.
+//
 // THE POPULATED STATE IS UNCHANGED IN KIND AND BETTER IN DETAIL. The moment
 // `data/notes.ts` carries verified entries, this renders them as real rows with
 // their real metadata and takes the space it has earned. Nothing here has to be
@@ -44,16 +54,16 @@ export function FieldNotes({ notes }: FieldNotesProps) {
 
   if (verifiedNotes.length === 0) {
     return (
-      <SystemNode index="07" label="Field notes">
+      <SystemNode index="07" label="Field notes" compact>
         <Reveal>
           {/* One line, on one rule. The heading stays at section scale so the IA
               is unbroken; everything under it is sized for what it actually is. */}
-          <div className="border-t border-ink pt-6 lg:flex lg:items-baseline lg:justify-between lg:gap-10">
-            <div>
-              <h2 className="font-display text-heading-l tracking-heading-l uppercase text-ink">
+          <div className="border-t border-ink pt-6 lg:flex lg:items-baseline lg:justify-between lg:gap-10 lg:border-line lg:pt-4">
+            <div className="lg:flex lg:items-baseline lg:gap-8">
+              <h2 className="font-display text-heading-l tracking-heading-l uppercase text-ink lg:text-heading-m lg:tracking-normal">
                 Field notes
               </h2>
-              <p className="mt-3 max-w-[34rem] font-display text-body text-ink-muted">
+              <p className="mt-3 max-w-[34rem] font-display text-body text-ink-muted lg:mt-0">
                 {pendingCopy.notesPrefix}{" "}
                 <TextLink href={ARCHIVE_URL} external>
                   {ARCHIVE_LABEL}

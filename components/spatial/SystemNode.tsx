@@ -55,13 +55,25 @@ export type SystemNodeProps = {
    * the side the route is actually on.
    */
   align?: "left" | "right";
+  /**
+   * V14.2 Gate C: a station that is an entry on the route rather than a
+   * scene of its own (Field Notes' empty state) opens with less paper above
+   * it at `lg`. The mobile interval is the V13 gate's and is untouched.
+   */
+  compact?: boolean;
 };
 
 /** The system's three words for how well it currently knows a surface. Shared
  *  verbatim with the spatial world's destination plates. */
 const STATE: string[] = ["Detected", "Acquired", "Resolved"];
 
-export function SystemNode({ index, label, children, align = "left" }: SystemNodeProps) {
+export function SystemNode({
+  index,
+  label,
+  children,
+  align = "left",
+  compact = false,
+}: SystemNodeProps) {
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useSettledReducedMotion();
   // The section's own passage through the viewport -- the same signal DriftBlock
@@ -94,7 +106,7 @@ export function SystemNode({ index, label, children, align = "left" }: SystemNod
     // opened with 128px of paper on top of their own approach interval; at the
     // measured ceiling that was ~1s of the reader's time per section spent on
     // nothing. The mobile value is the V13 gate's and is untouched.
-    <section ref={ref} className="relative mt-16 lg:mt-20">
+    <section ref={ref} className={`relative mt-16 ${compact ? "lg:mt-14" : "lg:mt-20"}`}>
       {/* V14.1 (owner §5): THE SPINE IS GONE FROM HERE. Each section drew its
           own full-height rule, so four sections were four documents each
           re-opening the same chrome. The lower page now has ONE rail -- the

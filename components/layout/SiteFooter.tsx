@@ -70,6 +70,20 @@ import { TextLink } from "@/components/ui/TextLink";
  * `styles/globals.css` on pages without the spatial tour -- the same `:has()`
  * scoping the finale's height already uses. The station indices are the route's
  * own presentation order (ROUTE_ONE_IDS), not content.
+ *
+ * V14.2 GATE C (owner) -- THE RESOLVED FINAL STATE, NOT A FOOTER WITH A MAP.
+ *
+ * On the homepage the finale is the last frame of the lower world, and it is
+ * now composed on the lower world's own datum: the rail the reader has come
+ * down stands at 4vw (LowerRoute); the finale's axis stands at the same x,
+ * runs from the frame's top and terminates ON the action with the world's
+ * closed corner -- the route's last line ends at the button. The caption is
+ * the route's resolved state in the world's register, stated once: the
+ * systems resolved, the complexity mapped (the map beside it), the operator
+ * addressable (the action under it). The page-wide rule that opened the
+ * footer is dropped on the homepage, so the finale is reached, not
+ * appended. Off the homepage the caption and the axis are hidden with the
+ * map, and the CTA stands alone in the shared container as before.
  */
 const FINALE_STATIONS = [
   { id: "software-factory", index: "01" },
@@ -91,7 +105,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line">
+    <footer className="spatial-footer relative overflow-clip border-t border-line">
       {/* FINAL REMEDIATION -- the finale must OWN the last viewport. At the
           owner's real ~1200px-tall display the 74vh composition plus the
           furniture strip left ~290px of the previous section hanging above the
@@ -107,26 +121,40 @@ export function SiteFooter() {
       <Container className="spatial-finale flex min-h-[82vh] flex-col justify-center pb-20 pt-10 lg:pb-24 lg:pt-12">
         <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 lg:pl-[4%]">
           <div className="lg:col-span-7">
-            {/* A true system statement, not fake telemetry: the route rails end
-                here and the map beside this block shows them ended. aria-hidden:
+            {/* A true system statement, not fake telemetry: the route ends
+                here, every station visited; the map beside this block shows
+                it; the action beneath is the one address left. aria-hidden:
                 the heading below is the accessible content. */}
             <p
               aria-hidden="true"
-              className="mb-4 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+              className="finale-route mb-4 font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
             >
-              End of route
+              {/* The mobile finale is the V13 gate's, so below `lg` the
+                  caption stays the V9 line, verbatim; the resolved state is
+                  stated at `lg`, where the map and the axis it names are. */}
+              <span className="lg:hidden">End of route</span>
+              <span className="hidden lg:inline">
+                System resolved · complexity mapped · operator addressable
+              </span>
             </p>
             {/* V9 (§14): the axis runs past the headline and terminates ON the
-                action, with the world's own closed corner at its foot. */}
+                action, with the world's own closed corner at its foot. V14.2
+                Gate C: the axis is the lower rail's own x (styles/globals.css
+                places it at the rail's datum on the homepage), so the line the
+                reader came down ends on the action. */}
             <div className="relative">
+              {/* On the homepage the axis is drawn from far above the block and
+                  clipped at the footer's top edge (`overflow-clip`), so it
+                  runs from where the lower rail handed over, down to the
+                  action, whatever the finale's centring leaves above it. */}
               <span
                 aria-hidden="true"
-                className="absolute -left-6 top-0 hidden w-px bg-ink opacity-25 lg:block"
+                className="finale-route finale-axis absolute -left-6 top-0 hidden w-px bg-ink opacity-25 lg:block"
                 style={{ height: "calc(100% - 0.75rem)" }}
               />
               <span
                 aria-hidden="true"
-                className="absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
+                className="finale-route finale-axis absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
                 style={{ bottom: "0.75rem" }}
               />
               <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">

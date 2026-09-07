@@ -255,3 +255,23 @@ New, not frozen: `lib/spatial/surfaceCover.ts`, `tests/unit/surface-cover.test.t
 `tests/tools/progress-stills.mjs`. Untouched, byte for byte, against `8c6045c`:
 `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,planeChoreography,projectGround,
 editorialDrift}.ts`, `SystemsWord.tsx`, every project scene, the lower page, `app/`.
+
+### 6.3 V14.2 Gate C — the lower world as one system (2026-09-07)
+
+The reopening continued under the owner's V14.2 Gate C brief (Selected Systems, How I Build, Field
+Notes, About, the final CTA — as one system; nothing else). D-049 and `docs/DESIGN_SYSTEM.md` §41
+record what moved and why; the evidence is `docs/review/v14.2-gate-c/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/sections/SelectedSystems.tsx` | the index as a section drawing: strata as floors, a descent per system, the record as footing — `lg:` only (D-049 §1) | stills at 1440 and 1920; lower-world sheets both ways; `[data-layer-record]` count; mobile route probe identical |
+| `components/sections/HowIBuild.tsx` | the method statement and the floors beside the four commitments — `lg:` only (D-049 §2) | stills; sheets; the reveal contract |
+| `components/sections/FieldNotes.tsx` | the empty state as one entry on one rule — `lg:` only (D-049 §3) | stills; the Field Notes link contracts |
+| `components/sections/AboutPreview.tsx` | the operator in the systems' grammar, one `nav` placed by the grid — `lg:` only (D-049 §4) | stills; the About link contracts; a11y |
+| `components/spatial/SystemNode.tsx` | a `compact` interval for a station that is an entry, `lg:` only | mobile route probe identical |
+| `components/layout/SiteFooter.tsx`, `styles/globals.css` | the finale on the rail's datum, the axis from the footer's top to the action, the resolved-state caption at `lg`, no page-wide rule on the homepage (D-049 §5) | stills at 1440 and 1920; runtime probe (overflow 0 of 99, console 0 on content routes) |
+
+New, not frozen: `tests/tools/lower-world-sheet.mjs`, the `projectDepth` cases in
+`tests/unit/selected-systems.test.ts`. Untouched, byte for byte, against `816b408`:
+`lib/spatial/*`, `SceneBreak.tsx`, `SpatialCamera.tsx`, `SpatialExperience.tsx`, `LowerRoute.tsx`,
+`WorldGrammar.tsx`, `SystemsWord.tsx`, `RouteMap.tsx`, every project scene, `app/`.

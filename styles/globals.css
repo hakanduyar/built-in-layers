@@ -281,3 +281,44 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-map {
   transform: scale(var(--world-fit, 1));
   transform-origin: top center;
 }
+
+/*
+ * V14.2 Gate C (owner): the finale is the lower world's resolved final state,
+ * so on the homepage it stands on the lower world's own datum rather than in
+ * the shared centred container. The lower rail (LowerRoute) runs at 4vw; the
+ * finale's axis is placed at that x and its content starts 2rem inside it,
+ * exactly as every lower section's register does (SystemNode's `lg:pl-8`),
+ * so the line the reader came down ends on the action. The page-wide rule
+ * that opened the footer is dropped on the homepage -- the finale is reached
+ * along the route, not appended after it -- and the caption and axis are
+ * hidden off the homepage, as the map is. Off the homepage nothing changes.
+ */
+body:has(section[aria-label="Spatial system tour"]) .spatial-footer {
+  border-top-color: transparent;
+}
+body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
+  display: none;
+}
+@media (min-width: 1024px) {
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+    margin-left: 0;
+    max-width: calc(8vw + 2rem + 1180px);
+    padding-left: calc(4vw + 2rem);
+    padding-right: 4vw;
+  }
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale > div {
+    padding-left: 0;
+  }
+  body:has(section[aria-label="Spatial system tour"]) .finale-axis {
+    left: -2rem;
+  }
+}
+@media (min-width: 1024px) {
+  /* The finale's axis, extended up to the footer's top edge on the homepage:
+     the rail's line resumes where the route handed over and ends on the
+     action. `overflow-clip` on the footer clips the overrun. */
+  body:has(section[aria-label="Spatial system tour"]) .finale-axis[style*="height"] {
+    top: -100vh;
+    height: calc(100% + 100vh - 0.75rem) !important;
+  }
+}

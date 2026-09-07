@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "dir": "forward",
+  "step": 540,
+  "positions": [
+    5461,
+    6001,
+    6541,
+    7081,
+    7621,
+    8161,
+    8627
+  ],
+  "consoleErrors": [],
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "routeStart": 61,
+  "routeEnd": 5461,
+  "docMax": 8627,
+  "lowerWorldPx": 3166,
+  "sections": {
+    "selected-systems": {
+      "top": 6621,
+      "height": 625,
+      "register": 6621
+    },
+    "how-i-build": {
+      "top": 7391,
+      "height": 644,
+      "register": 7391
+    },
+    "field-notes": {
+      "top": 8134,
+      "height": 80,
+      "register": 8134
+    },
+    "about": {
+      "top": 8358,
+      "height": 358,
+      "register": 8358
+    }
+  },
+  "footer": {
+    "top": 8780,
+    "height": 927
+  },
+  "overflowX": 0
+}

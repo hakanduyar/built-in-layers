@@ -1351,3 +1351,90 @@ Binding conditions attached to this approval — all already true of the current
   cover (a static copy of the drawing the reader had just watched move); mirroring the landing's
   4vh vertical settle (it lifted the SURFACE line off the frame through the dwell); darkening the
   recess to make the surface plane read (out of scope, and a panel at zoom-out).
+
+## D-049 — The lower world is one system: the index is a section, the method stands in it, the notes are an entry, the operator is a station, the finale is the resolved state
+
+- **Status:** V14.2 GATE C (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.2-gate-c/{before,iterations,after,metrics}/`.
+- **Context:** the owner's finding after Gate B: the route now continues through the lower world
+  (D-047), but the CONTENT itself does not — it "still feels too much like a conventional editorial
+  website placed after the spatial project world". Section by section: Selected Systems reads as a
+  dashboard table; How I Build as clean but conventional horizontal editorial rows; Field Notes is
+  too visually weak to justify a scene; About reads as a standard portfolio bio; the final CTA still
+  partly reads as a large footer with a diagram beside it. Target: SYSTEMS / UNDERNEATH → larger-
+  world context → Selected Systems → method → notes → operator reveal → resolved final state, as
+  one continuous system, without increasing page length or changing scroll physics. Use only
+  verified existing content; do not fabricate Professional Systems material; do not add fake process
+  stages; remove microtext that functions only as texture.
+- **What was measured first** (`before/stills/`, `before/motion/`, `metrics/`): at 1440×900 the
+  lower world ran from the surface return at 4561 to 7806 (3245 px): a five-row coverage table with
+  a five-name column header (≈720 px), four ruled rows (≈690 px), a heading-scale Field Notes for one
+  sentence (≈140 px), a two-column bio (≈380 px), then a footer opened by a page-wide rule with the
+  resolved map beside the question. Every section drew its own rules and grids on bare paper; none
+  of them used the strata, the stations or the descent the reader had just been shown at the cut.
+- **Decisions** (desktop, `lg` and above; the mobile composition below `lg` is the V13 gate's and is
+  byte-identical on the mobile route probe at the recorded step):
+  1. **Selected Systems is a section drawing, not a table** (`components/sections/SelectedSystems.tsx`).
+     The three strata run across the whole register as floors, named once in a gutter as every band
+     in the world is named; each of the five systems stands on the surface as a station — the same
+     glyph the route and the map give it (visited ring for the four toured, the branch's signal ring
+     for Professional Systems) — and descends from that station through the floors to the deepest
+     layer its validated record reaches (`projectDepth`), with a filled mark on every floor the record
+     documents and a hollow one on every floor it does not; provenance, verification and phase are
+     its footing under the SYSTEM line. Professional Systems, whose record documents no layer, stands
+     on the surface with no descent and hollow marks: not yet surveyed, which is what its "Not yet
+     verified" already says. Every mark is the same loader-fed fact the rows carried
+     (`[data-layer-record]` count unchanged at 15). A CSS subgrid keeps the floors level across
+     columns whatever the names wrap to. The column-header row is gone.
+  2. **How I Build is the method inside the same section** (`components/sections/HowIBuild.tsx`).
+     The site already states the movement the owner asked for, in the operator's own words, on
+     `/about` (`aboutIntro.method`: a system problem wearing an interface — four open questions —
+     worked through three layers, the last of which is the one usually underestimated). That
+     statement opens the section in the editorial serif the world reserves for the site's own voice,
+     and beneath it the three strata are drawn again as floors with the descent from the surface
+     station ending on the world's resolved corner at SYSTEM. The four principles stand beside it as
+     the commitments that hold on every floor: an ordered list on the line's weight, at the
+     column's measure — not cards, not stages (the "not sequenced" decision of V6.7 stands).
+  3. **Field Notes is compressed to one entry on the route** (`components/sections/FieldNotes.tsx`,
+     `SystemNode` `compact`). The empty state is a station on the rail and ONE line on ONE rule: the
+     heading at the register's heading scale, the sentence, the site's index, one baseline. The
+     writing is a branch off the route to an external archive and the entry carries the weight of
+     a branch. The populated state (three verified notes) is unchanged in kind.
+  4. **About is the operator revealed, in the systems' grammar** (`components/sections/AboutPreview.tsx`).
+     Classification above the name, as every project scene reads identity under its category line;
+     the name resolving as before; the two routes out under the name; and where a system carried its
+     description, the operator's statement (`aboutIntro.lead`) in the site's own serif voice — the
+     voice the finale then speaks in — with the honesty rule beneath it as the record. The accent bar
+     is gone: signal is the route's colour and is spent where the route is. One `nav` in the DOM,
+     placed by the grid.
+  5. **The finale is the resolved final state** (`components/layout/SiteFooter.tsx`,
+     `styles/globals.css`). On the homepage it stands on the lower world's own datum: the finale's
+     axis is the lower rail's x (4vw), drawn from the footer's top edge — clipped there — down to the
+     action, where the world's closed corner terminates it, so the line the reader came down ends on
+     the button; the content starts 2rem inside it as every register does. The page-wide rule that
+     opened the footer is dropped on the homepage. The caption states the route's resolved state
+     once, in the world's register — SYSTEM RESOLVED · COMPLEXITY MAPPED · OPERATOR ADDRESSABLE —
+     the map beside it being the second clause and the action the third. The core copy is
+     untouched. Off the homepage the caption, the axis and the map are hidden together and the CTA
+     stands in the shared container exactly as before; below `lg` the caption is the V9 "End of
+     route", verbatim.
+- **Voice, at one scale:** the two operator statements (How I Build, About) are set at 1.375rem
+  serif italic — above the body, below the finale's single `statement` line — so the operator's
+  voice enters the lower world once, quietly, and the finale's line is the only statement at full
+  scale.
+- **Page length:** the lower world is shorter, not longer — 3245 → 3000 px at 1440×900 (docMax
+  7806 → 7561), with no interval, approach gap or scroll constant touched.
+- **Tests:** `tests/unit/selected-systems.test.ts` (`projectDepth`: the four toured systems reach
+  SYSTEM, Professional Systems draws no descent). The existing contracts hold unchanged: the
+  fifteen layer records, "Resolved by layer and record", the fork disclosure, the Field Notes
+  links, the About links, the CTA destination, one heading per drift block, the reveal on How I
+  Build. New evidence tool: `tests/tools/lower-world-sheet.mjs`.
+- **Not changed, by the brief:** every scroll module (`lib/spatial/*` byte-identical), the project
+  scenes, evidence and grounds, the Gate B cut and surface return, `LowerRoute`, `RouteMap`, the
+  drift table and its intervals (`editorialDrift.ts`), `app/`, the mobile art direction, the
+  external repositories.
+- **Rejected:** a route map inside Selected Systems (a third copy of the drawing the reader has
+  watched twice); mapping the four principles onto the strata (a relationship the copy does not
+  state); an input → decision → implementation → validation arc (fake stages); the statements at
+  the finale's `statement` scale (they ran to eleven lines and lengthened the page); a second
+  `nav` for the About links (duplicated in the DOM).
