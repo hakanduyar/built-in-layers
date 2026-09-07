@@ -110,11 +110,11 @@ export function sceneState(signedApproach: number): SceneState {
  * clipped mid-word at full ink and an outgoing project stayed as loud as the
  * one arriving.
  *
- *   detected    approach <= -1        0.4   the station and the plane lead;
- *                                           the composition is there but dim
- *   acquired    -1 -> -0.35           -> 1  resolves to full as it enters
- *   focused     -0.35 -> +0.25        1     read
- *   released    +0.25 -> +0.9         -> 0.45  recedes as it leaves
+ *   detected    approach <= -0.66      0.45  the station and the plane lead;
+ *                                           the composition is there, muted
+ *   acquired    -0.66 -> -0.38         -> 1  resolves to full as it enters
+ *   focused     -0.38 -> +0.2          1     read
+ *   released    +0.2 -> +0.6           -> 0.34  recedes as it leaves
  *
  * The floors are deliberate and they are what keeps this a zoom-out asset
  * rather than a liability: at 50% zoom four scenes share a frame, and a scene
@@ -140,8 +140,13 @@ export function scenePresence(signedApproach: number, mobile = false): number {
   // departing scene is quiet before its successor is acquired. The far value
   // is what a neighbour reads at zoom-out: present as topology, not as a
   // competing composition.
-  if (a < -0.42) return 0.34;
-  if (a < -0.14) return 0.34 + 0.66 * ((a + 0.42) / 0.28);
+  // V14.3 Gate E (owner: "fully clear only near the middle of the
+  // viewport"): the rise is moved forward by a quarter of the approach and
+  // DETECTED sits at 0.45 rather than a third -- first visible slightly
+  // muted, fully readable after a short travel, never waiting for focus.
+  // RELEASED is unchanged: departure still sets the composition down.
+  if (a < -0.66) return 0.45;
+  if (a < -0.38) return 0.45 + 0.55 * ((a + 0.66) / 0.28);
   if (a <= 0.2) return 1;
   if (a < 0.6) return 1 - 0.66 * ((a - 0.2) / 0.4);
   return 0.34;

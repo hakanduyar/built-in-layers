@@ -55,7 +55,7 @@ export function FieldNotes({ notes }: FieldNotesProps) {
   if (verifiedNotes.length === 0) {
     return (
       <SystemNode index="07" label="Field notes" compact>
-        <Reveal>
+        <Reveal early>
           {/* One line, on one rule. The heading stays at section scale so the IA
               is unbroken; everything under it is sized for what it actually is. */}
           <div className="border-t border-ink pt-6 lg:flex lg:items-baseline lg:justify-between lg:gap-10 lg:border-line lg:pt-4">
@@ -75,7 +75,7 @@ export function FieldNotes({ notes }: FieldNotesProps) {
                 (docs/FROZEN_BOUNDARY.md §5). */}
             <nav
               aria-label="Field notes"
-              className="mt-5 shrink-0 font-mono text-mono-meta tracking-mono-meta uppercase lg:mt-0"
+              className="mt-5 shrink-0 font-mono text-mono-meta tracking-mono-meta uppercase lg:mt-0 lg:text-mono-label lg:tracking-mono-label"
             >
               <TextLink href="/notes" className="max-lg:inline-block max-lg:touch-link">
                 See all notes

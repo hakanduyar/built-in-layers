@@ -2787,3 +2787,35 @@ Scroll modules byte-identical; first paint, isolated wheel impulses and the mobi
 reproduce the records; the Gate B cover and timing untouched (`SceneBreak`'s hairline token only);
 the Gate C lower world untouched but for the branch station's ring colour. Details:
 `.ai/handoffs/V14_3_GATE_D_RETURN.md` §4.
+
+## 43. V14.3 Gate E — readable on arrival (2026-09-07)
+
+`feature/owner-visual-acceptance-v14` only, on the Gate D checkpoint `5bbccb6` / `b4921e1`. Not
+merged to `main`. Scope by the owner's brief: earlier clarity, controlled breathing room in the
+lower world, microtext and secondary contrast — nothing else. Decision: D-051. Evidence:
+`docs/review/v14.3-gate-e/`.
+
+### 43.1 Presence, at `lg`
+
+| Surface | Before | After |
+|---|---|---|
+| a project scene's composition | detected 0.34; acquired −0.42 → −0.14 | detected 0.45; acquired −0.66 → −0.38; release unchanged |
+| the acquisition frame's brackets and facts | peak at −0.12; facts by −0.1 | peak at −0.38; facts by −0.36 |
+| a lower section's reveal | a fifth of the element visible | the element's top 10% inside the viewport |
+| the register's marks | 0.28 → 1 over 4–34% of the passage, peak 0.65 | 0.35 → 1 over 2–16%, peak 0.85 |
+| About's name | 0.55 → 1 over 10–75% of its passage | 0.6 → 1 over 6–30% |
+
+First visible slightly muted, fully readable after a short travel, never waiting for focus.
+Below `lg` every curve is the V13 composition's.
+
+### 43.2 Intervals, at `lg`
+
+Major beats (Selected Systems, How I Build, About) open with 128px above the register; Field Notes
+with 56; the finale with 32px more above it. The lower world is 3194px at 1440×900 — between the
+3000 of Gate C and the 3245 the owner found long.
+
+### 43.3 Microtext
+
+Removed: the state word beside every register (desktop). Raised to label size or ink: Selected
+Systems' classifications and verification line, Field Notes' index link, the register's marks.
+Unchanged: strata names, indices, captions — muted at label size (7.2:1).

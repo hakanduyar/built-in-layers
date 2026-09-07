@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useEffect } from "react";
+import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import { useIsDesktop } from "@/lib/utils/useIsDesktop";
 import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 
 // Spatial Portfolio V6.7 completion pass (feature/spatial-portfolio-v5, not merged
@@ -61,11 +63,16 @@ export type SystemNodeProps = {
    * it at `lg`. The mobile interval is the V13 gate's and is untouched.
    */
   compact?: boolean;
+  /**
+   * V14.3 Gate E: a major beat (the index, the method, the operator) opens
+   * with more paper above it at `lg` -- controlled breathing room between
+   * the lower world's sections, not the old long travel. Mobile untouched.
+   */
+  major?: boolean;
 };
 
-/** The system's three words for how well it currently knows a surface. Shared
- *  verbatim with the spatial world's destination plates. */
-const STATE: string[] = ["Detected", "Acquired", "Resolved"];
+/** The mobile register's three state words (V6.7), kept below `lg` only. */
+const MOBILE_STATE: string[] = ["Detected", "Acquired", "Resolved"];
 
 export function SystemNode({
   index,
@@ -73,6 +80,7 @@ export function SystemNode({
   children,
   align = "left",
   compact = false,
+  major = false,
 }: SystemNodeProps) {
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useSettledReducedMotion();
@@ -81,20 +89,42 @@ export function SystemNode({
   // section is.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
-  // Acquisition rises as the section enters and holds once it owns the frame. It
-  // does NOT fall away again on exit: a destination the system has resolved stays
-  // resolved -- reverting would say the page forgot, which is not true and reads
-  // as flicker on the way past.
+  // V14.3 Gate E (owner: "faded for too long"): presence is full by 16% of
+  // the section's passage -- roughly 250px of travel after the register
+  // enters at 1440x900 -- rather than by a third, and it holds; a destination
+  // the system has resolved stays resolved. The register's marks peak at a
+  // readable weight instead of a texture one. The state word (DETECTED /
+  // ACQUIRED / RESOLVED) is gone: with the plates it echoed long deleted and
+  // the rail's stations already filling on acquisition, it was microtext
+  // that stated nothing the reader could use.
+  //
+  // Desktop only. Below `lg` the register keeps the V13 composition exactly:
+  // the V6.7 curve, the V6.7 weights and the state word. The breakpoint is a
+  // motion value so every derived opacity recomputes when it settles.
+  const desktop = useIsDesktop();
+  const mode = useMotionValue(0);
+  useEffect(() => {
+    mode.set(desktop ? 1 : 0);
+  }, [desktop, mode]);
+  const ramp = (p: number, from: number, to: number, lo: number, hi: number) =>
+    lo + (hi - lo) * Math.min(1, Math.max(0, (p - from) / (to - from)));
+  const presence = useTransform([scrollYProgress, mode], ([p, d]: number[]) =>
+    d ? ramp(p!, 0.02, 0.16, 0.35, 1) : ramp(p!, 0.04, 0.34, 0.28, 1),
+  );
+  // The mobile register's acquisition state, exactly as V6.7 wrote it.
   const acquired = useTransform(scrollYProgress, [0.06, 0.3, 0.52], [0, 1, 2]);
   const stateLabel = useTransform<number, string>(
     acquired,
-    (v) => STATE[Math.min(2, Math.max(0, Math.round(v)))]!,
+    (v) => MOBILE_STATE[Math.min(2, Math.max(0, Math.round(v)))]!,
   );
-  const presence = useTransform(scrollYProgress, [0.04, 0.34], [0.28, 1]);
   // Hoisted: every derived opacity is a hook, so none of them may live inside a
   // JSX expression or behind a conditional.
-  const armOpacity = useTransform(presence, (v) => 0.2 + v * 0.45);
-  const insetOpacity = useTransform(presence, (v) => 0.12 + v * 0.28);
+  const armOpacity = useTransform([presence, mode], ([v, d]: number[]) =>
+    d ? 0.25 + v! * 0.6 : 0.2 + v! * 0.45,
+  );
+  const insetOpacity = useTransform([presence, mode], ([v, d]: number[]) =>
+    d ? 0.15 + v! * 0.4 : 0.12 + v! * 0.28,
+  );
   const stateOpacity = useTransform(presence, (v) => 0.35 + v * 0.45);
 
   const edge = align === "right" ? "right-0" : "left-0";
@@ -106,7 +136,10 @@ export function SystemNode({
     // opened with 128px of paper on top of their own approach interval; at the
     // measured ceiling that was ~1s of the reader's time per section spent on
     // nothing. The mobile value is the V13 gate's and is untouched.
-    <section ref={ref} className={`relative mt-16 ${compact ? "lg:mt-14" : "lg:mt-20"}`}>
+    <section
+      ref={ref}
+      className={`relative mt-16 ${compact ? "lg:mt-14" : major ? "lg:mt-32" : "lg:mt-20"}`}
+    >
       {/* V14.1 (owner §5): THE SPINE IS GONE FROM HERE. Each section drew its
           own full-height rule, so four sections were four documents each
           re-opening the same chrome. The lower page now has ONE rail -- the
@@ -126,16 +159,16 @@ export function SystemNode({
         {align === "left" && (
           <motion.span
             className="absolute right-full top-0 hidden h-px bg-ink lg:block"
-            style={{ width: "var(--drift-arm, 0px)", opacity: reduceMotion ? 0.45 : armOpacity }}
+            style={{ width: "var(--drift-arm, 0px)", opacity: reduceMotion ? 0.85 : armOpacity }}
           />
         )}
         <motion.span
           className={`absolute top-0 block h-px w-10 bg-ink ${edge}`}
-          style={{ opacity: reduceMotion ? 0.5 : armOpacity }}
+          style={{ opacity: reduceMotion ? (desktop ? 0.85 : 0.5) : armOpacity }}
         />
         <motion.span
           className={`absolute top-1.5 block h-px w-3 bg-ink ${markInset}`}
-          style={{ opacity: reduceMotion ? 0.3 : insetOpacity }}
+          style={{ opacity: reduceMotion ? (desktop ? 0.55 : 0.3) : insetOpacity }}
         />
         <div className="flex items-baseline gap-4 pt-4">
           <span
@@ -147,7 +180,7 @@ export function SystemNode({
           {!reduceMotion && (
             <motion.span
               data-node-state
-              className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+              className="font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:hidden"
               style={{ opacity: stateOpacity }}
             >
               {stateLabel}

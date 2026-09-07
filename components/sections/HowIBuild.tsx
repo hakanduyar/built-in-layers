@@ -44,7 +44,7 @@ import {
 // cards, not stages. The mobile composition below `lg` is the V13 gate's.
 export function HowIBuild() {
   return (
-    <SystemNode index={sectionIndex.howIBuild} label={howIBuildHeading}>
+    <SystemNode index={sectionIndex.howIBuild} label={howIBuildHeading} major>
       <h2 className="mt-5 font-display text-display-l uppercase text-ink">{howIBuildHeading}</h2>
 
       <div className="lg:mt-10 lg:grid lg:grid-cols-12 lg:gap-10">
@@ -99,7 +99,7 @@ export function HowIBuild() {
           </div>
         </div>
 
-        <Reveal className="mt-8 lg:col-span-6 lg:mt-0">
+        <Reveal early className="mt-8 lg:col-span-6 lg:mt-0">
           {/* V14 (owner findings D, F) -- FOUR POSITIONS, ONE FRAME.
               The V6.8-V13 form hung the four principles off one vertical spine
               as four full-width rows: measured on the baseline at 1440x900 the

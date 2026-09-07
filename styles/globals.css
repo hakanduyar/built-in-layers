@@ -326,3 +326,12 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
     display: none;
   }
 }
+
+@media (min-width: 1024px) {
+  /* V14.3 Gate E (D-051): a modest interval between the operator's station and
+     the finale on the homepage -- the last beat opens with room, not the old
+     long travel. Off the homepage the footer sits as before. */
+  body:has(section[aria-label="Spatial system tour"]) .spatial-footer {
+    margin-top: 2rem;
+  }
+}

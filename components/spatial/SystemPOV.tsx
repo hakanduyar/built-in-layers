@@ -85,6 +85,7 @@ export function SystemPOV({
           state={state}
           animated={animated}
           resolved={resolved}
+          compact={compact}
         />
       ))}
       {/* V14 (owner finding A) REMOVED THE GRADUATED SCALE that sat on the
@@ -155,11 +156,13 @@ function Bracket({
   state,
   animated,
   resolved,
+  compact,
 }: {
   corner: Corner;
   state: MotionValue<number>;
   animated: boolean;
   resolved: boolean;
+  compact: boolean;
 }) {
   // Resolved marks are a shade more present and a shade larger after the
   // reposition (§25): the same grammar held more strictly, not a new theme.
@@ -168,7 +171,11 @@ function Bracket({
 
   const opacity = useTransform(
     state,
-    [-1, -0.55, -0.12, 0.12, corner.trailing ? 0.72 : 0.5, 1],
+    // V14.3 Gate E: on desktop the brackets are at peak by -0.38, with the
+    // composition; the compact (mobile) frame keeps the V14.1 timing.
+    compact
+      ? [-1, -0.55, -0.12, 0.12, corner.trailing ? 0.72 : 0.5, 1]
+      : [-1, -0.7, -0.38, 0.12, corner.trailing ? 0.72 : 0.5, 1],
     [0, 0.14, peak, peak, 0.1, 0],
   );
   const scale = useTransform(state, [-1, 0, 1], [0.55, 1, 0.28]);
@@ -209,8 +216,14 @@ function Cluster({
   compact: boolean;
 }) {
   const indexOpacity = useTransform(state, [-0.7, -0.32, 0.34, 0.68], [0, 1, 1, 0]);
-  const rowsOpacity = useTransform(state, [-0.42, -0.1, 0.16, 0.4], [0, 1, 1, 0]);
-  const slide = useTransform(state, [-0.42, 0], [8, 0]);
+  // V14.3 Gate E: on desktop the two facts are legible by -0.36, as the
+  // composition is; the compact (mobile) cluster keeps the V14.1 timing.
+  const rowsOpacity = useTransform(
+    state,
+    compact ? [-0.42, -0.1, 0.16, 0.4] : [-0.62, -0.36, 0.16, 0.4],
+    [0, 1, 1, 0],
+  );
+  const slide = useTransform(state, compact ? [-0.42, 0] : [-0.62, -0.2], [8, 0]);
 
   // V14.1 (owner §6, scene hierarchy) -- TWO VOICES, TWO CORNERS. Through V14
   // this cluster stood in the composition's own column, eight pixels above

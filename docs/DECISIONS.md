@@ -1498,3 +1498,55 @@ Binding conditions attached to this approval — all already true of the current
 - **Rejected:** darkening route two to a second ink tone (a second accent by another name); keeping
   the SYSTEMS map in ink (the finding was the drawing, not its colour); keeping the affordance's
   corner as "the bounded thing" (a fourth meaning for one glyph).
+
+## D-051 — Readable on arrival: earlier presence, controlled breathing room, information at a readable weight
+
+- **Status:** V14.3 GATE E (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.3-gate-e/{before,after,metrics}/`.
+- **Context:** the owner's three findings on the Gate D checkpoint. Sections remain faded for too
+  long and often become fully clear only near the middle of the viewport — desired: first visible
+  slightly muted, fully readable after a short travel, never waiting for centre or focus; departure
+  may still resolve or fade. The lower world (Selected Systems → How I Build → Field Notes → About →
+  CTA) feels slightly too compressed — modest, intentional room, major beats more, minor beats
+  compact, not the old long travel. Microtext and secondary contrast: information readable at
+  desktop scale, texture reduced or removed, nothing washed-out, nothing heavy. Preserved: scroll
+  physics and discrete-wheel behaviour, first paint, the Gate B transition, the Gate C structure,
+  the Gate D rules, evidence, the mobile art direction.
+- **What was measured first** (`before/metrics/entry.txt`, at 1440×900): Selected Systems' index
+  drawing at opacity 0 until the section's top reached 50% of the viewport (the reveal fired on a
+  fifth of a 400px element); How I Build's principles at 0 until 65%; the register's marks ramping
+  from 0.38 to a 0.65 peak over a third of the section's passage; About's name at 0.55 on entry and
+  1.0 only with the section's top at 30%; a project scene's composition at 0.34 with a third of it
+  in frame, full only near focus (`before/motion/1440--software-factory--to--kivilcim.png`). Gaps:
+  134 / 92 / 134 / 64 px between the lower sections and the finale; a state word (DETECTED /
+  ACQUIRED / RESOLVED) beside every register at 0.5–0.8 opacity; classifications and verification
+  lines at 12px muted.
+- **Decisions** (desktop, `lg` and above; every curve below `lg` is the V13 composition's, verified
+  by the mobile route probe):
+  1. **Earlier presence, same physics.** The project scene's composition is detected at 0.45 and
+     acquired between approach −0.66 and −0.38 instead of −0.42 to −0.14 (`lib/spatial/systemPov.ts`
+     `scenePresence`, desktop branch); the acquisition frame's brackets and its two facts arrive on
+     the same earlier window (`SystemPOV`). In the lower world the reveal fires as soon as an
+     element's top is 10% of the viewport inside it (`Reveal` `early`), the register's presence is
+     full by 16% of the section's passage rather than a third (`SystemNode`), and About's name is
+     resolved by 30% of its passage rather than 75%. Release curves are unchanged: departure still
+     sets a composition down. No scroll constant, route distance or velocity moved.
+  2. **Controlled breathing room.** The three major beats (Selected Systems, How I Build, About)
+     open with 128px above the register at `lg` instead of 80 (`SystemNode` `major`); Field Notes
+     keeps its compact 56; the finale gains 32px above it on the homepage. Lower world 3000 → 3194 px
+     at 1440×900 — under the 3245 the owner found long before Gate C.
+  3. **Information at a readable weight; texture removed.** The register's marks peak at 0.85 / 0.55
+     instead of 0.65 / 0.4. The state word beside every register is removed on desktop — with the
+     plates it echoed long deleted and the rail's stations already filling on acquisition, it stated
+     nothing the reader could use. Selected Systems' classifications are label size and its
+     verification line is ink; Field Notes' index link is label size. Nothing else was enlarged or
+     darkened: the strata names, the indices and the captions stay muted at label size, which
+     measures 7.2:1.
+- **Tests:** the unit suite unchanged (`spatial-system-pov` 23/23 on the new curve); every homepage
+  contract holds (the reveal on How I Build, the layer records, the links).
+- **Not changed, by the brief:** every scroll module, `SceneBreak`, the surface return, the route
+  geometry, the project scenes' compositions and evidence, SYSTEMS, the CTA's composition, the IA,
+  `editorialDrift.ts` and its approach intervals, mobile.
+- **Rejected:** changing the reveal's threshold globally (the case studies and the Work index keep
+  §13); shortening the release (departure is the owner's to keep); enlarging every muted line to
+  ink (heavy everywhere is the opposite failure).

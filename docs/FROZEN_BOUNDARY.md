@@ -295,3 +295,24 @@ visible orange, generic node-network graphics; nothing else). D-050 and `docs/DE
 
 Untouched, byte for byte, against `2eb06c1`: `lib/spatial/*`, `SpatialCamera.tsx`, `LowerRoute.tsx`,
 `SystemNode.tsx`, `ProjectPlane.tsx`, every case-study layout, `app/` but for the OG rule's colour.
+
+### 6.5 V14.3 Gate E — readable on arrival (2026-09-07)
+
+The reopening continued under the owner's V14.3 Gate E brief (earlier clarity, breathing room,
+microtext; nothing else). D-051 and `docs/DESIGN_SYSTEM.md` §43 record what moved and why; the
+evidence is `docs/review/v14.3-gate-e/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `lib/spatial/systemPov.ts` (`scenePresence`, desktop branch) | acquired earlier, detected less muted; release unchanged | approach sheets at 1440 and 1920; `spatial-system-pov` unit 23/23; mobile branch untouched |
+| `components/spatial/SystemPOV.tsx` | brackets and facts on the earlier window at `lg`; the compact frame unchanged | approach sheets |
+| `components/ui/motion/Reveal.tsx` | an `early` option, desktop-only, taken by the four lower sections | entry probe (`metrics/entry.txt`); the reveal contract |
+| `components/spatial/SystemNode.tsx` | desktop presence early and at a readable weight, the state word gone at `lg`, a `major` interval; the mobile register byte-for-byte | entry probe; mobile route probe identical |
+| `components/sections/{SelectedSystems,HowIBuild,FieldNotes,AboutPreview}.tsx` | early reveals, major intervals, label-size classifications and index link, ink verification (`lg:` only); About's desktop resolve curve | stills; lower-world sheets both ways; page-length JSON |
+| `lib/utils/useIsDesktop.ts` (new) | the breakpoint, settled after mount, so timing changes never reach the mobile composition | mobile route probe identical |
+| `styles/globals.css` | 2rem above the finale on the homepage at `lg` | page-length JSON |
+
+Untouched, byte for byte, against `b4921e1`: `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
+planeChoreography,projectGround,editorialDrift}.ts`, `SceneBreak.tsx`, `SpatialCamera.tsx`,
+`SpatialExperience.tsx`, `WorldGrammar.tsx`, `RouteMap.tsx`, `ProjectPlane.tsx`, `LowerRoute.tsx`,
+every project scene, the case-study system, `app/`.

@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useEffect } from "react";
+import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import { useIsDesktop } from "@/lib/utils/useIsDesktop";
 import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { TextLink } from "@/components/ui/TextLink";
@@ -53,15 +55,29 @@ export function AboutPreview() {
   // never reverts. Quantised so the text relayouts a handful of times, not per
   // frame; reduced motion renders the resolved state statically.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end 0.4"] });
-  const resolve = useTransform(scrollYProgress, [0.1, 0.75], [0, 1]);
+  // V14.3 Gate E: on desktop, resolved by 30% of the passage, not 75% -- the
+  // name is set and fully present a short travel after it enters, and stays
+  // so. Below `lg` the V6.8 curve stands exactly.
+  const desktop = useIsDesktop();
+  const mode = useMotionValue(0);
+  useEffect(() => {
+    mode.set(desktop ? 1 : 0);
+  }, [desktop, mode]);
+  const resolve = useTransform([scrollYProgress, mode], ([p, d]: number[]) => {
+    const [from, to] = d ? [0.06, 0.3] : [0.1, 0.75];
+    return Math.min(1, Math.max(0, (p! - from) / (to - from)));
+  });
   const tracking = useTransform(resolve, (v) => {
     const q = Math.round(Math.min(1, Math.max(0, v)) * 24) / 24;
     return `${(0.09 - 0.125 * q).toFixed(4)}em`;
   });
-  const settle = useTransform(resolve, [0, 1], [0.55, 1]);
+  const settle = useTransform(
+    [resolve, mode],
+    ([v, d]: number[]) => (d ? 0.6 : 0.55) + (d ? 0.4 : 0.45) * v!,
+  );
 
   return (
-    <SystemNode index="08" label="About">
+    <SystemNode index="08" label="About" major>
       <h2 className="sr-only">About</h2>
 
       {/* FINAL REMEDIATION: the earlier build's comment claimed the introduction
@@ -71,7 +87,7 @@ export function AboutPreview() {
           design intent stated: name resolving left, introduction on the right,
           hung at the name's cap line. */}
       <div className="lg:mt-5 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10">
-        <Reveal className="lg:col-span-6 lg:row-start-1">
+        <Reveal early className="lg:col-span-6 lg:row-start-1">
           {/* V14.2 Gate C: the classification line stands ABOVE the name at
               `lg`, as it does above every system's title in the world; below
               `lg` it stays under the name, the V13 composition. */}

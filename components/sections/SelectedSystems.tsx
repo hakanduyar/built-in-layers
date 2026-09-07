@@ -89,7 +89,7 @@ export function projectDepth(project: ProjectFrontmatter): number {
  */
 export function SelectedSystems({ projects }: SelectedSystemsProps) {
   return (
-    <SystemNode index={sectionIndex.selectedSystems} label={selectedSystemsHeading}>
+    <SystemNode index={sectionIndex.selectedSystems} label={selectedSystemsHeading} major>
       {/* V13 (Fable gate, finding E): the title row shares the register's own
           12-column grid AND its gap, so the column label below lands exactly on
           the Record column it names. Before, it started at column 9 of a
@@ -115,7 +115,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
           system that continues on the Work index carries the branch's hollow
           ring, exactly as the terminus map above drew it. Same five stops,
           same five symbols. */}
-      <Reveal className="mt-10 lg:mt-12">
+      <Reveal early className="mt-10 lg:mt-12">
         <div className="border-y border-ink lg:border-y-0">
           {/* At `lg` the list is a five-column section drawing: one subgrid
               row for the station and its name, one for the strata, one for
@@ -186,7 +186,9 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                           </span>
                         </Link>
                       </h3>
-                      <p className="mt-1 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted">
+                      {/* V14.3 Gate E: the classification is information, at
+                          label size on the desktop. Mobile keeps meta. */}
+                      <p className="mt-1 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:text-mono-label lg:tracking-mono-label">
                         {project.categoryLabel}
                       </p>
                     </div>
@@ -270,7 +272,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                         so the verification and phase lines take the meta size
                         and each phase stands on its own line -- three short
                         lines under the SYSTEM floor rather than five. */}
-                    <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+                    <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:text-ink">
                       {VERIFICATION_LABEL[project.verificationStatus]}
                       {project.phase ? (
                         <>
