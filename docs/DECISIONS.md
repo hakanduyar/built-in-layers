@@ -1550,3 +1550,64 @@ Binding conditions attached to this approval — all already true of the current
 - **Rejected:** changing the reveal's threshold globally (the case studies and the Work index keep
   §13); shortening the release (departure is the owner's to keep); enlarging every muted line to
   ink (heavy everywhere is the opposite failure).
+
+## D-052 — SYSTEMS as a decisive black state; the operator reveal owns its frame; registers instead of maps
+
+- **Status:** V14.4 OWNER VISUAL CORRECTION (Fable-only visual gate) — pending owner visual
+  acceptance. **Not** in force on `main`. Evidence: `docs/review/v14.4-owner-correction/`.
+- **Context:** the owner rejected the Gate B–E state of three systems. SYSTEMS: fully clear only
+  near the viewport centre; the pale diagonal transition and the weak, arbitrary shapes beneath and
+  around the word rejected; the stronger black transition of the older accepted direction wanted —
+  SYSTEMS → decisive black state → the underlying system revealed → UNDERNEATH, intentional in both
+  directions, without touching scroll physics. The lower world: still too dense and tiring; more
+  room between major beats, minor beats compact, no huge dead distances; ABOUT / HAKAN DUYAR as a
+  clean operator reveal that dominates its viewport with the previous section gone and the CTA not
+  yet competing; simplify where overloaded. Person of Interest / The Machine grammar through
+  structure, not decoration; every remaining line, dot or bracket must encode a real relationship
+  or state — no semantic meaning, remove it — especially around SYSTEMS, the larger-map / Work index
+  areas and the finale.
+- **What was measured first** (`before/motion/`, `before/stills/`, 1440×900): SYSTEMS at 0.6–0.75
+  presence through two of the eight approach frames, full only at the seventh; the transition a
+  pale plane with a diagonal seam, a 2.5% recess and three strata rising under the word, two cut
+  strokes floating mid-frame; the terminus map and the finale map as route polylines with nine
+  dots, a dotted branch and a ring; the lower world's gaps 128 / 181 / 93 / 181 / 96 px with the
+  finale's caption in the same frame as the operator's name.
+- **Decisions:**
+  1. **SYSTEMS stands clean and is read whole before the centre.** The word's presence is never
+     below 0.9 and is full a tenth into its approach (`systemsWordPresence`, desktop), held until
+     the black state has taken the frame; the project scenes keep the Gate E curve. On desktop the
+     surface behind the word is no longer opened: the diagonal seam, the recess and the revealed
+     strata (`SystemsWord` `SurfaceReveal`) are removed; the mobile compact cut is untouched.
+  2. **The black state.** The cover (`SceneBreak`, `surfaceCover.ts`) is the ink token, arriving by
+     opacity within the first 40% of the closing window and leaving within the last 40% of the
+     reveal — a state change with a clear edge in time — on the same protected timing and the same
+     guaranteed dwell. On the black it carries the underlying system in paper: the three strata
+     with their names at label size, and the descent to SYSTEM. Reverse is the same event backwards
+     by construction.
+  3. **Nothing beneath SYSTEMS.** The world's strata and recess exist only from the cut on
+     (`WorldGrammar` `Strata`, stepped under the opaque cover): before it the surface is whole. The
+     cut's two strokes and the landing corner (`StateChanges`) are removed; the black state is the
+     boundary and the route-two registration tick marks the landing.
+  4. **Registers, not maps.** The terminus map at the handoff is a route register — ROUTE 01, the
+     four stations by real title in the route's order, "4 STATIONS · TRACKED", the branch by real
+     name — drawn where the map stood so the camera's last move is onto it. The finale's map is the
+     resolved register: the same four stations, the branch, the lower world's four stations, under
+     RESOLVED. `RouteMap.tsx` is deleted. Every line in the world now encodes a route, a station, a
+     state, a boundary, a registration, a classification, a stratum or a handoff.
+  5. **The lower world's rhythm.** Major beats open with 160px above them (`SystemNode` `major`);
+     Field Notes keeps 56; the finale gains 80px above it. About is a stage (`SystemNode` `stage`):
+     at least 64vh tall at `lg`, with the name at 7vw — at its primary position the previous
+     section is above the frame and the finale below it. How I Build's second floors drawing is
+     removed (the index above draws the strata; the statement names them). Lower world
+     3194 → ~3600 px at 1440×900: more than Gate E, calmer than the pre-Gate-C page it replaces,
+     and every scroll constant untouched.
+- **Tests:** the SYSTEMS contracts restated — the black state exists under default motion; the
+  cover is ink, arrives by opacity, carries three strata and one descent, is opaque at the cut; no
+  desktop cut, one compact cut below `lg`; the V6.6 seam-bearing and opening-monotonicity tests are
+  skipped with the reason recorded (no desktop element left to hold them against). Unit:
+  `surface-cover` 5/5 on the steeper curve, `spatial-system-pov` 23/23.
+- **Not changed, by the brief:** every scroll module, the guarded break timing, first paint, project
+  content and order, the no-orange palette, mobile.
+- **Rejected:** raked ink rails (the "glitch" reading the owner gave them); a dark-grey cover (a
+  second tone, not a state); a typographic register that invents states per station ("tracked"
+  is said once, of the route the reader has just travelled).

@@ -246,10 +246,15 @@ test.describe("Spatial V4: atmosphere", () => {
   // V6.5: the same contract -- enhanced-only atmosphere is genuinely present --
   // asserted against the current mechanism. The structural plane behind SYSTEMS is
   // the element that only exists under default motion.
-  test("the SYSTEMS structural plane exists under default motion", async ({ page }) => {
+  // V14.4: on desktop the surface behind SYSTEMS is no longer cut open; the
+  // enhanced-only mechanism is the black state cover that follows the word.
+  test("the SYSTEMS black state exists under default motion, and the word stands clean", async ({
+    page,
+  }) => {
     await page.goto("/");
     await page.locator(`${TOUR} .sticky`).waitFor({ state: "attached" });
-    await expect(page.locator("[data-systems-cut]")).toHaveCount(1);
+    await expect(page.locator(`${TOUR} [data-surface-cover]`)).toHaveCount(1);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
     // ...and the word itself is a single intact layer, in both trees.
     await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
   });
@@ -368,14 +373,18 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
     expect(coversAtBest).toBe(true);
   });
 
-  test("the cover is the world's own ground, not a wipe: tone-matched, and it fades", async ({
+  // V14.4: the cover is the BLACK STATE -- the ink token -- carrying the
+  // underlying system in paper. Still by opacity, still no transform and no
+  // clip, still three strata and one descent; the tone it is matched to is
+  // the word's ink, not the frame's paper.
+  test("the cover is the black state, not a wipe: ink, and it arrives by opacity", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const { start, end } = await measureRoute(page, 900);
 
-    // Sampled 40% of the way through the closing, as the rail-convergence
+    // Sampled 20% of the way through the closing (V14.4), as the rail-convergence
     // contract this replaces was: the plane must be mid-arrival there --
     // neither absent nor already home -- and it must arrive by opacity alone.
     // No transform, no clip-path: the cover is a change of material in the
@@ -383,16 +392,19 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
     // (the recess tint the world already draws sits on it), and the section
     // it carries is the world's three strata and one descent -- nothing
     // decorative.
-    const closing = BREAK_COVER_START + (BREAK_CUT - BREAK_COVER_START) * 0.4;
+    // V14.4: the black state is decisive -- home within the first 40% of the
+    // closing -- so mid-arrival is sampled at 20%.
+    const closing = BREAK_COVER_START + (BREAK_CUT - BREAK_COVER_START) * 0.2;
     await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * closing);
     const read = () =>
       page.evaluate((selector) => {
         const el = document.querySelector(`${selector} [data-surface-cover]`) as HTMLElement | null;
         if (!el) return null;
         const style = getComputedStyle(el);
+        // The ink token, read off the word itself (text-ink).
         const paper = getComputedStyle(
-          document.querySelector(`${selector} .sticky`)!,
-        ).backgroundColor;
+          document.querySelector('[data-systems-layer="surface"]')!,
+        ).color;
         // The camera's own transform is read alongside: the settle poll below
         // waits on IT, not on the opacity, because an opacity of exactly 0 for
         // the whole approach is identical read after read and would end the

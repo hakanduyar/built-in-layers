@@ -8,7 +8,7 @@ import {
   workIndexLabel,
 } from "@/data/copy";
 import { contactUrl, siteName, siteOwner, socialLinks } from "@/data/site";
-import { RouteMap } from "@/components/spatial/RouteMap";
+import { getPublishedProjects } from "@/lib/content/work";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { TextLink } from "@/components/ui/TextLink";
@@ -85,6 +85,8 @@ import { TextLink } from "@/components/ui/TextLink";
  * appended. Off the homepage the caption and the axis are hidden with the
  * map, and the CTA stands alone in the shared container as before.
  */
+/** V14.4: the route's four stations, in the route's own order; titles come
+ *  from the same loader every other index reads. */
 const FINALE_STATIONS = [
   { id: "software-factory", index: "01" },
   { id: "kivilcim", index: "02" },
@@ -103,6 +105,15 @@ const FINALE_TAIL = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  // V14.4 (owner: the finale's map was a connected-dot graphic -- no semantic
+  // meaning beyond what its rows state; remove it) -- THE RESOLVED STATE IS A
+  // REGISTER. The same facts the map drew, filed: the four stations tracked in
+  // order, the branch to the Work index, the lower world's four stations.
+  // Real titles from the loader; no line, no dot, no diagram.
+  const titles = new Map(getPublishedProjects().map((project) => [project.slug, project.title]));
+  const branch = getPublishedProjects()
+    .filter((project) => !FINALE_STATIONS.some((station) => station.id === project.slug))
+    .map((project) => project.title);
 
   return (
     <footer className="spatial-footer relative overflow-clip border-t border-line">
@@ -174,16 +185,36 @@ export function SiteFooter() {
               would be decoration. */}
           <div
             aria-hidden="true"
-            className="finale-map mt-16 hidden lg:col-span-5 lg:col-start-8 lg:mt-3 lg:block"
+            data-finale-register="true"
+            className="finale-map mt-16 hidden font-mono text-mono-label tracking-mono-label uppercase lg:col-span-4 lg:col-start-9 lg:mt-3 lg:block"
           >
-            <RouteMap
-              state="resolved"
-              stations={FINALE_STATIONS}
-              branch={[workIndexLabel]}
-              tail={FINALE_TAIL}
-              labels
-              className="w-full"
-            />
+            <div className="flex items-baseline justify-between border-t border-ink pb-2 pt-2 text-ink-muted">
+              <span>Route 01</span>
+              <span>Resolved</span>
+            </div>
+            {FINALE_STATIONS.map((station) => (
+              <div
+                key={station.id}
+                className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
+              >
+                <span className="text-ink-muted">{station.index}</span>
+                <span>{titles.get(station.id) ?? station.id}</span>
+              </div>
+            ))}
+            <div className="flex items-baseline gap-4 border-t border-ink pb-2 pt-2 text-ink-muted">
+              <span>Branch</span>
+              <span>{[...branch, workIndexLabel].join(" · ")}</span>
+            </div>
+            {FINALE_TAIL.map((stop) => (
+              <div
+                key={stop.index}
+                className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
+              >
+                <span className="text-ink-muted">{stop.index}</span>
+                <span>{stop.label}</span>
+              </div>
+            ))}
+            <div className="border-t border-ink" />
           </div>
         </div>
       </Container>

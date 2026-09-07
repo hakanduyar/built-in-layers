@@ -153,6 +153,26 @@ export function scenePresence(signedApproach: number, mobile = false): number {
 }
 
 /**
+ * V14.4 (owner: "SYSTEMS becomes fully clear EARLIER -- when it reaches the
+ * viewport centre it must already have been fully readable for some
+ * distance"). The word is the one composition that is a single state
+ * change rather than a scene to be read, so it is detected brighter and
+ * acquired a full step ahead of the project scenes: 0.6 while far, full by
+ * approach -0.55 (a scene reaches full at -0.38), then the same release.
+ */
+export function systemsWordPresence(signedApproach: number, mobile = false): number {
+  if (mobile) return scenePresence(signedApproach, mobile);
+  const a = Math.max(-1, Math.min(1, signedApproach));
+  // Never below 0.9 and full a tenth into the approach: the word is read
+  // whole well before the frame centres on it.
+  if (a < -0.9) return 0.9 + 0.1 * ((a + 1) / 0.1);
+  // Held at full until the black state has already taken the frame: the
+  // word never fades into grey ahead of the cover -- the cover is the cut.
+  if (a <= 0.55) return 1;
+  return scenePresence(a, mobile);
+}
+
+/**
  * V6.4 renamed the middle state `collision` -> `occluded`, and moved where it
  * begins. It used to mean "the camera is being held at the wall"; it now means
  * "the surfaces are closing over the world", which is both what actually happens

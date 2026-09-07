@@ -112,13 +112,16 @@ const ROUTE_PATH = (() => {
 export function SystemsWord({ word, opening, active, wide = false }: SystemsWordProps) {
   return (
     <div className="relative inline-block text-[clamp(2.5rem,16vw,15rem)]" aria-hidden="true">
-      {opening !== null &&
-        active !== null &&
-        (wide ? (
-          <SurfaceReveal opening={opening} active={active} />
-        ) : (
-          <SurfaceCut opening={opening} active={active} />
-        ))}
+      {/* V14.4 (owner): on desktop the surface is no longer opened. The word
+          stands clean and fully readable, and the state change is the black
+          cover that follows (SceneBreak) -- SYSTEMS, a decisive black state,
+          the underlying system revealed on it, UNDERNEATH. The pale diagonal
+          seam, the recess and the strata that stood beneath the word were
+          the "weak, arbitrary shapes" the owner rejected. Mobile keeps the
+          V6.6 compact cut the V13 gate froze. */}
+      {opening !== null && active !== null && !wide && (
+        <SurfaceCut opening={opening} active={active} />
+      )}
       {/* THE SURFACE. A plain span of ink. No mask, no clip, no filter, no
           transform, no opacity -- in any state, at any progress. */}
       <span data-systems-layer="surface" className={`${WORD_CLASS} relative text-ink`}>
@@ -150,104 +153,9 @@ function useSeam(opening: MotionValue<number>, active: MotionValue<number>) {
   return { y, counter, structure, edge, visibility };
 }
 
-/**
- * V14 -- THE FRAME-SPANNING REVEAL (desktop).
- *
- *   field    unrotated, centred on the word, 240vw x 200vh. A coordinate space
- *            large enough that no corner is ever in frame.
- *   seam     a zero-height strip rotated to SEAM_ANGLE. Static.
- *   opened   the half-plane below the seam, `overflow-clip`. The element that
- *            MOVES, along its own local y.
- *   hold     counter-translates, so the structure stays still in world terms.
- *   layers   counter-rotated, so the strata are horizontal and cut by the seam.
- */
-function SurfaceReveal({
-  opening,
-  active,
-}: {
-  opening: MotionValue<number>;
-  active: MotionValue<number>;
-}) {
-  const { y, counter, structure, edge, visibility } = useSeam(opening, active);
-
-  return (
-    <motion.span
-      className="pointer-events-none absolute left-1/2 top-1/2 -z-10 block h-[200vh] w-[240vw]"
-      style={{ transform: "translate(-50%, -50%)", visibility }}
-    >
-      <span
-        className="absolute left-1/2 top-1/2 block h-px w-[240vw]"
-        style={{ transform: `translate(-50%, -50%) rotate(${SEAM_ANGLE.toFixed(3)}deg)` }}
-      >
-        <motion.span
-          data-systems-cut="true"
-          className="absolute left-0 top-0 block h-[140vh] w-full origin-top overflow-clip"
-          style={{ y, willChange: "transform", contain: "paint" }}
-        >
-          {/* The recess: a change of ground, not a plate. */}
-          <span className="absolute inset-0 block bg-[rgba(22,22,22,0.025)]" />
-
-          {/* THE CUT EDGE. The one place any real contrast is spent. */}
-          <motion.span className="absolute left-0 right-0 top-0 block" style={{ opacity: edge }}>
-            <span className="absolute left-0 right-0 top-0 block h-px bg-ink" />
-            <span className="absolute left-0 right-0 top-0 block h-[0.22em] bg-[linear-gradient(to_bottom,rgba(22,22,22,0.17),rgba(22,22,22,0))]" />
-          </motion.span>
-
-          <motion.span className="absolute inset-0 block" style={{ y: counter }}>
-            <motion.span
-              className="absolute left-1/2 top-0 block h-[3em] w-[240vw] origin-top"
-              style={{
-                transform: `translateX(-50%) rotate(${(-SEAM_ANGLE).toFixed(3)}deg)`,
-                opacity: structure,
-              }}
-            >
-              <RevealedStructure />
-            </motion.span>
-          </motion.span>
-        </motion.span>
-      </span>
-    </motion.span>
-  );
-}
-
-/**
- * WHAT THE OPENED SURFACE SHOWS, on desktop: the three strata, full width,
- * with the real layer names anchored to the word's left edge -- and the
- * journey itself, drawn as a map between them. The map's top sits on SURFACE
- * and its bottom on SYSTEM: the route descends through the three layers the
- * page is built in, which is the argument the next two scenes make in prose.
- */
-const STRATA_TOP_EM = 0.34;
-const STRATA_STEP_EM = 0.98;
-
-function RevealedStructure() {
-  return (
-    <span className="absolute inset-0 block">
-      {layerDefinitions.map((layer, index) => (
-        <span
-          key={layer.label}
-          className="absolute left-0 right-0 block"
-          style={{ top: `${STRATA_TOP_EM + index * STRATA_STEP_EM}em` }}
-        >
-          <span
-            className="absolute left-0 right-0 top-0 block h-px bg-ink"
-            // Deeper strata are drawn heavier: how a section marks the
-            // load-bearing layer, and true of this framework's own argument.
-            style={{ opacity: 0.2 + index * 0.12 }}
-          />
-          <span className="absolute left-[calc(50%-2.25em)] top-[0.08em] block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
-            {layer.label}
-          </span>
-        </span>
-      ))}
-      {/* V14.3 Gate D (owner: generic connected-dot graphics at SYSTEMS):
-          the route map that stood between SURFACE and SYSTEM is gone. What the
-          opened surface exposes is the STRUCTURE -- the three strata, and the
-          descent the Gate B cover then draws to SYSTEM -- not a third copy of
-          the map the handoff and the finale already carry. */}
-    </span>
-  );
-}
+// V14.4: the desktop SurfaceReveal (the frame-spanning diagonal seam, the
+// recess and the RevealedStructure under the word) is gone; see the note in
+// SystemsWord. The compact mobile cut below is the V13 composition.
 
 /**
  * THE COMPACT CUT (mobile) -- the V6.6 construction, exactly as the V13 mobile

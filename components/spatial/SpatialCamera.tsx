@@ -62,7 +62,7 @@ import {
   sceneApproach,
   sceneFocusProgress,
 } from "@/lib/spatial/sceneRoute";
-import { scenePresence, type SystemAnnotation } from "@/lib/spatial/systemPov";
+import { scenePresence, systemsWordPresence, type SystemAnnotation } from "@/lib/spatial/systemPov";
 import {
   MOBILE_PROJECT_GROUND_GEOMETRY,
   PROJECT_GROUND_SCENES,
@@ -99,6 +99,9 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
    * loader -- there is no slug table in here and nothing invented.
    */
   branchDestinations?: readonly string[];
+  /** V14.4: the four stations' real titles, for the route register at the
+   *  terminus (WorldGrammar). Presentation order is the route's. */
+  stations?: readonly { index: string; title: string }[];
   /**
    * V9 (§P0): the regime change that ends the world, rendered INSIDE the sticky
    * frame instead of after it. See SurfaceReturn in SpatialExperience for the
@@ -847,6 +850,7 @@ export function SpatialCamera({
   distantMaterial,
   nearMaterial,
   branchDestinations = [],
+  stations = [],
   surfaceReturn,
   annotations = {},
   ...scenes
@@ -1234,6 +1238,7 @@ export function SpatialCamera({
               progress={progress}
               mobile={mobile}
               branchDestinations={isDesktop ? branchDestinations : []}
+              stations={isDesktop ? stations : []}
             />
 
             {SCENE_IDS.map((id) => (
@@ -1369,7 +1374,10 @@ function SceneFrame({
   // in the world while moving, the exact mechanism V11 measured as the blur.
   // Desktop only; the mobile composition is the V13 gate's and is untouched --
   // V14.1 passes the flag so its re-cut curve (systemPov.ts) is desktop-only.
-  const presence = useTransform(approach, (value) => scenePresence(value, mobile));
+  // V14.4: the SYSTEMS word is acquired a step ahead of the scenes.
+  const presence = useTransform(approach, (value) =>
+    id === "tail" ? systemsWordPresence(value, mobile) : scenePresence(value, mobile),
+  );
 
   return (
     <motion.div

@@ -332,6 +332,6 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
      the finale on the homepage -- the last beat opens with room, not the old
      long travel. Off the homepage the footer sits as before. */
   body:has(section[aria-label="Spatial system tour"]) .spatial-footer {
-    margin-top: 2rem;
+    margin-top: 5rem; /* V14.4: the finale waits until the operator reveal has had its frame */
   }
 }

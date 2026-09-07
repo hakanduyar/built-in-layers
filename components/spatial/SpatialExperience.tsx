@@ -165,6 +165,12 @@ export function SpatialExperience() {
         // the route (WorldGrammar's TerminusMap) instead of on a branch beside
         // the handoff.
         branchDestinations={[...beyondTour.map((project) => project.title), workIndexLabel]}
+        // V14.4: the four stations, by real title, for the route register at the
+        // terminus -- the same four the annotations index.
+        stations={[softwareFactory, kivilcim, jointledger, dropspot].map((project, index) => ({
+          index: String(index + 1).padStart(2, "0"),
+          title: project.title,
+        }))}
         // V14 (owner findings A, §8) REMOVED THE TRAVEL MATERIAL. The distant
         // plane carried five oversized crops of real project titles, placed
         // 55% along the leg into each scene, and the near plane seven

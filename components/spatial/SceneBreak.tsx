@@ -110,13 +110,14 @@ function SurfaceCover({ progress }: { progress: MotionValue<number> }) {
     <motion.div
       data-surface-cover="true"
       aria-hidden="true"
-      className="absolute inset-0 hidden bg-paper lg:block"
+      // V14.4 (owner): THE BLACK STATE. The cover is ink -- the decisive state
+      // transition of the older accepted direction -- and what it carries is
+      // the underlying system drawn on the black in paper: the three strata
+      // and the descent to SYSTEM, the line UNDERNEATH then stands on. Same
+      // timing, same opacity contract, same dwell; arrives by opacity, steeply.
+      className="absolute inset-0 hidden bg-ink lg:block"
       style={{ opacity, fontSize: WORD_SCALE }}
     >
-      {/* The recess: the same 2.5% ink the opened surface shows under the
-          seam and the world lays under route two. Opaque as a pair with the
-          paper beneath it, which is what hides the jump. */}
-      <span aria-hidden="true" className="absolute inset-0 block bg-[rgba(22,22,22,0.025)]" />
       {/* The section, travelling with the landing as the cover lets go. */}
       <motion.span aria-hidden="true" className="absolute inset-0 block" style={{ x }}>
         {layerDefinitions.map((layer, index) => {
@@ -140,16 +141,15 @@ function SurfaceCover({ progress }: { progress: MotionValue<number> }) {
             >
               <span
                 aria-hidden="true"
-                className="absolute left-0 right-0 top-0 block h-px bg-ink"
-                style={{ opacity: 0.2 + index * 0.12 }}
+                className="absolute left-0 right-0 top-0 block h-px bg-paper"
+                style={{ opacity: 0.3 + index * 0.2 }}
               />
               <motion.span
                 aria-hidden="true"
-                className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted"
+                className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-paper"
                 style={{
                   left: `calc(40vw + ${LABEL_X})`,
                   top: 8,
-                  fontSize: "0.6875rem",
                   opacity: labels,
                 }}
               >
@@ -163,7 +163,7 @@ function SurfaceCover({ progress }: { progress: MotionValue<number> }) {
         <motion.span
           aria-hidden="true"
           data-cover-descent="true"
-          className="absolute block w-px bg-line"
+          className="absolute block w-px bg-paper opacity-60"
           style={{
             left: DESCENT_X,
             top: `calc(${SYSTEM_LINE} - ${(layerDefinitions.length - 1) * STRATA_STEP_EM}em)`,

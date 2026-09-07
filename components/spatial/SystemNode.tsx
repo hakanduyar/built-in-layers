@@ -69,6 +69,12 @@ export type SystemNodeProps = {
    * the lower world's sections, not the old long travel. Mobile untouched.
    */
   major?: boolean;
+  /**
+   * V14.4: the operator reveal owns its viewport -- the station is at least
+   * 60vh tall at `lg`, so the section before it is gone and the finale has
+   * not yet arrived when it stands at its primary position.
+   */
+  stage?: boolean;
 };
 
 /** The mobile register's three state words (V6.7), kept below `lg` only. */
@@ -81,6 +87,7 @@ export function SystemNode({
   align = "left",
   compact = false,
   major = false,
+  stage = false,
 }: SystemNodeProps) {
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useSettledReducedMotion();
@@ -138,7 +145,10 @@ export function SystemNode({
     // nothing. The mobile value is the V13 gate's and is untouched.
     <section
       ref={ref}
-      className={`relative mt-16 ${compact ? "lg:mt-14" : major ? "lg:mt-32" : "lg:mt-20"}`}
+      // V14.4: major beats open with 160px above them at `lg` (was 128).
+      className={`relative mt-16 ${compact ? "lg:mt-14" : major ? "lg:mt-40" : "lg:mt-20"}${
+        stage ? " lg:min-h-[64vh]" : ""
+      }`}
     >
       {/* V14.1 (owner §5): THE SPINE IS GONE FROM HERE. Each section drew its
           own full-height rule, so four sections were four documents each

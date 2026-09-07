@@ -2819,3 +2819,33 @@ with 56; the finale with 32px more above it. The lower world is 3194px at 1440×
 Removed: the state word beside every register (desktop). Raised to label size or ink: Selected
 Systems' classifications and verification line, Field Notes' index link, the register's marks.
 Unchanged: strata names, indices, captions — muted at label size (7.2:1).
+
+## 44. V14.4 owner visual correction — the black state, the operator's frame, registers (2026-09-08)
+
+`feature/owner-visual-acceptance-v14` only, on the Gate E checkpoint `51b3387` / `4810181`. Not
+merged to `main`. Scope by the owner's brief: SYSTEMS / UNDERNEATH, the lower world's rhythm and
+About, the Person of Interest grammar. Decision: D-052. Evidence: `docs/review/v14.4-owner-correction/`.
+
+### 44.1 SYSTEMS → black → the system → UNDERNEATH
+
+The word stands on clean paper, read whole a tenth into its approach and held until the black
+state takes the frame. The cover is ink: it arrives by opacity within the first 40% of the closing
+window, holds through the dwell, and leaves within the last 40% of the reveal — the same protected
+timing as every version before it. On the black, the underlying system in paper: SURFACE, FLOW,
+SYSTEM and the descent. UNDERNEATH then lands on the world's own strata, which exist only from the
+cut on. Nothing is drawn beneath or beside the word before the cut.
+
+### 44.2 The register
+
+Where the world drew its route as a map — at the terminus and at the finale — it now files it: a
+ruled register in the mono label, `ROUTE 01` and its state, the stations by index and real title,
+the branch by real name; at the finale, the lower world's four stations too. This is the Machine's
+grammar for a route: an index, not a diagram. The remaining marks in the world and their meanings
+are the §42.2 table less the cut strokes, the landing corner and the maps.
+
+### 44.3 The operator's frame
+
+About is a stage of at least 64vh at `lg`, the name at 7vw, 160px above it and 80px more below
+before the finale: when it stands at its primary position the previous section is gone and the CTA
+has not arrived. Major beats open with 160px; Field Notes stays compact; How I Build carries its
+statement and its four commitments only.

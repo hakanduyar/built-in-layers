@@ -1,11 +1,8 @@
 "use client";
 
 import { motion, useTransform, type MotionValue } from "motion/react";
-import { RouteMap } from "@/components/spatial/RouteMap";
 import { layerDefinitions } from "@/data/copy";
 import {
-  CUT_WORLD,
-  ROUTE_ONE_IDS,
   ROUTE_TWO_IDS,
   SCENE_IDS,
   TURN_WORLD,
@@ -16,7 +13,7 @@ import {
   type WorldPoint,
 } from "@/lib/spatial/scenes";
 import {
-  decompressionAnchor,
+  BREAK_CUT,
   routeLegs,
   sceneFocusProgress,
   sceneProximity,
@@ -88,9 +85,16 @@ type WorldGrammarProps = {
    * names rather than as a separate branch in the world. Empty on mobile.
    */
   branchDestinations?: readonly string[];
+  /** V14.4: the four stations' real titles, in the route's order. */
+  stations?: readonly { index: string; title: string }[];
 };
 
-export function WorldGrammar({ progress, mobile, branchDestinations = [] }: WorldGrammarProps) {
+export function WorldGrammar({
+  progress,
+  mobile,
+  branchDestinations = [],
+  stations = [],
+}: WorldGrammarProps) {
   const legs = routeLegs(mobile);
   return (
     <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
@@ -110,11 +114,9 @@ export function WorldGrammar({ progress, mobile, branchDestinations = [] }: Worl
         )}
       </div>
 
-      {!mobile && <StateChanges />}
+      {!mobile && <Strata progress={progress} />}
 
-      {!mobile && <Strata />}
-
-      {!mobile && <TerminusMap branch={branchDestinations} />}
+      {!mobile && <RouteRegister stations={stations} branch={branchDestinations} />}
 
       {/* V14.3 Gate D (owner: "one mark = one semantic meaning"): on desktop
           the four project scenes carry the acquisition frame's brackets at
@@ -425,76 +427,63 @@ function Station({
   );
 }
 
-/* ---------------------------------------------------------- state changes */
-
-/**
- * Where the system changes state. Route one ends at the cut: two short
- * strokes across the rail's end -- the occlusion's own two closing surfaces,
- * in miniature. Route two opens at the coordinate the camera is thrown to:
- * the world's resolved registration mark, the same closed corner its anchors
- * carry, at the point where the journey is picked up again.
- */
-function StateChanges() {
-  const cut = CUT_WORLD;
-  const landing = decompressionAnchor();
-  return (
-    <>
-      <span
-        aria-hidden="true"
-        className="absolute block"
-        style={{ left: worldX(cut.x), top: worldY(cut.y) }}
-      >
-        <span className="absolute block h-4 w-px bg-ink opacity-60" style={{ left: -1, top: -8 }} />
-        <span className="absolute block h-4 w-px bg-ink opacity-60" style={{ left: 3, top: -8 }} />
-      </span>
-      <span
-        aria-hidden="true"
-        className="absolute block"
-        style={{ left: worldX(landing.x), top: worldY(landing.y) }}
-      >
-        <span className="absolute left-0 top-0 block h-px w-6 bg-ink opacity-70" />
-        <span className="absolute left-0 top-0 block h-6 w-px bg-ink opacity-70" />
-        <span className="absolute left-1.5 top-1.5 block h-px w-2.5 bg-ink opacity-50" />
-      </span>
-    </>
-  );
-}
-
 /* ------------------------------------------------------------ the terminus */
 
 /**
- * V14 (owner findings D, E) -- THE LAST FRAME OF THE WORLD IS THE MAP.
+ * V14.4 (owner: "meaningless line/dot graphics around the larger-map /
+ * work-index areas -- no semantic meaning, remove it") -- THE TERMINUS IS A
+ * REGISTER, NOT A MAP.
  *
- * The route ends on the handover turn, a camera-only coordinate 52 units past
- * the handoff, so the frame the world hands over from never contained the
- * scene that stated "these are four stops on a larger map": on the baseline it
- * contained nothing but the surface-return marker (V9's own measurement was
- * 0.16-0.22% rendered content). The map now stands in the world at the turn,
- * so the camera literally travels onto it as its final move -- the sentence
- * at the handoff points down-route at the map arriving from the frame's lower
- * right, the terminus frames it whole, and the page then opens with the index
- * of the same stations. The lower world begins where the map ends.
- *
- * The RouteMap draws two route polylines and the branch's third; with the
- * ten travelled rails and two base rails that is fifteen polylines in the
- * frame, inside the sparse-structure bound (tests/e2e/spatial.spec.ts).
+ * V14 drew the whole route again here as a map: two polylines, nine dots, a
+ * dotted branch, a ring at a junction. Every mark was derived from the real
+ * route, and it still read as a connected-dot network. What the reader needs
+ * at the route's end is the route's RECORD: which stations were tracked, in
+ * which order, and where the branch goes -- stated, in the world's register,
+ * as the machine would file it. Real titles from the same loader the handoff
+ * sentence reads; the indices are the route's own presentation order. It
+ * stands where the map stood, so the camera's final move is onto it and the
+ * lower world's own index begins where it ends. Two cut marks and a landing
+ * corner that stood in the world (StateChanges) are gone with it: the black
+ * state carries the boundary and the route-two tick registers the landing.
  */
-const TERMINUS_MAP_OFFSET: WorldPoint = { x: 28, y: -14 };
-const TERMINUS_MAP_WIDTH_VW = 60;
+const REGISTER_OFFSET: WorldPoint = { x: 30, y: -12 };
+const REGISTER_WIDTH_VW = 34;
 
-function TerminusMap({ branch }: { branch: readonly string[] }) {
-  const at = { x: TURN_WORLD.x + TERMINUS_MAP_OFFSET.x, y: TURN_WORLD.y + TERMINUS_MAP_OFFSET.y };
-  const stations = ROUTE_ONE_IDS.filter((id) => id !== "hero" && id !== "tail").map(
-    (id, index) => ({ id, index: String(index + 1).padStart(2, "0") }),
-  );
+function RouteRegister({
+  stations,
+  branch,
+}: {
+  stations: readonly { index: string; title: string }[];
+  branch: readonly string[];
+}) {
+  const at = { x: TURN_WORLD.x + REGISTER_OFFSET.x, y: TURN_WORLD.y + REGISTER_OFFSET.y };
+  if (stations.length === 0) return null;
   return (
     <span
       aria-hidden="true"
-      data-terminus-map="true"
-      className="absolute block"
-      style={{ left: worldX(at.x), top: worldY(at.y), width: worldX(TERMINUS_MAP_WIDTH_VW) }}
+      data-route-register="true"
+      className="absolute block font-mono text-mono-label tracking-mono-label uppercase"
+      style={{ left: worldX(at.x), top: worldY(at.y), width: worldX(REGISTER_WIDTH_VW) }}
     >
-      <RouteMap state="mapped" stations={stations} branch={branch} className="w-full" />
+      <span className="flex items-baseline justify-between border-t border-ink pb-2 pt-2 text-ink-muted">
+        <span>Route 01</span>
+        <span>{stations.length} stations · tracked</span>
+      </span>
+      {stations.map((station) => (
+        <span
+          key={station.index}
+          className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
+        >
+          <span className="text-ink-muted">{station.index}</span>
+          <span>{station.title}</span>
+        </span>
+      ))}
+      {branch.length > 0 && (
+        <span className="flex items-baseline gap-4 border-t border-ink pt-2 text-ink-muted">
+          <span>Branch</span>
+          <span>{branch.join(" · ")}</span>
+        </span>
+      )}
     </span>
   );
 }
@@ -564,10 +553,16 @@ const RECESS_DEPTH_VH = 320;
 const RECESS_TO_VW = 960;
 const RECESS_FADE_VW = 140;
 
-function Strata() {
+function Strata({ progress }: { progress: MotionValue<number> }) {
   const surfaceY = sceneAnchor("handoff").y + STRATA_FOOT_VH.handoff!;
+  // V14.4 (owner: no weak shapes beneath SYSTEMS): the strata and the recess
+  // exist in the world only from the cut on. Before it the surface is whole
+  // and SYSTEMS stands on clean paper; the black state then reveals the
+  // section, and UNDERNEATH lands on it. The step happens under the opaque
+  // cover, so it is never witnessed in either direction.
+  const revealed = useTransform(progress, (value) => (value >= BREAK_CUT ? 1 : 0));
   return (
-    <>
+    <motion.span aria-hidden="true" data-strata-group="true" style={{ opacity: revealed }}>
       {/* The recess: the ground below the surface, across route two. */}
       <span
         aria-hidden="true"
@@ -607,7 +602,7 @@ function Strata() {
           </span>
         );
       })}
-    </>
+    </motion.span>
   );
 }
 

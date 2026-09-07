@@ -316,3 +316,22 @@ Untouched, byte for byte, against `b4921e1`: `lib/spatial/{cameraFilter,sceneRou
 planeChoreography,projectGround,editorialDrift}.ts`, `SceneBreak.tsx`, `SpatialCamera.tsx`,
 `SpatialExperience.tsx`, `WorldGrammar.tsx`, `RouteMap.tsx`, `ProjectPlane.tsx`, `LowerRoute.tsx`,
 every project scene, the case-study system, `app/`.
+
+### 6.6 V14.4 owner visual correction — the black state, the operator's frame, registers (2026-09-08)
+
+D-052 and `docs/DESIGN_SYSTEM.md` §44 record what moved and why; the evidence is
+`docs/review/v14.4-owner-correction/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/spatial/SystemsWord.tsx` | the desktop surface reveal (seam, recess, strata) removed; the mobile compact cut untouched | transition sheets both ways; the restated cut contracts |
+| `components/spatial/SceneBreak.tsx`, `lib/spatial/surfaceCover.ts` | the cover is ink, decisive (40% of each half of the window), carrying the section in paper | the cover contracts (opaque at the cut, by opacity, ink); `surface-cover` unit 5/5 |
+| `lib/spatial/systemPov.ts`, `components/spatial/SpatialCamera.tsx` (one branch on one line) | the word's own presence curve, desktop only | the approach sheet |
+| `components/spatial/WorldGrammar.tsx` | strata from the cut on; `StateChanges` and the terminus map removed; the route register in their place | sheets; stills at the handoff and the surface return |
+| `components/spatial/SpatialExperience.tsx` | the four stations' titles threaded to the register | stills |
+| `components/layout/SiteFooter.tsx` | the finale's map replaced by the resolved register; `RouteMap.tsx` deleted | stills; the CTA contracts |
+| `components/spatial/SystemNode.tsx`, `components/sections/{AboutPreview,HowIBuild}.tsx`, `styles/globals.css` | 160px major intervals, the About stage and name, the second floors drawing removed, 80px above the finale | lower-world sheets both ways; the page-length JSON |
+
+Untouched, byte for byte, against `4810181`: `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
+planeChoreography,projectGround,editorialDrift}.ts`, `LowerRoute.tsx`, `ProjectPlane.tsx`,
+`SpatialProjectScene.tsx`, `SystemPOV.tsx`, every project scene, the case-study system, `app/`.

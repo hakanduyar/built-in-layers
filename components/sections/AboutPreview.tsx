@@ -77,7 +77,7 @@ export function AboutPreview() {
   );
 
   return (
-    <SystemNode index="08" label="About" major>
+    <SystemNode index="08" label="About" major stage>
       <h2 className="sr-only">About</h2>
 
       {/* FINAL REMEDIATION: the earlier build's comment claimed the introduction
@@ -103,7 +103,9 @@ export function AboutPreview() {
               // V14.1 (owner §17): a station, not a second hero. The hero states
               // the name at 9.5rem; the operator's reveal at the last station
               // states it at the world's display-l scale, resolving as before.
-              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink lg:text-[clamp(2.25rem,5vw,4.25rem)] lg:leading-[0.9]"
+              // V14.4 (owner: the operator reveal dominates its viewport): 7vw at lg,
+              // between the station scale V14.1 set and the hero.
+              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink lg:text-[clamp(3rem,7vw,6rem)] lg:leading-[0.9]"
               style={
                 reduceMotion
                   ? { letterSpacing: "-0.035em" }

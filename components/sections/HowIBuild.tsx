@@ -1,12 +1,6 @@
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import {
-  aboutIntro,
-  howIBuildHeading,
-  howIBuildPrinciples,
-  layerDefinitions,
-  sectionIndex,
-} from "@/data/copy";
+import { aboutIntro, howIBuildHeading, howIBuildPrinciples, sectionIndex } from "@/data/copy";
 
 // IA section 7.
 //
@@ -56,47 +50,9 @@ export function HowIBuild() {
           <p className="max-w-[30rem] font-serif text-[1.375rem] italic leading-[1.45] text-ink">
             {aboutIntro.method}
           </p>
-          {/* The section: the strata the statement names, the descent from
-              the surface to the last one. Same floors as the index above,
-              same descent as the cut; nothing new is defined here (Built in
-              Layers already defines the three). */}
-          <div aria-hidden="true" className="relative mt-8 max-w-[30rem]">
-            {layerDefinitions.map((layer, index) => {
-              const foot = index === layerDefinitions.length - 1;
-              return (
-                <div
-                  key={layer.label}
-                  data-method-stratum={layer.label.toLowerCase()}
-                  className={`relative ${foot ? "h-8" : "h-11"}`}
-                >
-                  <span
-                    className="absolute left-0 right-0 top-0 block h-px bg-ink"
-                    style={{ opacity: 0.22 + index * 0.1 }}
-                  />
-                  <span
-                    className={`absolute left-6 top-2 block font-mono text-mono-label tracking-mono-label uppercase ${
-                      foot ? "text-ink" : "text-ink-muted"
-                    }`}
-                  >
-                    {layer.label}
-                  </span>
-                  {!foot && (
-                    <span className="absolute bottom-0 left-[4.5px] top-0 block w-px bg-line" />
-                  )}
-                  {foot && (
-                    <>
-                      {/* the resolved corner, where the descent ends */}
-                      <span className="absolute left-[4.5px] top-0 block h-3 w-px bg-ink opacity-70" />
-                      <span className="absolute left-[4.5px] top-3 block h-px w-4 bg-ink opacity-70" />
-                    </>
-                  )}
-                  {index === 0 && (
-                    <span className="absolute left-0 top-0 block h-2.5 w-2.5 -translate-y-1/2 rounded-full border border-ink bg-ink" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          {/* V14.4 (owner: simplify where overloaded): the floors that stood
+              under the statement are gone -- the index above already draws
+              the strata, and the statement names them. */}
         </div>
 
         <Reveal early className="mt-8 lg:col-span-6 lg:mt-0">

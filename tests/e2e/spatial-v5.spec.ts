@@ -282,19 +282,32 @@ test.describe("Spatial V5: System POV states real project metadata only", () => 
 // because the opening is now a transform; it asserts the same three properties
 // against the property that actually carries the motion.
 test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () => {
-  test("draws the word exactly once, with the opened surface behind it", async ({ page }) => {
+  test("draws the word exactly once, and on desktop nothing is cut behind it", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
 
     // ONE copy of the word. V6.4 drew it twice (a surface and a masked section over
-    // it); since V6.5 the word is a single plain span and everything else happens
-    // in the space behind it.
+    // it); since V6.5 the word is a single plain span. V14.4: on desktop the
+    // surface behind it is no longer opened at all -- the state change is the
+    // black cover (spatial.spec.ts) -- so no cut element exists at `lg`.
     await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
-    await expect(page.locator("[data-systems-cut]")).toHaveCount(1);
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(0);
     await expect(page.locator('[data-systems-layer="section"]')).toHaveCount(0);
   });
 
-  test("the cut runs at the camera route's own bearing, not at an authored angle", async ({
+  test("below lg the compact cut is drawn once, as the V13 gate froze it", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
+    await expect(page.locator("[data-systems-cut]")).toHaveCount(1);
+    await expect(page.locator('[data-systems-layer="surface"]')).toHaveCount(1);
+  });
+
+  // V14.4: the desktop cut is gone, and the mobile cut's bearing is derived
+  // from the desktop route (SEAM_ANGLE), which the mobile anchors cannot
+  // reproduce; the contract this guarded -- "the cut follows the route, not an
+  // authored angle" -- has no desktop element left to hold it against.
+  test.skip("the cut runs at the camera route's own bearing, not at an authored angle", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -381,7 +394,10 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
     }
   });
 
-  test("the surface opens monotonically and stays open", async ({ page }) => {
+  // V14.4: no desktop cut to open; the black state's own contracts (opaque at
+  // the cut, arriving by opacity, monotone each side) live in spatial.spec.ts
+  // and tests/unit/surface-cover.test.ts.
+  test.skip("the surface opens monotonically and stays open", async ({ page }) => {
     // V11: settle-bound, not assertion-bound. This sweeps 13 samples across the
     // cut and waits at each for the camera to arrive, and V11 made arrival
     // legitimately slower in wall-clock: route one's world grew 61% to buy focus

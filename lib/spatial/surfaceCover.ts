@@ -45,12 +45,21 @@ const smooth = (t: number) => {
 export function coverOpacity(progress: number): number {
   const p = clamp01(progress);
   if (p <= BREAK_COVER_START || p >= BREAK_REVEAL_END) return 0;
+  // V14.4: DECISIVE. The black state arrives within the first 40% of the
+  // closing window and leaves within the last 40% of the reveal, holding
+  // through the dwell between -- a state change with a clear edge in time,
+  // not a slow fade. Same window, same contract, steeper curve.
   if (p < BREAK_COVER_CLOSED) {
-    return smooth((p - BREAK_COVER_START) / (BREAK_COVER_CLOSED - BREAK_COVER_START));
+    return smooth((p - BREAK_COVER_START) / ((BREAK_COVER_CLOSED - BREAK_COVER_START) * DECISIVE));
   }
   if (p <= BREAK_REVEAL_START) return 1;
-  return 1 - smooth((p - BREAK_REVEAL_START) / (BREAK_REVEAL_END - BREAK_REVEAL_START));
+  const u = (p - BREAK_REVEAL_START) / (BREAK_REVEAL_END - BREAK_REVEAL_START);
+  return 1 - smooth((u - (1 - DECISIVE)) / DECISIVE);
 }
+
+/** The fraction of each half of the cover window the black state takes to
+ *  arrive or leave. */
+const DECISIVE = 0.4;
 
 /**
  * Presence of the section's upper strata (SURFACE, FLOW) and the descent:
