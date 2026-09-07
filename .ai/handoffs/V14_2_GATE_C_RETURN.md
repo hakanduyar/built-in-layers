@@ -2,8 +2,7 @@
 
 **From:** Fable 5.1 (visual gate, scoped) · **Date:** 2026-09-07 · **Branch:**
 `feature/owner-visual-acceptance-v14` · **Base:** `816b408` (the Gate B checkpoint `de538bf` and its
-record) · **Checkpoint:** see `.ai/STATE.md` (verify the tip with `git rev-parse HEAD`), pushed,
-`local == origin`.
+record) · **Checkpoint:** `5a4147d`, pushed, `local == origin` (verify the tip with `git rev-parse HEAD`).
 
 Owner acceptance is **PENDING**. Not a freeze, not an acceptance, not a merge. `main` = `16d3ec0`.
 

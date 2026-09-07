@@ -11,9 +11,15 @@ surface instead of ink (D-048); UNDERNEATH stands on the exposed section's SYSTE
 surface is a rising paper plane from the SURFACE rule down. Scroll untouched, first paint and mobile
 verified. Handoff: `.ai/handoffs/V14_2_GATE_B_RETURN.md`; package `docs/review/v14.2-gate-b/`.
 Checkpoint `de538bf`.
+**V14.2 GATE C (2026-09-07, Fable, scoped):** the lower world as one system on desktop — Selected
+Systems as a section drawing, How I Build as the method beside the same floors, Field Notes as one
+entry, About as the operator in the systems' grammar, the finale as the resolved state on the rail's
+datum (D-049). Scroll untouched, page 245 px shorter at 1440×900, first paint and mobile verified.
+Handoff: `.ai/handoffs/V14_2_GATE_C_RETURN.md`; package `docs/review/v14.2-gate-c/`. Checkpoint
+`5a4147d`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
