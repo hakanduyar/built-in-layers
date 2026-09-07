@@ -2,8 +2,7 @@
 
 **From:** Fable 5.1 (visual gate, scoped) · **Date:** 2026-09-07 · **Branch:**
 `feature/owner-visual-acceptance-v14` · **Base:** `b4921e1` (the Gate D checkpoint `5bbccb6` and its
-record) · **Checkpoint:** see `.ai/STATE.md` (verify the tip with `git rev-parse HEAD`), pushed,
-`local == origin`.
+record) · **Checkpoint:** `51b3387`, pushed, `local == origin` (verify the tip with `git rev-parse HEAD`).
 
 Owner acceptance is **PENDING**. Not a freeze, not an acceptance, not a merge. `main` = `16d3ec0`.
 
@@ -65,7 +64,7 @@ Docs: `DECISIONS.md` D-051, `DESIGN_SYSTEM.md` §43, `FROZEN_BOUNDARY.md` §6.5,
 - **Runtime:** console noise 0 on every content route, hydration 0 on all 11 routes, overflow 0 of
   99, CLS 0.0418 on `/` — unchanged.
 - **Focused Chromium** (`spatial`, `spatial-v5`, `a11y`, `smoke`, `motion`, `home`) and the unit
-  suite: see `.ai/STATE.md` for the counts.
+  suite: 112/112 and 569/569.
 - typecheck 0 · lint 0 · format 0 · build ✓.
 
 The full acceptance matrix and WebKit were not run, per the brief.

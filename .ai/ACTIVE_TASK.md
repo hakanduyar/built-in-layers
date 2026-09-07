@@ -2,9 +2,10 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER VISUAL REVIEW of V14.3 Gate D
-(one mark one meaning, no orange, every line a fact), with Gate C (the lower world as one system)
-and Gate B (SYSTEMS → UNDERNEATH, the landing, back to the surface). Gate E not started.** Fable V14 checkpoint `35c2c58`; Opus QA
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER VISUAL REVIEW of V14.3 Gate E
+(readable on arrival: earlier presence, breathing room, microtext), with Gate D (one mark one
+meaning, no orange, every line a fact), Gate C (the lower world as one system) and Gate B (SYSTEMS →
+UNDERNEATH, the landing, back to the surface).** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
 (`.ai/handoffs/V14_1_FABLE_TO_OPUS.md`).
 
@@ -13,8 +14,10 @@ GATE B COMPLETE` (D-048; `.ai/handoffs/V14_2_GATE_B_RETURN.md`; package
 `docs/review/v14.2-gate-b/README.md`) · `V14.2 VISUAL GATE C COMPLETE` (D-049, checkpoint
 `5a4147d`; `.ai/handoffs/V14_2_GATE_C_RETURN.md`; package `docs/review/v14.2-gate-c/README.md`) ·
 `V14.3 VISUAL GATE D COMPLETE` (D-050, checkpoint `5bbccb6`; `.ai/handoffs/V14_3_GATE_D_RETURN.md`;
-package `docs/review/v14.3-gate-d/README.md`). Owner acceptance **PENDING**. Do not merge. Do not
-start Gate E or the final Opus QA without the owner.
+package `docs/review/v14.3-gate-d/README.md`) · `V14.3 VISUAL GATE E COMPLETE` (D-051, checkpoint
+`51b3387`; `.ai/handoffs/V14_3_GATE_E_RETURN.md`; package `docs/review/v14.3-gate-e/README.md`).
+Owner acceptance **PENDING**. Do not merge. Do not start another visual gate or the final Opus QA
+without the owner.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the
