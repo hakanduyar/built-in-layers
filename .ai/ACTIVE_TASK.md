@@ -14,9 +14,11 @@ GATE B COMPLETE` (D-048; `.ai/handoffs/V14_2_GATE_B_RETURN.md`; package
 `5a4147d`; `.ai/handoffs/V14_2_GATE_C_RETURN.md`; package `docs/review/v14.2-gate-c/README.md`) ·
 `V14.3 VISUAL GATE D COMPLETE` (D-050, checkpoint `5bbccb6`; `.ai/handoffs/V14_3_GATE_D_RETURN.md`;
 package `docs/review/v14.3-gate-d/README.md`) · `V14.3 VISUAL GATE E COMPLETE` (D-051, checkpoint
-`51b3387`; `.ai/handoffs/V14_3_GATE_E_RETURN.md`; package `docs/review/v14.3-gate-e/README.md`).
+`51b3387`; `.ai/handoffs/V14_3_GATE_E_RETURN.md`; package `docs/review/v14.3-gate-e/README.md`) ·
+`V14.4 OWNER VISUAL CORRECTION COMPLETE` (D-052, checkpoint `f9b0a72`;
+`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`; package `docs/review/v14.4-owner-correction/README.md`).
 Owner acceptance **PENDING**. Do not merge. Do not start another visual gate or the final Opus QA
-without the owner.
+without the owner; Codex only as a separate engineering gate on the owner's instruction.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the
