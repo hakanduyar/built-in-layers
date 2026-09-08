@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-08 (V14.5 visual gate — the older SYSTEMS restored, the Machine's state, the index as a file)_
+_Updated: 2026-09-08 (V14.6 — Codex engineering gate 1: motion)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `b8ff8b8` — V14.5 visual gate (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `84fb5a9` — V14.6 Codex engineering gate 1, motion (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -35,7 +35,21 @@ regression.
 **V14 — owner visual acceptance recovery. V14.1 FABLE VISUAL GATE COMPLETE · FINAL OPUS QA
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
 COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE · V14.5 VISUAL GATE
-COMPLETE. Owner acceptance: PENDING.**
+COMPLETE · V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE. Owner acceptance: PENDING.**
+
+**V14.6 Codex engineering gate 1 — motion (implemented by Codex CLI 0.153.4 under owner brief;
+Claude orchestrator only; `.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`, report
+`docs/review/v14.6-codex-motion/REPORT.md`).** Wheel: an isolated notch is eased in and out inside
+the governor's existing budget (steps 2/4/6/7/8 rather than 8 from the first frame) with reach,
+delivery and settle unchanged, and the lower world's aggressive peak is 1957 → 1657 px/s (−15%);
+`routeSpan` 4500, `leadCapPx` 540 and reverse unchanged. First load: the pre-hydration tree painted
+at `zoom: 1` with the hero 44px left / 56px down of its settled place; the boot script now sets
+`data-world-preview="desktop"` and a boot-gated desktop CSS block lays the same scenes in the
+camera's initial frame, so the first painted frame is pixel-identical to settled
+(`compositionMaxDeltaPx` 0, `changedPixelsOver8` 0) with nothing hidden. Blur: the numeric probe
+finds no per-frame acutance loss (1.0727 → 1.0702, moving measures sharper than rest); the
+hydration repaint that read as softening is gone. Mobile byte-identical at 390×844; unit 569/569;
+focused Chromium 83 passed / 2 skipped. WebKit and the full matrix not run.
 
 **V14.5 visual gate (Fable-only; D-053, `docs/DESIGN_SYSTEM.md` §45,
 `.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`).** SYSTEMS after `f4bdab3`: a short muted entrance then
@@ -183,7 +197,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.5-visual-gate/README.md`**, with V14.4
+0. **The owner's review of `docs/review/v14.6-codex-motion/REPORT.md`** (the motion gate) and
+   `docs/review/v14.5-visual-gate/README.md`, with V14.4
    (`docs/review/v14.4-owner-correction/README.md`) and Gates E, D, C and B. No further visual gate
    and no final QA is started automatically; Codex only as a separate engineering gate on the
    owner's instruction (scroll blur, wheel smoothing, max speed, first-load flash, the UNDERNEATH
