@@ -35,9 +35,15 @@ terminus and finale maps replaced by typographic route registers; 160px major in
 paint and mobile verified, Chromium 111 passed (two seam tests skipped). Handoff:
 `.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`; package `docs/review/v14.4-owner-correction/`.
 Checkpoint `f9b0a72`.
+**V14.5 VISUAL GATE (2026-09-08, Fable-only):** the older SYSTEMS restored after `f4bdab3` — a short
+muted entrance then whole before focus, straight rules with names beneath the word, the V4
+interlocking black rails with the system in paper on the black; the acquisition frame states its
+state; the terminus and finale registers removed; Selected Systems as five entries on rules (D-053).
+Scroll untouched, first paint and mobile verified. Handoff: `.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`;
+package `docs/review/v14.5-visual-gate/`. Checkpoint `b8ff8b8`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 

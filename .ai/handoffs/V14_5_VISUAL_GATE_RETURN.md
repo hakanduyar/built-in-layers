@@ -2,8 +2,7 @@
 
 **From:** Fable 5.1 (visual gate, Fable-only; no Codex) · **Date:** 2026-09-08 · **Branch:**
 `feature/owner-visual-acceptance-v14` · **Base:** `ec37eb1` (the V14.4 checkpoint `f9b0a72` and its
-record) · **Checkpoint:** see `.ai/STATE.md` (verify the tip with `git rev-parse HEAD`), pushed,
-`local == origin`.
+record) · **Checkpoint:** `b8ff8b8`, pushed, `local == origin` (verify the tip with `git rev-parse HEAD`).
 
 Owner acceptance is **PENDING**. Not a freeze, not an acceptance, not a merge. `main` = `16d3ec0`.
 
@@ -74,7 +73,7 @@ Docs: `DECISIONS.md` D-053, `DESIGN_SYSTEM.md` §45, `FROZEN_BOUNDARY.md` §6.7,
 - **Runtime:** console noise 0 on every content route, hydration 0 on all 11 routes, overflow 0 of
   99, CLS 0.0418 on `/` — unchanged.
 - **Focused Chromium** (`spatial`, `spatial-v5`, `a11y`, `smoke`, `motion`, `home`) and the unit
-  suite: see `.ai/STATE.md` for the counts.
+  suite: 110 passed with the two skipped seam tests, then `home` and `smoke` re-run green on the final build; unit 564/564 (the cover's five tests removed with its module).
 - typecheck 0 · lint 0 · format 0 · build ✓.
 
 The full acceptance matrix and WebKit were not run, per the brief.
