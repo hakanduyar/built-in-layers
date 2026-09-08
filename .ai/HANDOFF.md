@@ -47,9 +47,16 @@ ceiling down 15%, and the first painted frame now pixel-identical to settled (th
 lays out in the camera's frame; nothing hidden). No per-frame blur was found by the numeric probe.
 Handoff: `.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`; report `docs/review/v14.6-codex-motion/REPORT.md`.
 Checkpoint `84fb5a9`.
+**V14.7 CODEX ENGINEERING GATE 2 — TIMING + SPACING (2026-09-09, Codex implemented, Claude
+orchestrated):** composition opacity for UNDERNEATH and the four-stops sentence now reads a window
+derived from the neighbouring focus progresses instead of the shorter adjacent segment, so
+UNDERNEATH holds to the Built in Layers release (174px / 209px) and four stops is fully readable
+after 95px / 153px; About is centred in its existing stage. Signed approach, route geometry, Gate 1
+motion and first paint untouched. Handoff: `.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`; report
+`docs/review/v14.7-codex-timing/REPORT.md`. Checkpoint `2d40c65`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 

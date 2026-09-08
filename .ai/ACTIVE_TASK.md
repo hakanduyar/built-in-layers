@@ -2,7 +2,7 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.6 (Codex engineering gate 1, motion) and the V14.5 visual gate
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.7 (Codex engineering gate 2, timing and spacing), V14.6 (motion) and the V14.5 visual gate
 (the older SYSTEMS restored with the interlocking rails, the Machine's state stated, Selected
 Systems as a file, registers removed), with V14.4 and Gates E, D, C and B.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
@@ -21,8 +21,10 @@ package `docs/review/v14.3-gate-d/README.md`) · `V14.3 VISUAL GATE E COMPLETE` 
 package `docs/review/v14.5-visual-gate/README.md`).
 · `V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE` (checkpoint `84fb5a9`;
 `.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`; report `docs/review/v14.6-codex-motion/REPORT.md`).
-Owner acceptance **PENDING**. Do not merge. Do not start Gate 2, another visual gate or the final QA
-without the owner.
+· `V14.7 CODEX ENGINEERING GATE 2 (TIMING + SPACING) COMPLETE` (checkpoint `2d40c65`;
+`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`; report `docs/review/v14.7-codex-timing/REPORT.md`).
+Owner acceptance **PENDING**. Do not merge. Do not start another gate or the final QA without the
+owner.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the
