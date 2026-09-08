@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**V14.7 Codex engineering gate (owner instruction, 2026-09-09; uncommitted):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `lib/spatial/systemPov.ts`, `components/spatial/SpatialCamera.tsx`, `components/spatial/SystemNode.tsx` | Explicit Engineering Gate 2: give UNDERNEATH the Built in Layers release timing, acquire four-stops earlier, centre About inside its existing desktop stage. Route geometry, scroll physics, SYSTEMS, acquisition-frame language, other lower sections and mobile composition are preserved. | `docs/review/v14.7-codex-timing/REPORT.md` and `metrics/`: before/after computed opacity in scroll pixels, stage/text geometry at 1440×900 and 1920×1080, route invariants, targeted tests and the step-2 mobile comparison. |
+
 **V14.6 Codex engineering gate (owner instruction, 2026-09-08; uncommitted):**
 
 | Files | Scope and authority | Evidence |

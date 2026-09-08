@@ -71,7 +71,7 @@ export type SystemNodeProps = {
   major?: boolean;
   /**
    * V14.4: the operator reveal owns its viewport -- the station is at least
-   * 60vh tall at `lg`, so the section before it is gone and the finale has
+   * 64vh tall at `lg`, so the section before it is gone and the finale has
    * not yet arrived when it stands at its primary position.
    */
   stage?: boolean;
@@ -147,7 +147,7 @@ export function SystemNode({
       ref={ref}
       // V14.4: major beats open with 160px above them at `lg` (was 128).
       className={`relative mt-16 ${compact ? "lg:mt-14" : major ? "lg:mt-40" : "lg:mt-20"}${
-        stage ? " lg:min-h-[64vh]" : ""
+        stage ? " lg:flex lg:min-h-[64vh] lg:flex-col lg:justify-center" : ""
       }`}
     >
       {/* V14.1 (owner §5): THE SPINE IS GONE FROM HERE. Each section drew its

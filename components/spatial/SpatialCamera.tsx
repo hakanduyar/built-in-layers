@@ -62,7 +62,7 @@ import {
   sceneApproach,
   sceneFocusProgress,
 } from "@/lib/spatial/sceneRoute";
-import { scenePresence, systemsWordPresence, type SystemAnnotation } from "@/lib/spatial/systemPov";
+import { sceneCompositionPresence, type SystemAnnotation } from "@/lib/spatial/systemPov";
 import {
   MOBILE_PROJECT_GROUND_GEOMETRY,
   PROJECT_GROUND_SCENES,
@@ -1406,10 +1406,9 @@ function SceneFrame({
   // in the world while moving, the exact mechanism V11 measured as the blur.
   // Desktop only; the mobile composition is the V13 gate's and is untouched --
   // V14.1 passes the flag so its re-cut curve (systemPov.ts) is desktop-only.
-  // V14.4: the SYSTEMS word is acquired a step ahead of the scenes.
-  const presence = useTransform(approach, (value) =>
-    id === "tail" ? systemsWordPresence(value, mobile) : scenePresence(value, mobile),
-  );
+  // Gate 2: composition timing can use a different reading window from the
+  // unchanged signed approach that drives the brackets and depth resolution.
+  const presence = useTransform(progress, (value) => sceneCompositionPresence(id, value, mobile));
 
   return (
     <motion.div

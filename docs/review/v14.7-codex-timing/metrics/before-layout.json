@@ -1,0 +1,205 @@
+{
+  "methodology": "Integer scroll-pixel binary search; computed composition opacity, exact full=1 and floor<=0.340001. Each sample waits for camera transform stability. Entry is first intersecting text Range line box. About ink uses visible text Range boxes, excluding decorative rules. Primary position centres the stage in the viewport.",
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "geometry": {
+        "routeStart": 60.5,
+        "routeEnd": 4560.5,
+        "routeSpan": 4500,
+        "leadCapPx": 540
+      },
+      "focus": {
+        "hero": 0,
+        "software-factory": 0.15943269200674015,
+        "kivilcim": 0.28866152036855164,
+        "jointledger": 0.4151851869433107,
+        "dropspot": 0.5417088535180697,
+        "tail": 0.6682325207262532,
+        "reorient": 0.7577835481053027,
+        "approach": 0.8630083411688465,
+        "handoff": 0.9592567411824426
+      },
+      "anchors": {
+        "hero": {
+          "x": 0,
+          "y": 0
+        },
+        "software-factory": {
+          "x": 155,
+          "y": 106
+        },
+        "kivilcim": {
+          "x": 310,
+          "y": 212
+        },
+        "jointledger": {
+          "x": 465,
+          "y": 318
+        },
+        "dropspot": {
+          "x": 620,
+          "y": 424
+        },
+        "tail": {
+          "x": 775,
+          "y": 530
+        },
+        "reorient": {
+          "x": -14,
+          "y": 652
+        },
+        "approach": {
+          "x": 132,
+          "y": 586
+        },
+        "handoff": {
+          "x": 264,
+          "y": 548
+        }
+      },
+      "release": {},
+      "about": {
+        "scrollY": 7832,
+        "stage": {
+          "top": 162.328125,
+          "bottom": 738.328125,
+          "height": 576
+        },
+        "marginTop": 160,
+        "marginBottom": 0,
+        "firstInkFromTop": 16,
+        "lastInkToBottom": 173.0625,
+        "text": {
+          "top": 178.328125,
+          "bottom": 565.265625
+        },
+        "fieldNotes": {
+          "top": -131.25,
+          "bottom": -51.671875,
+          "height": 79.578125
+        },
+        "fieldNotesInk": {
+          "top": -115.25,
+          "bottom": -98.25
+        },
+        "finale": {
+          "top": 883.328125,
+          "bottom": 1567.328125,
+          "height": 684
+        },
+        "finaleInk": {
+          "top": 968.34375,
+          "bottom": 1420.203125
+        },
+        "footer": {
+          "top": 882.328125,
+          "bottom": 1672.328125,
+          "height": 790
+        },
+        "documentHeight": 9504
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "geometry": {
+        "routeStart": 60.5,
+        "routeEnd": 5460.5,
+        "routeSpan": 5400,
+        "leadCapPx": 648
+      },
+      "focus": {
+        "hero": 0,
+        "software-factory": 0.15943269200674015,
+        "kivilcim": 0.28866152036855164,
+        "jointledger": 0.4151851869433107,
+        "dropspot": 0.5417088535180697,
+        "tail": 0.6682325207262532,
+        "reorient": 0.7577835481053027,
+        "approach": 0.8630083411688465,
+        "handoff": 0.9592567411824426
+      },
+      "anchors": {
+        "hero": {
+          "x": 0,
+          "y": 0
+        },
+        "software-factory": {
+          "x": 155,
+          "y": 106
+        },
+        "kivilcim": {
+          "x": 310,
+          "y": 212
+        },
+        "jointledger": {
+          "x": 465,
+          "y": 318
+        },
+        "dropspot": {
+          "x": 620,
+          "y": 424
+        },
+        "tail": {
+          "x": 775,
+          "y": 530
+        },
+        "reorient": {
+          "x": -14,
+          "y": 652
+        },
+        "approach": {
+          "x": 132,
+          "y": 586
+        },
+        "handoff": {
+          "x": 264,
+          "y": 548
+        }
+      },
+      "release": {},
+      "about": {
+        "scrollY": 8909,
+        "stage": {
+          "top": 194.109375,
+          "bottom": 885.296875,
+          "height": 691.1875
+        },
+        "marginTop": 160,
+        "marginBottom": 0,
+        "firstInkFromTop": 16,
+        "lastInkToBottom": 288.25,
+        "text": {
+          "top": 210.109375,
+          "bottom": 597.046875
+        },
+        "fieldNotes": {
+          "top": -110.265625,
+          "bottom": -30.6875,
+          "height": 79.578125
+        },
+        "fieldNotesInk": {
+          "top": -94.265625,
+          "bottom": -77.265625
+        },
+        "finale": {
+          "top": 1030.296875,
+          "bottom": 1851.09375,
+          "height": 820.796875
+        },
+        "finaleInk": {
+          "top": 1183.71875,
+          "bottom": 1635.578125
+        },
+        "footer": {
+          "top": 1029.296875,
+          "bottom": 1956.09375,
+          "height": 926.796875
+        },
+        "documentHeight": 10865
+      }
+    }
+  ]
+}

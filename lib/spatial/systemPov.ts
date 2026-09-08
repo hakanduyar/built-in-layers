@@ -25,7 +25,14 @@
 // hairline and case index around them are pure orientation and are hidden.
 
 import type { ProjectFrontmatter } from "@/lib/content/schemas";
-import { BREAK_COVER_START, BREAK_CUT, BREAK_REVEAL_END } from "@/lib/spatial/sceneRoute";
+import {
+  BREAK_COVER_START,
+  BREAK_CUT,
+  BREAK_REVEAL_END,
+  sceneApproach,
+  sceneFocusProgress,
+  type SceneId,
+} from "@/lib/spatial/sceneRoute";
 
 /**
  * The one asset a scene leads with, chosen entirely from the asset's own
@@ -150,6 +157,32 @@ export function scenePresence(signedApproach: number, mobile = false): number {
   if (a <= 0.2) return 1;
   if (a < 0.6) return 1 - 0.66 * ((a - 0.2) / 0.4);
   return 0.34;
+}
+
+// Presentation timing only: the short decompression/exit legs still govern
+// sceneApproach and every acquisition-frame mark. They must not compress the
+// reading time of these two compositions. No route coordinates are changed.
+const approachFocus = sceneFocusProgress("approach");
+const handoffFocus = sceneFocusProgress("handoff");
+const reorientFocus = sceneFocusProgress("reorient");
+const handoffIncomingReach = handoffFocus - approachFocus;
+const approachReleaseReach = Math.min(approachFocus - reorientFocus, handoffIncomingReach);
+
+export function sceneCompositionPresence(id: SceneId, progress: number, mobile = false): number {
+  const signedApproach = sceneApproach(id, progress, mobile);
+  if (id === "tail") return systemsWordPresence(signedApproach, mobile);
+  if (!mobile) {
+    if (id === "reorient" && progress > reorientFocus) {
+      // Match Built in Layers' full hold AND completed release in scroll space.
+      return scenePresence((progress - reorientFocus) / approachReleaseReach);
+    }
+    if (id === "handoff" && progress < handoffFocus) {
+      // Read the incoming leg, not the shorter exit. Full halfway through that
+      // leg (-0.50 + 0.12 = -0.38), shortly after the sentence enters the frame.
+      return scenePresence((progress - handoffFocus) / handoffIncomingReach + 0.12);
+    }
+  }
+  return scenePresence(signedApproach, mobile);
 }
 
 /**

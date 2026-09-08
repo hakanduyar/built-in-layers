@@ -1,0 +1,132 @@
+{
+  "base": "docs/review/v14.6-codex-motion/metrics/mobile-route.json",
+  "candidate": "docs/review/v14.7-codex-timing/metrics/mobile-route.json",
+  "differences": [
+    {
+      "path": "/viewports/320x568/summary/meanPxInkRows/lower",
+      "before": 0.326,
+      "after": 0.325
+    },
+    {
+      "path": "/viewports/320x568/frames/4/px/inkRows",
+      "before": 0.239,
+      "after": 0.234
+    },
+    {
+      "path": "/viewports/320x568/frames/4/px/lastInkVh",
+      "before": 0.803,
+      "after": 0.801
+    },
+    {
+      "path": "/viewports/320x568/frames/6/materialCoverage",
+      "before": 0.574,
+      "after": 0.575
+    },
+    {
+      "path": "/viewports/360x800/summary/meanPxInkRows/lower",
+      "before": 0.287,
+      "after": 0.288
+    },
+    {
+      "path": "/viewports/360x800/frames/4/px/materialRows",
+      "before": 0.472,
+      "after": 0.471
+    },
+    {
+      "path": "/viewports/360x800/frames/5/px/inkRows",
+      "before": 0.313,
+      "after": 0.314
+    },
+    {
+      "path": "/viewports/375x667/summary/meanPxInkRows/lower",
+      "before": 0.165,
+      "after": 0.166
+    },
+    {
+      "path": "/viewports/375x667/frames/4/materialCoverage",
+      "before": 0.566,
+      "after": 0.567
+    },
+    {
+      "path": "/viewports/375x667/frames/4/firstInkVh",
+      "before": 0.069,
+      "after": 0.07
+    },
+    {
+      "path": "/viewports/375x667/frames/4/px/materialRows",
+      "before": 0.211,
+      "after": 0.204
+    },
+    {
+      "path": "/viewports/375x667/frames/5/px/inkRows",
+      "before": 0.126,
+      "after": 0.127
+    },
+    {
+      "path": "/viewports/375x667/frames/5/px/materialRows",
+      "before": 0.138,
+      "after": 0.133
+    },
+    {
+      "path": "/viewports/390x844/summary/meanPxInkRows/lower",
+      "before": 0.287,
+      "after": 0.288
+    },
+    {
+      "path": "/viewports/390x844/frames/4/px/inkRows",
+      "before": 0.336,
+      "after": 0.34
+    },
+    {
+      "path": "/viewports/768x1024/frames/4/px/inkRows",
+      "before": 0.255,
+      "after": 0.256
+    }
+  ],
+  "stageClassControls": [
+    {
+      "width": 320,
+      "height": 568,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    },
+    {
+      "width": 360,
+      "height": 800,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "elementsCompared": 814,
+      "propertiesPerElement": 15,
+      "changed": []
+    }
+  ],
+  "desktopRouteUnchanged": true,
+  "mobileGeometryUnchanged": true
+}
