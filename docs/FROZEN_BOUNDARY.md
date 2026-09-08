@@ -335,3 +335,22 @@ D-052 and `docs/DESIGN_SYSTEM.md` §44 record what moved and why; the evidence i
 Untouched, byte for byte, against `4810181`: `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
 planeChoreography,projectGround,editorialDrift}.ts`, `LowerRoute.tsx`, `ProjectPlane.tsx`,
 `SpatialProjectScene.tsx`, `SystemPOV.tsx`, every project scene, the case-study system, `app/`.
+
+### 6.7 V14.5 visual gate — the older SYSTEMS restored, the Machine's state, the index as a file (2026-09-08)
+
+D-053 and `docs/DESIGN_SYSTEM.md` §45 record what moved and why; the evidence is
+`docs/review/v14.5-visual-gate/`.
+
+| File | Why | Measured by |
+|---|---|---|
+| `components/spatial/SceneBreak.tsx` | the V4 rails on desktop again; the system in paper above them through the dwell; the V14.4 cover removed (`lib/spatial/surfaceCover.ts` and its unit test deleted) | the two `f4bdab3` rail contracts; transition sheets both ways at 1440, 1920 smoke |
+| `components/spatial/SystemsWord.tsx` | the structure beneath the word (straight rules, names), desktop | the atmosphere contract; the approach sheet |
+| `lib/spatial/systemPov.ts` | the word's entrance curve | the approach sheet |
+| `components/spatial/SystemPOV.tsx` | the state word in the acquisition frame's index line, desktop | stills at the project scenes |
+| `components/spatial/{WorldGrammar,SpatialCamera,SpatialExperience}.tsx`, `components/layout/SiteFooter.tsx` | the terminus and finale registers removed with their plumbing | stills at the handoff, the surface return, the finale |
+| `components/sections/SelectedSystems.tsx` | the index as a file, `lg:` only | stills; the home contracts (15 layer records, links, the caption) |
+
+Untouched, byte for byte, against `ec37eb1`: `lib/spatial/{cameraFilter,sceneRoute,scenes,worldFit,
+planeChoreography,projectGround,editorialDrift}.ts`, `LowerRoute.tsx`, `ProjectPlane.tsx`,
+`SpatialProjectScene.tsx`, `SystemNode.tsx`, `AboutPreview.tsx`, `HowIBuild.tsx`, `FieldNotes.tsx`,
+`styles/globals.css`, the case-study system, `app/`.

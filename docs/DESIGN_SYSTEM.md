@@ -2849,3 +2849,30 @@ About is a stage of at least 64vh at `lg`, the name at 7vw, 160px above it and 8
 before the finale: when it stands at its primary position the previous section is gone and the CTA
 has not arrived. Major beats open with 160px; Field Notes stays compact; How I Build carries its
 statement and its four commitments only.
+
+## 45. V14.5 visual gate — the older SYSTEMS restored, the Machine's state, the index as a file (2026-09-08)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.4 checkpoint `f9b0a72` / `ec37eb1`. Not merged
+to `main`. Scope: SYSTEMS after `f4bdab3`, the Machine's behaviour, Selected Systems. Decision:
+D-053. Evidence: `docs/review/v14.5-visual-gate/`.
+
+### 45.1 SYSTEMS
+
+A short, slightly muted entrance (0.72), whole by approach −0.88, held. Beneath the word, three
+straight rules with their names — SURFACE, FLOW, SYSTEM — resolving as the word is acquired. Then
+the rails: black planes closing into the frame from alternating sides over the base field; at the
+dwell, on solid black, the underlying system in paper; then the rails open onto UNDERNEATH. Reverse
+mirrors it. No seam, no recess, no map, no orange.
+
+### 45.2 The Machine's state
+
+The acquisition frame states what it is doing: `CASE 01 / 04 — DETECTED · ACQUIRED · RELEASED`,
+from the same signed approach its brackets read. The brackets are the classification, the ticks the
+registration, the rails the boundary, the state word the state.
+
+### 45.3 The index as a file
+
+Selected Systems is five entries on rules: station and index, the name at heading scale, the
+classification, the record filed on one line (provenance · verification · phase), and the three
+layers as labelled marks, filled where documented. No columns, no floors, no descents. The terminus
+and finale registers of V14.4 are gone; the handoff's sentence and the finale's address stand alone.

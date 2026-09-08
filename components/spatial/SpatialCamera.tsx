@@ -98,10 +98,6 @@ type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
    * rather than imported, because only the server component has the content
    * loader -- there is no slug table in here and nothing invented.
    */
-  branchDestinations?: readonly string[];
-  /** V14.4: the four stations' real titles, for the route register at the
-   *  terminus (WorldGrammar). Presentation order is the route's. */
-  stations?: readonly { index: string; title: string }[];
   /**
    * V9 (§P0): the regime change that ends the world, rendered INSIDE the sticky
    * frame instead of after it. See SurfaceReturn in SpatialExperience for the
@@ -849,8 +845,6 @@ export function SpatialCamera({
   systemsWord,
   distantMaterial,
   nearMaterial,
-  branchDestinations = [],
-  stations = [],
   surfaceReturn,
   annotations = {},
   ...scenes
@@ -1234,12 +1228,7 @@ export function SpatialCamera({
                   mobile
                 />
               ))}
-            <WorldGrammar
-              progress={progress}
-              mobile={mobile}
-              branchDestinations={isDesktop ? branchDestinations : []}
-              stations={isDesktop ? stations : []}
-            />
+            <WorldGrammar progress={progress} mobile={mobile} />
 
             {SCENE_IDS.map((id) => (
               <SceneFrame

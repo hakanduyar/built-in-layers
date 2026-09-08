@@ -122,6 +122,14 @@ export function SystemsWord({ word, opening, active, wide = false }: SystemsWord
       {opening !== null && active !== null && !wide && (
         <SurfaceCut opening={opening} active={active} />
       )}
+      {/* V14.5 (owner: "restrained straight rules / textual system marks
+          beneath SYSTEMS", after f4bdab3): on desktop the three strata stand
+          beneath the word as straight rules with their names -- the section
+          the older reveal drew, without the seam, the recess or the map. They
+          resolve as the word is acquired and hold. */}
+      {opening !== null && active !== null && wide && (
+        <StructureBeneath opening={opening} active={active} />
+      )}
       {/* THE SURFACE. A plain span of ink. No mask, no clip, no filter, no
           transform, no opacity -- in any state, at any progress. */}
       <span data-systems-layer="surface" className={`${WORD_CLASS} relative text-ink`}>
@@ -153,9 +161,51 @@ function useSeam(opening: MotionValue<number>, active: MotionValue<number>) {
   return { y, counter, structure, edge, visibility };
 }
 
-// V14.4: the desktop SurfaceReveal (the frame-spanning diagonal seam, the
-// recess and the RevealedStructure under the word) is gone; see the note in
-// SystemsWord. The compact mobile cut below is the V13 composition.
+/** Where the strata stand beneath the word, in em of the word's scale. */
+const STRUCTURE_TOP_EM = 1.06;
+const STRUCTURE_STEP_EM = 0.9;
+
+/**
+ * V14.5 -- THE STRUCTURE BENEATH THE WORD (desktop). Three straight rules,
+ * frame-wide, unrotated, with the real layer names anchored a little inside
+ * the word's left edge: SURFACE just under the word, FLOW, then SYSTEM. No
+ * seam, no recess, no route. Drawn once; only its opacity follows the
+ * opening (the word itself is never touched).
+ */
+function StructureBeneath({
+  opening,
+  active,
+}: {
+  opening: MotionValue<number>;
+  active: MotionValue<number>;
+}) {
+  const presence = useTransform(opening, [0, 0.3], [0.35, 1]);
+  const visibility = useTransform(active, (value) => (value > 0.5 ? "visible" : "hidden"));
+  return (
+    <motion.span
+      aria-hidden="true"
+      data-systems-structure="true"
+      className="pointer-events-none absolute -left-[60vw] -right-[60vw] top-0 -z-10 block"
+      style={{ opacity: presence, visibility }}
+    >
+      {layerDefinitions.map((layer, index) => (
+        <span
+          key={layer.label}
+          className="absolute left-0 right-0 block"
+          style={{ top: `${STRUCTURE_TOP_EM + index * STRUCTURE_STEP_EM}em` }}
+        >
+          <span
+            className="absolute left-0 right-0 top-0 block h-px bg-ink"
+            style={{ opacity: 0.18 + index * 0.12 }}
+          />
+          <span className="absolute left-[calc(60vw+0.06em)] top-[0.06em] block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
+            {layer.label}
+          </span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
 
 /**
  * THE COMPACT CUT (mobile) -- the V6.6 construction, exactly as the V13 mobile

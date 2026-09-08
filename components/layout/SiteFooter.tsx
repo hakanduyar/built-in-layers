@@ -1,14 +1,5 @@
-import {
-  footerCtaHeading,
-  footerCtaLabel,
-  footerCtaSubline,
-  howIBuildHeading,
-  sectionIndex,
-  selectedSystemsHeading,
-  workIndexLabel,
-} from "@/data/copy";
+import { footerCtaHeading, footerCtaLabel, footerCtaSubline } from "@/data/copy";
 import { contactUrl, siteName, siteOwner, socialLinks } from "@/data/site";
-import { getPublishedProjects } from "@/lib/content/work";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { TextLink } from "@/components/ui/TextLink";
@@ -85,35 +76,8 @@ import { TextLink } from "@/components/ui/TextLink";
  * appended. Off the homepage the caption and the axis are hidden with the
  * map, and the CTA stands alone in the shared container as before.
  */
-/** V14.4: the route's four stations, in the route's own order; titles come
- *  from the same loader every other index reads. */
-const FINALE_STATIONS = [
-  { id: "software-factory", index: "01" },
-  { id: "kivilcim", index: "02" },
-  { id: "jointledger", index: "03" },
-  { id: "dropspot", index: "04" },
-] as const;
-
-/** V14.1: the lower page's stations, so the resolved map is the whole journey
- *  -- the sections' real IA indices and labels, in their real order. */
-const FINALE_TAIL = [
-  { index: sectionIndex.selectedSystems, label: selectedSystemsHeading },
-  { index: sectionIndex.howIBuild, label: howIBuildHeading },
-  { index: "07", label: "Field notes" },
-  { index: "08", label: "About" },
-] as const;
-
 export function SiteFooter() {
   const year = new Date().getFullYear();
-  // V14.4 (owner: the finale's map was a connected-dot graphic -- no semantic
-  // meaning beyond what its rows state; remove it) -- THE RESOLVED STATE IS A
-  // REGISTER. The same facts the map drew, filed: the four stations tracked in
-  // order, the branch to the Work index, the lower world's four stations.
-  // Real titles from the loader; no line, no dot, no diagram.
-  const titles = new Map(getPublishedProjects().map((project) => [project.slug, project.title]));
-  const branch = getPublishedProjects()
-    .filter((project) => !FINALE_STATIONS.some((station) => station.id === project.slug))
-    .map((project) => project.title);
 
   return (
     <footer className="spatial-footer relative overflow-clip border-t border-line">
@@ -183,39 +147,10 @@ export function SiteFooter() {
               the branch drawn, the terminus closed. Hidden off the homepage by
               styles/globals.css -- a map of a journey the page does not contain
               would be decoration. */}
-          <div
-            aria-hidden="true"
-            data-finale-register="true"
-            className="finale-map mt-16 hidden font-mono text-mono-label tracking-mono-label uppercase lg:col-span-4 lg:col-start-9 lg:mt-3 lg:block"
-          >
-            <div className="flex items-baseline justify-between border-t border-ink pb-2 pt-2 text-ink-muted">
-              <span>Route 01</span>
-              <span>Resolved</span>
-            </div>
-            {FINALE_STATIONS.map((station) => (
-              <div
-                key={station.id}
-                className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
-              >
-                <span className="text-ink-muted">{station.index}</span>
-                <span>{titles.get(station.id) ?? station.id}</span>
-              </div>
-            ))}
-            <div className="flex items-baseline gap-4 border-t border-ink pb-2 pt-2 text-ink-muted">
-              <span>Branch</span>
-              <span>{[...branch, workIndexLabel].join(" · ")}</span>
-            </div>
-            {FINALE_TAIL.map((stop) => (
-              <div
-                key={stop.index}
-                className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
-              >
-                <span className="text-ink-muted">{stop.index}</span>
-                <span>{stop.label}</span>
-              </div>
-            ))}
-            <div className="border-t border-ink" />
-          </div>
+          {/* V14.5 (owner): the resolved register that stood here -- and the map
+              before it -- is gone. The finale is the operator's address: the
+              state in the caption, the question, the one action. Nothing beside
+              it. */}
         </div>
       </Container>
 

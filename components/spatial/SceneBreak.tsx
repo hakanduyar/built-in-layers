@@ -3,14 +3,12 @@
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { layerDefinitions } from "@/data/copy";
 import { SCENE_BREAK_BANDS } from "@/lib/spatial/scenes";
-import { breakBandOffset, breakWipeOffset } from "@/lib/spatial/sceneRoute";
 import {
-  coverOpacity,
-  labelPresence,
-  landingDrift,
-  sectionPresence,
-  upperSectionPresence,
-} from "@/lib/spatial/surfaceCover";
+  BREAK_COVER_CLOSED,
+  BREAK_REVEAL_START,
+  breakBandOffset,
+  breakWipeOffset,
+} from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
 // see docs/DESIGN_SYSTEM.md §18).
@@ -52,147 +50,107 @@ export function SceneBreak({ progress }: SceneBreakProps) {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0"
     >
-      <SurfaceCover progress={progress} />
       <InkRails progress={progress} />
     </div>
   );
 }
 
-/* ---------------------------------------------- desktop: the underside */
+/* ------------------------------------------ the system, on the black */
 
 /**
- * Where the section's SYSTEM line sits in the frame once the cover has let
- * go: the screen height of UNDERNEATH's own SYSTEM stratum at
- * BREAK_REVEAL_END (measured 48.6vh at 1440x900, 50.3vh at 1920x1080), set
- * between the two so the SURFACE line above it clears the frame top at both.
+ * V14.5 (owner: restore the older interlocking black transition). The rails
+ * are back on desktop -- black planes closing into the frame from
+ * alternating sides over the base field (lib/spatial/sceneRoute.ts: the
+ * protected timing, untouched). What the covered frame carries is the
+ * UNDERLYING SYSTEM, drawn on the field in paper: the three strata with their
+ * names and the descent to SYSTEM, the line UNDERNEATH then stands on. The
+ * SYSTEM line sits where UNDERNEATH's own stratum arrives (measured 48.6vh /
+ * 50.3vh at 1440 / 1920), the step is the word's own stratum step, and the
+ * descent stands where UNDERNEATH's depth rail will (fitted through the
+ * world fit the boot script publishes). It stands ABOVE the rails and is
+ * present only through the dwell -- from the moment every rail is home to
+ * the moment the first lets go -- so it is seen on solid black and never
+ * over a moving plane. Desktop only; the mobile field keeps the V13
+ * boundary section.
  */
 const SYSTEM_LINE = "49.5%";
-/** The reveal's own stratum step (SystemsWord's RevealedStructure, 0.98em),
- *  in em of the SYSTEMS word's scale, so the section at rest is the section
- *  that was just opened -- two hundredths tighter so the SURFACE line and its
- *  name stay inside a 900px frame. */
 const STRATA_STEP_EM = 0.96;
-/** The SYSTEMS word's type scale: the em the section is drawn in. */
 const WORD_SCALE = "clamp(2.5rem, 16vw, 15rem)";
-/**
- * The descent's x: registered to UNDERNEATH's depth rail as the cover lets go,
- * fitted to the rail's measured screen position at 1440x900 (24.5vw) and
- * 1920x1080 (33.6vw) through the world fit the boot script publishes. The
- * rail then continues it from the frame's top, in the world.
- */
 const DESCENT_X = "calc(47.3vw * var(--world-fit, 1) - 292px)";
-/** The stratum labels: the world's own inset from the descent (the anchor's
- *  label offset), so the names sit where UNDERNEATH's SYSTEM label will. */
 const LABEL_X = "calc(28vw * var(--world-fit, 1) - 292px)";
-/**
- * How far the landing decompresses across the reveal, in world units: at
- * BREAK_REVEAL_START the reorient composition stands this much to the right
- * of where it settles (measured: the depth rail 34.5vw -> 22.7vw at 1440x900,
- * 19.3 world-vw of label inset at both viewports). The section travels the
- * same way. Its 4vh of vertical settle is deliberately NOT mirrored: carried,
- * it lifted the SURFACE line off the frame's top through the whole dwell,
- * and a 4vh drift between two faint lines during a fade is not worth losing
- * the surface for.
- */
-const LANDING_DRIFT_VW = 13;
 
-function SurfaceCover({ progress }: { progress: MotionValue<number> }) {
-  const opacity = useTransform(progress, coverOpacity);
-  const presence = useTransform(progress, sectionPresence);
-  const upper = useTransform(progress, upperSectionPresence);
-  const drift = useTransform(progress, landingDrift);
-  const labels = useTransform(progress, labelPresence);
-  const x = useTransform(
-    drift,
-    (d) => `calc(${(LANDING_DRIFT_VW * d).toFixed(3)}vw * var(--world-fit, 1))`,
+function SystemOnInk({ progress }: { progress: MotionValue<number> }) {
+  const dwell = useTransform(progress, (value) =>
+    value >= BREAK_COVER_CLOSED && value <= BREAK_REVEAL_START ? 1 : 0,
   );
   return (
-    <motion.div
-      data-surface-cover="true"
+    <motion.span
       aria-hidden="true"
-      // V14.4 (owner): THE BLACK STATE. The cover is ink -- the decisive state
-      // transition of the older accepted direction -- and what it carries is
-      // the underlying system drawn on the black in paper: the three strata
-      // and the descent to SYSTEM, the line UNDERNEATH then stands on. Same
-      // timing, same opacity contract, same dwell; arrives by opacity, steeply.
-      className="absolute inset-0 hidden bg-ink lg:block"
-      style={{ opacity, fontSize: WORD_SCALE }}
+      data-cover-system="true"
+      className="absolute inset-0 hidden lg:block"
+      style={{ fontSize: WORD_SCALE, opacity: dwell }}
     >
-      {/* The section, travelling with the landing as the cover lets go. */}
-      <motion.span aria-hidden="true" className="absolute inset-0 block" style={{ x }}>
-        {layerDefinitions.map((layer, index) => {
-          const depth = layerDefinitions.length - 1 - index;
-          const foot = depth === 0;
-          return (
-            <motion.span
-              key={layer.label}
+      {layerDefinitions.map((layer, index) => {
+        const depth = layerDefinitions.length - 1 - index;
+        return (
+          <span
+            key={layer.label}
+            aria-hidden="true"
+            data-cover-stratum={layer.label.toLowerCase()}
+            className="absolute left-0 right-0 block"
+            style={{ top: `calc(${SYSTEM_LINE} - ${depth * STRATA_STEP_EM}em)` }}
+          >
+            <span
               aria-hidden="true"
-              data-cover-stratum={layer.label.toLowerCase()}
-              // Overrunning both edges: the section travels with the landing,
-              // and a line that stopped at the frame's edge would show where.
-              className="absolute -left-[40vw] -right-[40vw] block"
-              style={{
-                top: `calc(${SYSTEM_LINE} - ${depth * STRATA_STEP_EM}em)`,
-                // The SYSTEM line hands over to the world's own as the cover
-                // lets go; the strata above it have nothing to hand over to
-                // and stay with the field.
-                opacity: foot ? presence : upper,
-              }}
+              className="absolute left-0 right-0 top-0 block h-px bg-paper"
+              style={{ opacity: 0.3 + index * 0.2 }}
+            />
+            <span
+              aria-hidden="true"
+              className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-paper"
+              style={{ left: LABEL_X, top: 8, opacity: 0.85 }}
             >
-              <span
-                aria-hidden="true"
-                className="absolute left-0 right-0 top-0 block h-px bg-paper"
-                style={{ opacity: 0.3 + index * 0.2 }}
-              />
-              <motion.span
-                aria-hidden="true"
-                className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-paper"
-                style={{
-                  left: `calc(40vw + ${LABEL_X})`,
-                  top: 8,
-                  opacity: labels,
-                }}
-              >
-                {layer.label}
-              </motion.span>
-            </motion.span>
-          );
-        })}
-        {/* THE DESCENT: from the surface line down to SYSTEM -- UNDERNEATH's
-            depth rail, drawn to its foot before the word stands there. */}
-        <motion.span
-          aria-hidden="true"
-          data-cover-descent="true"
-          className="absolute block w-px bg-paper opacity-60"
-          style={{
-            left: DESCENT_X,
-            top: `calc(${SYSTEM_LINE} - ${(layerDefinitions.length - 1) * STRATA_STEP_EM}em)`,
-            height: `${(layerDefinitions.length - 1) * STRATA_STEP_EM}em`,
-            opacity: upper,
-          }}
-        />
-      </motion.span>
-    </motion.div>
+              {layer.label}
+            </span>
+          </span>
+        );
+      })}
+      <span
+        aria-hidden="true"
+        data-cover-descent="true"
+        className="absolute block w-px bg-paper opacity-60"
+        style={{
+          left: DESCENT_X,
+          top: `calc(${SYSTEM_LINE} - ${(layerDefinitions.length - 1) * STRATA_STEP_EM}em)`,
+          height: `${(layerDefinitions.length - 1) * STRATA_STEP_EM}em`,
+        }}
+      />
+    </motion.span>
   );
 }
 
-/* ------------------------------------------------- mobile: the V4 rails */
+/* ------------------------------------------------------------ the rails */
 
 function InkRails({ progress }: { progress: MotionValue<number> }) {
   // The slowest-arriving element of the break, and the one guaranteeing the
   // frame is genuinely opaque through the dwell.
   const fieldX = useTransform(progress, (value) => `${breakWipeOffset(value)}%`);
   return (
-    <div aria-hidden="true" className="absolute inset-0 lg:hidden">
+    // V14.5: the rails run on every viewport again. Below `lg` the field
+    // carries the V13 boundary section; at `lg` it carries the system.
+    <div aria-hidden="true" className="absolute inset-0">
       <motion.div className="absolute inset-0 bg-ink" style={{ x: fieldX }}>
         {/* V6.1: the boundary's own section, carried ON the field so it is only
             ever seen while the field is home -- i.e. during the dwell, and
             nowhere else in the journey. */}
-        <BoundarySection />
+        <span aria-hidden="true" className="absolute inset-0 block lg:hidden">
+          <BoundarySection />
+        </span>
       </motion.div>
       {Array.from({ length: SCENE_BREAK_BANDS }, (_, index) => (
         <BreakRail key={index} index={index} progress={progress} />
       ))}
+      <SystemOnInk progress={progress} />
     </div>
   );
 }

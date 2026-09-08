@@ -5,7 +5,6 @@ import { layerDefinitions } from "@/data/copy";
 import {
   ROUTE_TWO_IDS,
   SCENE_IDS,
-  TURN_WORLD,
   VW_PER_VH,
   sceneAnchor,
   screenDistance,
@@ -79,22 +78,9 @@ import { worldX, worldY } from "@/lib/spatial/worldFit";
 type WorldGrammarProps = {
   progress: MotionValue<number>;
   mobile: boolean;
-  /**
-   * Real project titles the Work index holds, plus the site's own term for it.
-   * V14: drawn on the terminus map (RouteMap, `mapped`) as the branch's real
-   * names rather than as a separate branch in the world. Empty on mobile.
-   */
-  branchDestinations?: readonly string[];
-  /** V14.4: the four stations' real titles, in the route's order. */
-  stations?: readonly { index: string; title: string }[];
 };
 
-export function WorldGrammar({
-  progress,
-  mobile,
-  branchDestinations = [],
-  stations = [],
-}: WorldGrammarProps) {
+export function WorldGrammar({ progress, mobile }: WorldGrammarProps) {
   const legs = routeLegs(mobile);
   return (
     <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0">
@@ -115,8 +101,6 @@ export function WorldGrammar({
       </div>
 
       {!mobile && <Strata progress={progress} />}
-
-      {!mobile && <RouteRegister stations={stations} branch={branchDestinations} />}
 
       {/* V14.3 Gate D (owner: "one mark = one semantic meaning"): on desktop
           the four project scenes carry the acquisition frame's brackets at
@@ -424,67 +408,6 @@ function Station({
         </motion.span>
       )}
     </>
-  );
-}
-
-/* ------------------------------------------------------------ the terminus */
-
-/**
- * V14.4 (owner: "meaningless line/dot graphics around the larger-map /
- * work-index areas -- no semantic meaning, remove it") -- THE TERMINUS IS A
- * REGISTER, NOT A MAP.
- *
- * V14 drew the whole route again here as a map: two polylines, nine dots, a
- * dotted branch, a ring at a junction. Every mark was derived from the real
- * route, and it still read as a connected-dot network. What the reader needs
- * at the route's end is the route's RECORD: which stations were tracked, in
- * which order, and where the branch goes -- stated, in the world's register,
- * as the machine would file it. Real titles from the same loader the handoff
- * sentence reads; the indices are the route's own presentation order. It
- * stands where the map stood, so the camera's final move is onto it and the
- * lower world's own index begins where it ends. Two cut marks and a landing
- * corner that stood in the world (StateChanges) are gone with it: the black
- * state carries the boundary and the route-two tick registers the landing.
- */
-const REGISTER_OFFSET: WorldPoint = { x: 30, y: -12 };
-const REGISTER_WIDTH_VW = 34;
-
-function RouteRegister({
-  stations,
-  branch,
-}: {
-  stations: readonly { index: string; title: string }[];
-  branch: readonly string[];
-}) {
-  const at = { x: TURN_WORLD.x + REGISTER_OFFSET.x, y: TURN_WORLD.y + REGISTER_OFFSET.y };
-  if (stations.length === 0) return null;
-  return (
-    <span
-      aria-hidden="true"
-      data-route-register="true"
-      className="absolute block font-mono text-mono-label tracking-mono-label uppercase"
-      style={{ left: worldX(at.x), top: worldY(at.y), width: worldX(REGISTER_WIDTH_VW) }}
-    >
-      <span className="flex items-baseline justify-between border-t border-ink pb-2 pt-2 text-ink-muted">
-        <span>Route 01</span>
-        <span>{stations.length} stations · tracked</span>
-      </span>
-      {stations.map((station) => (
-        <span
-          key={station.index}
-          className="flex items-baseline gap-4 border-t border-line py-1.5 text-ink"
-        >
-          <span className="text-ink-muted">{station.index}</span>
-          <span>{station.title}</span>
-        </span>
-      ))}
-      {branch.length > 0 && (
-        <span className="flex items-baseline gap-4 border-t border-ink pt-2 text-ink-muted">
-          <span>Branch</span>
-          <span>{branch.join(" · ")}</span>
-        </span>
-      )}
-    </span>
   );
 }
 

@@ -163,9 +163,9 @@ export function scenePresence(signedApproach: number, mobile = false): number {
 export function systemsWordPresence(signedApproach: number, mobile = false): number {
   if (mobile) return scenePresence(signedApproach, mobile);
   const a = Math.max(-1, Math.min(1, signedApproach));
-  // Never below 0.9 and full a tenth into the approach: the word is read
-  // whole well before the frame centres on it.
-  if (a < -0.9) return 0.9 + 0.1 * ((a + 1) / 0.1);
+  // V14.5 (owner, after f4bdab3): a very short, slightly muted entrance,
+  // then fully clear well before focus -- 0.72 while far, full by -0.88.
+  if (a < -0.88) return 0.72 + 0.28 * ((a + 1) / 0.12);
   // Held at full until the black state has already taken the frame: the
   // word never fades into grey ahead of the cover -- the cover is the cut.
   if (a <= 0.55) return 1;

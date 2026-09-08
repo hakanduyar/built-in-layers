@@ -216,6 +216,13 @@ function Cluster({
   compact: boolean;
 }) {
   const indexOpacity = useTransform(state, [-0.7, -0.32, 0.34, 0.68], [0, 1, 1, 0]);
+  // V14.5 (owner: the Machine's behaviour through state): the frame states
+  // what it is doing with the composition -- detected while it approaches,
+  // acquired while it is read, released as it leaves. Derived from the same
+  // signed approach every mark here reads; never authored, never a number.
+  const stateWord = useTransform<number, string>(state, (value) =>
+    value < -0.35 ? "Detected" : value <= 0.2 ? "Acquired" : "Released",
+  );
   // V14.3 Gate E: on desktop the two facts are legible by -0.36, as the
   // composition is; the compact (mobile) cluster keeps the V14.1 timing.
   const rowsOpacity = useTransform(
@@ -249,6 +256,17 @@ function Cluster({
             signal -- the portfolio carries no orange. */}
         <span className="block h-px w-3 bg-ink-muted" />
         <MonoLabel className="text-ink-muted">Case {index}</MonoLabel>
+        {!compact && animated && (
+          <>
+            <span aria-hidden="true" className="block h-px w-3 bg-ink-muted" />
+            <motion.span
+              data-system-state
+              className="font-mono text-mono-label tracking-mono-label uppercase text-ink"
+            >
+              {stateWord}
+            </motion.span>
+          </>
+        )}
       </motion.div>
 
       {rows.length > 0 && (

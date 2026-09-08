@@ -42,10 +42,8 @@ export function projectLayerCoverage(project: ProjectFrontmatter, layer: LayerKe
 }
 
 /**
- * V14.2 Gate C: the deepest stratum a system's record reaches -- the foot of
- * its descent in the section drawing. -1 when the record documents no layer
- * at all, in which case no descent is drawn: the system stands on the
- * surface, not yet surveyed.
+ * V14.2 Gate C: the deepest stratum a system's record reaches. -1 when the
+ * record documents no layer at all.
  */
 export function projectDepth(project: ProjectFrontmatter): number {
   let depth = -1;
@@ -56,45 +54,33 @@ export function projectDepth(project: ProjectFrontmatter): number {
 }
 
 /**
- * The resolved map after the spatial journey.
+ * The resolved index after the spatial journey.
  *
  * This deliberately does not replay the project gallery. The reader has already
  * experienced title, description, stack and evidence at full scale. Here every
- * system becomes one position in a common topology: Surface / Flow / System
- * coverage on the route, then provenance and verification at the foot. The
- * result answers a new question -- which layers can this portfolio actually
+ * system is one entry in a common record: which of Surface / Flow / System its
+ * validated evidence covers, its provenance, how far it is verified, its phase.
+ * The result answers a new question -- which layers can this portfolio actually
  * substantiate? -- while keeping the same loader-fed order and one route into
  * each case study.
  *
- * V14.2 GATE C (owner) -- THE INDEX IS A SECTION, NOT A TABLE.
+ * V14.5 (owner) -- THE INDEX IS A FILE, NOT A TABLE AND NOT A DRAWING.
  *
- * The V14.1 register put the five systems in rows against a header of five
- * column names, with the three layers as three squares on a line in each
- * row: a coverage table, read as "another portfolio grid". The world has
- * just drawn what a layer IS -- at the cut, the underside of the surface is
- * three strata and a descent to SYSTEM; at Built in Layers the three are
- * defined; on route two they are the floors the reader climbs back through.
- * So the index is now drawn in that grammar, at `lg`: the three strata run
- * across the whole register as floors, named once in the gutter as every
- * band in the world is named; each system stands on the surface as a
- * station -- the same glyph the route and the map give it -- and descends
- * from that station through the floors to the deepest layer its validated
- * record reaches, with a mark on every floor it documents (filled) and on
- * every floor it does not (hollow); its record, provenance and verification,
- * is its footing under the SYSTEM line. A system whose record documents no
- * layer stands on the surface with no descent and hollow marks: not yet
- * surveyed, which is what "Not yet verified" means here. Every mark is the
- * same loader-fed fact the rows carried; only the drawing changed. The
- * mobile register is the V13 gate's, untouched below `lg`.
+ * Gate C drew the five systems as a section: five columns descending through
+ * three floors. The owner's reading was that the index should be calmer,
+ * stronger in hierarchy, more present, and in the Machine's own grammar. So
+ * at `lg` each system is now ONE ENTRY at reading scale, the way the
+ * acquisition frame classifies a scene: the station and its index, the
+ * subject's name at heading scale, its classification beneath, and on the
+ * right the three layers as labelled marks -- filled where the record
+ * documents the layer, hollow where it does not -- with the record's
+ * provenance, verification and phase filed on one line under the name. Five
+ * entries on rules, generous, one column, nothing drawn that is not a fact.
+ * The mobile register below `lg` is the V13 gate's, untouched.
  */
 export function SelectedSystems({ projects }: SelectedSystemsProps) {
   return (
     <SystemNode index={sectionIndex.selectedSystems} label={selectedSystemsHeading} major>
-      {/* V13 (Fable gate, finding E): the title row shares the register's own
-          12-column grid AND its gap, so the column label below lands exactly on
-          the Record column it names. Before, it started at column 9 of a
-          gap-10 grid -- measured 77-80px left of the Record header at every
-          desktop viewport, aligned to nothing on the page. */}
       <div className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-8">
         <div className="lg:col-span-7">
           <h2 className="mt-5 font-display text-display-l uppercase text-ink">
@@ -109,70 +95,42 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
         </p>
       </div>
 
-      {/* V14.1 (owner §14): THE REGISTER IS THE MAP'S INDEX, NOT A TABLE.
-          The four systems the route visited carry the world's own station
-          glyph -- the filled ring the map draws for a visited stop -- and the
-          system that continues on the Work index carries the branch's hollow
-          ring, exactly as the terminus map above drew it. Same five stops,
-          same five symbols. */}
-      <Reveal early className="mt-10 lg:mt-12">
-        <div className="border-y border-ink lg:border-y-0">
-          {/* At `lg` the list is a five-column section drawing: one subgrid
-              row for the station and its name, one for the strata, one for
-              the footing, so the floors run level across every column
-              whatever the names wrap to. The gutter left of the first column
-              is where the strata are named. */}
-          <ol
-            data-systems-section="true"
-            className="[--strata-gutter:0px] lg:ml-[var(--strata-gutter)] lg:grid lg:grid-cols-5 lg:grid-rows-[auto_auto_auto] lg:[--strata-gutter:5.5rem]"
-          >
+      <Reveal early className="mt-10 lg:mt-14">
+        <div className="border-y border-ink lg:border-b-0">
+          <ol>
             {projects.map((project, index) => {
               const visited = ROUTE_ONE_IDS.some((id) => id === project.slug);
-              const depth = projectDepth(project);
-              const first = index === 0;
-              const last = index === projects.length - 1;
               return (
                 <li
                   key={project.slug}
-                  data-system-column={project.slug}
-                  className="border-b border-line py-6 last:border-b-0 lg:row-span-3 lg:grid lg:min-w-0 lg:grid-rows-subgrid lg:border-b-0 lg:py-0"
+                  data-system-entry={project.slug}
+                  className="border-b border-line py-6 last:border-b-0 lg:grid lg:grid-cols-12 lg:grid-rows-[auto_auto] lg:items-start lg:gap-x-8 lg:gap-y-0 lg:border-b lg:py-8 lg:last:border-b"
                 >
-                  {/* THE STATION AND ITS NAME. Below lg, the V13 row: glyph
-                      and index beside the title block. At lg, stacked at the
-                      column's leading edge, with the descent leaving the
-                      station toward the first floor. */}
-                  <div className="relative flex items-start gap-5 lg:flex-col lg:items-stretch lg:gap-2 lg:pb-5 lg:pr-6">
-                    {depth >= 0 && (
-                      <span
-                        aria-hidden="true"
-                        data-system-descent={project.slug}
-                        className="absolute bottom-0 left-[4.5px] top-3 hidden w-px bg-line lg:block"
-                      />
-                    )}
-                    <span aria-hidden="true" className="flex items-center pt-1 lg:gap-3 lg:pt-0">
+                  {/* THE SUBJECT. Below lg, the V13 row: glyph and index beside
+                      the title block. At lg, the station and its index in a
+                      gutter, the name at heading scale, the classification
+                      beneath it. */}
+                  <div className="flex items-start gap-5 lg:col-span-8 lg:row-start-1 lg:gap-6">
+                    <span
+                      aria-hidden="true"
+                      className="flex items-center pt-1 lg:w-14 lg:shrink-0 lg:gap-3 lg:pt-3"
+                    >
                       <span
                         data-station-glyph={visited ? "visited" : "branch"}
                         className={
                           visited
-                            ? "relative z-[1] hidden h-2.5 w-2.5 rounded-full border border-ink bg-ink lg:block"
-                            : "relative z-[1] hidden h-2.5 w-2.5 rounded-full border border-ink bg-paper lg:block"
+                            ? "hidden h-2.5 w-2.5 rounded-full border border-ink bg-ink lg:block"
+                            : "hidden h-2.5 w-2.5 rounded-full border border-ink bg-paper lg:block"
                         }
                       />
                       <span className="font-mono text-mono-label tracking-mono-label text-ink-muted">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </span>
-                    {/* Beside the descent, never on it: the name stands to the
-                        right of the station's line, as every label in the
-                        world stands beside its rail. */}
-                    <div className="lg:min-w-0 lg:pl-6">
-                      {/* V13 (mobile gate, M4): the register's title is the route
-                          into each system and was a 24px-tall target on phones.
-                          `touch-link` (styles/globals.css) gives it a 44px hit
-                          box below `lg` and changes nothing else -- the row's
-                          rhythm and the desktop are pixel-identical
-                          (docs/FROZEN_BOUNDARY.md §5). */}
-                      <h3 className="font-display text-heading-m text-ink lg:text-[clamp(1.0625rem,1.5vw,1.375rem)] lg:leading-[1.2]">
+                    <div className="lg:min-w-0">
+                      {/* V13 (mobile gate, M4): `touch-link` gives the title a
+                          44px hit box below `lg` and changes nothing else. */}
+                      <h3 className="font-display text-heading-m text-ink lg:text-heading-l lg:tracking-heading-l">
                         <Link
                           href={`/work/${project.slug}`}
                           className="group/open underline decoration-1 underline-offset-[3px] transition-[color,text-decoration-thickness] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-ink-muted hover:decoration-2 max-lg:inline-block max-lg:touch-link"
@@ -186,67 +144,40 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                           </span>
                         </Link>
                       </h3>
-                      {/* V14.3 Gate E: the classification is information, at
-                          label size on the desktop. Mobile keeps meta. */}
-                      <p className="mt-1 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:text-mono-label lg:tracking-mono-label">
+                      <p className="mt-1 font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:mt-2 lg:text-mono-label lg:tracking-mono-label">
                         {project.categoryLabel}
                       </p>
                     </div>
                   </div>
 
-                  {/* THE STRATA. Below lg, three squares on a line with their
-                      names. At lg, three floors: the rule runs the column's
-                      full width (and, in the first column, back through the
-                      gutter to the stratum's name); the mark sits on the rule
-                      at the station's x; the descent continues through the
-                      floor while a deeper layer is documented. */}
+                  {/* THE LAYERS. Below lg, three squares on a line with their
+                      names. At lg, three labelled marks on the right: filled
+                      where the validated record documents the layer, hollow
+                      where it does not. */}
                   <ul
                     aria-label={`${project.title} documented layers`}
-                    className="relative mt-5 grid grid-cols-3 gap-4 before:absolute before:left-[8%] before:right-[8%] before:top-[7px] before:h-px before:bg-line lg:mt-0 lg:grid-cols-1 lg:gap-0 lg:before:hidden"
+                    className="relative mt-5 grid grid-cols-3 gap-4 before:absolute before:left-[8%] before:right-[8%] before:top-[7px] before:h-px before:bg-line lg:col-span-4 lg:row-start-1 lg:mt-3 lg:flex lg:justify-end lg:gap-8 lg:before:hidden"
                   >
-                    {layerDefinitions.map((layer, layerIndex) => {
+                    {layerDefinitions.map((layer) => {
                       const key = layer.label.toLowerCase() as LayerKey;
                       const present = projectLayerCoverage(project, key);
-                      const foot = layerIndex === layerDefinitions.length - 1;
                       return (
                         <li
                           key={layer.label}
                           data-layer-record={`${project.slug}:${key}:${present ? "present" : "absent"}`}
-                          className={`relative z-[1] ${foot ? "lg:h-7" : "lg:h-11"}`}
+                          className="relative z-[1] lg:flex lg:items-center lg:gap-2.5"
                         >
-                          {/* the floor */}
                           <span
                             aria-hidden="true"
-                            className="absolute right-0 top-0 hidden h-px bg-ink lg:block"
-                            style={{
-                              left: first ? "calc(-1 * var(--strata-gutter))" : 0,
-                              opacity: 0.22 + layerIndex * 0.1,
-                            }}
-                          />
-                          {first && (
-                            <span
-                              aria-hidden="true"
-                              data-strata-label={key}
-                              className="absolute top-2 hidden font-mono text-mono-label tracking-mono-label uppercase text-ink-muted lg:block"
-                              style={{ left: "calc(-1 * var(--strata-gutter))" }}
-                            >
-                              {layer.label}
-                            </span>
-                          )}
-                          {/* the descent, on through this floor */}
-                          {depth > layerIndex && (
-                            <span
-                              aria-hidden="true"
-                              className="absolute bottom-0 left-[4.5px] top-0 hidden w-px bg-line lg:block"
-                            />
-                          )}
-                          <span
-                            aria-hidden="true"
-                            className={`relative z-[1] block h-[15px] w-[15px] border lg:absolute lg:left-0 lg:top-0 lg:h-2.5 lg:w-2.5 lg:-translate-y-1/2 ${
-                              present ? "border-ink bg-ink" : "border-line bg-paper"
+                            className={`block h-[15px] w-[15px] border lg:h-2.5 lg:w-2.5 ${
+                              present ? "border-ink bg-ink" : "border-line bg-paper lg:border-ink"
                             }`}
                           />
-                          <span className="mt-2 block font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:hidden">
+                          <span
+                            className={`mt-2 block font-mono text-mono-meta tracking-mono-meta uppercase lg:mt-0 lg:text-mono-label lg:tracking-mono-label ${
+                              present ? "text-ink-muted lg:text-ink" : "text-ink-muted"
+                            }`}
+                          >
                             {layer.label}
                           </span>
                           <span className="sr-only">
@@ -257,29 +188,21 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
                     })}
                   </ul>
 
-                  {/* THE FOOTING: the record, under the SYSTEM line. */}
-                  <div
-                    className={`mt-5 border-l border-line pl-4 lg:mt-0 lg:border-l-0 lg:pl-6 ${last ? "" : "lg:pr-4"}`}
-                  >
-                    <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink">
+                  {/* THE RECORD. Below lg the V13 block: provenance and the
+                      verification line in a ruled block after the layers. At lg the
+                      same two facts are filed on one line under the name -- the
+                      grid places the block in the subject column's second row. */}
+                  <div className="mt-5 border-l border-line pl-4 lg:col-span-8 lg:col-start-1 lg:row-start-2 lg:mt-3 lg:ml-20 lg:flex lg:flex-wrap lg:items-baseline lg:gap-x-3 lg:border-l-0 lg:pl-0">
+                    <p className="font-mono text-mono-label tracking-mono-label uppercase text-ink lg:whitespace-nowrap">
                       {PROVENANCE_LABEL[project.provenance]}
                       {project.upstream ? ` of ${project.upstream.name}` : ""}
                     </p>
-                    {/* V14 (§21): the verification state is the record's most
-                        important line and was its smallest (12px). Label size at
-                        `lg`; the mobile row is the V13 gate's. */}
-                    {/* V14.2 Gate C: at a column's measure the record wraps,
-                        so the verification and phase lines take the meta size
-                        and each phase stands on its own line -- three short
-                        lines under the SYSTEM floor rather than five. */}
-                    <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:text-ink">
+                    <p className="mt-1 font-mono text-mono-meta tracking-mono-meta text-ink-muted lg:mt-0 lg:text-mono-label lg:tracking-mono-label lg:text-ink">
+                      <span aria-hidden="true" className="hidden text-ink-muted lg:inline">
+                        ·{" "}
+                      </span>
                       {VERIFICATION_LABEL[project.verificationStatus]}
-                      {project.phase ? (
-                        <>
-                          <span className="lg:hidden"> · </span>
-                          <span className="lg:block">{humanise(project.phase)}</span>
-                        </>
-                      ) : null}
+                      {project.phase ? ` · ${humanise(project.phase)}` : ""}
                     </p>
                   </div>
                 </li>

@@ -1611,3 +1611,55 @@ Binding conditions attached to this approval — all already true of the current
 - **Rejected:** raked ink rails (the "glitch" reading the owner gave them); a dark-grey cover (a
   second tone, not a state); a typographic register that invents states per station ("tracked"
   is said once, of the route the reader has just travelled).
+
+## D-053 — The older SYSTEMS experience restored; the Machine's state stated; the index as a file
+
+- **Status:** V14.5 VISUAL GATE (Fable-only) — pending owner visual acceptance. **Not** in force
+  on `main`. Evidence: `docs/review/v14.5-visual-gate/`.
+- **Context:** the owner's three goals after V14.4. Restore the older SYSTEMS experience with
+  `f4bdab3` as the reference: a very short, slightly muted entrance then fully clear well before
+  focus; restrained straight rules and textual system marks beneath the word; the older interlocking
+  black transition where black planes close into the frame; intentional forward and reverse; clean
+  typography; no orange, no node graphics. Strengthen the Person of Interest / Machine behaviour
+  through acquisition, classification, registration, state, boundaries and controlled transitions —
+  no fan art, no HUD, no fake telemetry, every mark with a purpose. Replace the ROUTE 01 / 4 STATIONS ·
+  TRACKED register treatment and make Selected Systems calmer, stronger in hierarchy, more present,
+  architecturally meaningful and in the Machine's language. Preserved: scroll mechanics, first paint,
+  content and order, no orange, the V14.4 lower-world spacing, About, mobile.
+- **What was measured first** (`before/motion/`, `before/stills/` at `ec37eb1`): the word at 0.9
+  through its approach with nothing beneath it; the V14.4 black arriving by opacity as one plane;
+  the terminus and finale registers; the five-column index drawing.
+- **Decisions:**
+  1. **The entrance** (`systemsWordPresence`, desktop): 0.72 while far, full by approach −0.88 — a
+     short, slightly muted arrival, whole two frames before focus — and held until the rails have
+     taken the frame.
+  2. **The structure beneath the word** (`SystemsWord` `StructureBeneath`, desktop): the three
+     strata as straight, frame-wide rules with their real names anchored just inside the word's
+     left edge, resolving as the word is acquired and holding — the rules and marks the `f4bdab3`
+     reveal drew, without its seam, its recess and its map. The word is never touched.
+  3. **The interlocking black transition** (`SceneBreak`): the V4 rails run on desktop again —
+     black planes closing into the frame from alternating sides over the base field, on the
+     protected timing — and what the black carries is the underlying system in paper: SURFACE, FLOW,
+     SYSTEM and the descent to SYSTEM, standing above the rails and present only through the dwell,
+     from the moment every rail is home to the moment the first lets go. The V14.4 opacity cover and
+     `lib/spatial/surfaceCover.ts` are removed. Reverse is the same event backwards by construction.
+     The rails' hairline is the line token (no orange, since Gate D).
+  4. **The Machine's state, stated** (`SystemPOV`): the acquisition frame's index line carries the
+     frame's own state — DETECTED while the composition approaches, ACQUIRED while it is read,
+     RELEASED as it leaves — derived from the same signed approach every mark reads. Desktop only.
+  5. **Registers out** (`WorldGrammar`, `SiteFooter`, `SpatialCamera`, `SpatialExperience`): the
+     terminus register and the finale register are removed; the handoff's sentence and action carry
+     the handoff, and the finale is the operator's address alone.
+  6. **Selected Systems as a file** (`SelectedSystems`, `lg`): each system is one entry at reading
+     scale — the station and its index, the name at heading scale, its classification beneath, the
+     record (provenance · verification · phase) filed on one line under the name, and the three
+     layers as labelled marks on the right, filled where the validated record documents the layer.
+     Five entries on rules, one column. Every fact the drawing carried, none of its lines. Mobile
+     untouched.
+- **Tests:** the two `f4bdab3` rail contracts restored unchanged (every rail home at the cut; rails
+  converging from alternating sides); the atmosphere test asserts the structure and the rails; the
+  reduced-motion contracts unchanged. `tests/unit/surface-cover.test.ts` removed with its module.
+- **Not changed, by the brief:** scroll modules, first paint, content and order, the V14.4 lower
+  world, About, mobile; the items reserved for the Codex gate.
+- **Rejected:** restoring the diagonal seam (rejected in V14.4); a map or dots beneath the word;
+  per-station state words in the index (the state belongs to the frame that acquires, not to a list).
