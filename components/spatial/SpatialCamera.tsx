@@ -81,6 +81,7 @@ import {
   worldY,
 } from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
+import { LOWER_WORLD_CEILING_RATIO, wheelMotionStep } from "@/lib/spatial/wheelMotion";
 
 /** Composed scenes. `tail` is the near-empty beat before the cut, and its
  *  whole composition is the giant word the structural plane opens behind, which
@@ -660,6 +661,7 @@ function useRouteGovernor(
     let lastWrite = -1;
     let raf = 0;
     let prevT = 0;
+    let motionAgeMs = 0;
 
     /**
      * V10 (§G) -- ONE MODEL FOR THE WHOLE PAGE.
@@ -734,9 +736,16 @@ function useRouteGovernor(
       // onward it is the same screen speed expressed in page pixels -- see
       // pageGearing() in lib/spatial/cameraFilter.ts for the derivation and the
       // baseline measurement that demanded it.
-      const maxStep = governorBudget(y, bounds.pinnedEnd, bounds.routeSpan, bounds.gearing, dt);
+      const maxStep = governorBudget(
+        y,
+        bounds.pinnedEnd,
+        bounds.routeSpan,
+        Math.max(1, bounds.gearing * LOWER_WORLD_CEILING_RATIO),
+        dt,
+      );
       const step = intent - y;
-      const move = Math.abs(step) <= maxStep ? step : Math.sign(step) * maxStep;
+      motionAgeMs += dt;
+      const move = wheelMotionStep(step, maxStep, dt, motionAgeMs);
       const next = Math.round(y + move);
       window.scrollTo(0, next);
       lastWrite = next;
@@ -827,6 +836,7 @@ function useRouteGovernor(
         return;
       }
       event.preventDefault();
+      if (intent === null || opposes || lead === 0) motionAgeMs = 0;
       intent = next;
       if (!raf) raf = requestAnimationFrame(tick);
     };
@@ -1031,37 +1041,70 @@ export function SpatialCamera({
     // Each scene keeps its full V4 composition, so this reads as a designed
     // linear page rather than a stripped dump.
     return (
-      // V14.1: `world-fit-layer` carries the boot script's fit, so this tree --
-      // which every JS visitor sees for the frames before the world mounts --
-      // paints at the same scale the world settles at instead of 9% larger. It
-      // scales by transform rather than by `zoom` so the document's layout is
-      // untouched and the hydration swap's own layout shift does not grow; see
-      // the rule in styles/globals.css for the measurement. For the visitors
-      // this tree is FINAL rather than transient (reduced motion, no JS) the
-      // property is never set, and the CSS fallback of 1 leaves their
-      // composition exactly as it was.
-      <div className="world-fit-layer mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8">
-        {SCENE_IDS.map((id) => {
-          const annotation = annotations[id];
-          return (
-            // The system annotation survives here in its resolved, static form:
-            // §37 keeps useful system metadata, and these two rows are real
-            // project facts stated nowhere else on the page.
-            <div key={id} className={annotation ? "relative" : undefined}>
-              {annotation && <SystemPOV annotation={annotation} approach={null} />}
-              {id === "tail" ? (
-                <SystemsWord word={systemsWord} opening={null} active={null} />
-              ) : (
-                scenes[id]
-              )}
-            </div>
-          );
-        })}
-        {/* V9 (§P0): the regime change is page grammar, so the reduced-motion and
+      // Before hydration, desktop boot CSS lays these same scenes out in the
+      // camera's initial frame. Without that opt-in this remains the original
+      // linear layout for mobile, reduced motion and no-JS visitors.
+      <div
+        className="world-preview-shell"
+        style={{ "--preview-route-height": `${ROUTE_LENGTH_VH}vh` } as CSSProperties}
+      >
+        <div
+          className="world-fit-layer mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8"
+          style={
+            {
+              "--preview-inset-left": CAMERA_INSET.left,
+              "--preview-inset-top": CAMERA_INSET.top,
+              "--preview-scene-width": SCENE_WIDTH,
+              "--preview-world-vw": WORLD_UNIT.x,
+              "--preview-world-vh": WORLD_UNIT.y,
+            } as CSSProperties
+          }
+        >
+          <div className="world-preview-fit">
+            <CameraPlane
+              progress={progress}
+              rate={1}
+              inset={CAMERA_INSET}
+              mobile={false}
+              data-world-preview-plane="true"
+            >
+              {SCENE_IDS.map((id) => {
+                const annotation = annotations[id];
+                return (
+                  // The system annotation survives here in its resolved, static form:
+                  // §37 keeps useful system metadata, and these two rows are real
+                  // project facts stated nowhere else on the page.
+                  <div
+                    key={id}
+                    data-world-preview-scene={id}
+                    className={annotation ? "relative" : undefined}
+                    style={
+                      {
+                        "--preview-x": worldX(sceneAnchor(id, false).x),
+                        "--preview-y": worldY(sceneAnchor(id, false).y),
+                      } as CSSProperties
+                    }
+                  >
+                    {annotation && <SystemPOV annotation={annotation} approach={null} />}
+                    {id === "tail" ? (
+                      <SystemsWord word={systemsWord} opening={null} active={null} />
+                    ) : (
+                      scenes[id]
+                    )}
+                  </div>
+                );
+              })}
+              {/* V9 (§P0): the regime change is page grammar, so the reduced-motion and
             no-JS trees get it too -- statically, at the end of the linear read,
             which is exactly where it means the same thing. D-020: reduced motion
             disables motion, not design. */}
-        {surfaceReturn}
+              <div className="world-preview-return">{surfaceReturn}</div>
+              <div className="world-preview-grammar">
+                <WorldGrammar progress={progress} mobile={false} />
+              </div>
+            </CameraPlane>
+          </div>
+        </div>
       </div>
     );
   }

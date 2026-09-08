@@ -276,6 +276,78 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-map {
   transform-origin: top center;
 }
 
+.world-preview-shell,
+.world-preview-fit,
+[data-world-preview-plane],
+.world-preview-return {
+  display: contents;
+}
+
+.world-preview-grammar {
+  display: none;
+}
+
+/* The desktop boot preview must agree with the mounted camera in position,
+ * width AND raster scale. Its old centred linear container matched only the
+ * heading's height: hydration moved that heading 44px left / 56px down at 1440.
+ * Boot opts in only with JS and ordinary desktop motion. The scene constants
+ * come from SpatialCamera, so this is the same composition before hydration.
+ */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html[data-world-preview="desktop"] .world-preview-shell {
+    display: block;
+    height: var(--preview-route-height);
+  }
+
+  html[data-world-preview="desktop"] .world-fit-layer {
+    --world-vw: var(--preview-world-vw);
+    --world-vh: var(--preview-world-vh);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: clip;
+    /* Match the mounted sticky frame's opaque paint backing as well as its
+     * geometry; otherwise Chromium changes text antialiasing at hydration. */
+    background-color: var(--color-paper);
+    transform: none;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  html[data-world-preview="desktop"] [data-world-preview-scene] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateX(var(--preview-x)) translateY(var(--preview-y));
+    width: var(--preview-scene-width);
+  }
+
+  html[data-world-preview="desktop"] .world-preview-fit {
+    display: block;
+    position: absolute;
+    inset: 0;
+    zoom: var(--world-fit);
+  }
+
+  html[data-world-preview="desktop"] [data-world-preview-plane] {
+    display: block;
+  }
+
+  html[data-world-preview="desktop"] .world-preview-grammar {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  html[data-world-preview="desktop"] .world-preview-return {
+    display: block;
+    position: absolute;
+    top: var(--preview-route-height);
+  }
+}
+
 /*
  * V14.2 Gate C (owner): the finale is the lower world's resolved final state,
  * so on the homepage it stands on the lower world's own datum rather than in

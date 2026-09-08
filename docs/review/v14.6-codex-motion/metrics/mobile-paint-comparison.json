@@ -1,0 +1,174 @@
+{
+  "cold": {
+    "heroX": {
+      "before": {
+        "first": 16,
+        "last": 15.59,
+        "min": 15.59,
+        "max": 16
+      },
+      "after": {
+        "first": 16,
+        "last": 15.59,
+        "min": 15.59,
+        "max": 16
+      }
+    },
+    "heroY": {
+      "before": {
+        "first": 183.19,
+        "last": 203.58,
+        "min": 183.19,
+        "max": 203.58
+      },
+      "after": {
+        "first": 183.19,
+        "last": 203.58,
+        "min": 183.19,
+        "max": 203.58
+      }
+    },
+    "heroW": {
+      "before": {
+        "first": 358,
+        "last": 358.8,
+        "min": 358,
+        "max": 358.8
+      },
+      "after": {
+        "first": 358,
+        "last": 358.8,
+        "min": 358,
+        "max": 358.8
+      }
+    },
+    "heroH": {
+      "before": {
+        "first": 78.72,
+        "last": 78.72,
+        "min": 78.72,
+        "max": 78.72
+      },
+      "after": {
+        "first": 78.72,
+        "last": 78.72,
+        "min": 78.72,
+        "max": 78.72
+      }
+    },
+    "glyphW": {
+      "before": {
+        "first": 157.11,
+        "last": 157.11,
+        "min": 157.11,
+        "max": 157.11
+      },
+      "after": {
+        "first": 157.11,
+        "last": 157.11,
+        "min": 157.11,
+        "max": 157.11
+      }
+    },
+    "glyphH": {
+      "before": {
+        "first": 52,
+        "last": 52,
+        "min": 52,
+        "max": 52
+      },
+      "after": {
+        "first": 52,
+        "last": 52,
+        "min": 52,
+        "max": 52
+      }
+    }
+  },
+  "warm": {
+    "heroX": {
+      "before": {
+        "first": 16,
+        "last": 15.59,
+        "min": 15.59,
+        "max": 16
+      },
+      "after": {
+        "first": 16,
+        "last": 15.59,
+        "min": 15.59,
+        "max": 16
+      }
+    },
+    "heroY": {
+      "before": {
+        "first": 183.19,
+        "last": 203.58,
+        "min": 183.19,
+        "max": 203.58
+      },
+      "after": {
+        "first": 183.19,
+        "last": 203.58,
+        "min": 183.19,
+        "max": 203.58
+      }
+    },
+    "heroW": {
+      "before": {
+        "first": 358,
+        "last": 358.8,
+        "min": 358,
+        "max": 358.8
+      },
+      "after": {
+        "first": 358,
+        "last": 358.8,
+        "min": 358,
+        "max": 358.8
+      }
+    },
+    "heroH": {
+      "before": {
+        "first": 78.72,
+        "last": 78.72,
+        "min": 78.72,
+        "max": 78.72
+      },
+      "after": {
+        "first": 78.72,
+        "last": 78.72,
+        "min": 78.72,
+        "max": 78.72
+      }
+    },
+    "glyphW": {
+      "before": {
+        "first": 157.11,
+        "last": 157.11,
+        "min": 157.11,
+        "max": 157.11
+      },
+      "after": {
+        "first": 157.11,
+        "last": 157.11,
+        "min": 157.11,
+        "max": 157.11
+      }
+    },
+    "glyphH": {
+      "before": {
+        "first": 52,
+        "last": 52,
+        "min": 52,
+        "max": 52
+      },
+      "after": {
+        "first": 52,
+        "last": 52,
+        "min": 52,
+        "max": 52
+      }
+    }
+  }
+}

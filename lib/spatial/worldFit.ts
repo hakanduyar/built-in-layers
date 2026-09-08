@@ -292,6 +292,7 @@ export function worldFitBootScript(): string {
     `var f=Math.min(innerHeight/${WORLD_REFERENCE.height},innerWidth/${WORLD_FIT_WIDTH_REFERENCE});` +
     `f=Math.min(Math.max(f,${WORLD_FIT_MIN}),${WORLD_FIT_MAX});` +
     `document.documentElement.style.setProperty(${JSON.stringify(WORLD_FIT_VAR)},String(f));` +
+    `document.documentElement.setAttribute("data-world-preview","desktop");` +
     `}catch(e){}})();`
   );
 }

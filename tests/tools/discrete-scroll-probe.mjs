@@ -155,6 +155,16 @@ async function goTo(y) {
 async function impulses(startY, count, separated) {
   await goTo(startY);
   const before = await worldState();
+  if (count === 1) {
+    await page.evaluate(() => {
+      window.__notchFrames = [];
+      const tick = (t) => {
+        window.__notchFrames.push({ t, y: window.scrollY });
+        window.__notchRaf = requestAnimationFrame(tick);
+      };
+      window.__notchRaf = requestAnimationFrame(tick);
+    });
+  }
   const t0 = Date.now();
   for (let i = 0; i < count; i += 1) {
     await page.mouse.wheel(0, NOTCH);
@@ -168,6 +178,14 @@ async function impulses(startY, count, separated) {
   const atInputStop = await page.evaluate(() => window.scrollY);
   const settleMs = await settle();
   const after = await worldState();
+  const frames =
+    count === 1
+      ? await page.evaluate(() => {
+          cancelAnimationFrame(window.__notchRaf);
+          return window.__notchFrames;
+        })
+      : undefined;
+  const movingFrames = frames?.filter((frame, i) => i > 0 && frame.y !== frames[i - 1].y);
   const p0 = (before.scrollY - geom.routeStart) / geom.routeSpan;
   const p1 = (after.scrollY - geom.routeStart) / geom.routeSpan;
   const worldPx = Math.hypot(after.x - before.x, after.y - before.y) * before.zoom;
@@ -189,6 +207,18 @@ async function impulses(startY, count, separated) {
     progressBefore: +p0.toFixed(4),
     progressAfter: +p1.toFixed(4),
     focusBoundariesCrossed: boundariesCrossed(p0, p1),
+    ...(frames
+      ? {
+          frames,
+          movingFrames: movingFrames.length,
+          activeScrollMs: movingFrames.length
+            ? +(movingFrames.at(-1).t - movingFrames[0].t).toFixed(1)
+            : 0,
+          maxFrameStepPx: Math.max(
+            ...frames.slice(1).map((frame, i) => Math.abs(frame.y - frames[i].y)),
+          ),
+        }
+      : {}),
   };
 }
 
@@ -219,9 +249,12 @@ const report = {
 
 for (const [name, y] of POSITIONS) {
   const rows = [];
-  for (const count of [1, 2, 3, 5]) rows.push(await impulses(y, count, true));
-  rows.push(await impulses(y, 5, false));
-  rows.push(await impulses(y, 12, false));
+  for (const count of process.env.PROBE_NOTCH_ONLY ? [1] : [1, 2, 3, 5])
+    rows.push(await impulses(y, count, true));
+  if (!process.env.PROBE_NOTCH_ONLY) {
+    rows.push(await impulses(y, 5, false));
+    rows.push(await impulses(y, 12, false));
+  }
   report.positions[name] = rows;
   console.log("\n" + name + "  (start " + Math.round(y) + ")");
   console.log(

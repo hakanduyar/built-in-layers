@@ -31,7 +31,7 @@ const SHOTS = process.env.SHOT_OUT ?? null;
 const TOUR = "section[aria-label='Spatial system tour']";
 // The scene title: the largest piece of information text the world carries.
 const TITLE = TOUR + ' [data-scene="software-factory"] h3';
-const FOCUS = 0.1;
+const FOCUS = Number(process.env.PROBE_FOCUS ?? 0.1);
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
@@ -151,6 +151,38 @@ const clip = {
 const restShot = await page.screenshot({ clip });
 const rest = await acutance(restShot);
 
+// Optional controlled compositor experiment: hold the same content/presence
+// still and vary only the device-pixel phase of its camera translation.
+// Unlike the live crop below, no glyph can leave the crop during capture.
+const phaseSweep = [];
+if (process.env.PROBE_PHASE_SWEEP) {
+  const phaseStyle = await page.addStyleTag({ content: "/* phase experiment */" });
+  const transform = await page.evaluate(() => {
+    const plane = document.querySelector("[data-camera-plane='world']");
+    const m = new DOMMatrixReadOnly(getComputedStyle(plane).transform);
+    let zoom = 1;
+    for (let el = plane; el; el = el.parentElement) {
+      zoom *= parseFloat(getComputedStyle(el).zoom) || 1;
+    }
+    return { x: m.m41, y: m.m42, zoom };
+  });
+  for (const phase of [0, 0.25, 0.5, 0.75]) {
+    await phaseStyle.evaluate(
+      (el, { transform, phase, dpr }) => {
+        const scale = transform.zoom * dpr;
+        const x = (Math.round(transform.x * scale) + phase) / scale;
+        const y = (Math.round(transform.y * scale) + phase) / scale;
+        el.textContent = `[data-camera-plane='world'] { transform: translate3d(${x}px, ${y}px, 0) !important; }`;
+      },
+      { transform, phase, dpr: DPR },
+    );
+    const geometry = await readGeometry();
+    const shot = await page.screenshot({ clip: { ...clip, x: geometry.x - 8, y: geometry.y - 8 } });
+    phaseSweep.push({ phase, geometry, ...(await acutance(shot)) });
+  }
+  await phaseStyle.evaluate((el) => el.remove());
+}
+
 // The same glyphs while the camera translates. The governor pays an intent out
 // over many frames, so these notches leave the camera moving for well over a
 // second and the capture below lands inside that window.
@@ -193,6 +225,7 @@ const report = {
   rest: { ...rest, geometry: restGeom },
   moving: { ...moving, geometry: movingGeom, movedDuringCaptureCssPx: movedDuringCapture },
   acutanceRetainedWhileMoving: +(moving.meanGradient / rest.meanGradient).toFixed(4),
+  ...(phaseSweep.length ? { phaseSweep } : {}),
 };
 console.log(
   LABEL +

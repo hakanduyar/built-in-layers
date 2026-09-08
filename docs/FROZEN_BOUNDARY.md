@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**V14.6 Codex engineering gate (owner instruction, 2026-09-08; uncommitted):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `components/spatial/SpatialCamera.tsx`, `lib/spatial/worldFit.ts`, `styles/globals.css`; new `lib/spatial/wheelMotion.ts` | Explicit Engineering Gate 1: ease desktop wheel delivery inside the accepted governor; lower only the lower-world ceiling; make the desktop boot preview paint the mounted composition. No camera path, scene presence, transition or mobile art-direction changes. | `docs/review/v14.6-codex-motion/REPORT.md` and its `metrics/`: numeric sharpness, isolated wheel frame traces, scroll contract, cold/warm first-paint geometry and filmstrips, including the 390×844 mobile comparison. The report records remaining limits rather than declaring owner acceptance. |
+
 The fingerprints in §1 stay written as they were at `243db393` — they are the reference the loop in
 §4 compares against, and rewriting them would erase the boundary. This section is the ledger of
 moves that were granted under §4's standard, so a `MOVED:` line can be checked against a decision
