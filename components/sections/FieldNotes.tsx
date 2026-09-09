@@ -1,7 +1,7 @@
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { TextLink } from "@/components/ui/TextLink";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import { pendingCopy } from "@/data/copy";
+import { pendingCopy, sectionIndex } from "@/data/copy";
 import type { Note } from "@/lib/content/schemas";
 
 type FieldNotesProps = {
@@ -54,7 +54,7 @@ export function FieldNotes({ notes }: FieldNotesProps) {
 
   if (verifiedNotes.length === 0) {
     return (
-      <SystemNode index="07" label="Field notes" compact>
+      <SystemNode index={sectionIndex.fieldNotes} label="Field notes" compact>
         <Reveal early>
           {/* One line, on one rule. The heading stays at section scale so the IA
               is unbroken; everything under it is sized for what it actually is. */}
@@ -88,7 +88,7 @@ export function FieldNotes({ notes }: FieldNotesProps) {
   }
 
   return (
-    <SystemNode index="07" label="Field notes">
+    <SystemNode index={sectionIndex.fieldNotes} label="Field notes">
       <h2 className="mt-5 font-display text-display-l uppercase text-ink">Field notes</h2>
 
       <div className="mt-10 lg:grid lg:grid-cols-12 lg:gap-10">

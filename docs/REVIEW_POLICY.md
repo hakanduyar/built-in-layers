@@ -58,6 +58,7 @@ The probes under `tests/tools/` are evidence tools, not test suites — they are
 | `mobile-audit-probe.mjs` | measure, tap targets, overflow, headings and console at six device sizes (Phase 6) |
 | `mobile-route-probe.mjs` | how much of each frame carries ink, walking the mobile route in half-viewport steps (V13 mobile gate, M3) |
 | `touch-target-probe.mjs` | every hit box below `lg`, plus the strip-and-recapture proof that the layout did not move (V13 mobile gate, M4) |
+| `route-navigation-probe.mjs` | what the document does when a station is clicked -- frame-by-frame travel, arrival and whether free scroll resumes (V14.9 navigation gate) |
 | `desktop-parity-probe.mjs` | two builds walked side by side: is the desktop provably unchanged (V13 mobile gate, `docs/FROZEN_BOUNDARY.md` §5) |
 | `measure-768-probe.mjs` | per-element line length at a tablet width, and the cost of the 34rem measure alone — the page as built against the same page with the token re-declared (V13 mobile gate, M2 / ART-2) |
 | `figure-inspect-probe.mjs` | every INSPECT control's accessible name and asset per page, and the `/work` thumbnails' scale at every width (V13 mobile gate, A11Y-1 / ART-1) |

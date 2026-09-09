@@ -384,3 +384,28 @@ composition timing, the route geometry and the first-load implementation are unt
 Mobile: the route probe at the recorded 2vh step is identical to the V14.6 record on every geometry
 and layout measure, with five pixel-row sampling means moved by 0.004 or less. Every change in this
 gate is gated to `lg` or to `min-width: 1536px`.
+
+### 6.9 V14.9 navigation gate — the route navigator (2026-09-09)
+
+Owner-directed navigation gate on the V14.8 checkpoint `b385675`. This gate is almost entirely
+ADDITIVE: new `lib/spatial/routeNavigation.ts`, new `components/spatial/RouteNavigator.tsx`, new
+`tests/unit/route-navigation.test.ts`, `tests/e2e/navigation.spec.ts` and
+`tests/tools/route-navigation-probe.mjs`.
+
+Four existing files were touched, none of them in a way that changes what renders:
+`components/spatial/SpatialCamera.tsx` gains one attribute (`data-route-spacer`) on the route
+spacer; `data/copy.ts` gains `sectionIndex.fieldNotes` and `sectionIndex.about`; `FieldNotes.tsx`
+and `AboutPreview.tsx` read those two constants instead of the identical literals they carried;
+`app/page.tsx` mounts the navigator.
+
+Not reopened, and verified byte-identical to `69d57f5`: every module under `lib/spatial/` except the
+new file, `styles/globals.css`, `SceneBreak`, `SystemsWord`, `SystemPOV`, `WorldGrammar`,
+`LowerRoute`, `SystemNode`, `SelectedSystems`, `HowIBuild`, `SiteFooter`, `EditorialDrift`. Scroll
+physics, the wheel governor, the break's timing, the V14.8 SYSTEMS composition and the V14.7
+composition timing are untouched.
+
+Measured on the checkpoint build: route geometry `tourStart` 61 with a 5400px spacer and a 9504px
+document at 1440x900, identical to the record; first paint `FIRST PAINT == SETTLED` cold at 1440 and
+1920; the mobile route probe at the recorded 2vh step identical to the V14.8 record on every
+geometry and layout measure, with three pixel-row sampling means moved by 0.005 or less. The
+navigator does not exist below `lg`, under reduced motion or without JavaScript.

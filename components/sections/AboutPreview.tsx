@@ -8,7 +8,7 @@ import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 import { SystemNode } from "@/components/spatial/SystemNode";
 import { TextLink } from "@/components/ui/TextLink";
 import { Reveal } from "@/components/ui/motion/Reveal";
-import { aboutIntro, homePositioning, homeWordmark } from "@/data/copy";
+import { aboutIntro, homePositioning, homeWordmark, sectionIndex } from "@/data/copy";
 import { contactUrl } from "@/data/site";
 
 // IA section 9. Same pending copy already live on /about.
@@ -77,7 +77,7 @@ export function AboutPreview() {
   );
 
   return (
-    <SystemNode index="08" label="About" major stage>
+    <SystemNode index={sectionIndex.about} label="About" major stage>
       <h2 className="sr-only">About</h2>
 
       {/* FINAL REMEDIATION: the earlier build's comment claimed the introduction

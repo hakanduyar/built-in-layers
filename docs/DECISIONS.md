@@ -1699,3 +1699,50 @@ underscaled on wide displays.
 **Rejected:** reopening the SYSTEMS typography or the V14.5 transition timing; any node, network or
 telemetry graphic; a `vw`-multiple type scale (it would not clear the existing caps until ~2100px);
 and scaling the wide tier by changing section intervals, which would move the lower world's rhythm.
+
+## D-055 — The route navigator: one ordered journey, addressed by the document's own scroll
+
+**Date:** 2026-09-09 · **Gate:** V14.9 navigation gate (Opus 5) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `69d57f5` (the V14.8 checkpoint `b385675`). Owner
+acceptance PENDING.
+
+**Context.** The page is two worlds joined by a cut — a governed camera route addressed by PROGRESS,
+and an ordinary document below it addressed by POSITION — and nothing described them as one
+sequence. The owner asked for a restrained top navigator, previous/next controls and arrow-key
+navigation, all coexisting with completely free scrolling.
+
+- **One list, not three.** `lib/spatial/routeNavigation.ts` holds the journey as a single ordered
+  array of fourteen stations: the nine real camera scenes, the four real drift sections and the
+  finale. The navigator's ticks, the PREVIOUS/NEXT controls, the arrow keys and the active readout
+  are all pure functions of that array, so they cannot disagree. A station must name a real
+  `SceneId`, a real `DriftSectionId` or the finale — there is no way to express an animation state
+  as a destination, which is the brief's "no navigation stops for minor animation states" enforced
+  by the data's shape and asserted by unit test.
+- **Labels and indices are the product's own.** Every label is a string the site already ships or a
+  derivation of one (the hero line's two state words, `layerDefinitions[0]`, the projects' real
+  frontmatter titles, the section headings, `footerCtaLabel` without its destination). Indices
+  appear only where the product already assigns one — 01..04 for the cases, 05..08 for the IA — so
+  the hero, route two's three framework scenes and the finale carry none, matching the rule
+  `WorldGrammar` already applies. `sectionIndex` gained `fieldNotes` and `about`, which were
+  literals inside their own components; identical output, one source.
+- **Navigation is one `window.scrollTo`, not a second engine.** The camera is a pure function of
+  document scroll, so moving the document IS moving the camera — along the real route, through the
+  real cut, with the real filter and the real governor. This is the mechanism `SpatialCamera` already
+  uses for keyboard focus (`recenterOnScene` → `scrollToProgress`), including `behavior: "smooth"`
+  and the next-frame re-assert. Measured: five stations reach their target with 19–66 moving frames
+  and settle in 388–1150 ms; zero teleports.
+- **Free scroll is the single source of truth for state.** The active station is never set by a
+  click or a keypress. It is read from `window.scrollY` by `activeStationIndex` on every frame the
+  document moves, so a reader can interrupt a navigation mid-flight with the wheel and the navigator
+  stays correct. ArrowLeft/ArrowRight step the route; ArrowUp/ArrowDown, PageUp/PageDown, Home/End
+  and space are deliberately untouched — they are the reader's own scrolling, and the break guard
+  already listens for them as real input.
+- **It stands down where it would mean nothing.** Below `lg`, under reduced motion, without
+  JavaScript, and at the very top of the page until the reader has moved — so the first painted
+  frame is exactly what it was before this gate. Hidden with `visibility`, not opacity, so fourteen
+  buttons are never focusable over the hero.
+
+**Rejected:** a fixed full-width bar (a navbar, and it would have covered the top of every scene); a
+tween or scroll library (a second engine); wrapping at the ends; setting the active station from the
+control that was pressed (two sources of truth); and reusing `data-route-station`, which the world's
+own rail already owns — the navigator's attributes are `data-nav-*`.

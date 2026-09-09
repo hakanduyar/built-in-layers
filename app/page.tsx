@@ -4,6 +4,7 @@ import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { FieldNotes } from "@/components/sections/FieldNotes";
 import { HowIBuild } from "@/components/sections/HowIBuild";
 import { DriftBlock, EditorialDrift } from "@/components/spatial/EditorialDrift";
+import { RouteNavigator } from "@/components/spatial/RouteNavigator";
 import { SpatialExperience } from "@/components/spatial/SpatialExperience";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
@@ -47,6 +48,15 @@ export default function Home() {
 
   return (
     <>
+      {/* V14.9: the route navigator. Fixed, desktop-only, and mounted on the
+          homepage alone -- it addresses this page's journey, and there is no
+          journey to address anywhere else. It is given the real project titles
+          rather than retyping them (lib/spatial/routeNavigation.ts). */}
+      <RouteNavigator
+        projectTitles={Object.fromEntries(
+          publishedSystems.map((project) => [project.slug, project.title]),
+        )}
+      />
       <SpatialExperience />
       {/* Spatial V5 (docs/DESIGN_SYSTEM.md §19.9): the lower homepage keeps its exact semantic order
           and its exact content, but is composed along a deterministic drift

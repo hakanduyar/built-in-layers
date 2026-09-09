@@ -2910,3 +2910,37 @@ At `min-width: 1536px`, `[data-drift-block]` and `.spatial-finale` on the homepa
 type-scale theme variables as linear clamps: the section's current size plus `(100vw - 1536px)` at a
 per-step rate, capped. About's name and the finale's question carry the same schedule on the
 element. `--drift-w` and the finale's `max-width` grow with it. Nothing below 1536px moves.
+
+## 47. V14.9 navigation gate — the route navigator (2026-09-09)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.8 checkpoint `b385675` / `69d57f5`. Not
+merged to `main`. Scope: a top route navigator, previous/next controls, and keyboard navigation that
+coexists with free scrolling. Decision: D-055. Evidence: `docs/review/v14.9-navigation/`.
+
+### 47.1 The source of truth
+
+`lib/spatial/routeNavigation.ts` is the only ordered list of the page's destinations: nine camera
+scenes, four drift sections, the finale. Ticks, controls, keys and readout all derive from it.
+Stations name real scenes and real sections only; animation states are not addressable.
+
+### 47.2 The navigator
+
+Fixed at the lower rail's own datum (`4vw`), top of the frame, `lg` and up. Two lines: the current
+station's index and name in mono above, and below it the route drawn horizontally in the world's own
+two states — dotted where the route is ahead, solid ink where the reader has travelled — with one
+24px station tick per destination. Active is a taller ink tick; passed ticks are ink at 55%; ahead
+ticks are on the line token. No background, no border, no bar: it sits in the band the camera's 14vh
+inset leaves empty.
+
+### 47.3 Previous and next
+
+The terminus mark the world closes a rail with, at either end of the rail, as the two directions of
+travel. Disabled at the ends rather than wrapping. Accessible names state the destination.
+
+### 47.4 Behaviour
+
+One `window.scrollTo({ behavior: "smooth" })` per navigation — the same mechanism `recenterOnScene`
+uses — so the camera travels the real route through the real cut. The active station is read from
+`window.scrollY` only, never set by the control that was pressed. ArrowLeft/ArrowRight step the
+route; every other scrolling key is left to the browser. Absent below `lg`, under reduced motion,
+without JavaScript, and until the reader has moved off the top of the page.

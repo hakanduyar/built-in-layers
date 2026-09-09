@@ -1112,7 +1112,15 @@ export function SpatialCamera({
   const inset = isDesktop ? CAMERA_INSET : CAMERA_INSET_MOBILE;
 
   return (
-    <div ref={spacerRef} style={{ height: `${ROUTE_LENGTH_VH}vh` }} className="relative">
+    // V14.9: the route spacer names itself, so the navigator can address the
+    // camera by the route's own progress without guessing at markup shape.
+    // Presentational value: none.
+    <div
+      ref={spacerRef}
+      data-route-spacer="true"
+      style={{ height: `${ROUTE_LENGTH_VH}vh` }}
+      className="relative"
+    >
       {/* `overflow-clip`, not `overflow-hidden`: an `overflow: hidden` box is
           still a programmatically scrollable container, so focusing a link the
           camera had not reached made the browser scroll THIS box internally

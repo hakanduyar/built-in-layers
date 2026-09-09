@@ -51,6 +51,13 @@ export const sectionIndex = {
   // below for the retired component, which is kept unused for revert paths.
   selectedSystems: "05",
   howIBuild: "06",
+  // V14.9: the last two IA indices were literals inside their own components,
+  // so nothing could enumerate the lower world without retyping them. The
+  // route navigator reads the sequence from one list
+  // (lib/spatial/routeNavigation.ts) and that list reads its indices from
+  // here. Same strings, same rendered output; one source instead of three.
+  fieldNotes: "07",
+  about: "08",
 } as const;
 
 /**
