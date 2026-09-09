@@ -1663,3 +1663,39 @@ Binding conditions attached to this approval — all already true of the current
   world, About, mobile; the items reserved for the Codex gate.
 - **Rejected:** restoring the diagonal seam (rejected in V14.4); a map or dots beneath the word;
   per-station state words in the index (the state belongs to the frame that acquires, not to a list).
+
+## D-054 — The strata beneath SYSTEMS classified and stated; the frame closes on its subject; a wide tier for the lower world
+
+**Date:** 2026-09-09 · **Gate:** V14.8 visual gate (Fable; completed by Opus after the Fable limit
+was reached mid-gate) · **Branch:** `feature/owner-visual-acceptance-v14` · **Base:** `518984a`
+(the V14.7 Codex timing checkpoint `2d40c65`). Owner acceptance PENDING.
+
+**Context.** The owner accepted the V14.5 transition direction and rejected the supporting design
+beneath SYSTEMS as too weak; asked for the Person of Interest / Machine atmosphere to be carried by
+behaviour and grammar rather than by decoration; and reported the last two or three sections as
+underscaled on wide displays.
+
+- **The strata beneath SYSTEMS are a classification, not three names.** Each frame-wide rule now
+  carries its index, its name and its real definition from `layerDefinitions`, with the stratum's
+  state at the word's right edge — SURFACE acquired, FLOW and SYSTEM detected — and a dotted descent
+  down the left, in the rail's own AHEAD grammar, drawn down as the cut approaches. Rule weight
+  increases with depth. The word itself is still never touched.
+- **The black is the same drawing, after the state change.** On the ink the same three strata carry
+  index and name in paper and the state the cut has changed them to: SURFACE released, SYSTEM
+  acquired — which is where UNDERNEATH lands. One drawing, two materials, one boundary. The
+  definitions are read once, on paper, and are not repeated on the black (at 1440 they collided with
+  the descent).
+- **The acquisition frame closes on its subject.** The four brackets stand off the composition while
+  it is detected, close onto its edges as it is acquired, and stand off again as it is released —
+  each along its own diagonal, from the same signed approach, as a compositor translate. The state
+  word is now a ruled box on the index line that fills with ink while the composition is acquired.
+  Desktop only; the compact mobile frame is the V13 gate's.
+- **The lower world has a wide tier.** From 1536px up, the homepage's lower sections and the finale
+  re-resolve the type-scale theme variables through linear clamps whose minimum is today's size, so
+  1440 and 1536 are byte-identical and the tier grows about 12% at 1920 and about 33% at 2560 before
+  capping. The drift track's measure and the finale's max-width grow on the same schedule. Hierarchy
+  and intervals are unchanged: every step scales at roughly one rate.
+
+**Rejected:** reopening the SYSTEMS typography or the V14.5 transition timing; any node, network or
+telemetry graphic; a `vw`-multiple type scale (it would not clear the existing caps until ~2100px);
+and scaling the wide tier by changing section intervals, which would move the lower world's rhythm.

@@ -105,7 +105,7 @@ export function AboutPreview() {
               // states it at the world's display-l scale, resolving as before.
               // V14.4 (owner: the operator reveal dominates its viewport): 7vw at lg,
               // between the station scale V14.1 set and the hero.
-              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink lg:text-[clamp(3rem,7vw,6rem)] lg:leading-[0.9]"
+              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.88] uppercase text-ink lg:text-[clamp(3rem,7vw,6rem)] lg:leading-[0.9] 2xl:text-[clamp(6rem,calc(6rem_+_(100vw_-_1536px)_*_0.031),8.5rem)]"
               style={
                 reduceMotion
                   ? { letterSpacing: "-0.035em" }
@@ -145,7 +145,7 @@ export function AboutPreview() {
           {/* Below lg the V13 accent bar and body-scale lead; at lg the
               operator's statement in the site's own voice. */}
           <span aria-hidden="true" className="mb-5 block h-0.5 w-12 bg-ink lg:hidden" />
-          <p className="max-w-[34rem] font-display text-body-l text-ink lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:max-w-[30rem] lg:font-serif lg:text-[1.375rem] lg:italic lg:leading-[1.45]">
+          <p className="max-w-[34rem] font-display text-body-l text-ink lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:max-w-[30rem] lg:font-serif lg:text-[1.375rem] lg:italic lg:leading-[1.45] 2xl:text-[clamp(1.375rem,calc(1.375rem_+_(100vw_-_1536px)_*_0.007),1.75rem)]">
             {aboutIntro.lead}
           </p>
           <p className="mt-4 max-w-[34rem] font-display text-body text-ink-muted lg:col-span-6 lg:col-start-7 lg:row-start-2 lg:mt-6 lg:max-w-[30rem]">

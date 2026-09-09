@@ -124,9 +124,11 @@ export function SystemsWord({ word, opening, active, wide = false }: SystemsWord
       )}
       {/* V14.5 (owner: "restrained straight rules / textual system marks
           beneath SYSTEMS", after f4bdab3): on desktop the three strata stand
-          beneath the word as straight rules with their names -- the section
-          the older reveal drew, without the seam, the recess or the map. They
-          resolve as the word is acquired and hold. */}
+          beneath the word as straight rules -- the section the older reveal
+          drew, without the seam, the recess or the map. V14.8 (owner): the
+          rules carry the classification and the state of each stratum, and
+          the descent to SYSTEM. They resolve as the word is acquired and
+          hold. */}
       {opening !== null && active !== null && wide && (
         <StructureBeneath opening={opening} active={active} />
       )}
@@ -166,11 +168,32 @@ const STRUCTURE_TOP_EM = 1.06;
 const STRUCTURE_STEP_EM = 0.9;
 
 /**
- * V14.5 -- THE STRUCTURE BENEATH THE WORD (desktop). Three straight rules,
- * frame-wide, unrotated, with the real layer names anchored a little inside
- * the word's left edge: SURFACE just under the word, FLOW, then SYSTEM. No
- * seam, no recess, no route. Drawn once; only its opacity follows the
- * opening (the word itself is never touched).
+ * V14.8 (owner: the supporting composition beneath SYSTEMS is too weak) --
+ * THE STATE OF EACH STRATUM AT THIS BEAT, in the acquisition frame's own
+ * vocabulary. The surface is what the four cases were acquired on, and the
+ * word is its acquisition; the two layers beneath it are detected -- known
+ * to be there, not yet in frame. The cut then changes the state: on the
+ * black (SceneBreak's SystemOnInk) the surface is released and SYSTEM is
+ * acquired, which is where UNDERNEATH lands. Never a number, never authored
+ * per frame: one word per layer per side of the boundary.
+ */
+export const STRUCTURE_STATE_ON_PAPER = ["Acquired", "Detected", "Detected"] as const;
+/** The same three layers after the cut, on the black: read by SceneBreak. */
+export const STRUCTURE_STATE_ON_INK = ["Released", "Detected", "Acquired"] as const;
+
+/**
+ * V14.5 -- THE STRUCTURE BENEATH THE WORD (desktop).
+ *
+ * V14.8 (owner): the same three straight, frame-wide, unrotated rules, now
+ * carrying a CLASSIFICATION rather than a name alone. Each rule is a
+ * stratum, in section: its index and name in ink, its definition from
+ * `layerDefinitions` beside it, and at the word's right edge its state. The
+ * rules gain weight with depth, exactly as the system on the black does,
+ * so the drawing beneath the word and the drawing on the black are one
+ * drawing in two materials. Down the left, from the surface to SYSTEM, the
+ * descent: the route ahead in the rail's own AHEAD grammar (dotted), drawn
+ * down as the cut approaches -- the one moving mark, and it moves on a
+ * compositor transform only. The word itself is never touched.
  */
 function StructureBeneath({
   opening,
@@ -180,6 +203,7 @@ function StructureBeneath({
   active: MotionValue<number>;
 }) {
   const presence = useTransform(opening, [0, 0.3], [0.35, 1]);
+  const descent = useTransform(opening, [0.3, 1], [0, 1]);
   const visibility = useTransform(active, (value) => (value > 0.5 ? "visible" : "hidden"));
   return (
     <motion.span
@@ -191,18 +215,42 @@ function StructureBeneath({
       {layerDefinitions.map((layer, index) => (
         <span
           key={layer.label}
+          data-systems-stratum={layer.label.toLowerCase()}
           className="absolute left-0 right-0 block"
           style={{ top: `${STRUCTURE_TOP_EM + index * STRUCTURE_STEP_EM}em` }}
         >
           <span
             className="absolute left-0 right-0 top-0 block h-px bg-ink"
-            style={{ opacity: 0.18 + index * 0.12 }}
+            style={{ opacity: 0.3 + index * 0.2 }}
           />
-          <span className="absolute left-[calc(60vw+0.06em)] top-[0.06em] block font-mono text-mono-label tracking-mono-label uppercase text-ink-muted">
-            {layer.label}
+          {/* The classification: index, name, definition -- hung off the
+              descent, inside the word's left edge. */}
+          <span className="absolute left-[calc(60vw+0.06em+1.25rem)] top-[0.06em] flex items-baseline gap-x-5 whitespace-nowrap font-mono text-mono-label tracking-mono-label uppercase">
+            <span className="text-ink-muted">{String(index + 1).padStart(2, "0")}</span>
+            <span className="text-ink">{layer.label}</span>
+            <span className="text-ink-muted">{layer.body}</span>
+          </span>
+          {/* The state, at the word's right edge. */}
+          <span
+            data-systems-state={STRUCTURE_STATE_ON_PAPER[index]!.toLowerCase()}
+            className="absolute right-[60vw] top-[0.06em] block font-mono text-mono-label tracking-mono-label uppercase text-ink"
+          >
+            {STRUCTURE_STATE_ON_PAPER[index]}
           </span>
         </span>
       ))}
+      {/* THE DESCENT: the route ahead, from the surface down to SYSTEM. */}
+      <motion.span
+        data-systems-descent="true"
+        className="absolute left-[calc(60vw+0.06em)] block w-px origin-top"
+        style={{
+          top: `${STRUCTURE_TOP_EM}em`,
+          height: `${(layerDefinitions.length - 1) * STRUCTURE_STEP_EM}em`,
+          backgroundImage:
+            "repeating-linear-gradient(to bottom, rgba(22,22,22,0.7) 0 1.5px, rgba(0,0,0,0) 1.5px 8px)",
+          scaleY: descent,
+        }}
+      />
     </motion.span>
   );
 }

@@ -61,7 +61,7 @@ export function EditorialDrift({ children }: EditorialDriftProps) {
       // space the widened drift fractions spend. At 1440px it takes the track's
       // free width from 245px to 305px, and combined with the wider fractions
       // roughly doubles real lateral travel.
-      className="relative w-full overflow-x-clip [--drift-pad:3vw] [--drift-w:min(92vw,1020px)] lg:[--drift-pad:4vw] lg:[--drift-w:min(72vw,1020px)]"
+      className="relative w-full overflow-x-clip [--drift-pad:3vw] [--drift-w:min(92vw,1020px)] lg:[--drift-pad:4vw] lg:[--drift-w:min(72vw,1020px)] 2xl:[--drift-w:min(72vw,calc(1020px+(100vw-1536px)*0.4),1440px)]"
     >
       {/* V6.1: the spine now runs at two depths. The background runs sit behind
           the content planes; the foreground run comes in front of them, so the

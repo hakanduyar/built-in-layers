@@ -179,6 +179,20 @@ function Bracket({
     [0, 0.14, peak, peak, 0.1, 0],
   );
   const scale = useTransform(state, [-1, 0, 1], [0.55, 1, 0.28]);
+  // V14.8 (owner: the Machine through behaviour) -- THE FRAME CLOSES ON THE
+  // SUBJECT. While the composition is detected the four corners stand off
+  // it, wide; they close onto its edges as it is acquired and stand off
+  // again as it is released. Acquisition as a movement, not a fade: the
+  // same signed approach, a compositor translate only, desktop only (the
+  // compact frame is the V13 gate's). Outward is away from the frame's centre,
+  // so each corner moves along its own diagonal.
+  const reach = useTransform(
+    state,
+    [-1, -0.7, -0.38, 0.12, corner.trailing ? 0.72 : 0.5, 1],
+    compact ? [0, 0, 0, 0, 0, 0] : [30, 22, 0, 0, 12, 18],
+  );
+  const dx = useTransform(reach, (value) => (corner.key.endsWith("l") ? -value : value));
+  const dy = useTransform(reach, (value) => (corner.key.startsWith("t") ? -value : value));
 
   return (
     <motion.span
@@ -187,7 +201,7 @@ function Bracket({
       className={`absolute block ${corner.box} ${corner.origin}`}
       style={
         animated
-          ? { width: size, height: size, opacity, scaleX: scale, scaleY: scale }
+          ? { width: size, height: size, opacity, scaleX: scale, scaleY: scale, x: dx, y: dy }
           : { width: size, height: size, opacity: peak }
       }
     >
@@ -222,6 +236,17 @@ function Cluster({
   // signed approach every mark here reads; never authored, never a number.
   const stateWord = useTransform<number, string>(state, (value) =>
     value < -0.35 ? "Detected" : value <= 0.2 ? "Acquired" : "Released",
+  );
+  // V14.8 (owner): the state is a LABEL, in the Machine's grammar -- a ruled
+  // box on the index line -- and the state change is visible as well as
+  // read: the box fills with ink while the composition is acquired, and
+  // stands open while it is only detected or has been released. Written
+  // only when the word changes (three times per passage), never per frame.
+  const stateFill = useTransform<number, string>(state, (value) =>
+    value >= -0.35 && value <= 0.2 ? "var(--color-ink)" : "transparent",
+  );
+  const stateInk = useTransform<number, string>(state, (value) =>
+    value >= -0.35 && value <= 0.2 ? "var(--color-paper)" : "var(--color-ink)",
   );
   // V14.3 Gate E: on desktop the two facts are legible by -0.36, as the
   // composition is; the compact (mobile) cluster keeps the V14.1 timing.
@@ -261,7 +286,8 @@ function Cluster({
             <span aria-hidden="true" className="block h-px w-3 bg-ink-muted" />
             <motion.span
               data-system-state
-              className="font-mono text-mono-label tracking-mono-label uppercase text-ink"
+              className="block border border-ink px-1.5 py-px font-mono text-mono-label leading-[1.3] tracking-mono-label uppercase"
+              style={{ backgroundColor: stateFill, color: stateInk }}
             >
               {stateWord}
             </motion.span>

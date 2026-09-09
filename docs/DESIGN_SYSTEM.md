@@ -2876,3 +2876,37 @@ Selected Systems is five entries on rules: station and index, the name at headin
 classification, the record filed on one line (provenance · verification · phase), and the three
 layers as labelled marks, filled where documented. No columns, no floors, no descents. The terminus
 and finale registers of V14.4 are gone; the handoff's sentence and the finale's address stand alone.
+
+## 46. V14.8 visual gate — the strata classified, the frame that closes, the wide tier (2026-09-09)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.7 checkpoint `2d40c65` / `518984a`. Not
+merged to `main`. Scope: the supporting composition beneath SYSTEMS, the Machine's grammar, and
+wide-screen scale in the final sections. Decision: D-054. Evidence:
+`docs/review/v14.8-visual-gate/`.
+
+### 46.1 Beneath SYSTEMS
+
+Three frame-wide straight rules, weighting with depth. Each carries its index, its name and its real
+definition, hung off a dotted descent inside the word's left edge, and the stratum's state at the
+word's right edge: SURFACE acquired, FLOW detected, SYSTEM detected. The descent draws down as the
+cut approaches. No seam, no recess, no map, no orange; the word is drawn once and never touched.
+
+### 46.2 On the black
+
+The same strata, in paper, with the state the cut changed them to: SURFACE released, FLOW detected,
+SYSTEM acquired. The definitions are not repeated there. The rails, their timing and the dwell are
+the V14.5 gate's, unchanged.
+
+### 46.3 The acquisition frame
+
+The brackets stand off a detected composition, close onto it as it is acquired and stand off as it
+is released — a translate along each corner's own diagonal, from the same signed approach the
+opacity already reads. The state word is a ruled box that fills with ink while acquired. Desktop
+only.
+
+### 46.4 The wide tier
+
+At `min-width: 1536px`, `[data-drift-block]` and `.spatial-finale` on the homepage redefine the
+type-scale theme variables as linear clamps: the section's current size plus `(100vw - 1536px)` at a
+per-step rate, capped. About's name and the finale's question carry the same schedule on the
+element. `--drift-w` and the finale's `max-width` grow with it. Nothing below 1536px moves.

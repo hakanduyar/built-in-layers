@@ -366,3 +366,21 @@ Untouched, byte for byte, against `ec37eb1`: `lib/spatial/{cameraFilter,sceneRou
 planeChoreography,projectGround,editorialDrift}.ts`, `LowerRoute.tsx`, `ProjectPlane.tsx`,
 `SpatialProjectScene.tsx`, `SystemNode.tsx`, `AboutPreview.tsx`, `HowIBuild.tsx`, `FieldNotes.tsx`,
 `styles/globals.css`, the case-study system, `app/`.
+
+### 6.8 V14.8 visual gate — the strata classified, the frame that closes, the wide tier (2026-09-09)
+
+Owner-directed visual gate on the V14.7 checkpoint `2d40c65`. Reopened, by the owner's brief: the
+supporting composition beneath SYSTEMS (`SystemsWord`'s `StructureBeneath`), the labels of the
+system carried on the black (`SceneBreak`'s `SystemOnInk`), the acquisition frame's bracket motion
+and state label (`SystemPOV`), and the desktop type tier of the homepage's lower sections and finale
+(`styles/globals.css`, `EditorialDrift`'s `--drift-w`, and the element-level clamps in
+`AboutPreview`, `HowIBuild` and `SiteFooter`).
+
+Not reopened, and verified byte-identical to `518984a`: every module under `lib/spatial/`,
+`SpatialCamera`, `SystemNode`, `WorldGrammar`, `LowerRoute`, `SelectedSystems`, `FieldNotes`,
+`app/`, `playwright.config.ts` and `tests/`. The V14.5 rails and their protected timing, the V14.7
+composition timing, the route geometry and the first-load implementation are untouched.
+
+Mobile: the route probe at the recorded 2vh step is identical to the V14.6 record on every geometry
+and layout measure, with five pixel-row sampling means moved by 0.004 or less. Every change in this
+gate is gated to `lg` or to `min-width: 1536px`.

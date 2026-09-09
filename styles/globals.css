@@ -407,3 +407,37 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
     margin-top: 5rem; /* V14.4: the finale waits until the operator reveal has had its frame */
   }
 }
+
+/*
+ * V14.8 (owner: on wide displays the final sections feel underscaled) -- THE
+ * WIDE TIER OF THE LOWER WORLD. Every utility in this file resolves its size
+ * from a theme variable, so the lower world's type is re-sized in ONE place,
+ * scoped to the homepage's lower sections and the finale, and only from
+ * 1536px up. Each value is a clamp whose minimum is the size the section has
+ * today, so nothing changes at 1440 or 1536 and the tier grows continuously
+ * with the viewport from there -- a little at 1920, fully at 2560 -- and is
+ * capped so it cannot run away on a 4K canvas. The growth is linear in the
+ * viewport (not a vw multiple, which would only clear today's caps past
+ * ~2100px): about +12% at 1920, about +33% at 2560, then the cap. The hierarchy is untouched:
+ * every step scales by roughly the same factor, and the intervals between
+ * sections are the V14.4 gate's. The name in About and the finale's question
+ * carry their own clamps on the element, at the same rate. Off the homepage
+ * nothing changes.
+ */
+@media (min-width: 1536px) {
+  body:has(section[aria-label="Spatial system tour"]) :is([data-drift-block], .spatial-finale) {
+    --text-display-l: clamp(4rem, calc(4rem + (100vw - 1536px) * 0.021), 5.5rem);
+    --text-heading-l: clamp(2.5rem, calc(2.5rem + (100vw - 1536px) * 0.012), 3.25rem);
+    --text-heading-m: clamp(1.375rem, calc(1.375rem + (100vw - 1536px) * 0.007), 1.625rem);
+    --text-statement: clamp(2.25rem, calc(2.25rem + (100vw - 1536px) * 0.011), 2.75rem);
+    --text-body-l: clamp(1.125rem, calc(1.125rem + (100vw - 1536px) * 0.0055), 1.3125rem);
+    --text-body: clamp(1rem, calc(1rem + (100vw - 1536px) * 0.005), 1.1875rem);
+    --text-mono-label: clamp(0.8125rem, calc(0.8125rem + (100vw - 1536px) * 0.004), 0.9375rem);
+    --text-mono-meta: clamp(0.75rem, calc(0.75rem + (100vw - 1536px) * 0.0035), 0.875rem);
+  }
+  /* The finale's measure grows with the same tier the drift track does
+     (EditorialDrift's --drift-w at 2xl), so the question holds the canvas. */
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+    max-width: calc(8vw + 2rem + min(1180px + (100vw - 1536px) * 0.4, 1600px));
+  }
+}

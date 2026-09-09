@@ -132,7 +132,7 @@ export function SiteFooter() {
                 className="finale-route finale-axis absolute -left-6 hidden h-px w-4 bg-ink opacity-45 lg:block"
                 style={{ bottom: "0.75rem" }}
               />
-              <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink">
+              <h2 className="max-w-[24ch] font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] tracking-[-0.03em] uppercase text-ink 2xl:text-[clamp(6rem,calc(6rem_+_(100vw_-_1536px)_*_0.031),8.5rem)]">
                 {footerCtaHeading}
               </h2>
               <p className="mt-8 max-w-[42rem] font-serif text-statement italic text-ink">

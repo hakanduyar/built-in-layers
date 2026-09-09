@@ -2,6 +2,7 @@
 
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { layerDefinitions } from "@/data/copy";
+import { STRUCTURE_STATE_ON_INK } from "@/components/spatial/SystemsWord";
 import { SCENE_BREAK_BANDS } from "@/lib/spatial/scenes";
 import {
   BREAK_COVER_CLOSED,
@@ -105,12 +106,28 @@ function SystemOnInk({ progress }: { progress: MotionValue<number> }) {
               className="absolute left-0 right-0 top-0 block h-px bg-paper"
               style={{ opacity: 0.3 + index * 0.2 }}
             />
+            {/* V14.8 (owner): the same strata the structure beneath the word
+                classified -- index and name in paper -- and at the descent
+                the state the cut has changed each to: the surface released,
+                SYSTEM acquired, which is where UNDERNEATH lands. One drawing,
+                two materials, one state change at the boundary. The
+                definitions were read on paper and are not repeated here (at
+                1440 they would run into the descent). */}
             <span
               aria-hidden="true"
-              className="absolute block font-mono text-mono-label tracking-mono-label uppercase text-paper"
-              style={{ left: LABEL_X, top: 8, opacity: 0.85 }}
+              className="absolute flex items-baseline gap-x-5 whitespace-nowrap font-mono text-mono-label tracking-mono-label uppercase text-paper"
+              style={{ left: LABEL_X, top: 8 }}
             >
-              {layer.label}
+              <span style={{ opacity: 0.6 }}>{String(index + 1).padStart(2, "0")}</span>
+              <span style={{ opacity: 0.92 }}>{layer.label}</span>
+            </span>
+            <span
+              aria-hidden="true"
+              data-cover-state={STRUCTURE_STATE_ON_INK[index]!.toLowerCase()}
+              className="absolute block whitespace-nowrap font-mono text-mono-label tracking-mono-label uppercase text-paper"
+              style={{ left: `calc(${DESCENT_X} + 0.75rem)`, top: 8, opacity: 0.92 }}
+            >
+              {STRUCTURE_STATE_ON_INK[index]}
             </span>
           </span>
         );

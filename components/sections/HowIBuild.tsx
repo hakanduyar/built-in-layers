@@ -47,7 +47,7 @@ export function HowIBuild() {
         <div className="hidden lg:col-span-6 lg:block" data-method-movement="true">
           {/* The operator's voice, at the lower world's own statement scale:
               below the finale's single line, above the body. */}
-          <p className="max-w-[30rem] font-serif text-[1.375rem] italic leading-[1.45] text-ink">
+          <p className="max-w-[30rem] font-serif text-[1.375rem] italic leading-[1.45] text-ink 2xl:max-w-[34rem] 2xl:text-[clamp(1.375rem,calc(1.375rem_+_(100vw_-_1536px)_*_0.007),1.75rem)]">
             {aboutIntro.method}
           </p>
           {/* V14.4 (owner: simplify where overloaded): the floors that stood
