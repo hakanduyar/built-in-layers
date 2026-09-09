@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-09 (V14.7 — Codex engineering gate 2: timing and spacing)_
+_Updated: 2026-09-09 (V14.8 — visual gate: the strata classified, the frame that closes, the wide tier)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `2d40c65` — V14.7 Codex engineering gate 2, timing and spacing (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `b385675` — V14.8 visual gate, the strata classified / the frame that closes / the wide tier (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -36,7 +36,22 @@ regression.
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
 COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE · V14.5 VISUAL GATE
 COMPLETE · V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE · V14.7 CODEX ENGINEERING GATE 2
-(TIMING + SPACING) COMPLETE. Owner acceptance: PENDING.**
+(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE. Owner acceptance: PENDING.**
+
+**V14.8 visual gate (started by Fable 5.1, completed by Opus 5 after the Fable limit was reached
+mid-gate; D-054, `docs/DESIGN_SYSTEM.md` §46, `.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`).** Beneath
+SYSTEMS the three straight rules now carry a classification — index, name and the real definition —
+hung off a dotted descent, with each stratum's state at the word's right edge (SURFACE acquired,
+FLOW and SYSTEM detected); on the black the same strata carry the state the cut changed them to
+(SURFACE released, SYSTEM acquired, where UNDERNEATH lands). The acquisition frame's brackets stand
+off a detected composition and close onto its edges as it is acquired, and the state word is a ruled
+box that fills with ink. From `min-width: 1536px` the homepage's lower sections and the finale
+re-resolve the type-scale theme variables through linear clamps floored at today's size (about +12%
+at 1920, +33% at 2560, capped), with `--drift-w` and the finale's max-width on the same schedule;
+1440 and 1536 are byte-identical. The V14.5 rails and timing, the V14.7 composition timing, the
+scroll modules, Selected Systems and `tests/` are untouched; SYSTEMS verified forward and reverse;
+first paint settled at 1440 / 1920 / 2560; mobile identical to the V14.6 record; unit 572/572;
+focused Chromium 96 passed / 2 skipped. WebKit and the full matrix not run.
 
 **V14.7 Codex engineering gate 2 — timing and spacing (implemented by Codex CLI 0.153.4 under owner
 brief; Claude orchestrator only; `.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`, report
@@ -213,7 +228,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.7-codex-timing/REPORT.md`** (timing and spacing),
+0. **The owner's review of `docs/review/v14.8-visual-gate/README.md`** (the V14.8 visual gate),
+   `docs/review/v14.7-codex-timing/REPORT.md` (timing and spacing),
    `docs/review/v14.6-codex-motion/REPORT.md` (motion) and
    `docs/review/v14.5-visual-gate/README.md`, with V14.4
    (`docs/review/v14.4-owner-correction/README.md`) and Gates E, D, C and B. No further visual gate

@@ -54,9 +54,18 @@ UNDERNEATH holds to the Built in Layers release (174px / 209px) and four stops i
 after 95px / 153px; About is centred in its existing stage. Signed approach, route geometry, Gate 1
 motion and first paint untouched. Handoff: `.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`; report
 `docs/review/v14.7-codex-timing/REPORT.md`. Checkpoint `2d40c65`.
+**V14.8 VISUAL GATE (2026-09-09, Fable 5.1, completed by Opus 5 after the Fable limit was reached
+mid-gate):** beneath SYSTEMS the three rules carry index, name, definition and the stratum's state
+with a dotted descent; on the black the same strata carry the state the cut changed them to; the
+acquisition frame's brackets close onto a composition as it is acquired and its state word is a
+ruled box that fills with ink; from 1536px up the lower sections and the finale re-resolve the
+type-scale variables through linear clamps floored at today's size. Scroll modules, the V14.5
+timing, the V14.7 timing, Selected Systems and `tests/` untouched; mobile identical. Handoff:
+`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`; package `docs/review/v14.8-visual-gate/README.md`.
+Checkpoint `b385675`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
