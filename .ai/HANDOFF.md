@@ -63,9 +63,17 @@ type-scale variables through linear clamps floored at today's size. Scroll modul
 timing, the V14.7 timing, Selected Systems and `tests/` untouched; mobile identical. Handoff:
 `.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`; package `docs/review/v14.8-visual-gate/README.md`.
 Checkpoint `b385675`.
+**V14.9 NAVIGATION GATE (2026-09-09, Opus 5):** one ordered list of fourteen stations
+(`lib/spatial/routeNavigation.ts`) drives a fixed desktop route navigator, previous/next controls
+and ArrowLeft/ArrowRight. Navigation is one `window.scrollTo` on the document, so the camera travels
+the real route; the active station is read from `window.scrollY` only, so free scrolling and the
+controls share one signal. Absent below `lg`, under reduced motion and without JS. Scroll physics,
+route geometry, first paint, the V14.8 composition and mobile are untouched. Handoff:
+`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`; package `docs/review/v14.9-navigation/README.md`.
+Checkpoint `b244a4d`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
