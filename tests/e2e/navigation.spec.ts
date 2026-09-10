@@ -13,6 +13,7 @@ import { ROUTE_STATIONS } from "@/lib/spatial/routeNavigation";
 // Deliberately NOT tested here: art direction, tick geometry, timings.
 
 const NAV = "[data-route-navigator]";
+const RAIL = "[data-nav-rail]";
 const READOUT = "[data-nav-readout]";
 
 /** Wait until the document has stopped moving. Navigation is a real smooth
@@ -57,16 +58,40 @@ async function activeStation(page: Page): Promise<string | null> {
 }
 
 test.describe("V14.9: the route navigator", () => {
-  test("stays out of the first frame and arrives once the reader moves", async ({ page }) => {
+  test("the rail stays out of the first frame and arrives once the reader moves", async ({
+    page,
+  }) => {
     await page.goto("/");
     await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
-    // At rest at the top it is present but not visible, so the hero's first
-    // painted frame is what it was before this gate and no control is
+    // At rest at the top the rail is present but not visible, so the hero's
+    // first painted frame is what it was before this gate and no station is
     // focusable over it.
-    await expect(page.locator(NAV)).toBeHidden();
+    await expect(page.locator(RAIL)).toBeHidden();
     await page.mouse.move(700, 400);
     await page.mouse.wheel(0, 200);
-    await expect(page.locator(NAV)).toBeVisible();
+    await expect(page.locator(RAIL)).toBeVisible();
+  });
+
+  test("the rail is centred on the frame", async ({ page }) => {
+    await enterRoute(page);
+    const rail = await page.locator(`${RAIL} ol`).boundingBox();
+    const width = page.viewportSize()!.width;
+    expect(rail).not.toBeNull();
+    // Centred to within a couple of pixels of the frame's own middle.
+    expect(Math.abs(rail!.x + rail!.width / 2 - width / 2)).toBeLessThan(3);
+  });
+
+  test("the two arrows sit on the frame's edges, not in the rail", async ({ page }) => {
+    await enterRoute(page);
+    const width = page.viewportSize()!.width;
+    const previous = await page.locator('[data-nav-step="previous"]').boundingBox();
+    const next = await page.locator('[data-nav-step="next"]').boundingBox();
+    expect(previous).not.toBeNull();
+    expect(next).not.toBeNull();
+    expect(previous!.x).toBeLessThan(width * 0.08);
+    expect(next!.x + next!.width).toBeGreaterThan(width * 0.92);
+    // ...and they are no longer children of the rail.
+    await expect(page.locator(`${RAIL} [data-nav-step]`)).toHaveCount(0);
   });
 
   test("offers one station per real destination and nothing else", async ({ page }) => {
@@ -216,6 +241,26 @@ test.describe("V14.9: navigation and free scroll coexist", () => {
     for (let i = 0; i < 6; i += 1) await page.mouse.wheel(0, -240);
     await settle(page);
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(afterWheel);
+  });
+});
+
+test.describe("V14.10: the first-load cue", () => {
+  test("suggests left/right once, then never again this session", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
+    // On the first visit of a session both arrows carry the cue.
+    await expect(page.locator('[data-nav-step="next"][data-nav-cue="true"]')).toHaveCount(1);
+
+    // It gets out of the way the moment the reader moves.
+    await page.mouse.move(700, 400);
+    await page.mouse.wheel(0, 200);
+    await expect(page.locator('[data-nav-cue="true"]')).toHaveCount(0);
+
+    // ...and it does not come back on the next page load in the same session.
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
+    await page.waitForTimeout(400);
+    await expect(page.locator('[data-nav-cue="true"]')).toHaveCount(0);
   });
 });
 

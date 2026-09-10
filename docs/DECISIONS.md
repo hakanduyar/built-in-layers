@@ -1746,3 +1746,49 @@ navigation, all coexisting with completely free scrolling.
 tween or scroll library (a second engine); wrapping at the ends; setting the active station from the
 control that was pressed (two sources of truth); and reusing `data-route-station`, which the world's
 own rail already owns — the navigator's attributes are `data-nav-*`.
+
+## D-056 — The governor owns the route, not the page; the navigator is centred, edge-armed and self-introducing
+
+**Date:** 2026-09-10 · **Gate:** V14.10 navigation refinement (Opus 5) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `0f8ad8a` (the V14.9 checkpoint `b244a4d`). Owner
+acceptance PENDING.
+
+**Context.** The owner accepted the V14.9 navigator's mechanism and asked for three refinements: a
+centred, quieter navigator that does not read as a header bar; free scrolling that is genuinely
+free again; and subtle left/right controls with a brief first-load suggestion that navigation
+exists.
+
+- **Free scroll: the governed region is now the route, not the document.** V10 (§G) extended the
+  governor to the whole page so there would be no hand-back seam at the route's end. The cost was a
+  speed limit on the ordinary document below the pinned route — the surface return, the four lower
+  sections and the finale. Measured at 1536×864 before this gate: an aggressive run through the
+  lower world peaked at **1543 px/s** and coasted **471 px** after input stopped. Below
+  `bounds.pinnedEnd` the wheel is now handed back to the browser untouched: native rate, native
+  momentum, no ceiling, no lead cap, no coast of ours. After: **8333 px/s, 0 px of coast** — 5.4×
+  faster and no residual movement. The one exception is an upward gesture within a viewport of the
+  boundary, which keeps the governor so re-entering the route from below is as controlled as
+  leaving it.
+- **The route itself is untouched, deliberately.** `ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, the break's
+  absorber, the lead cap and reverse are the accepted scroll model
+  (`safety-v14-scroll-baseline`) and this gate does not reopen them: route aggressive 516 → 529 px/s
+  (run-to-run noise), coast 494 px unchanged, reverse 2 notches with 0 wrong-way pixels, geometry
+  identical. The fast path *through* the route is the navigation layer, which is what this gate
+  exists to make good.
+- **The rail is centred.** It stood at the lower rail's `4vw` datum, which read as a corner element.
+  Centred on the frame — readout above, route below — it reads as the instrument the frame is
+  travelling through. No background, no border, no bar.
+- **The two directions moved to the frame's edges.** PREVIOUS and NEXT left the rail (which is now
+  ticks and a readout only, less noise) and became one arrow on each edge, vertically centred: a
+  chevron built the way every other mark in this world is built, two hairlines meeting at a corner
+  turned 45°, at a quarter of ink at rest, resolving under pointer or focus with the destination
+  named beside it. They step the same canonical list as the ticks and the arrow keys.
+- **A first-load cue, once per session.** On a reader's first visit both arrows breathe twice
+  (opacity 0.24 → 0.62 on the control, a 3px drift on the chevron) and stop for good. No overlay, no
+  text, no dismiss. It also ends the instant the reader scrolls, because at that point they have
+  found their own way. Stored in `sessionStorage` behind try/catch, read in a lazy state initialiser
+  so no state is set from an effect.
+
+**Rejected:** raising `ROUTE_MAX_RATE` to make the route itself fast (it would change the accepted
+cinematic pacing, and the brief says not to break the route logic); a full-width bar; glyph or icon
+arrows; a tutorial overlay or any dismissible tip; and keeping prev/next in the rail as well as on
+the edges, which would have stated the same thing twice.

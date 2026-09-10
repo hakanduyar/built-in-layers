@@ -783,6 +783,37 @@ function useRouteGovernor(
         intent = null;
         return;
       }
+      /**
+       * V14.10 (owner: "free scrolling must be truly free again") -- THE
+       * GOVERNOR OWNS THE ROUTE, NOT THE WHOLE DOCUMENT.
+       *
+       * V10 (§G) extended the governed region to the entire page so there
+       * would be no hand-back seam at the route's end. The cost was that the
+       * ORDINARY DOCUMENT below the pinned route -- the surface return, the
+       * four lower sections and the finale -- scrolled on the governor's
+       * budget too. Measured at 1536x864 before this gate: an aggressive run
+       * through the lower world peaked at 1543 px/s and coasted 471px after
+       * the input stopped. That is a page with a speed limit on it, which is
+       * exactly what the owner is feeling.
+       *
+       * Below the pinned route the page is a page. The wheel is handed back to
+       * the browser untouched -- native rate, native momentum, no ceiling, no
+       * lead cap, no coast of ours -- so a reader who wants to go quickly can.
+       *
+       * The ROUTE itself is unchanged and still governed: its ceiling, its
+       * lead cap, its reverse behaviour and the break's absorber are the
+       * accepted scroll model (safety-v14-scroll-baseline) and this gate does
+       * not reopen them. The one exception is an upward gesture within a
+       * viewport of the boundary, which keeps the governor so that RE-ENTERING
+       * the route from below is as controlled as leaving it was.
+       */
+      if (y >= bounds.pinnedEnd) {
+        const reentering = event.deltaY < 0 && y < bounds.pinnedEnd + window.innerHeight;
+        if (!reentering) {
+          intent = null;
+          return;
+        }
+      }
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
       const delta = event.deltaY * unit;
       /**

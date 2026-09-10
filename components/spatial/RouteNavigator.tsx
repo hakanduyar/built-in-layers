@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   ROUTE_STATIONS,
   activeStationIndex,
@@ -69,6 +69,9 @@ const ACTIVE_LEAD = 0.35;
  *  of the viewport from the top. */
 const SECTION_LEAD = 0.18;
 const FINALE_LEAD = 0.06;
+
+/** Session key for the first-load navigation cue. */
+const CUE_KEY = "bil.route.cue";
 
 /** The whole observable state, as one primitive, so the store needs no cache and
  *  can never hand React a new object for an unchanged reading. */
@@ -216,6 +219,35 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
     [active, goTo],
   );
 
+  /**
+   * THE FIRST-LOAD CUE. Once per session, and only until the reader moves.
+   *
+   * Read during the first render rather than set from an effect: the component
+   * renders nothing until it has mounted, so this cannot disagree with the
+   * server, and the store -- not a cascading render -- stays the only thing
+   * that writes state here. The write-back happens in an effect, where a side
+   * effect belongs.
+   */
+  const [cueEligible] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.sessionStorage.getItem(CUE_KEY) !== "seen";
+    } catch {
+      // Private mode, or storage denied: no cue rather than a broken one.
+      return false;
+    }
+  });
+  const cue = enabled && hasRoute && cueEligible && !entered;
+
+  useEffect(() => {
+    if (!cue) return;
+    try {
+      window.sessionStorage.setItem(CUE_KEY, "seen");
+    } catch {
+      // Nothing to do: the cue simply shows again next visit.
+    }
+  }, [cue]);
+
   // ArrowLeft / ArrowRight step the route. Deliberately NOT ArrowUp/ArrowDown,
   // PageUp/PageDown, Home/End or space: those are the browser's own scrolling --
   // the reader's free movement -- and the break guard already listens for them
@@ -252,40 +284,43 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
   const label = current ? stationLabel(current, projectTitles) : "";
 
   return (
-    <div
+    // One landmark for the whole layer. The wrapper spans the viewport so the
+    // rail can be centred against the frame and the two arrows can sit on its
+    // edges, and it passes every pointer straight through -- only the controls
+    // themselves are interactive.
+    <nav
       data-route-navigator="true"
-      // `invisible`, not `opacity-0`: visibility:hidden takes the controls out of
-      // the tab order and out of the accessibility tree together, so a control
-      // the reader cannot see is also one they cannot land on. Opacity alone
-      // would leave fourteen focusable buttons lying over the hero.
-      className={`pointer-events-none fixed left-[4vw] top-0 z-40 hidden pt-5 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] lg:block ${
-        entered ? "visible opacity-100" : "invisible opacity-0"
-      }`}
+      aria-label="Route"
+      className="pointer-events-none fixed inset-0 z-40 hidden lg:block"
     >
-      <nav aria-label="Route" className="pointer-events-auto inline-block">
-        {/* THE READOUT. Decorative: the active station's tick below carries the
-            same name as its accessible name and `aria-current`, so exposing this
-            too would announce the reader's position twice. */}
-        <p
-          aria-hidden="true"
-          data-nav-readout={current?.id}
-          className="mb-2 flex items-baseline gap-2.5 font-mono text-mono-label tracking-mono-label uppercase"
-        >
-          {current?.index && <span className="text-ink-muted">{current.index}</span>}
-          <span className="text-ink">{label}</span>
-        </p>
-
-        <div className="flex items-center gap-3">
-          <StepControl
-            direction={-1}
-            station={ROUTE_STATIONS[active - 1]}
-            projectTitles={projectTitles}
-            onActivate={() => step(-1)}
-          />
+      {/* THE RAIL, centred on the frame. V14.10 (owner): it stood at the lower
+          rail's 4vw datum, which read as a corner element; centred, it reads as
+          the instrument the frame is travelling through. It arrives once the
+          reader has moved, so the first painted frame is untouched, and it is
+          hidden with `visibility` rather than opacity so its buttons are never
+          focusable while invisible. */}
+      <div
+        data-nav-rail="true"
+        className={`absolute inset-x-0 top-0 flex justify-center pt-5 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] ${
+          entered ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        <div className="pointer-events-auto">
+          {/* THE READOUT. Decorative: the active station's tick carries the same
+              name as its accessible name and `aria-current`, so exposing this
+              too would announce the reader's position twice. */}
+          <p
+            aria-hidden="true"
+            data-nav-readout={current?.id}
+            className="mb-2 flex items-baseline justify-center gap-2.5 font-mono text-mono-label tracking-mono-label uppercase"
+          >
+            {current?.index && <span className="text-ink-muted">{current.index}</span>}
+            <span className="text-ink">{label}</span>
+          </p>
 
           <div className="relative">
-            {/* THE RAIL, in the world's own two states: dotted where the route is
-                still ahead, solid ink behind the reader. */}
+            {/* The route in the world's own two states: dotted where it is still
+                ahead, solid ink where the reader has travelled. */}
             <span
               aria-hidden="true"
               className="absolute left-0 right-0 top-1/2 block h-px -translate-y-1/2"
@@ -313,16 +348,27 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
               ))}
             </ol>
           </div>
-
-          <StepControl
-            direction={1}
-            station={ROUTE_STATIONS[active + 1]}
-            projectTitles={projectTitles}
-            onActivate={() => step(1)}
-          />
         </div>
-      </nav>
-    </div>
+      </div>
+
+      {/* THE TWO DIRECTIONS, on the frame's edges. Quiet at rest; they resolve
+          under the pointer or on focus, exactly as every other mark in this
+          world resolves as the system closes on it. */}
+      <SideArrow
+        direction={-1}
+        station={ROUTE_STATIONS[active - 1]}
+        projectTitles={projectTitles}
+        cue={cue}
+        onActivate={() => step(-1)}
+      />
+      <SideArrow
+        direction={1}
+        station={ROUTE_STATIONS[active + 1]}
+        projectTitles={projectTitles}
+        cue={cue}
+        onActivate={() => step(1)}
+      />
+    </nav>
   );
 }
 
@@ -364,18 +410,31 @@ function StationTick({
   );
 }
 
-/** PREVIOUS and NEXT: the route's two directions, drawn as the terminus mark the
- *  world already closes a rail with. Disabled at the ends rather than wrapping,
- *  because the journey has a start and an end. */
-function StepControl({
+/**
+ * PREVIOUS and NEXT, on the left and right edges of the frame.
+ *
+ * A chevron built the way every other mark in this world is built -- two
+ * hairlines meeting at a corner, turned 45 degrees -- not a glyph and not an
+ * icon from a set. At rest it sits at a quarter of ink, which is the weight of
+ * the route's own dotted survey; under the pointer or on keyboard focus it
+ * resolves, and the destination names itself beside it.
+ *
+ * On the reader's first visit of the session both arrows breathe twice
+ * (`nav-cue-*`, styles/globals.css) and then stop for good: enough to say the
+ * page moves left and right, and nothing more. The cue also ends the instant
+ * the reader scrolls, because at that point they have found their own way.
+ */
+function SideArrow({
   direction,
   station,
   projectTitles,
+  cue,
   onActivate,
 }: {
   direction: -1 | 1;
   station: RouteStation | undefined;
   projectTitles: Record<string, string>;
+  cue: boolean;
   onActivate: () => void;
 }) {
   const previous = direction === -1;
@@ -384,18 +443,35 @@ function StepControl({
     <button
       type="button"
       data-nav-step={previous ? "previous" : "next"}
+      data-nav-cue={cue ? "true" : undefined}
       disabled={!station}
       onClick={onActivate}
       aria-label={
         station ? `${word} section: ${stationLabel(station, projectTitles)}` : `${word} section`
       }
-      className="flex h-6 w-6 items-center justify-center disabled:cursor-default disabled:opacity-25"
+      className={`group pointer-events-auto absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] disabled:cursor-default disabled:opacity-10 ${
+        previous ? "left-[1.6vw]" : "right-[1.6vw]"
+      } opacity-25 ${cue ? "nav-cue" : ""} hover:opacity-80 focus-visible:opacity-80`}
     >
-      <span aria-hidden="true" className="flex items-center">
-        {previous && <span className="block h-2.5 w-px bg-ink" />}
-        <span className="block h-px w-3 bg-ink" />
-        {!previous && <span className="block h-2.5 w-px bg-ink" />}
-      </span>
+      <span
+        aria-hidden="true"
+        className={`block h-2.5 w-2.5 rotate-45 border-ink transition-transform duration-[var(--duration-base)] ease-[var(--ease-standard)] ${
+          previous
+            ? "border-b border-l group-hover:-translate-x-0.5"
+            : "border-r border-t group-hover:translate-x-0.5"
+        } ${cue ? (previous ? "nav-cue-left" : "nav-cue-right") : ""}`}
+      />
+      {/* The destination, named only while the reader is on the control. */}
+      {station && (
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted opacity-0 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-100 group-focus-visible:opacity-100 ${
+            previous ? "left-full ml-1" : "right-full mr-1"
+          }`}
+        >
+          {stationLabel(station, projectTitles)}
+        </span>
+      )}
     </button>
   );
 }

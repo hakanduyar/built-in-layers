@@ -409,3 +409,41 @@ document at 1440x900, identical to the record; first paint `FIRST PAINT == SETTL
 1920; the mobile route probe at the recorded 2vh step identical to the V14.8 record on every
 geometry and layout measure, with three pixel-row sampling means moved by 0.005 or less. The
 navigator does not exist below `lg`, under reduced motion or without JavaScript.
+
+### 6.10 V14.10 navigation refinement — the governed region narrows to the route (2026-09-10)
+
+Owner-directed gate on the V14.9 checkpoint `b244a4d`. This is the one entry in this series that
+changes SCROLL BEHAVIOUR, so it is recorded with before/after numbers rather than by assertion.
+
+**What moved.** The wheel handler in `components/spatial/SpatialCamera.tsx` (`useRouteGovernor`)
+hands the wheel back to the browser below `bounds.pinnedEnd` — the ordinary document under the
+pinned route. Everything above that boundary is governed exactly as before. An upward gesture within
+one viewport of the boundary keeps the governor, so re-entry into the route is controlled.
+
+**Why.** The owner reported free scrolling as capped. It was: V10 (§G) had extended the governed
+region to the whole page, so the lower world scrolled on the governor's budget. Measured at
+1536×864, `tests/tools/scroll-contract-probe.mjs`:
+
+| | before | after |
+|---|---:|---:|
+| lower world, aggressive peak | 1543 px/s | **8333 px/s** |
+| lower world, coast after input | 471 px | **0 px** |
+| lower world, gentle peak | 465 px/s | 448 px/s |
+| route, aggressive peak | 516 px/s | 529 px/s |
+| route, coast | 494 px | 494 px |
+| reverse | 2 notches, 0 wrong-way px | 2 notches, 0 wrong-way px |
+| geometry (`routeTop`/`routeEnd`/`docMax`) | 61 / 4381 / 8368 | identical |
+
+**What did not move.** Every module under `lib/spatial/` is byte-identical to `b244a4d`, including
+`cameraFilter.ts` (`ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, `governorBudget`), `wheelMotion.ts`
+(`LOWER_WORLD_CEILING_RATIO`, `wheelMotionStep`), `sceneRoute.ts` and `scenes.ts`. The break's
+absorber and its one-gesture escape are untouched. `safety-v14-scroll-baseline` is not moved.
+
+**Also in this gate**, additively: the navigator's rail is centred, its previous/next controls moved
+to the frame's edges as chevrons, and a once-per-session first-load cue was added
+(`styles/globals.css` keyframes, `components/spatial/RouteNavigator.tsx`).
+
+**Mobile:** untouched by construction — the governor is `enhanced && isDesktop`, and the navigator
+is `lg` and up. The route probe at the recorded 2vh step against the V14.9 record shows no document
+height, scene position or DOM-rect difference; nineteen readings move, all of them pixel-sampling
+means and one derived coverage ratio, by 0.005 or less.

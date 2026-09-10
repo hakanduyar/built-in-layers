@@ -441,3 +441,61 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
     max-width: calc(8vw + 2rem + min(1180px + (100vw - 1536px) * 0.4, 1600px));
   }
 }
+
+/*
+ * V14.10 (owner) -- THE FIRST-LOAD NAVIGATION CUE.
+ *
+ * The two side arrows breathe twice on the reader's first visit of a session
+ * and then stop for good. It is a suggestion, not a tutorial: no overlay, no
+ * text, no dismiss button, nothing to read. The component also drops the cue
+ * the moment the reader scrolls, so anyone who has already found their own way
+ * never sees it finish.
+ *
+ * Opacity is animated on the control and `translate` on the chevron inside it,
+ * which are two different elements and two different properties -- so neither
+ * fights the `rotate` that forms the chevron nor the `translate` its hover
+ * state uses. Without a fill mode both revert to the resting values the utility
+ * classes set, which is why the arrow is quiet again the instant the last
+ * iteration ends.
+ *
+ * The navigator does not render at all under reduced motion, so this is doubly
+ * guarded rather than singly.
+ */
+@keyframes nav-cue-breathe {
+  0%,
+  100% {
+    opacity: 0.24;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+@keyframes nav-cue-drift-left {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: -3px 0;
+  }
+}
+@keyframes nav-cue-drift-right {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 3px 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-cue {
+    animation: nav-cue-breathe 2.6s var(--ease-standard) 2;
+  }
+  .nav-cue-left {
+    animation: nav-cue-drift-left 2.6s var(--ease-standard) 2;
+  }
+  .nav-cue-right {
+    animation: nav-cue-drift-right 2.6s var(--ease-standard) 2;
+  }
+}

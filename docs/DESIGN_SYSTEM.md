@@ -2944,3 +2944,35 @@ uses — so the camera travels the real route through the real cut. The active s
 `window.scrollY` only, never set by the control that was pressed. ArrowLeft/ArrowRight step the
 route; every other scrolling key is left to the browser. Absent below `lg`, under reduced motion,
 without JavaScript, and until the reader has moved off the top of the page.
+
+## 48. V14.10 navigation refinement — centred rail, edge arrows, free page (2026-09-10)
+
+`feature/owner-visual-acceptance-v14` only, on the V14.9 checkpoint `b244a4d` / `0f8ad8a`. Not
+merged to `main`. Scope: navigator alignment, free scroll, side arrows, first-load cue. Decision:
+D-056. Evidence: `docs/review/v14.10-navigation-refine/`.
+
+### 48.1 The governed region
+
+The governor owns the camera route and nothing else. Below the pinned route the wheel is the
+browser's: native rate, native momentum, no ceiling and no coast. An upward gesture within one
+viewport of the boundary keeps the governor so re-entry is controlled. `ROUTE_MAX_RATE`,
+`INTENT_LEAD_VH`, the lead cap, reverse and the break's absorber are unchanged.
+
+### 48.2 The rail
+
+Centred on the frame at the top. The current station's index and name above; below it the route in
+the world's own two states — dotted ahead, solid ink behind — with one 24px tick per destination.
+Ticks and readout only: the two directions live on the frame's edges now.
+
+### 48.3 The edge arrows
+
+One on each edge, vertically centred, 44px hit area. A chevron of two hairlines meeting at a corner,
+turned 45°, at a quarter of ink at rest; it resolves under pointer or keyboard focus and names its
+destination beside it. Same canonical station list as the ticks and ArrowLeft/ArrowRight.
+
+### 48.4 The first-load cue
+
+Once per session: both arrows breathe twice, then stop for good. It also ends the moment the reader
+scrolls. Opacity animates on the control and `translate` on the chevron — two elements, two
+properties, so neither fights the `rotate` that forms the chevron. No overlay, no text, nothing to
+dismiss. Absent under reduced motion, where the navigator does not render at all.
