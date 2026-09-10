@@ -71,9 +71,17 @@ controls share one signal. Absent below `lg`, under reduced motion and without J
 route geometry, first paint, the V14.8 composition and mobile are untouched. Handoff:
 `.ai/handoffs/V14_9_NAVIGATION_RETURN.md`; package `docs/review/v14.9-navigation/README.md`.
 Checkpoint `b244a4d`.
+**V14.10 NAVIGATION REFINEMENT (2026-09-10, Opus 5):** the governor now owns the camera route only —
+below the pinned route the wheel is the browser's, so the lower world goes 1543 → 8333 px/s with no
+coast, while the route's own ceiling, lead cap, reverse and break absorber are untouched and every
+`lib/spatial/` module is byte-identical. The rail is centred with ticks and a readout only, PREVIOUS
+and NEXT are one quiet chevron on each frame edge on the same canonical list, and a once-per-session
+first-load cue breathes twice and ends the moment the reader scrolls. Handoff:
+`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`; package
+`docs/review/v14.10-navigation-refine/README.md`. Checkpoint `60a6708`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
