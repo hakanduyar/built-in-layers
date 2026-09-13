@@ -72,8 +72,8 @@ export function SystemPOV({
         // V7: the compact (mobile) frame tucks in less — at a 4vw camera inset
         // a full -14px bracket overhang ran the metadata labels off the left
         // screen edge (measured: 'LAYER' clipped to 'AYER' at 390px).
-        left: compact ? -6 : BRACKET_INSET,
-        right: compact ? -6 : BRACKET_INSET,
+        left: compact ? -6 : `calc(${BRACKET_INSET}px - var(--frame-overhang-left, 0px))`,
+        right: compact ? -6 : `calc(${BRACKET_INSET}px - var(--frame-overhang-right, 0px))`,
         top: compact ? -6 : BRACKET_INSET,
         bottom: compact ? -6 : BRACKET_INSET,
       }}

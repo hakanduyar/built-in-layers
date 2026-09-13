@@ -4,9 +4,11 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import {
   ROUTE_STATIONS,
   activeStationIndex,
+  presentedStationIndex,
   stationLabel,
   type RouteStation,
 } from "@/lib/spatial/routeNavigation";
+import { readRoutePresentation, subscribeRoutePresentation } from "@/lib/spatial/routePresentation";
 import { sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 import { useIsDesktop } from "@/lib/utils/useIsDesktop";
@@ -34,13 +36,8 @@ import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 // parallel one. Nothing here touches scroll physics, the wheel governor, the
 // route's geometry or the break's timing.
 //
-// FREE SCROLL IS THE SOURCE OF TRUTH. The active station is never set by a click
-// or a keypress. It is read from `window.scrollY`, and only from there, by
-// `activeStationIndex`. A click and an arrow key move the document; the
-// navigator then observes where the document went, exactly as it observes a
-// wheel. That is why a reader can interrupt a navigation mid-flight with the
-// wheel and the navigator stays correct -- there is one signal, and it is the
-// scroll position.
+// Camera scenes observe filtered presentation; lower sections observe document
+// position. A click or key only moves the document and never sets the readout.
 //
 // THE STATE IS AN EXTERNAL STORE, not `useState` in an effect. The thing being
 // read -- where the document is, and where each station sits in it -- lives in
@@ -79,8 +76,13 @@ type Snapshot = string;
 const IDLE: Snapshot = "0:0:0";
 
 function readSnapshot(snapshot: Snapshot) {
-  const [route = "0", entered = "0", active = "0"] = snapshot.split(":");
-  return { hasRoute: route === "1", entered: entered === "1", active: Number(active) || 0 };
+  const [route = "0", entered = "0", active = "0", cancelled = "0"] = snapshot.split(":");
+  return {
+    hasRoute: route === "1",
+    entered: entered === "1",
+    active: Number(active) || 0,
+    cancelled: cancelled === "1",
+  };
 }
 
 type RouteNavigatorProps = {
@@ -132,14 +134,19 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
 
   const targetsRef = useRef<number[]>([]);
   const snapshotRef = useRef<Snapshot>(IDLE);
+  const presentedRef = useRef(0);
+  const cueCancelledRef = useRef(false);
 
   /** Read the document and compose the snapshot. The only writer of the store. */
   const read = useCallback((): Snapshot => {
     const targets = targetsRef.current;
     if (targets.length === 0) return IDLE;
     const y = window.scrollY;
-    const active = activeStationIndex(y, targets, window.innerHeight * ACTIVE_LEAD);
-    return `1:${y > ENTER_AT_PX ? 1 : 0}:${active}`;
+    if (y > ENTER_AT_PX) cueCancelledRef.current = true;
+    presentedRef.current = presentedStationIndex(readRoutePresentation(), presentedRef.current);
+    const documentStation = activeStationIndex(y, targets, window.innerHeight * ACTIVE_LEAD);
+    const active = ROUTE_STATIONS[documentStation]?.scene ? presentedRef.current : documentStation;
+    return `1:${y > ENTER_AT_PX ? 1 : 0}:${active}:${cueCancelledRef.current ? 1 : 0}`;
   }, []);
 
   const subscribe = useCallback(
@@ -171,6 +178,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
           publish();
         });
       };
+      const unsubscribePresentation = subscribeRoutePresentation(publish);
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", remeasure);
       // The lower world's reveals and the drift track settle the document's
@@ -184,6 +192,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", remeasure);
         observer.disconnect();
+        unsubscribePresentation();
       };
     },
     [enabled, read],
@@ -194,7 +203,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
     () => snapshotRef.current,
     () => IDLE,
   );
-  const { hasRoute, entered, active } = readSnapshot(snapshot);
+  const { hasRoute, entered, active, cancelled } = readSnapshot(snapshot);
 
   /**
    * Move to a station. The whole navigation mechanism: one scripted document
@@ -228,7 +237,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
    * that writes state here. The write-back happens in an effect, where a side
    * effect belongs.
    */
-  const [cueEligible] = useState<boolean>(() => {
+  const [cueEligible, setCueEligible] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
       return window.sessionStorage.getItem(CUE_KEY) !== "seen";
@@ -237,7 +246,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
       return false;
     }
   });
-  const cue = enabled && hasRoute && cueEligible && !entered;
+  const cue = enabled && hasRoute && cueEligible && !cancelled && !entered;
 
   useEffect(() => {
     if (!cue) return;
@@ -290,8 +299,9 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
     // themselves are interactive.
     <nav
       data-route-navigator="true"
+      onAnimationEnd={() => setCueEligible(false)}
       aria-label="Route"
-      className="pointer-events-none fixed inset-0 z-40 hidden lg:block"
+      className="route-navigator pointer-events-none fixed inset-0 z-40 hidden lg:block"
     >
       {/* THE RAIL, centred on the frame. V14.10 (owner): it stood at the lower
           rail's 4vw datum, which read as a corner element; centred, it reads as
@@ -358,14 +368,14 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
         direction={-1}
         station={ROUTE_STATIONS[active - 1]}
         projectTitles={projectTitles}
-        cue={cue}
+        cue={cue && active > 0}
         onActivate={() => step(-1)}
       />
       <SideArrow
         direction={1}
         station={ROUTE_STATIONS[active + 1]}
         projectTitles={projectTitles}
-        cue={cue}
+        cue={cue && active < ROUTE_STATIONS.length - 1}
         onActivate={() => step(1)}
       />
     </nav>
@@ -419,7 +429,7 @@ function StationTick({
  * the route's own dotted survey; under the pointer or on keyboard focus it
  * resolves, and the destination names itself beside it.
  *
- * On the reader's first visit of the session both arrows breathe twice
+ * On the reader's first visit of the session available arrows breathe twice
  * (`nav-cue-*`, styles/globals.css) and then stop for good: enough to say the
  * page moves left and right, and nothing more. The cue also ends the instant
  * the reader scrolls, because at that point they have found their own way.
@@ -449,9 +459,9 @@ function SideArrow({
       aria-label={
         station ? `${word} section: ${stationLabel(station, projectTitles)}` : `${word} section`
       }
-      className={`group pointer-events-auto absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] disabled:cursor-default disabled:opacity-10 ${
+      className={`${station ? "group hover:opacity-80 focus-visible:opacity-80" : ""} pointer-events-auto absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] disabled:cursor-default disabled:opacity-10 ${
         previous ? "left-[1.6vw]" : "right-[1.6vw]"
-      } opacity-25 ${cue ? "nav-cue" : ""} hover:opacity-80 focus-visible:opacity-80`}
+      } opacity-25 ${cue ? "nav-cue" : ""}`}
     >
       <span
         aria-hidden="true"

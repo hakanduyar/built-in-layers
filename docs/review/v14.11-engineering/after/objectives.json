@@ -1,0 +1,379 @@
+{
+  "1440x900": {
+    "firstCue": [
+      {
+        "direction": "previous",
+        "disabled": true,
+        "animation": "none"
+      },
+      {
+        "direction": "next",
+        "cue": "true",
+        "disabled": false,
+        "animation": "nav-cue-breathe"
+      }
+    ],
+    "returnedCue": [
+      {
+        "direction": "previous",
+        "disabled": true,
+        "animation": "none"
+      },
+      {
+        "direction": "next",
+        "disabled": false,
+        "animation": "none"
+      }
+    ],
+    "frames": [
+      {
+        "id": "software-factory",
+        "frameRight": 1190.8455810546875,
+        "evidenceRight": 1178.1268310546875,
+        "difference": 12.71875
+      },
+      {
+        "id": "kivilcim",
+        "frameRight": 1263.185302734375,
+        "evidenceRight": 1250.466552734375,
+        "difference": 12.71875
+      },
+      {
+        "id": "jointledger",
+        "frameRight": 1190.6494140625,
+        "evidenceRight": 900.6494140625,
+        "difference": 290
+      },
+      {
+        "id": "dropspot",
+        "frameRight": 1191.1787109375,
+        "evidenceRight": 1178.4443359375,
+        "difference": 12.734375
+      }
+    ],
+    "firstNamed": {
+      "ms": 937,
+      "active": "kivilcim",
+      "left": 953.038818359375,
+      "top": 579.4541015625,
+      "right": 1820.070068359375
+    },
+    "geom": {
+      "start": 60.5,
+      "span": 4500,
+      "pinnedEnd": 4560.5
+    },
+    "boundary": {
+      "down": [
+        {
+          "before": 4311,
+          "after": 4331,
+          "step": 20
+        },
+        {
+          "before": 4331,
+          "after": 4379,
+          "step": 48
+        },
+        {
+          "before": 4387,
+          "after": 4435,
+          "step": 48
+        },
+        {
+          "before": 4435,
+          "after": 4491,
+          "step": 56
+        },
+        {
+          "before": 4491,
+          "after": 4539,
+          "step": 48
+        },
+        {
+          "before": 4539,
+          "after": 4587,
+          "step": 48
+        },
+        {
+          "before": 4587,
+          "after": 4640,
+          "step": 53
+        },
+        {
+          "before": 4640,
+          "after": 4710,
+          "step": 70
+        },
+        {
+          "before": 4710,
+          "after": 4818,
+          "step": 108
+        },
+        {
+          "before": 4826,
+          "after": 5033,
+          "step": 207
+        },
+        {
+          "before": 5033,
+          "after": 5374,
+          "step": 341
+        },
+        {
+          "before": 5374,
+          "after": 5774,
+          "step": 400
+        },
+        {
+          "before": 5774,
+          "after": 6174,
+          "step": 400
+        },
+        {
+          "before": 6174,
+          "after": 6574,
+          "step": 400
+        },
+        {
+          "before": 6574,
+          "after": 6974,
+          "step": 400
+        },
+        {
+          "before": 6974,
+          "after": 7374,
+          "step": 400
+        },
+        {
+          "before": 7374,
+          "after": 7774,
+          "step": 400
+        },
+        {
+          "before": 7774,
+          "after": 8174,
+          "step": 400
+        },
+        {
+          "before": 8174,
+          "after": 8574,
+          "step": 400
+        },
+        {
+          "before": 8574,
+          "after": 8604,
+          "step": 30
+        },
+        {
+          "before": 8604,
+          "after": 8604,
+          "step": 0
+        },
+        {
+          "before": 8604,
+          "after": 8604,
+          "step": 0
+        },
+        {
+          "before": 8604,
+          "after": 8604,
+          "step": 0
+        },
+        {
+          "before": 8604,
+          "after": 8604,
+          "step": 0
+        }
+      ],
+      "up": [
+        {
+          "before": 5911,
+          "after": 5511,
+          "step": -400
+        },
+        {
+          "before": 5511,
+          "after": 5111,
+          "step": -400
+        },
+        {
+          "before": 5111,
+          "after": 4879,
+          "step": -232
+        },
+        {
+          "before": 4879,
+          "after": 4790,
+          "step": -89
+        },
+        {
+          "before": 4790,
+          "after": 4726,
+          "step": -64
+        },
+        {
+          "before": 4726,
+          "after": 4662,
+          "step": -64
+        },
+        {
+          "before": 4662,
+          "after": 4606,
+          "step": -56
+        },
+        {
+          "before": 4606,
+          "after": 4558,
+          "step": -48
+        },
+        {
+          "before": 4558,
+          "after": 4510,
+          "step": -48
+        },
+        {
+          "before": 4510,
+          "after": 4462,
+          "step": -48
+        },
+        {
+          "before": 4462,
+          "after": 4406,
+          "step": -56
+        },
+        {
+          "before": 4406,
+          "after": 4350,
+          "step": -56
+        },
+        {
+          "before": 4350,
+          "after": 4286,
+          "step": -64
+        },
+        {
+          "before": 4286,
+          "after": 4230,
+          "step": -56
+        },
+        {
+          "before": 4230,
+          "after": 4174,
+          "step": -56
+        },
+        {
+          "before": 4166,
+          "after": 4110,
+          "step": -56
+        },
+        {
+          "before": 4110,
+          "after": 4054,
+          "step": -56
+        },
+        {
+          "before": 4046,
+          "after": 3990,
+          "step": -56
+        },
+        {
+          "before": 3990,
+          "after": 3926,
+          "step": -64
+        },
+        {
+          "before": 3926,
+          "after": 3870,
+          "step": -56
+        },
+        {
+          "before": 3870,
+          "after": 3806,
+          "step": -64
+        },
+        {
+          "before": 3806,
+          "after": 3750,
+          "step": -56
+        },
+        {
+          "before": 3750,
+          "after": 3686,
+          "step": -64
+        },
+        {
+          "before": 3686,
+          "after": 3622,
+          "step": -64
+        }
+      ]
+    }
+  },
+  "1920x1080": {
+    "firstCue": [
+      {
+        "direction": "previous",
+        "disabled": true,
+        "animation": "none"
+      },
+      {
+        "direction": "next",
+        "cue": "true",
+        "disabled": false,
+        "animation": "nav-cue-breathe"
+      }
+    ],
+    "returnedCue": [
+      {
+        "direction": "previous",
+        "disabled": true,
+        "animation": "none"
+      },
+      {
+        "direction": "next",
+        "disabled": false,
+        "animation": "none"
+      }
+    ],
+    "frames": [
+      {
+        "id": "software-factory",
+        "frameRight": 1495.32568359375,
+        "evidenceRight": 1481.32568359375,
+        "difference": 14
+      },
+      {
+        "id": "kivilcim",
+        "frameRight": 1573.79931640625,
+        "evidenceRight": 1559.79931640625,
+        "difference": 14
+      },
+      {
+        "id": "jointledger",
+        "frameRight": 1494,
+        "evidenceRight": 1175,
+        "difference": 319
+      },
+      {
+        "id": "dropspot",
+        "frameRight": 1494.30859375,
+        "evidenceRight": 1480.29296875,
+        "difference": 14.015625
+      }
+    ],
+    "firstNamed": {
+      "ms": 1141,
+      "active": "kivilcim",
+      "left": 1213.797119140625,
+      "top": 681.0196533203125,
+      "right": 2167.547119140625
+    },
+    "geom": {
+      "start": 60.5,
+      "span": 5400,
+      "pinnedEnd": 5460.5
+    },
+    "boundary": {}
+  }
+}

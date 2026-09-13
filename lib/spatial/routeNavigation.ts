@@ -1,5 +1,6 @@
 import { DRIFT_SECTIONS, type DriftSectionId } from "@/lib/spatial/editorialDrift";
 import { SCENE_IDS, type SceneId } from "@/lib/spatial/scenes";
+import { sceneApproach } from "@/lib/spatial/sceneRoute";
 import { footerCtaLabel, heroPrimaryLine, layerDefinitions, sectionIndex } from "@/data/copy";
 
 // V14.9 NAVIGATION GATE -- THE ONE LIST THE NAVIGATOR, THE PREV/NEXT CONTROLS
@@ -209,6 +210,19 @@ export function activeStationIndex(
     if (target === undefined) continue;
     if (scrollY + lead >= target) active = i;
   }
+  return active;
+}
+
+/** Keep the last presented subject between acquisitions. The same signed
+ * approach that says ACQUIRED on the frame selects the instrument's subject.
+ * This observes the camera; navigation commands never select a subject. */
+export function presentedStationIndex(progress: number, previous: number): number {
+  let active = previous;
+  ROUTE_STATIONS.forEach((station, index) => {
+    if (!station.scene) return;
+    const approach = sceneApproach(station.scene, progress);
+    if (approach >= -0.35 && approach <= 0.2) active = index;
+  });
   return active;
 }
 

@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import { DRIFT_SECTIONS } from "@/lib/spatial/editorialDrift";
 import { SCENE_IDS } from "@/lib/spatial/scenes";
 import { sectionIndex } from "@/data/copy";
+import { sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 import {
   ROUTE_STATIONS,
   activeStationIndex,
+  presentedStationIndex,
   coversEveryScene,
   coversEverySection,
   stationIndex,
@@ -141,6 +143,20 @@ describe("the active station follows the document, not the controls", () => {
   it("never runs off either end", () => {
     expect(activeStationIndex(-500, targets, 0)).toBe(0);
     expect(activeStationIndex(1e9, targets, 0)).toBe(targets.length - 1);
+  });
+});
+
+describe("camera presentation", () => {
+  it("names every scene at its actual filtered acquisition in both directions", () => {
+    for (const [index, station] of ROUTE_STATIONS.entries()) {
+      if (!station.scene) continue;
+      for (const previous of [Math.max(0, index - 1), Math.min(8, index + 1)]) {
+        expect(presentedStationIndex(sceneFocusProgress(station.scene), previous)).toBe(index);
+      }
+    }
+  });
+  it("does not name Kivilcim while Software Factory is still acquired", () => {
+    expect(presentedStationIndex(sceneFocusProgress("software-factory"), 1)).toBe(1);
   });
 });
 

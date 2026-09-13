@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**V14.11 engineering gate (explicit owner instruction, 2026-09-13; uncommitted):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `components/spatial/{RouteNavigator,SpatialCamera,SystemPOV}.tsx`, `lib/spatial/routeNavigation.ts`, new `lib/spatial/{routePresentation,routeBoundary}.ts`, `styles/globals.css` | Correct the desktop navigator's observed subject and session cue, reverse its marks on ink, blend the route/native wheel handoff, and register the acquisition frame against existing evidence overhang. No camera filter, route geometry, scene layout, break constants, or mobile art-direction changes. | `docs/review/v14.11-engineering/REPORT.md`: measured baseline and after probes, focused validation, and step-2 mobile comparison. |
+
 **V14.7 Codex engineering gate (owner instruction, 2026-09-09; uncommitted):**
 
 | Files | Scope and authority | Evidence |

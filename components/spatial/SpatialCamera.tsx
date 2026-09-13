@@ -23,6 +23,7 @@ import { ProjectPlane } from "@/components/spatial/ProjectPlane";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
 import { SystemsWord } from "@/components/spatial/SystemsWord";
 import { SystemPOV } from "@/components/spatial/SystemPOV";
+import { publishRoutePresentation } from "@/lib/spatial/routePresentation";
 import { WorldGrammar } from "@/components/spatial/WorldGrammar";
 import {
   BREAK_ABORT_PX,
@@ -81,7 +82,8 @@ import {
   worldY,
 } from "@/lib/spatial/worldFit";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
-import { LOWER_WORLD_CEILING_RATIO, wheelMotionStep } from "@/lib/spatial/wheelMotion";
+import { wheelMotionStep } from "@/lib/spatial/wheelMotion";
+import { boundaryNativeShare } from "@/lib/spatial/routeBoundary";
 
 /** Composed scenes. `tail` is the near-empty beat before the cut, and its
  *  whole composition is the giant word the structural plane opens behind, which
@@ -663,28 +665,8 @@ function useRouteGovernor(
     let prevT = 0;
     let motionAgeMs = 0;
 
-    /**
-     * V10 (§G) -- ONE MODEL FOR THE WHOLE PAGE.
-     *
-     * The governor used to bind to the spatial spacer alone: `top` was the
-     * spacer's offset and `end` was where the route finished. Everything below
-     * that -- Selected Systems, How I Build, Field Notes, About, the CTA -- was
-     * plain native scroll. So the page genuinely ran TWO scroll implementations,
-     * and the owner's report that "the lower vertical route feels like a
-     * separate scroll implementation" was not a percept to be tuned away: it was
-     * a literal description of the code.
-     *
-     * The bounds are now the whole document. The RATE, however, stays anchored
-     * to the route's own span -- `ROUTE_MAX_RATE * routeSpan` is the same
-     * absolute px/second it has always been (measured: 727-760px/s peak over any
-     * 100ms window at 1536x864) -- so the ceiling inside the spatial world is
-     * byte-for-byte what it was, and the lower page simply comes under the same
-     * ceiling instead of having none. Deriving the rate from the DOCUMENT span
-     * instead would have silently raised the ceiling by the ratio of the two,
-     * which is the opposite of what §G asks for.
-     *
-     * Slower is still always allowed everywhere. Only the maximum is held.
-     */
+    // Document bounds remain the escape limits; the route span alone defines
+    // the accepted paced budget. Native ownership resumes beyond the blend.
     const box = () => {
       const spacer = spacerRef.current;
       if (!spacer) return null;
@@ -723,6 +705,12 @@ function useRouteGovernor(
       const dt = prevT ? Math.min(t - prevT, 17) : 16.7;
       prevT = t;
       const y = window.scrollY;
+      if (y >= bounds.pinnedEnd + window.innerHeight * 0.75) {
+        intent = null;
+        lastWrite = -1;
+        prevT = 0;
+        return;
+      }
       // Someone else moved the page (keyboard, scrollbar, a test, the break's
       // own ramp): adopt their position rather than dragging it back.
       if (lastWrite >= 0 && Math.abs(y - lastWrite) > 24) {
@@ -731,16 +719,13 @@ function useRouteGovernor(
         prevT = 0;
         return;
       }
-      // V14 (F): the ceiling is ONE screen speed. Inside the pinned route that
-      // is the route's own budget, byte-identical to V7-V11; from the pinned end
-      // onward it is the same screen speed expressed in page pixels -- see
-      // pageGearing() in lib/spatial/cameraFilter.ts for the derivation and the
-      // baseline measurement that demanded it.
+      // The route budget remains unchanged through the governed share of the
+      // handoff. Native displacement is contributed only by wheel events.
       const maxStep = governorBudget(
-        y,
+        Math.min(y, bounds.pinnedEnd - 1),
         bounds.pinnedEnd,
         bounds.routeSpan,
-        Math.max(1, bounds.gearing * LOWER_WORLD_CEILING_RATIO),
+        1,
         dt,
       );
       const step = intent - y;
@@ -776,46 +761,33 @@ function useRouteGovernor(
       }
       const bounds = box();
       if (!bounds) return;
-      const y = window.scrollY;
+      let y = window.scrollY;
       // V10 (§G): the region is now the whole document, so the only hand-back
       // is at its real ends -- below, the browser owns overscroll.
       if (y < bounds.top - 2 || y > bounds.end + 2) {
         intent = null;
         return;
       }
-      /**
-       * V14.10 (owner: "free scrolling must be truly free again") -- THE
-       * GOVERNOR OWNS THE ROUTE, NOT THE WHOLE DOCUMENT.
-       *
-       * V10 (§G) extended the governed region to the entire page so there
-       * would be no hand-back seam at the route's end. The cost was that the
-       * ORDINARY DOCUMENT below the pinned route -- the surface return, the
-       * four lower sections and the finale -- scrolled on the governor's
-       * budget too. Measured at 1536x864 before this gate: an aggressive run
-       * through the lower world peaked at 1543 px/s and coasted 471px after
-       * the input stopped. That is a page with a speed limit on it, which is
-       * exactly what the owner is feeling.
-       *
-       * Below the pinned route the page is a page. The wheel is handed back to
-       * the browser untouched -- native rate, native momentum, no ceiling, no
-       * lead cap, no coast of ours -- so a reader who wants to go quickly can.
-       *
-       * The ROUTE itself is unchanged and still governed: its ceiling, its
-       * lead cap, its reverse behaviour and the break's absorber are the
-       * accepted scroll model (safety-v14-scroll-baseline) and this gate does
-       * not reopen them. The one exception is an upward gesture within a
-       * viewport of the boundary, which keeps the governor so that RE-ENTERING
-       * the route from below is as controlled as leaving it was.
-       */
-      if (y >= bounds.pinnedEnd) {
-        const reentering = event.deltaY < 0 && y < bounds.pinnedEnd + window.innerHeight;
-        if (!reentering) {
-          intent = null;
-          return;
-        }
-      }
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-      const delta = event.deltaY * unit;
+      let delta = event.deltaY * unit;
+      // A finite band below the pin mixes native displacement into the existing
+      // governed intent. Beyond it the event and all momentum belong to the browser.
+      const band = window.innerHeight * 0.75;
+      if (y >= bounds.pinnedEnd + band && y + delta >= bounds.pinnedEnd + band) {
+        intent = null;
+        lastWrite = -1;
+        return;
+      }
+      if (y >= bounds.pinnedEnd) {
+        const mix = boundaryNativeShare(y, delta, bounds.pinnedEnd, band);
+        const nativeMove = Math.max(bounds.pinnedEnd - y, delta * mix);
+        event.preventDefault();
+        window.scrollTo(0, y + nativeMove);
+        if (intent !== null) intent = window.scrollY + (intent - y) * (1 - mix);
+        y = window.scrollY;
+        lastWrite = y;
+        delta *= 1 - mix;
+      }
       /**
        * V10 (§H3-H5) -- BOUNDED INTENT, AND REVERSE THAT ACTUALLY REVERSES.
        *
@@ -932,6 +904,11 @@ export function SpatialCamera({
     filterResyncRef,
     entryGlideTo(mobile),
   );
+  useEffect(() => {
+    if (!enhanced || !isDesktop) return;
+    publishRoutePresentation(progress.get());
+    return progress.on("change", publishRoutePresentation);
+  }, [progress, enhanced, isDesktop]);
   // Plays the occlusion across a fixed window once scroll triggers it, so the
   // event cannot be compressed or skipped by scroll velocity. See
   // useSceneBreakEvent.
@@ -1448,6 +1425,37 @@ function SceneFrame({
   // Gate 2: composition timing can use a different reading window from the
   // unchanged signed approach that drives the brackets and depth resolution.
   const presence = useTransform(progress, (value) => sceneCompositionPresence(id, value, mobile));
+  const compositionRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const composition = compositionRef.current;
+    if (!isDesktop || !annotation || !composition) return;
+    const sources = Array.from(
+      composition.querySelectorAll<HTMLElement>("[data-project-ground-source]"),
+    );
+    const measure = () => {
+      const box = composition.getBoundingClientRect();
+      if (!box.width || !composition.offsetWidth) return;
+      const scale = box.width / composition.offsetWidth;
+      let left = box.left;
+      let right = box.right;
+      for (const source of sources) {
+        const bounds = source.getBoundingClientRect();
+        left = Math.min(left, bounds.left);
+        right = Math.max(right, bounds.right);
+      }
+      composition.style.setProperty("--frame-overhang-left", `${(box.left - left) / scale}px`);
+      composition.style.setProperty("--frame-overhang-right", `${(right - box.right) / scale}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(composition);
+    sources.forEach((source) => observer.observe(source));
+    return () => {
+      observer.disconnect();
+      composition.style.removeProperty("--frame-overhang-left");
+      composition.style.removeProperty("--frame-overhang-right");
+    };
+  }, [isDesktop, annotation]);
 
   return (
     <motion.div
@@ -1515,7 +1523,7 @@ function SceneFrame({
           world"; one element visibly re-scaled while the rest did not.
           This wrapper shrink-wraps the composition, so the brackets now measure
           what they are bracketing at every viewport and every zoom level. */}
-      <div className="relative w-full">
+      <div ref={compositionRef} className="relative w-full">
         <motion.div style={isDesktop ? { opacity: presence } : undefined}>{children}</motion.div>
         {annotation && (
           <SystemPOV

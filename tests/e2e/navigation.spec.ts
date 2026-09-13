@@ -5,7 +5,7 @@ import { ROUTE_STATIONS } from "@/lib/spatial/routeNavigation";
 //
 // What is under test is behaviour a browser has to produce: that a click and an
 // arrow key really move the camera along the real route, that the navigator's
-// active station is derived from the document's position rather than from the
+// active station observes camera presentation (or lower document position), not the
 // control that was pressed, and -- the contract the owner's brief is most
 // explicit about -- that free scrolling still works exactly as it did, before
 // and after a navigation.
@@ -16,7 +16,7 @@ const NAV = "[data-route-navigator]";
 const RAIL = "[data-nav-rail]";
 const READOUT = "[data-nav-readout]";
 
-/** Wait until the document has stopped moving. Navigation is a real smooth
+/** Wait until the document AND the presented camera have stopped moving. Navigation is a real smooth
  *  scroll through the real route, so every assertion about where the reader
  *  ended up has to wait for the journey to finish rather than for a timeout. */
 async function settle(page: Page) {
@@ -24,15 +24,15 @@ async function settle(page: Page) {
   // return on its first poll -- while the click it was waiting on had not yet
   // started moving the document -- which is a flaky test, not a slow page.
   await page.evaluate(() => {
-    const w = window as unknown as { __navLast?: number; __navStill?: number };
+    const w = window as unknown as { __navLast?: string; __navStill?: number };
     w.__navLast = undefined;
     w.__navStill = 0;
   });
   await page.waitForTimeout(150);
   await page.waitForFunction(
     () => {
-      const w = window as unknown as { __navLast?: number; __navStill?: number };
-      const y = Math.round(window.scrollY);
+      const w = window as unknown as { __navLast?: string; __navStill?: number };
+      const y = `${Math.round(window.scrollY)}:${document.querySelector<HTMLElement>('[data-camera-plane="world"]')?.style.transform ?? ""}`;
       if (w.__navLast === y) w.__navStill = (w.__navStill ?? 0) + 1;
       else w.__navStill = 0;
       w.__navLast = y;
@@ -248,12 +248,35 @@ test.describe("V14.10: the first-load cue", () => {
   test("suggests left/right once, then never again this session", async ({ page }) => {
     await page.goto("/");
     await page.locator("section[aria-label='Spatial system tour'] .sticky").waitFor();
-    // On the first visit of a session both arrows carry the cue.
+    // Only an available direction may advertise movement.
     await expect(page.locator('[data-nav-step="next"][data-nav-cue="true"]')).toHaveCount(1);
+    await expect(page.locator('[data-nav-step="previous"]')).toBeDisabled();
+    await expect(page.locator('[data-nav-step="previous"]')).not.toHaveAttribute(
+      "data-nav-cue",
+      "true",
+    );
+    expect(
+      await page
+        .locator('[data-nav-step="previous"]')
+        .evaluate((element) => getComputedStyle(element).animationName),
+    ).toBe("none");
+    const disabledChevron = page.locator('[data-nav-step="previous"] > span').first();
+    const beforeHover = await disabledChevron.evaluate(
+      (element) => getComputedStyle(element).transform,
+    );
+    await page.locator('[data-nav-step="previous"]').hover();
+    await page.waitForTimeout(300);
+    expect(await disabledChevron.evaluate((element) => getComputedStyle(element).transform)).toBe(
+      beforeHover,
+    );
 
     // It gets out of the way the moment the reader moves.
     await page.mouse.move(700, 400);
     await page.mouse.wheel(0, 200);
+    await expect(page.locator('[data-nav-cue="true"]')).toHaveCount(0);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await settle(page);
     await expect(page.locator('[data-nav-cue="true"]')).toHaveCount(0);
 
     // ...and it does not come back on the next page load in the same session.

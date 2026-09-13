@@ -461,6 +461,20 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
  * The navigator does not render at all under reduced motion, so this is doubly
  * guarded rather than singly.
  */
+/* Each mark reverses against the material directly beneath it, including a
+   partly closed ink rail. No backing surface or transition timing is involved. */
+@media (min-width: 1024px) {
+  .route-navigator {
+    mix-blend-mode: difference;
+    --color-ink: var(--color-paper);
+    --color-ink-muted: var(--color-paper);
+    --color-line: var(--color-paper);
+  }
+  .route-navigator [data-nav-state="ahead"] > span[aria-hidden] {
+    opacity: 0.35;
+  }
+}
+
 @keyframes nav-cue-breathe {
   0%,
   100% {
