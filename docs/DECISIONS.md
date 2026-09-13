@@ -1792,3 +1792,54 @@ exists.
 cinematic pacing, and the brief says not to break the route logic); a full-width bar; glyph or icon
 arrows; a tutorial overlay or any dismissible tip; and keeping prev/next in the rail as well as on
 the edges, which would have stated the same thing twice.
+
+## D-057 — The instrument reports the camera's subject; the handoff is a blend; the frame registers on the evidence
+
+**Date:** 2026-09-13 · **Gate:** V14.11 engineering (implemented by Codex CLI 0.153.4 under owner
+brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` · **Base:**
+`1ec2726` (application baseline `60a6708`). Owner acceptance PENDING.
+
+**Context.** A measured Codex audit of `60a6708` found three defects the owner scoped into one gate.
+
+- **The navigator named a subject the camera had not reached.** The readout derived the active
+  station from raw `window.scrollY` plus a 0.35-viewport lead while the visible composition followed
+  the camera's filtered progress. Measured at 1440×900: "Kıvılcım" appeared at 205ms with its
+  evidence still 2319px outside the viewport. A read-only bridge (`lib/spatial/routePresentation.ts`)
+  publishes the existing filtered motion value without changing it, and a scene station is now
+  selected when its signed approach enters the ACQUIRED range the acquisition frame already uses,
+  holding the last subject between acquisitions. Lower-world stations still use document position —
+  one component, one clock per question. After: first named at 927ms with the evidence inside the
+  frame. `lib/spatial/routeNavigation.ts` remains the one canonical station list; ticks, chevrons and
+  keys still step it, and navigation still only scrolls the document.
+- **The instrument vanished on the black.** Its marks now composite against the material beneath
+  them, so they read as paper on ink and ink on paper without a timing switch, a background or a
+  panel — and without touching `SceneBreak` or the break's timing. On a settled black frame at
+  progress 0.72 the navigator crop carries 274 pixels above mean channel 150 where the old treatment
+  carried 0.
+- **The cue could restart, and advertised a direction that did not exist.** Cancellation is now
+  latched into the observable snapshot, so returning to the top cannot re-trigger it, and completion
+  ends eligibility. A disabled PREVIOUS no longer animates.
+- **The governed/native boundary was a gear change.** The wheel handler released downward input at a
+  binary `pinnedEnd` test and reacquired upward input a full viewport early. A finite 0.75-viewport
+  band below `pinnedEnd` now mixes native displacement with the existing governed intent, the native
+  share rising continuously across the band; beyond it the browser owns the event outright.
+  Downward steps ramp 20/48/48/56/48/48/53/70/108/207/341/400 where they previously jumped 64 → 452;
+  upward ramps instead of braking early. The lower world keeps native-order speed (7273 px/s, 0px
+  coast) and the route model — `ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, the lead cap, reverse, the break
+  absorber — is untouched, with `lib/spatial/{sceneRoute,scenes,cameraFilter}.ts` and `SceneBreak`
+  byte-identical.
+- **The acquisition frame missed its evidence.** `SystemPOV` inset to the composition wrapper while
+  the evidence extended past it. A desktop-only measurement of the union of the wrapper and every
+  evidence source now supplies the frame's horizontal overhang. Kıvılcım's right brackets went from
+  58.86px INSIDE its diagram to 12.72px clear at 1440, and 64.75px inside to 14.00px clear at 1920 —
+  the same clearance the other three scenes already had. Every evidence edge is unmoved and the
+  scene's own design overhang is unchanged.
+
+**Rejected:** changing the camera, its filter or its smoothing to make the readout true (that would
+retune motion to fix an instrument); a background or plate behind the navigator to survive the black;
+taking the document back under the governor to smooth the handoff; and special-casing Kıvılcım rather
+than fixing the registration mechanism for all four scenes.
+
+**Explicitly not addressed, by the brief:** the global camera-lag / perceived-blur problem — the
+audit measured the composition still travelling ~2068 screen px/s for ~251ms after document scrolling
+stopped. That gets its own measured motion gate.

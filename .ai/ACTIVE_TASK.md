@@ -2,7 +2,7 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
 (the older SYSTEMS restored with the interlocking rails, the Machine's state stated, Selected
 Systems as a file, registers removed), with V14.4 and Gates E, D, C and B.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
@@ -30,8 +30,10 @@ package `docs/review/v14.5-visual-gate/README.md`).
 · `V14.10 NAVIGATION REFINEMENT COMPLETE` (checkpoint `60a6708`;
 `.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`; package
 `docs/review/v14.10-navigation-refine/README.md`).
-Owner acceptance **PENDING**. Do not merge. Do not start another gate or the final QA without the
-owner.
+· `V14.11 ENGINEERING GATE COMPLETE` (checkpoint `e37e77b`;
+`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`; report `docs/review/v14.11-engineering/REPORT.md`).
+Owner acceptance **PENDING**. The camera-lag / perceived-blur motion gate is owed and NOT started.
+Do not merge. Do not start another gate or the final QA without the owner.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the

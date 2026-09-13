@@ -79,9 +79,18 @@ and NEXT are one quiet chevron on each frame edge on the same canonical list, an
 first-load cue breathes twice and ends the moment the reader scrolls. Handoff:
 `.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`; package
 `docs/review/v14.10-navigation-refine/README.md`. Checkpoint `60a6708`.
+**V14.11 ENGINEERING GATE (2026-09-13, Codex implemented, Claude orchestrated):** the navigator now
+selects a scene station from the camera's filtered progress rather than raw scroll, so it names the
+subject the camera is presenting; it stays legible through the interlocking black by compositing
+against the material beneath it; the cue cannot restart and a disabled direction cannot animate; the
+route/native wheel handoff is a finite blended band in both directions with the lower world still
+native; and the acquisition frame registers on the composition's real evidence bounds, clearing
+Kıvılcım's diagram by 12.72px at 1440 and 14.00px at 1920. Camera lag / perceived blur explicitly
+out of scope and still owed a motion gate. Handoff: `.ai/handoffs/V14_11_ENGINEERING_RETURN.md`.
+Checkpoint `e37e77b`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE` · `V14.11 ENGINEERING GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
