@@ -1,0 +1,788 @@
+{
+  "1440x900": {
+    "geom": {
+      "start": 60.5,
+      "span": 4500,
+      "docHeight": 9504
+    },
+    "cases": {
+      "slow-forward": {
+        "subject": "kivilcim",
+        "lastEventMs": 2024.1,
+        "documentStopMs": 2238.5,
+        "documentCoastAfterEventPx": 41,
+        "cameraTailPx": 1.66,
+        "cameraTailMs": 15.7,
+        "tailDistanceToFinalPx": 1.66,
+        "visibleSubjectP95SpeedPxS": 2019.94,
+        "visibleSubjectTravelAfterStopPx": 1.66,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 9.5,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1572.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 984.6728515625,
+              "y": 594.666259765625,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1306,
+        "frameCount": 283,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 1.66,
+          "unsettledVisibleMs": 15.7,
+          "trackingErrorP95Px": 23.86,
+          "trackingSamples": 59,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 394.74,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "aggressive-forward": {
+        "subject": "jointledger",
+        "lastEventMs": 1195.6,
+        "documentStopMs": 2510.5,
+        "documentCoastAfterEventPx": 540,
+        "cameraTailPx": 1.96,
+        "cameraTailMs": 16.9,
+        "tailDistanceToFinalPx": 1.96,
+        "visibleSubjectP95SpeedPxS": 2612.5,
+        "visibleSubjectTravelAfterStopPx": 1.96,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 5.6,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 885.4,
+            "rect": {
+              "id": "kivilcim",
+              "x": 986.97509765625,
+              "y": 595.7738037109375,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 2147.4,
+            "rect": {
+              "id": "jointledger",
+              "x": 703.93310546875,
+              "y": 575.716064453125,
+              "w": 795.4375,
+              "h": 443.21875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1858,
+        "frameCount": 234,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 1.96,
+          "unsettledVisibleMs": 16.9,
+          "trackingErrorP95Px": 26.02,
+          "trackingSamples": 33,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 530.81,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "slow-reverse": {
+        "subject": "kivilcim",
+        "lastEventMs": 2087.8,
+        "documentStopMs": 2404.9,
+        "documentCoastAfterEventPx": -46,
+        "cameraTailPx": 1.07,
+        "cameraTailMs": 19.5,
+        "tailDistanceToFinalPx": 1.07,
+        "visibleSubjectP95SpeedPxS": 1229.8,
+        "visibleSubjectTravelAfterStopPx": 1.07,
+        "firstNamed": {
+          "jointledger": {
+            "ms": 9,
+            "rect": {
+              "id": "jointledger",
+              "x": 952.41015625,
+              "y": 683.886962890625,
+              "w": 795.4375,
+              "h": 443.218505859375,
+              "opacity": 0.889676
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1192.6,
+            "rect": {
+              "id": "kivilcim",
+              "x": 95.173828125,
+              "y": 194.2061767578125,
+              "w": 867.03125,
+              "h": 545.7967529296875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1241,
+        "frameCount": 261,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 1.07,
+          "unsettledVisibleMs": 19.5,
+          "trackingErrorP95Px": 12.09,
+          "trackingSamples": 70,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 359.55,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "aggressive-reverse": {
+        "subject": "software-factory",
+        "lastEventMs": 1484.3,
+        "documentStopMs": 3149,
+        "documentCoastAfterEventPx": -540,
+        "cameraTailPx": 0.65,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.65,
+        "visibleSubjectP95SpeedPxS": 1666.98,
+        "visibleSubjectTravelAfterStopPx": 0.65,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 10.8,
+            "rect": {
+              "id": "kivilcim",
+              "x": -799.41552734375,
+              "y": -180.83251953125,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 0.399672
+            },
+            "inFrame": true
+          },
+          "software-factory": {
+            "ms": 2341.8,
+            "rect": {
+              "id": "software-factory",
+              "x": -170.4678955078125,
+              "y": 248.03253173828125,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 649,
+        "frameCount": 204,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.65,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 13.7,
+          "trackingSamples": 46,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 495.36,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "fast-document-stop": {
+        "subject": "kivilcim",
+        "lastEventMs": 0,
+        "documentStopMs": 24,
+        "documentCoastAfterEventPx": 585,
+        "cameraTailPx": 366.69,
+        "cameraTailMs": 56.8,
+        "tailDistanceToFinalPx": 366.69,
+        "visibleSubjectP95SpeedPxS": 82215.84,
+        "visibleSubjectTravelAfterStopPx": 366.69,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 1.4,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 24,
+            "rect": {
+              "id": "kivilcim",
+              "x": 615.134521484375,
+              "y": 419.2015380859375,
+              "w": 867.03125,
+              "h": 545.7969970703125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1411,
+        "frameCount": 165,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 366.69,
+          "unsettledVisibleMs": 39.7,
+          "trackingErrorP95Px": 366.69,
+          "trackingSamples": 1,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 5571.43,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "reverse-during-input": {
+        "subject": "kivilcim",
+        "lastEventMs": 888.9,
+        "documentStopMs": 2310.1,
+        "documentCoastAfterEventPx": -400,
+        "cameraTailPx": 1.74,
+        "cameraTailMs": 18.2,
+        "tailDistanceToFinalPx": 1.74,
+        "visibleSubjectP95SpeedPxS": 1671.26,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 13.1,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1265.944091796875,
+              "y": 729.7332763671875,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 0.835706
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 940,
+        "frameCount": 177,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 19.75,
+          "trackingSamples": 70,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 381.41,
+        "reversal": {
+          "documentResponseMs": 32.7,
+          "cameraResponseMs": 51.1,
+          "cameraFramesAfterDocument": 1,
+          "wrongWayHorizontalPx": 0.01,
+          "deliveryFrameResidualPx": 0.01,
+          "wrongWayAfterNextFramePx": 0
+        },
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "navigation-free-scroll": {
+        "subject": "kivilcim",
+        "lastEventMs": 138.3,
+        "documentStopMs": 466.1,
+        "documentCoastAfterEventPx": 503,
+        "cameraTailPx": 0.49,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.49,
+        "visibleSubjectP95SpeedPxS": 20442.05,
+        "visibleSubjectTravelAfterStopPx": 0.49,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 3.5,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 259.6,
+            "rect": {
+              "id": "kivilcim",
+              "x": 751.1767578125,
+              "y": 483.0400390625,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1359,
+        "frameCount": 269,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.49,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 22.44,
+          "trackingSamples": 8,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 3200,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "lower-native": {
+        "subject": "kivilcim",
+        "lastEventMs": 418.2,
+        "documentStopMs": 451.3,
+        "documentCoastAfterEventPx": 200,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": null,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "selected-systems": {
+            "ms": 17.2,
+            "inFrame": null
+          },
+          "how-i-build": {
+            "ms": 245,
+            "inFrame": null
+          }
+        },
+        "finalScroll": 6911,
+        "frameCount": 190,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0,
+          "unsettledVisibleMs": 0
+        },
+        "documentPeak80to140msPxS": 3361.34,
+        "offscreenCameraMetric": true,
+        "documentSteps": [
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "nativeExtraPx": 0,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      }
+    }
+  },
+  "1920x1080": {
+    "geom": {
+      "start": 60.5,
+      "span": 5400,
+      "docHeight": 10991
+    },
+    "cases": {
+      "slow-forward": {
+        "subject": "kivilcim",
+        "lastEventMs": 2869.5,
+        "documentStopMs": 3188.3,
+        "documentCoastAfterEventPx": 44,
+        "cameraTailPx": 0.93,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.93,
+        "visibleSubjectP95SpeedPxS": 1302.37,
+        "visibleSubjectTravelAfterStopPx": 0.93,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 9.9,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 2684.5,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1268.2373046875,
+              "y": 709.7613525390625,
+              "w": 953.75,
+              "h": 600.327880859375,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1459,
+        "frameCount": 241,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.93,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 9.7,
+          "trackingSamples": 35,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 309.16,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "aggressive-forward": {
+        "subject": "jointledger",
+        "lastEventMs": 1759.3,
+        "documentStopMs": 3925.4,
+        "documentCoastAfterEventPx": 648,
+        "cameraTailPx": 1.63,
+        "cameraTailMs": 24.7,
+        "tailDistanceToFinalPx": 1.63,
+        "visibleSubjectP95SpeedPxS": 1531.8,
+        "visibleSubjectTravelAfterStopPx": 1.63,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 2.1,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1547.4,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1249.607421875,
+              "y": 699.9205322265625,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 3587.5,
+            "rect": {
+              "id": "jointledger",
+              "x": 972.21533203125,
+              "y": 692.9638671875,
+              "w": 875,
+              "h": 487.484375,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 2124,
+        "frameCount": 166,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 1.63,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 11.34,
+          "trackingSamples": 23,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 429.99,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "slow-reverse": {
+        "subject": "kivilcim",
+        "lastEventMs": 2277.1,
+        "documentStopMs": 2606,
+        "documentCoastAfterEventPx": -46,
+        "cameraTailPx": 0.46,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.46,
+        "visibleSubjectP95SpeedPxS": 1240.18,
+        "visibleSubjectTravelAfterStopPx": 0.46,
+        "firstNamed": {
+          "jointledger": {
+            "ms": 16.3,
+            "rect": {
+              "id": "jointledger",
+              "x": 1232.46044921875,
+              "y": 817.37744140625,
+              "w": 875,
+              "h": 487.484375,
+              "opacity": 0.889676
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1497.8,
+            "rect": {
+              "id": "kivilcim",
+              "x": 295.30224609375,
+              "y": 228.053955078125,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1565,
+        "frameCount": 243,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.46,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 7.58,
+          "trackingSamples": 53,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 316.3,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "aggressive-reverse": {
+        "subject": "software-factory",
+        "lastEventMs": 1603.6,
+        "documentStopMs": 3960.7,
+        "documentCoastAfterEventPx": -648,
+        "cameraTailPx": 0.36,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.36,
+        "visibleSubjectP95SpeedPxS": 1264.22,
+        "visibleSubjectTravelAfterStopPx": 0.36,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 11.6,
+            "rect": {
+              "id": "kivilcim",
+              "x": -694.53955078125,
+              "y": -229.2138671875,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 0.399672
+            },
+            "inFrame": true
+          },
+          "software-factory": {
+            "ms": 3126,
+            "rect": {
+              "id": "software-factory",
+              "x": -1.707275390625,
+              "y": 288.6326904296875,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 852,
+        "frameCount": 158,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.36,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 5.81,
+          "trackingSamples": 36,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 422.22,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "fast-document-stop": {
+        "subject": "kivilcim",
+        "lastEventMs": 0,
+        "documentStopMs": 19,
+        "documentCoastAfterEventPx": 0,
+        "cameraTailPx": 297.83,
+        "cameraTailMs": 59,
+        "tailDistanceToFinalPx": 297.81,
+        "visibleSubjectP95SpeedPxS": null,
+        "visibleSubjectTravelAfterStopPx": 297.83,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 19,
+            "rect": {
+              "id": "kivilcim",
+              "x": 761.22216796875,
+              "y": 446.9541015625,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1681,
+        "frameCount": 159,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 297.83,
+          "unsettledVisibleMs": 59,
+          "trackingErrorP95Px": 297.81,
+          "trackingSamples": 1,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 0,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "reverse-during-input": {
+        "subject": "kivilcim",
+        "lastEventMs": 915.5,
+        "documentStopMs": 2357.5,
+        "documentCoastAfterEventPx": -400,
+        "cameraTailPx": 1.13,
+        "cameraTailMs": 32.3,
+        "tailDistanceToFinalPx": 1.13,
+        "visibleSubjectP95SpeedPxS": 1961.48,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 14.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1577.35595703125,
+              "y": 872.7913818359375,
+              "w": 953.75,
+              "h": 600.327880859375,
+              "opacity": 0.835706
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1185,
+        "frameCount": 159,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 19.08,
+          "trackingSamples": 68,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 475.61,
+        "reversal": {
+          "documentResponseMs": 32.4,
+          "cameraResponseMs": 60.5,
+          "cameraFramesAfterDocument": 1,
+          "wrongWayHorizontalPx": 0.18,
+          "deliveryFrameResidualPx": 0.18,
+          "wrongWayAfterNextFramePx": 0
+        },
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "navigation-free-scroll": {
+        "subject": "kivilcim",
+        "lastEventMs": 92.8,
+        "documentStopMs": 494.5,
+        "documentCoastAfterEventPx": 638,
+        "cameraTailPx": 0.18,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.18,
+        "visibleSubjectP95SpeedPxS": 27102.22,
+        "visibleSubjectTravelAfterStopPx": 0.18,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 14.1,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 246.6,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1131.376708984375,
+              "y": 637.6337890625,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1619,
+        "frameCount": 261,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0.18,
+          "unsettledVisibleMs": 0,
+          "trackingErrorP95Px": 35.05,
+          "trackingSamples": 10,
+          "trackingDefinition": "P95 evidence displacement from the unfiltered route position during document motion, using unchanged cameraPosition/worldFit and final settled evidence as the anchor; opacity >=0.8 and viewport intersection required. Null means no qualifying samples."
+        },
+        "documentPeak80to140msPxS": 4528.11,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      },
+      "lower-native": {
+        "subject": "kivilcim",
+        "lastEventMs": 362.4,
+        "documentStopMs": 386.4,
+        "documentCoastAfterEventPx": 200,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": null,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "selected-systems": {
+            "ms": 11.8,
+            "inFrame": null
+          },
+          "how-i-build": {
+            "ms": 240.5,
+            "inFrame": null
+          }
+        },
+        "finalScroll": 8081,
+        "frameCount": 188,
+        "readability": {
+          "definition": "Path travelled by >=0.8-opacity evidence intersecting viewport after document stop; and time it remains >1px from final position.",
+          "visibleTailPx": 0,
+          "unsettledVisibleMs": 0
+        },
+        "documentPeak80to140msPxS": 3842.46,
+        "offscreenCameraMetric": true,
+        "documentSteps": [
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "nativeExtraPx": 0,
+        "speedDefinition": "P95 during document-moving frames only, visible evidence at opacity >=0.8; null if none."
+      }
+    }
+  }
+}

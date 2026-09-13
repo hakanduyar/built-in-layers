@@ -1,0 +1,107 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "viewport": "1440x900",
+  "mode": "cold",
+  "frames": 222,
+  "enhancedTreeAtMs": 415.5,
+  "zoom": {
+    "firstPainted": "0.909091",
+    "settled": "0.909091",
+    "steps": [
+      {
+        "t": 181.5,
+        "value": "0.909091"
+      }
+    ]
+  },
+  "heroHeight": {
+    "firstPainted": 225.41,
+    "settled": 225.41,
+    "resizeRatio": 1,
+    "resizePx": 0,
+    "steps": [
+      {
+        "t": 181.5,
+        "value": 225.41
+      }
+    ]
+  },
+  "heroFontSize": {
+    "steps": [
+      {
+        "t": 181.5,
+        "value": "151.2px"
+      }
+    ]
+  },
+  "foreground": {
+    "heroX": [
+      {
+        "t": 181.5,
+        "value": 104.72
+      }
+    ],
+    "heroY": [
+      {
+        "t": 181.5,
+        "value": 213.38
+      }
+    ],
+    "heroW": [
+      {
+        "t": 181.5,
+        "value": 836.72
+      }
+    ],
+    "inkX": [
+      {
+        "t": 181.5,
+        "value": 104.72
+      }
+    ],
+    "inkY": [
+      {
+        "t": 181.5,
+        "value": 194.38
+      }
+    ],
+    "inkW": [
+      {
+        "t": 181.5,
+        "value": 836.72
+      }
+    ],
+    "inkH": [
+      {
+        "t": 181.5,
+        "value": 262.7
+      }
+    ],
+    "glyphW": [
+      {
+        "t": 181.5,
+        "value": 449.88
+      }
+    ],
+    "glyphH": [
+      {
+        "t": 181.5,
+        "value": 150
+      }
+    ],
+    "fonts": [
+      {
+        "t": 181.5,
+        "value": "loading"
+      },
+      {
+        "t": 269.9,
+        "value": "loaded"
+      }
+    ]
+  },
+  "compositionMaxDeltaPx": 0,
+  "heroTextMaxDeltaPx": 0,
+  "verdict": "FIRST PAINT == SETTLED",
+  "bulk": "C:/Users/hakan/portfolio-review/v14.12-motion/initial-paint-1440.json"
+}

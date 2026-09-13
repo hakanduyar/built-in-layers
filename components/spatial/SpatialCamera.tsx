@@ -567,6 +567,7 @@ function useFilteredProgress(
   enabled: boolean,
   resyncRef: FilterResyncRef,
   glideUntil: number,
+  desktop: boolean,
 ): MotionValue<number> {
   const filtered = useMotionValue(source.get());
   const state = useRef<FilterState>({
@@ -604,12 +605,23 @@ function useFilteredProgress(
     }
     // Clamped so a backgrounded tab returning after a long gap resumes rather
     // than teleporting the camera through the cut.
-    const next = advanceFilter(previous, target, source.getVelocity(), Math.min(delta, 50));
+    const next = advanceFilter(
+      previous,
+      target,
+      source.getVelocity(),
+      Math.min(delta, 50),
+      desktop,
+    );
     // V6.8: THE OPENING GLIDE. Inside the entry zone the camera's rate is
     // governed, whatever the wheel does -- see GLIDE_MAX_RATE for the
     // measurements. Both stages are re-seated to the governed value so leaving
     // the zone hands over to the ordinary filter dynamics without a lurch.
-    const glided = glideStep(previous.stage2, next.stage2, Math.min(delta, 50), glideUntil);
+    // Desktop wheel input is already paced on the document. Capping its
+    // presentation again queues a second journey, especially after navigation.
+    // Touch retains the original visual governor and original filter tuning.
+    const glided = desktop
+      ? next.stage2
+      : glideStep(previous.stage2, next.stage2, Math.min(delta, 50), glideUntil);
     state.current =
       glided === next.stage2 ? next : { stage1: glided, stage2: glided, speed: next.speed };
     filtered.set(state.current.stage2);
@@ -903,6 +915,7 @@ export function SpatialCamera({
     !reduceMotion,
     filterResyncRef,
     entryGlideTo(mobile),
+    isDesktop,
   );
   useEffect(() => {
     if (!enhanced || !isDesktop) return;

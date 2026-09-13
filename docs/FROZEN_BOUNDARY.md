@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**V14.12 motion gate (explicit owner instruction, 2026-09-13; uncommitted):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `lib/spatial/cameraFilter.ts`, `components/spatial/SpatialCamera.tsx` | Owner explicitly reopens camera smoothing: desktop uses a tighter nonzero two-stage lag and no duplicate visual rate cap after the document governor. Original mobile response, wheel pacing constants/handler, route geometry, scene opacity and layouts stay unchanged. | `docs/review/v14.12-motion/REPORT.md`, before/after production traces at 1440/1920, targeted filter contracts, cold first paint, focused Chromium and step-2 mobile comparison. |
+
 **V14.11 engineering gate (explicit owner instruction, 2026-09-13; uncommitted):**
 
 | Files | Scope and authority | Evidence |

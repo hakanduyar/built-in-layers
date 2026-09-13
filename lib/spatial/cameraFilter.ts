@@ -56,6 +56,12 @@
 export const TAU_SETTLED_MS = 48;
 export const TAU_TIGHT_MS = 22;
 
+// V14.12: the desktop document is already paced by the wheel governor.
+// Keep two nonzero lag stages to soften frame edges, without adding another
+// reading-length delay. The original constants remain the mobile response.
+export const DESKTOP_TAU_SETTLED_MS = 12;
+export const DESKTOP_TAU_TIGHT_MS = 8;
+
 /**
  * Scroll speeds, in progress-units per second, between which the filter
  * tightens. Derived from the measured wheel profiles at 1440x900: deliberate
@@ -369,9 +375,18 @@ export function advanceFilter(
   target: number,
   instantSpeed: number,
   dtMs: number,
+  desktop = false,
 ): FilterState {
   const speed = trackSpeed(state.speed, instantSpeed, dtMs);
-  const tau = filterTau(speed);
+  const blend = clamp01((speed - SPEED_SETTLED) / (SPEED_TIGHT - SPEED_SETTLED));
+  const tau = desktop
+    ? Math.min(
+        DESKTOP_TAU_SETTLED_MS + (DESKTOP_TAU_TIGHT_MS - DESKTOP_TAU_SETTLED_MS) * blend,
+        // Keep a governed reverse step ahead of the cascade's residual at
+        // high refresh rates too; retain both fractional stages at every rate.
+        Math.max(dtMs, 0) * 0.7,
+      )
+    : filterTau(speed);
   const stage1 = lagStep(state.stage1, target, dtMs, tau);
   const stage2 = lagStep(state.stage2, stage1, dtMs, tau);
   return { stage1, stage2, speed };

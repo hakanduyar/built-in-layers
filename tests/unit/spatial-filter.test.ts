@@ -238,6 +238,40 @@ describe("the filter is deterministic", () => {
   });
 });
 
+describe("desktop reader tracking (V14.12)", () => {
+  it("retains smoothing and settles within 80ms after a governed ramp", () => {
+    for (const dt of [1000 / 144, 1000 / 120, 1000 / 60, 1000 / 30]) {
+      let state: FilterState = { stage1: 0, stage2: 0, speed: 0 };
+      let target = 0;
+      for (let i = 0; i < 100; i++) {
+        target += (ROUTE_MAX_RATE * dt) / 1000;
+        state = advanceFilter(state, target, ROUTE_MAX_RATE, dt, true);
+        expect(state.stage2).toBeLessThan(target);
+      }
+      const before = state.stage2;
+      target -= (ROUTE_MAX_RATE * dt) / 1000;
+      state = advanceFilter(state, target, -ROUTE_MAX_RATE, dt, true);
+      expect(state.stage2).toBeLessThan(before);
+      for (let ms = 0; ms < 80; ms += dt) state = advanceFilter(state, target, 0, dt, true);
+      // <0.1 screen px even at 25,000 screen px / route progress.
+      expect(Math.abs(target - state.stage2) * 25000).toBeLessThan(0.1);
+    }
+  });
+
+  it("keeps monotonic cut crossing without overshoot on desktop", () => {
+    let state: FilterState = { stage1: BREAK_CUT - 0.02, stage2: BREAK_CUT - 0.02, speed: 0 };
+    let crossings = 0;
+    for (const target of ramp(BREAK_CUT - 0.02, BREAK_CUT + 0.02, 100)) {
+      const next = advanceFilter(state, target, 0.105, 16.7, true);
+      expect(next.stage2).toBeGreaterThanOrEqual(state.stage2);
+      expect(next.stage2).toBeLessThanOrEqual(target);
+      if (state.stage2 < BREAK_CUT && next.stage2 >= BREAK_CUT) crossings++;
+      state = next;
+    }
+    expect(crossings).toBe(1);
+  });
+});
+
 // V6.8 (JOB 1): the opening glide governor. Measured before it existed, a normal
 // wheel run peaked at 6,881 px/s of world movement in the departure and a trackpad
 // fling crossed the whole opening in a single frame. These are the contracts that
