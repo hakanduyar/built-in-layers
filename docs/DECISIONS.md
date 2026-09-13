@@ -1843,3 +1843,48 @@ than fixing the registration mechanism for all four scenes.
 **Explicitly not addressed, by the brief:** the global camera-lag / perceived-blur problem — the
 audit measured the composition still travelling ~2068 screen px/s for ~251ms after document scrolling
 stopped. That gets its own measured motion gate.
+
+## D-058 — The camera tracks the reader; the glide cap leaves desktop presentation
+
+**Date:** 2026-09-13 · **Gate:** V14.12 motion / readability (implemented by Codex CLI 0.153.4 under
+owner brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` ·
+**Base:** `e37e77b`. Owner acceptance PENDING.
+
+**Context.** The V14.10 audit found the composition still moving after the reader had stopped
+scrolling, and fast scrolling hard to read. The owner reopened camera smoothing for this gate
+specifically.
+
+- **Two mechanisms, not one.** Measurement separated the filter's own settling from `glideStep`,
+  which capped VISUAL progress a second time after the document's wheel governor had already paced
+  the input. That second cap is what allowed a large visual backlog — it is why a navigation jump
+  left 1496px of camera still to travel. Its constants are shared with accepted wheel pacing, so
+  changing the constants would have fixed the wrong mechanism; desktop presentation simply stops
+  applying it. Mobile keeps it, and keeps the original response.
+- **A tighter camera, not no camera.** The desktop branch responds in 12ms falling to 8ms per stage
+  instead of 48ms falling to 22ms, capped at 0.7 frame intervals so high-refresh displays cannot
+  make it snap. Both fractional stages remain: this is not pass-through, and the world still does not
+  jump between frames.
+- **Measured, at 1440×900, movement continuing after the document stops:** aggressive forward
+  71.17px / 250.5ms → **1.96px / 16.9ms**; slow forward 23.18 → 1.66px; aggressive reverse 77.56 →
+  0.65px; navigation followed immediately by a wheel event **1496.51px / 997.2ms → 0.49px / 0ms**.
+  At 1920×1080 the same cases fall to 1.63, 0.93, 0.36 and 0.18px. The audit's 519px figure was not
+  reproduced by explicit input profiles; the navigation case is where that magnitude actually lived,
+  and it is now essentially gone.
+- **Readability was addressed by the same change, and nothing else was touched.** The defensible
+  proxy is the P95 distance between visible evidence and where the route says it should be: 296.13 →
+  **26.02px** on aggressive forward at 1440, 125.62 → 11.34px at 1920. The traces did not establish
+  composition opacity, `Reveal`, `EditorialDrift` or the departure scale as material contributors —
+  acquired evidence is already at opacity 1 through the measured intervals — so none of them was
+  changed, `lib/spatial/systemPov.ts` is untouched, and the accepted V14.7 timing and V14.8 curves
+  need no re-acceptance.
+- **A latent defect fixed on the way.** Before, the document reversed but the camera followed 4 (1440)
+  / 3 (1920) presentation frames later with 27.95 / 24.50px of wrong-way travel. After, the camera
+  reverses on the next presentation frame with 0px of wrong-way travel from that frame onward.
+
+**Rejected:** disabling the camera or setting the filter to pass-through; retuning `ROUTE_MAX_RATE`,
+`INTENT_LEAD_VH` or any wheel-governor constant (they pace the document, not the picture, and are
+accepted); changing opacity curves or secondary motion that measurement did not implicate; and
+applying the desktop response to mobile, whose art direction is frozen.
+
+**Disclosed:** an abrupt programmatic document jump — a stress control, not a wheel gesture — still
+produces a large movement, now concentrated into about 60ms rather than 1442ms.

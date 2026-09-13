@@ -2,7 +2,7 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.12 (motion gate), V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
 (the older SYSTEMS restored with the interlocking rails, the Machine's state stated, Selected
 Systems as a file, registers removed), with V14.4 and Gates E, D, C and B.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`

@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-13 (V14.11 — engineering gate: navigator correctness, handoff blend, frame registration)_
+_Updated: 2026-09-13 (V14.12 — motion gate: the camera tracks the reader)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `e37e77b` — V14.11 engineering gate, navigator correctness / route-native handoff blend / Kıvılcım frame registration (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `1944e25` — V14.12 motion gate, the camera tracks the reader (`.ai/handoffs/V14_12_MOTION_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.11 engineering gate `e37e77b` / `0d350d0` (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -36,7 +36,25 @@ regression.
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
 COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE · V14.5 VISUAL GATE
 COMPLETE · V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE · V14.7 CODEX ENGINEERING GATE 2
-(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE. Owner acceptance: PENDING.**
+(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE · V14.12 MOTION GATE COMPLETE. Owner acceptance: PENDING.**
+
+**V14.12 motion / readability gate (implemented by Codex CLI 0.153.4 under owner brief; Claude
+orchestrator only; D-058, `.ai/handoffs/V14_12_MOTION_RETURN.md`, report
+`docs/review/v14.12-motion/REPORT.md`).** THE CAMERA NOW TRACKS THE READER INSTEAD OF GLIDING AFTER
+THEM. Measurement separated two mechanisms: the filter's own settling, and `glideStep`, which capped
+VISUAL progress a second time after the document's wheel governor had already paced the input — the
+reason a navigation jump left a large visual backlog. Desktop presentation no longer applies
+`glideStep`, and the desktop filter branch responds in 12ms falling to 8ms per stage (was 48 → 22),
+capped at 0.7 frame intervals; both fractional stages remain, so this is a tighter camera, not
+pass-through, and MOBILE KEEPS the original response and the glide cap. Movement continuing after
+the document stops, 1440×900: aggressive forward 71.17px/250.5ms → **1.96px/16.9ms**, navigation +
+wheel 1496.51px/997.2ms → **0.49px/0ms**; the P95 pursuit gap falls 296.13 → 26.02px. Reverse now
+turns on the NEXT presentation frame with 0px wrong-way travel (was 4 frames later after 27.95px).
+No opacity curve, `Reveal`, `EditorialDrift` or departure scale was changed — the traces did not
+implicate them — so `systemPov.ts` is untouched and the V14.7/V14.8 curves need no re-acceptance.
+Product diff is 28 lines across `cameraFilter.ts` and `SpatialCamera.tsx`. First paint settled at
+both sizes; mobile unchanged; unit 595/595; focused Chromium 128 passed / 2 skipped with axe.
+**This is a real change of FEEL and needs the owner's eyes, not only the numbers.**
 
 **V14.11 engineering gate (implemented by Codex CLI 0.153.4 under owner brief; Claude orchestrator
 only; D-057, `.ai/handoffs/V14_11_ENGINEERING_RETURN.md`, report
@@ -280,7 +298,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.11-engineering/REPORT.md`** (the engineering gate),
+0. **The owner's review of `docs/review/v14.12-motion/REPORT.md`** (the motion gate),
+   `docs/review/v14.11-engineering/REPORT.md` (the engineering gate),
    `docs/review/v14.10-navigation-refine/README.md` (the refinement),
    `docs/review/v14.9-navigation/README.md` (the navigation gate),
    `docs/review/v14.8-visual-gate/README.md` (the V14.8 visual gate),
