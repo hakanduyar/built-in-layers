@@ -32,8 +32,10 @@ package `docs/review/v14.5-visual-gate/README.md`).
 `docs/review/v14.10-navigation-refine/README.md`).
 · `V14.11 ENGINEERING GATE COMPLETE` (checkpoint `e37e77b`;
 `.ai/handoffs/V14_11_ENGINEERING_RETURN.md`; report `docs/review/v14.11-engineering/REPORT.md`).
-Owner acceptance **PENDING**. The camera-lag / perceived-blur motion gate is owed and NOT started.
-Do not merge. Do not start another gate or the final QA without the owner.
+· `V14.12 MOTION GATE COMPLETE` (checkpoint `1944e25`;
+`.ai/handoffs/V14_12_MOTION_RETURN.md`; report `docs/review/v14.12-motion/REPORT.md`).
+Owner acceptance **PENDING**. The camera-lag motion gate is now DONE; its change of feel needs the
+owner's eyes. Do not merge. Do not start another gate or the final QA without the owner.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the
