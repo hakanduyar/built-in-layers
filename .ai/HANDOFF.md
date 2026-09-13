@@ -96,9 +96,17 @@ the document stops falls from 71.17px/250.5ms to 1.96px/16.9ms on aggressive for
 turns on the next presentation frame with 0px wrong-way travel. No opacity, Reveal, EditorialDrift
 or departure-scale change; 28-line product diff. Handoff: `.ai/handoffs/V14_12_MOTION_RETURN.md`.
 Checkpoint `1944e25`.
+**V14.13 MOTION FEEL GATE (2026-09-14, Claude Opus 5):** the governor's per-frame budget now scales
+with reader demand (1× at reading pace to 4× under sustained intent) while `INTENT_LEAD_VH` — the
+distance bound — is unchanged, so route aggressive peak goes 431 → 1259 px/s with coast 502 → 288px
+and reverse improves to 1 notch at 0 wrong-way px, with geometry identical and reading pace nearly
+untouched. A wheel gesture now cancels an in-flight native smooth scroll, so free input takes control
+immediately: document travel after a wheel 120ms into a navigation goes 503px → 0px. The camera
+response is byte-identical to V14.12 — two relaxations were measured and both cost more than they
+bought. Handoff: `.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`. Checkpoint `5ccbf5c`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE` · `V14.11 ENGINEERING GATE COMPLETE` · `V14.12 MOTION GATE COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE` · `V14.11 ENGINEERING GATE COMPLETE` · `V14.12 MOTION GATE COMPLETE` · `V14.13 MOTION FEEL GATE COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 

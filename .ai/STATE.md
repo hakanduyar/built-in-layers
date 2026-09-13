@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-13 (V14.12 — motion gate: the camera tracks the reader)_
+_Updated: 2026-09-14 (V14.13 — motion feel gate: speed follows demand)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `1944e25` — V14.12 motion gate, the camera tracks the reader (`.ai/handoffs/V14_12_MOTION_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.11 engineering gate `e37e77b` / `0d350d0` (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `5ccbf5c` — V14.13 motion feel gate, speed follows demand while distance stays bounded (`.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.12 motion gate `1944e25` / `e287f90` (`.ai/handoffs/V14_12_MOTION_RETURN.md`), on the V14.11 engineering gate `e37e77b` / `0d350d0` (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -36,7 +36,26 @@ regression.
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
 COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE · V14.5 VISUAL GATE
 COMPLETE · V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE · V14.7 CODEX ENGINEERING GATE 2
-(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE · V14.12 MOTION GATE COMPLETE. Owner acceptance: PENDING.**
+(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE · V14.12 MOTION GATE COMPLETE · V14.13 MOTION FEEL GATE COMPLETE. Owner acceptance: PENDING.**
+
+**V14.13 motion feel gate (Claude Opus 5, single writer; D-059,
+`.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`, report `docs/review/v14.13-motion-feel/REPORT.md`).**
+SPEED NOW FOLLOWS DEMAND WHILE DISTANCE STAYS BOUNDED. `ROUTE_MAX_RATE` was a flat ceiling doing two
+jobs: the route could not be crossed in under ~9.5s however hard the reader pushed, and the same flat
+rate drained the 540px intent queue, so letting go left the page travelling 1.6s. The per-frame
+budget now scales with the squared fraction of the UNCHANGED lead cap that pending intent occupies —
+1× at reading pace, 4× under sustained intent — so speed is granted and travel is not. Measured at
+1536×864: route aggressive peak **431 → 1259 px/s**, coast 502 → 288px, reading pace 415 → 474 px/s,
+geometry identical, and reverse IMPROVED from 2 notches to **1 notch at 0 wrong-way px**. A
+controlled check proves the residual is bounded coast, not forward debt (0px after the queue
+drains). A WHEEL NOW OUTRANKS AN IN-FLIGHT NAVIGATION: the governor used to read the browser's
+re-applied smooth-scroll target as someone else driving and stand down, so a wheel 120ms into a
+navigation still let the document travel 503px to the navigation's destination — now **0px over
+6ms**. THE CAMERA RESPONSE IS DELIBERATELY UNCHANGED: two relaxations were built and measured; the
+only one that produces a real trail at 60Hz costs the reverse guarantee (0 → 3px wrong-way), and the
+other buys ~1px of trail, below perception, while breaking V14.12's 80ms settling contract. Product
+diff is two files; camera tails ≤1.73px; first paint settled at both sizes; zero mobile layout
+differences; unit 595/595; focused Chromium 113 passed / 2 skipped.
 
 **V14.12 motion / readability gate (implemented by Codex CLI 0.153.4 under owner brief; Claude
 orchestrator only; D-058, `.ai/handoffs/V14_12_MOTION_RETURN.md`, report
@@ -298,7 +317,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.12-motion/REPORT.md`** (the motion gate),
+0. **The owner's review of `docs/review/v14.13-motion-feel/REPORT.md`** (the motion feel gate),
+   `docs/review/v14.12-motion/REPORT.md` (the motion gate),
    `docs/review/v14.11-engineering/REPORT.md` (the engineering gate),
    `docs/review/v14.10-navigation-refine/README.md` (the refinement),
    `docs/review/v14.9-navigation/README.md` (the navigation gate),
