@@ -1,0 +1,648 @@
+{
+  "1440x900": {
+    "geom": {
+      "start": 60.5,
+      "span": 4500,
+      "docHeight": 9504
+    },
+    "cases": {
+      "slow-forward": {
+        "subject": "kivilcim",
+        "lastEventMs": 2158.2,
+        "documentStopMs": 2370.7,
+        "documentCoastAfterEventPx": 43,
+        "cameraTailPx": 1.73,
+        "cameraTailMs": 15,
+        "tailDistanceToFinalPx": 1.73,
+        "visibleSubjectP95SpeedPxS": 1388.85,
+        "visibleSubjectTravelAfterStopPx": 1.73,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 6.7,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1642.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 975.786865234375,
+              "y": 590.3917236328125,
+              "w": 867.03125,
+              "h": 545.7967529296875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1306,
+        "frameCount": 289
+      },
+      "aggressive-forward": {
+        "subject": "tail",
+        "lastEventMs": 1275.5,
+        "documentStopMs": 2186.4,
+        "documentCoastAfterEventPx": 540,
+        "cameraTailPx": 1.37,
+        "cameraTailMs": 17,
+        "tailDistanceToFinalPx": 1.37,
+        "visibleSubjectP95SpeedPxS": 2865.86,
+        "visibleSubjectTravelAfterStopPx": 1.37,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 17,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 366,
+            "rect": {
+              "id": "kivilcim",
+              "x": 949.10546875,
+              "y": 577.563720703125,
+              "w": 867.03125,
+              "h": 545.7967529296875,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 766.5,
+            "rect": {
+              "id": "jointledger",
+              "x": 682.6181640625,
+              "y": 566.429931640625,
+              "w": 795.4375,
+              "h": 443.218505859375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "dropspot": {
+            "ms": 1151.2,
+            "rect": {
+              "id": "dropspot",
+              "x": 730.58642578125,
+              "y": 587.341552734375,
+              "w": 750.89013671875,
+              "h": 386.672119140625,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "tail": {
+            "ms": 1982,
+            "rect": {
+              "id": "tail",
+              "x": 270.0966796875,
+              "y": 185.27978515625,
+              "w": 1072.71875,
+              "h": 589.078125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 3044,
+        "frameCount": 229
+      },
+      "slow-reverse": {
+        "subject": "kivilcim",
+        "lastEventMs": 2080.2,
+        "documentStopMs": 2361.9,
+        "documentCoastAfterEventPx": -44,
+        "cameraTailPx": 1.31,
+        "cameraTailMs": 19.4,
+        "tailDistanceToFinalPx": 1.31,
+        "visibleSubjectP95SpeedPxS": 923.44,
+        "visibleSubjectTravelAfterStopPx": 1.31,
+        "firstNamed": {
+          "jointledger": {
+            "ms": 6.4,
+            "rect": {
+              "id": "jointledger",
+              "x": 952.41015625,
+              "y": 683.886962890625,
+              "w": 795.4375,
+              "h": 443.218505859375,
+              "opacity": 0.889676
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1237.7,
+            "rect": {
+              "id": "kivilcim",
+              "x": 91.1220703125,
+              "y": 192.5155029296875,
+              "w": 867.03125,
+              "h": 545.7967529296875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1241,
+        "frameCount": 263
+      },
+      "aggressive-reverse": {
+        "subject": "hero",
+        "lastEventMs": 1356.5,
+        "documentStopMs": 1920.6,
+        "documentCoastAfterEventPx": -213,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": 531.15,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 15.1,
+            "rect": {
+              "id": "kivilcim",
+              "x": -799.41552734375,
+              "y": -180.83251953125,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 0.399672
+            },
+            "inFrame": true
+          },
+          "software-factory": {
+            "ms": 783.9,
+            "rect": {
+              "id": "software-factory",
+              "x": -133.2381591796875,
+              "y": 260.7720947265625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "hero": {
+            "ms": 1606.6,
+            "rect": {
+              "id": "hero",
+              "x": 115.55734252929688,
+              "y": 52.28043746948242,
+              "w": 836.71875,
+              "h": 16.531253814697266,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 0,
+        "frameCount": 232
+      },
+      "fast-document-stop": {
+        "subject": "kivilcim",
+        "lastEventMs": 0,
+        "documentStopMs": 18.2,
+        "documentCoastAfterEventPx": 0,
+        "cameraTailPx": 283.53,
+        "cameraTailMs": 58.5,
+        "tailDistanceToFinalPx": 283.53,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 283.53,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 18.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 539.621337890625,
+              "y": 384.3297119140625,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1411,
+        "frameCount": 165
+      },
+      "reverse-during-input": {
+        "subject": "jointledger",
+        "lastEventMs": 780.5,
+        "documentStopMs": 1769.1,
+        "documentCoastAfterEventPx": -400,
+        "cameraTailPx": 0.78,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.78,
+        "visibleSubjectP95SpeedPxS": 6542.74,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 4.5,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1265.944091796875,
+              "y": 729.7332763671875,
+              "w": 867.03125,
+              "h": 545.796875,
+              "opacity": 0.835706
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 632.5,
+            "rect": {
+              "id": "jointledger",
+              "x": 678.2060546875,
+              "y": 564.507568359375,
+              "w": 795.4375,
+              "h": 443.21875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1572,
+        "frameCount": 188
+      },
+      "navigation-free-scroll": {
+        "subject": "software-factory",
+        "lastEventMs": 136.4,
+        "documentStopMs": 142.7,
+        "documentCoastAfterEventPx": 0,
+        "cameraTailPx": 6.68,
+        "cameraTailMs": 28.5,
+        "tailDistanceToFinalPx": 6.68,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 6.68,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 1.9,
+            "rect": {
+              "id": "software-factory",
+              "x": 8.5323486328125,
+              "y": 306.133056640625,
+              "w": 1072.7186279296875,
+              "h": 380.84375,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 856,
+        "frameCount": 273
+      },
+      "lower-native": {
+        "subject": "kivilcim",
+        "lastEventMs": 324.6,
+        "documentStopMs": 349.2,
+        "documentCoastAfterEventPx": 200,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "selected-systems": {
+            "ms": 8.3,
+            "inFrame": null
+          },
+          "how-i-build": {
+            "ms": 192,
+            "inFrame": null
+          }
+        },
+        "finalScroll": 6911,
+        "frameCount": 190
+      }
+    }
+  },
+  "1920x1080": {
+    "geom": {
+      "start": 60.5,
+      "span": 5400,
+      "docHeight": 10991
+    },
+    "cases": {
+      "slow-forward": {
+        "subject": "kivilcim",
+        "lastEventMs": 2323.7,
+        "documentStopMs": 2640.3,
+        "documentCoastAfterEventPx": 45,
+        "cameraTailPx": 1.33,
+        "cameraTailMs": 24.3,
+        "tailDistanceToFinalPx": 1.33,
+        "visibleSubjectP95SpeedPxS": 1061.58,
+        "visibleSubjectTravelAfterStopPx": 1.33,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 2.1,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 2177.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1262.9013671875,
+              "y": 706.942138671875,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1459,
+        "frameCount": 241
+      },
+      "aggressive-forward": {
+        "subject": "dropspot",
+        "lastEventMs": 1530.9,
+        "documentStopMs": 2906.6,
+        "documentCoastAfterEventPx": 648,
+        "cameraTailPx": 0.42,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.42,
+        "visibleSubjectP95SpeedPxS": 6659.44,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 0.6,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 468.9,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1259.691162109375,
+              "y": 705.246337890625,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 1021.3,
+            "rect": {
+              "id": "jointledger",
+              "x": 939.044921875,
+              "y": 677.095703125,
+              "w": 875,
+              "h": 487.484375,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "dropspot": {
+            "ms": 1539.4,
+            "rect": {
+              "id": "dropspot",
+              "x": 951.1591796875,
+              "y": 682.8916015625,
+              "w": 826,
+              "h": 425.265625,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 3414,
+        "frameCount": 189
+      },
+      "slow-reverse": {
+        "subject": "kivilcim",
+        "lastEventMs": 2315.5,
+        "documentStopMs": 2636.1,
+        "documentCoastAfterEventPx": -46,
+        "cameraTailPx": 0.99,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.99,
+        "visibleSubjectP95SpeedPxS": 797.47,
+        "visibleSubjectTravelAfterStopPx": 0.99,
+        "firstNamed": {
+          "jointledger": {
+            "ms": 0.7,
+            "rect": {
+              "id": "jointledger",
+              "x": 1232.46044921875,
+              "y": 817.37744140625,
+              "w": 875,
+              "h": 487.484375,
+              "opacity": 0.889676
+            },
+            "inFrame": true
+          },
+          "kivilcim": {
+            "ms": 1577.6,
+            "rect": {
+              "id": "kivilcim",
+              "x": 297.25390625,
+              "y": 228.95166015625,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1565,
+        "frameCount": 241
+      },
+      "aggressive-reverse": {
+        "subject": "hero",
+        "lastEventMs": 1562.6,
+        "documentStopMs": 2475.6,
+        "documentCoastAfterEventPx": -363,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": 782.06,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 6.7,
+            "rect": {
+              "id": "kivilcim",
+              "x": -694.53955078125,
+              "y": -229.2138671875,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 0.399672
+            },
+            "inFrame": true
+          },
+          "software-factory": {
+            "ms": 913.5,
+            "rect": {
+              "id": "software-factory",
+              "x": 44.008056640625,
+              "y": 305.854248046875,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          },
+          "hero": {
+            "ms": 2135.7,
+            "rect": {
+              "id": "hero",
+              "x": 309.5558776855469,
+              "y": 84.34687042236328,
+              "w": 920.390625,
+              "h": 18.1875,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 0,
+        "frameCount": 210
+      },
+      "fast-document-stop": {
+        "subject": "kivilcim",
+        "lastEventMs": 0,
+        "documentStopMs": 8.9,
+        "documentCoastAfterEventPx": 0,
+        "cameraTailPx": 337.8,
+        "cameraTailMs": 89.3,
+        "tailDistanceToFinalPx": 337.78,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 337.8,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 8.9,
+            "rect": {
+              "id": "kivilcim",
+              "x": 796.9267578125,
+              "y": 464.9327392578125,
+              "w": 953.75,
+              "h": 600.328125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1681,
+        "frameCount": 161
+      },
+      "reverse-during-input": {
+        "subject": "jointledger",
+        "lastEventMs": 899.8,
+        "documentStopMs": 2048.9,
+        "documentCoastAfterEventPx": -400,
+        "cameraTailPx": 0.86,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0.86,
+        "visibleSubjectP95SpeedPxS": 5295.1,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "kivilcim": {
+            "ms": 15.2,
+            "rect": {
+              "id": "kivilcim",
+              "x": 1577.35595703125,
+              "y": 872.7913818359375,
+              "w": 953.75,
+              "h": 600.327880859375,
+              "opacity": 0.835706
+            },
+            "inFrame": true
+          },
+          "jointledger": {
+            "ms": 729.3,
+            "rect": {
+              "id": "jointledger",
+              "x": 979.13134765625,
+              "y": 696.271728515625,
+              "w": 875,
+              "h": 487.484375,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 1881,
+        "frameCount": 170
+      },
+      "navigation-free-scroll": {
+        "subject": "software-factory",
+        "lastEventMs": 89.1,
+        "documentStopMs": 93.7,
+        "documentCoastAfterEventPx": 0,
+        "cameraTailPx": 1.82,
+        "cameraTailMs": 38,
+        "tailDistanceToFinalPx": 1.82,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 1.82,
+        "firstNamed": {
+          "software-factory": {
+            "ms": 4.9,
+            "rect": {
+              "id": "software-factory",
+              "x": 194.19482421875,
+              "y": 358.79345703125,
+              "w": 1180,
+              "h": 418.828125,
+              "opacity": 1
+            },
+            "inFrame": true
+          }
+        },
+        "finalScroll": 981,
+        "frameCount": 272
+      },
+      "lower-native": {
+        "subject": "kivilcim",
+        "lastEventMs": 321.6,
+        "documentStopMs": 344.1,
+        "documentCoastAfterEventPx": 200,
+        "cameraTailPx": 0,
+        "cameraTailMs": 0,
+        "tailDistanceToFinalPx": 0,
+        "visibleSubjectP95SpeedPxS": 0,
+        "visibleSubjectTravelAfterStopPx": 0,
+        "firstNamed": {
+          "selected-systems": {
+            "ms": 2.3,
+            "inFrame": null
+          },
+          "how-i-build": {
+            "ms": 193,
+            "inFrame": null
+          }
+        },
+        "finalScroll": 8081,
+        "frameCount": 189
+      }
+    }
+  }
+}

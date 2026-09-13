@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**V14.13 motion feel gate (explicit owner instruction, 2026-09-14):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `lib/spatial/cameraFilter.ts`, `components/spatial/SpatialCamera.tsx` | Owner reopens the route's flat rate ceiling: the governor's per-frame budget now scales with reader demand (1x at reading pace to 4x under sustained intent) while `INTENT_LEAD_VH` — the DISTANCE bound — is unchanged, so speed is granted and travel is not. A wheel gesture also cancels an in-flight native smooth scroll so free input can take control immediately. `ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, `wheelMotion`, the break absorber, the camera response constants, route geometry, scene layout and mobile are unchanged. | `docs/review/v14.13-motion-feel/REPORT.md`: route aggressive peak 431 → 1259 px/s with coast 502 → 288px and geometry identical; reverse 2 notches → 1 notch at 0 wrong-way px; navigation-then-wheel document travel 503px → 0px; camera tails ≤1.73px; cold first paint settled at both sizes; zero mobile layout differences. |
+
 **V14.12 motion gate (explicit owner instruction, 2026-09-13; uncommitted):**
 
 | Files | Scope and authority | Evidence |

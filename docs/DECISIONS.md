@@ -1888,3 +1888,43 @@ applying the desktop response to mobile, whose art direction is frozen.
 
 **Disclosed:** an abrupt programmatic document jump — a stress control, not a wheel gesture — still
 produces a large movement, now concentrated into about 60ms rather than 1442ms.
+
+## D-059 — Speed follows demand, distance stays bounded; a wheel outranks a navigation
+
+**Date:** 2026-09-14 · **Gate:** V14.13 motion feel (Claude Opus 5, single writer) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `1944e25`. Owner acceptance PENDING.
+
+**Context.** After V14.12 the owner reported that normal wheel/trackpad scrolling still felt
+artificially capped, and asked for free scrolling to be genuinely free without creating runaway.
+
+- **One constant was doing two jobs.** `ROUTE_MAX_RATE` is a flat ceiling, so the route could not be
+  crossed in under ~9.5s however hard the reader pushed; and because the same flat rate drained the
+  540px intent queue, letting go left the page travelling for 1.6s. It would not go fast, and it
+  would not stop. The ceiling now follows DEMAND — the squared fraction of the unchanged lead cap
+  that pending intent occupies, 1× at reading pace to 4× under sustained intent — while DISTANCE
+  stays bounded by exactly the same `INTENT_LEAD_VH`. Speed is granted; travel is not. Measured at
+  1536×864: route aggressive peak **431 → 1259 px/s**, coast **502 → 288 px**, reading pace
+  415 → 474 px/s, geometry identical, and reverse improved from 2 notches to **1 notch with 0
+  wrong-way pixels**.
+- **Bounded coast, not forward debt.** Reversing the same gesture while the queue drains gives 2px
+  of wrong-way travel; reversing after it drains gives 0. Debt would survive the wait. The metric
+  that once measured 484-506px of forward debt is not regressing.
+- **A wheel gesture now outranks an in-flight navigation.** A navigation runs a native smooth
+  scroll, and while it is in flight the browser re-applies its own target every frame — so the
+  governor read that as someone else driving and stood down. A wheel event 120ms into a navigation
+  still let the document travel a further 503px to the navigation's destination. The wheel handler
+  now cancels the animation by re-issuing the current position with an explicit instant behaviour:
+  zero pixels of movement, a no-op for the governor's own already-instant writes. After: **0px over
+  6ms** (1440) and 0px over 5ms (1920).
+- **The camera response was deliberately NOT relaxed.** Two candidates were built and measured.
+  Raising the frame cap is the only way to get a real trail at 60Hz, because desktop tau is clamped
+  to 0.7·dt — and it measurably cost the reverse guarantee (0 → 3px wrong-way, 1 → 2 notches).
+  Raising only the constants preserved reverse but bought about **1px** of extra trail, below
+  perception, while breaking V14.12's contract that the filter settles within 80ms. Neither trade
+  was worth making, so the response is byte-identical to V14.12 and what actually changes the felt
+  character of the motion is the much wider speed range above.
+
+**Rejected:** raising `ROUTE_MAX_RATE` itself (it would speed up reading pace, which is the accepted
+cinematic pacing); reducing `INTENT_LEAD_VH` to shorten coast (it would make fast scrolling stop
+abruptly); loosening the 80ms settling contract to justify a 1px change; and relaxing the frame cap
+at the cost of the zero-wrong-way guarantee the owner listed as preserved.

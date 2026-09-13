@@ -32,6 +32,7 @@ import {
   advanceFilter,
   glideStep,
   governorBudget,
+  routeDemandGain,
   pageGearing,
   type FilterState,
 } from "@/lib/spatial/cameraFilter";
@@ -733,14 +734,21 @@ function useRouteGovernor(
       }
       // The route budget remains unchanged through the governed share of the
       // handoff. Native displacement is contributed only by wheel events.
+      //
+      // V14.13: the ceiling now follows how hard the reader is pushing. The
+      // pending intent, measured against the unchanged lead cap, is the only
+      // input to that -- so reading pace keeps the accepted pacing, and a
+      // reader who means to move quickly is allowed to. The DISTANCE bound is
+      // untouched, so this grants speed without granting travel.
+      const step = intent - y;
       const maxStep = governorBudget(
         Math.min(y, bounds.pinnedEnd - 1),
         bounds.pinnedEnd,
         bounds.routeSpan,
         1,
         dt,
+        routeDemandGain(step, window.innerHeight * INTENT_LEAD_VH),
       );
-      const step = intent - y;
       motionAgeMs += dt;
       const move = wheelMotionStep(step, maxStep, dt, motionAgeMs);
       const next = Math.round(y + move);
@@ -851,6 +859,22 @@ function useRouteGovernor(
         return;
       }
       event.preventDefault();
+      /**
+       * V14.13 (owner: free input must be able to take control immediately).
+       *
+       * A navigation runs a NATIVE smooth scroll. While it is in flight the
+       * browser keeps re-applying its own target every frame, so the
+       * governor's tick saw the page move away from its last write, took that
+       * for someone else driving, and stood down -- measured, a wheel event
+       * 120ms into a navigation still let the document travel a further 503px
+       * to the navigation's destination. The reader's own gesture lost to a
+       * journey they had just interrupted.
+       *
+       * Re-issuing the current position with an explicit instant behaviour
+       * cancels that animation without moving the page a pixel. It is a no-op
+       * for the governor's own writes, which are already instant.
+       */
+      window.scrollTo({ top: y, left: 0, behavior: "instant" });
       if (intent === null || opposes || lead === 0) motionAgeMs = 0;
       intent = next;
       if (!raf) raf = requestAnimationFrame(tick);

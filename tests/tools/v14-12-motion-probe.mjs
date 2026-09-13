@@ -3,7 +3,9 @@
 import { chromium } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 const phase = process.env.PROBE_PHASE ?? "before";
-const out = "docs/review/v14.12-motion";
+// V14.13: the output root is overridable so a later gate can re-run this probe
+// without overwriting the gate that recorded it.
+const out = process.env.PROBE_ROOT ?? "docs/review/v14.12-motion";
 const bulk = `C:/Users/hakan/portfolio-review/v14.12-motion/${phase}`;
 mkdirSync(out, { recursive: true });
 mkdirSync(bulk, { recursive: true });

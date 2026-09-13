@@ -249,6 +249,52 @@ export const ROUTE_MAX_RATE = 0.105;
  */
 export const INTENT_LEAD_VH = 0.6;
 
+/**
+ * V14.13 (owner: "normal wheel/trackpad scrolling should be genuinely free") --
+ * THE CEILING BECOMES RESPONSIVE TO DEMAND, AND THE DISTANCE BOUND DOES NOT MOVE.
+ *
+ * THE MEASURED COMPLAINT. `ROUTE_MAX_RATE` is a flat ceiling: whatever the
+ * reader does, the route advances at 0.105 of itself per second -- about
+ * 472px/s at a 4500px span -- so crossing route one takes at least 9.5 seconds
+ * and no amount of input buys more. Worse, `INTENT_LEAD_VH` lets a full 540px
+ * of intent queue up, and draining it at that same flat rate takes ~1.14s:
+ * measured at 1440x900, an aggressive run's last wheel event landed at 1299ms
+ * and the document did not stop until 2941ms -- 1.6 seconds of travel the
+ * reader had stopped asking for. The flat ceiling therefore produced BOTH
+ * halves of the complaint: it would not go fast, and it would not stop.
+ *
+ * The fix separates the two things that constant conflated. RATE now follows
+ * how hard the reader is actually pushing -- the fraction of the lead cap their
+ * pending intent occupies -- while DISTANCE stays bounded by exactly the same
+ * `INTENT_LEAD_VH` as before:
+ *
+ *   reading pace     one notch leads ~100px of a 540px cap: demand 0.19,
+ *                    gain 1.10. The accepted cinematic pacing is untouched,
+ *                    which is the point -- this is not "make the route fast".
+ *   deliberate haste the lead saturates, demand 1, gain 4: about 1890px/s, so
+ *                    the route can be crossed in ~2.4s by someone who means to.
+ *   letting go       the queue is still at most 540px, and it now drains in
+ *                    ~0.29s instead of ~1.14s. Coasting gets SHORTER, not
+ *                    longer -- there is no new runaway, because no new
+ *                    distance was granted.
+ *
+ * Squared, so the curve is flat where reading happens and only opens under
+ * sustained intent; and applied to the governed route only, the lower world
+ * having been the browser's since V14.10.
+ */
+export const ROUTE_DEMAND_MAX_GAIN = 4;
+
+/**
+ * How much of the rate ceiling the reader has earned, from the intent still
+ * pending against the lead cap. 1 at reading pace, `ROUTE_DEMAND_MAX_GAIN` when
+ * the cap is saturated.
+ */
+export function routeDemandGain(lead: number, cap: number): number {
+  if (!(cap > 0)) return 1;
+  const demand = Math.min(1, Math.abs(lead) / cap);
+  return 1 + (ROUTE_DEMAND_MAX_GAIN - 1) * demand * demand;
+}
+
 /* ------------------------------------------------- V14: one ceiling, two gears */
 
 /**
@@ -324,9 +370,12 @@ export function governorBudget(
   routeSpan: number,
   gearing: number,
   dtMs: number,
+  /** V14.13: the reader-demand multiplier from routeDemandGain. 1 leaves the
+   *  budget exactly as it was, so every existing caller is unchanged. */
+  demandGain = 1,
 ): number {
   const gain = y >= pinnedEnd ? gearing : 1;
-  return ROUTE_MAX_RATE * routeSpan * gain * (Math.max(dtMs, 0) / 1000);
+  return ROUTE_MAX_RATE * routeSpan * gain * Math.max(demandGain, 1) * (Math.max(dtMs, 0) / 1000);
 }
 
 /**
