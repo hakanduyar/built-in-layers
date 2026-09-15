@@ -2,14 +2,14 @@
 
 Replace entries when they go stale. History belongs in Git and `docs/`, not here.
 
-_Updated: 2026-09-14 (V14.13 — motion feel gate: speed follows demand)_
+_Updated: 2026-09-16 (V14.14 — navigator refinement: clearance and destination preview)_
 
 | Field | Value |
 |---|---|
 | Project | Built in Layers — Hakan Duyar portfolio |
 | Repo | `C:\GitHub\portfolio` |
 | Branch | `feature/owner-visual-acceptance-v14` — created from exactly `5670234` |
-| Last application checkpoint | `5ccbf5c` — V14.13 motion feel gate, speed follows demand while distance stays bounded (`.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.12 motion gate `1944e25` / `e287f90` (`.ai/handoffs/V14_12_MOTION_RETURN.md`), on the V14.11 engineering gate `e37e77b` / `0d350d0` (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
+| Last application checkpoint | `76897e2` — V14.14 navigator refinement, the instrument's clearance and its destination preview (`.ai/handoffs/V14_14_NAVIGATOR_RETURN.md`; verify the tip with `git rev-parse HEAD`), on the V14.13 motion feel gate `5ccbf5c` / `d85bde4` (`.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`), on the V14.12 motion gate `1944e25` / `e287f90` (`.ai/handoffs/V14_12_MOTION_RETURN.md`), on the V14.11 engineering gate `e37e77b` / `0d350d0` (`.ai/handoffs/V14_11_ENGINEERING_RETURN.md`), on the V14.10 navigation refinement `60a6708` / `1ec2726` (`.ai/handoffs/V14_10_NAVIGATION_REFINE_RETURN.md`), on the V14.9 navigation gate `b244a4d` / `0f8ad8a` (`.ai/handoffs/V14_9_NAVIGATION_RETURN.md`), on the V14.8 visual gate `b385675` / `69d57f5` (`.ai/handoffs/V14_8_VISUAL_GATE_RETURN.md`), on the V14.7 Codex timing gate `2d40c65` / `518984a` (`.ai/handoffs/V14_7_CODEX_TIMING_RETURN.md`), on the V14.6 Codex motion gate `84fb5a9` / `bd3d840` (`.ai/handoffs/V14_6_CODEX_MOTION_RETURN.md`), on the V14.5 visual gate `b8ff8b8` / `516946a` (`.ai/handoffs/V14_5_VISUAL_GATE_RETURN.md`), on the V14.4 checkpoint `f9b0a72` / `ec37eb1` (`.ai/handoffs/V14_4_OWNER_CORRECTION_RETURN.md`), on the V14.3 Gate E checkpoint `51b3387` / `4810181` (`.ai/handoffs/V14_3_GATE_E_RETURN.md`), on the V14.3 Gate D checkpoint `5bbccb6` / `b4921e1` (`.ai/handoffs/V14_3_GATE_D_RETURN.md`), on the V14.2 Gate C checkpoint `5a4147d` / `2eb06c1` (`.ai/handoffs/V14_2_GATE_C_RETURN.md`), on the V14.2 Gate B checkpoint `de538bf` / `816b408` (`.ai/handoffs/V14_2_GATE_B_RETURN.md`), on the V14.1 Fable gate `f4bdab3` and its Opus QA `8c6045c`. That sits on the V14.1 engineering checkpoint `c2ba26a` / `fa7c72c`, which sits on the V14 visual candidate `35c2c58` (`.ai/handoffs/FABLE-V14-RETURN.md`) |
 | Scroll safety tag | `safety-v14-scroll-baseline` → `35c2c58`, annotated and pushed — the governed scroll the owner accepted, recorded in `docs/review/v14-scroll-baseline/`. **Not touched by the Fable gate** (`V14_1_FABLE_TO_OPUS.md` §6) |
 | Origin | verify with `git rev-parse origin/feature/owner-visual-acceptance-v14` |
 | V13 | `feature/project-architecture-v13` at `5670234` — not mutated |
@@ -36,7 +36,26 @@ regression.
 COMPLETE (PASS) · V14.2 VISUAL GATE B COMPLETE · V14.2 VISUAL GATE C COMPLETE · V14.3 VISUAL GATE D
 COMPLETE · V14.3 VISUAL GATE E COMPLETE · V14.4 OWNER VISUAL CORRECTION COMPLETE · V14.5 VISUAL GATE
 COMPLETE · V14.6 CODEX ENGINEERING GATE 1 (MOTION) COMPLETE · V14.7 CODEX ENGINEERING GATE 2
-(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE · V14.12 MOTION GATE COMPLETE · V14.13 MOTION FEEL GATE COMPLETE. Owner acceptance: PENDING.**
+(TIMING + SPACING) COMPLETE · V14.8 VISUAL GATE COMPLETE · V14.9 NAVIGATION GATE COMPLETE · V14.10 NAVIGATION REFINEMENT COMPLETE · V14.11 ENGINEERING GATE COMPLETE · V14.12 MOTION GATE COMPLETE · V14.13 MOTION FEEL GATE COMPLETE · V14.14 NAVIGATOR REFINEMENT COMPLETE. Owner acceptance: PENDING.**
+
+**V14.14 navigator refinement (Claude Opus 5, single writer; D-060,
+`.ai/handoffs/V14_14_NAVIGATOR_RETURN.md`, package `docs/review/v14.14-navigator/README.md`).**
+Both goals came from the independent V14.13 Codex review's two MINOR findings. THE INSTRUMENT NOW
+CLEARS THE GROUND IT READS, AND ONLY THERE: through the route the camera's 14vh inset already leaves
+its band empty, but below the pinned route the page is an ordinary document whose lines pass under
+it — measured at 1920×1080 the Field Notes landing put the readout and rail on How I Build's last
+line, glyph over glyph. A field of the page's own paper, sized to the cluster and masked away at its
+rim (no full-bleed edge, no rule, no border, no shadow), exists only at and below the pin where the
+ground is always paper, so it can never appear over the black transition; it sits outside the
+difference-composited layer. Both sizes go from one uncovered line in the band to ZERO, and no
+lower-world content moved. THE TICKS NAME THEIR DESTINATION under the pointer or on keyboard focus
+and nowhere else, absolutely positioned and `aria-hidden` so the rail neither shifts nor gains a
+second accessible name. Two defects were found while verifying and fixed: the preview inherited a raw
+ink colour and rendered faint under difference compositing, and V14.11's ahead-state opacity rule was
+forcing it visible on every station ahead of the reader. **MOTION IS FROZEN AND BYTE-IDENTICAL** —
+`lib/spatial/**` and `SpatialCamera.tsx` have an empty diff. Unit 595/595; focused Chromium 128
+passed / 2 skipped with axe; navigation 21 passed including four new contracts; first paint settled
+at both sizes; zero mobile layout differences.
 
 **V14.13 motion feel gate (Claude Opus 5, single writer; D-059,
 `.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`, report `docs/review/v14.13-motion-feel/REPORT.md`).**
@@ -317,7 +336,8 @@ FINAL FREEZE, OWNER ACCEPTED or READY TO MERGE; nothing merges to `main` without
 
 ## Next action
 
-0. **The owner's review of `docs/review/v14.13-motion-feel/REPORT.md`** (the motion feel gate),
+0. **The owner's review of `docs/review/v14.14-navigator/README.md`** (the navigator refinement),
+   `docs/review/v14.13-motion-feel/REPORT.md` (the motion feel gate),
    `docs/review/v14.12-motion/REPORT.md` (the motion gate),
    `docs/review/v14.11-engineering/REPORT.md` (the engineering gate),
    `docs/review/v14.10-navigation-refine/README.md` (the refinement),
