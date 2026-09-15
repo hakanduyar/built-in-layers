@@ -1928,3 +1928,38 @@ artificially capped, and asked for free scrolling to be genuinely free without c
 cinematic pacing); reducing `INTENT_LEAD_VH` to shorten coast (it would make fast scrolling stop
 abruptly); loosening the 80ms settling contract to justify a 1px change; and relaxing the frame cap
 at the cost of the zero-wrong-way guarantee the owner listed as preserved.
+
+## D-060 — The instrument clears the ground it reads; the ticks name their destination
+
+**Date:** 2026-09-16 · **Gate:** V14.14 navigator refinement (Claude Opus 5, single writer) ·
+**Branch:** `feature/owner-visual-acceptance-v14` · **Base:** `5ccbf5c`. Owner acceptance PENDING.
+
+**Context.** The independent V14.13 review returned two MINOR findings against the navigator: it
+overlaps real lower-world text, and its station ticks are anonymous to sighted readers. Motion was
+frozen for this gate and is untouched.
+
+- **A clearance, not a bar.** Through the route the camera's own 14vh inset leaves the navigator's
+  band empty; below the pinned route the page is an ordinary document whose lines pass under the
+  instrument. Measured at 1920×1080, the Field Notes landing put the readout and rail on top of How
+  I Build's last line, glyph over glyph — difference compositing keeps the marks dark but cannot
+  separate two sets of letterforms in the same pixels. The instrument now clears the ground it needs
+  to read, and only there: a field of the page's own paper, sized to the cluster and masked away at
+  its rim, with no full-bleed edge, no rule, no border and no shadow. It exists only at and below the
+  pin, where the ground is always paper, so it can never appear over the black transition, and it
+  sits OUTSIDE `.route-navigator` because that layer composites with difference and a clearance
+  inside it would invert itself. Lower-world content was not moved. Measured: at both sizes the Field
+  Notes landing goes from one uncovered line in the band to **zero**.
+- **The ticks name their destination.** Under the pointer or on keyboard focus, each tick shows its
+  canonical station name and nothing else — the same answer the edge chevrons already gave. It is
+  absolutely positioned, so revealing it cannot move the rail by a pixel, and `aria-hidden`, so the
+  tick keeps exactly one accessible name. The rail gains no permanent labels.
+
+**Two defects found while verifying, both fixed:** the preview inherited a raw ink colour instead of
+the navigator's remapped token and so rendered faint under difference compositing; and V14.11's
+`[data-nav-state="ahead"] > span[aria-hidden]` rule, written when the tick mark was the only
+`aria-hidden` child of a station button, was forcing the new preview visible on every station ahead
+of the reader. The mark is now named `data-nav-mark` and the selector targets it.
+
+**Rejected:** a full-width or bordered backing (a header bar, which the brief rules out); moving or
+re-spacing lower-world content to avoid the overlap; hiding the navigator when content is beneath it
+(it would be unreliable exactly when it is needed); and permanent tick labels.

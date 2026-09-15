@@ -470,7 +470,11 @@ body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
     --color-ink-muted: var(--color-paper);
     --color-line: var(--color-paper);
   }
-  .route-navigator [data-nav-state="ahead"] > span[aria-hidden] {
+  /* V14.14: the TICK MARK specifically. This selector was written when the
+     mark was the only aria-hidden child of a station button; the destination
+     preview added beside it is also one, and was being forced visible on every
+     station still ahead of the reader. */
+  .route-navigator [data-nav-state="ahead"] > [data-nav-mark] {
     opacity: 0.35;
   }
 }

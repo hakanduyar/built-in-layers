@@ -1,0 +1,80 @@
+{
+  "1440x900": {
+    "field-notes": {
+      "band": {
+        "top": 20,
+        "bottom": 70.1875,
+        "left": 552,
+        "right": 888
+      },
+      "clearance": {
+        "top": 0,
+        "bottom": 128,
+        "left": 336,
+        "right": 1104
+      },
+      "intersecting": 1,
+      "uncovered": []
+    },
+    "about": {
+      "band": {
+        "top": 20,
+        "bottom": 70.1875,
+        "left": 552,
+        "right": 888
+      },
+      "clearance": {
+        "top": 0,
+        "bottom": 128,
+        "left": 336,
+        "right": 1104
+      },
+      "intersecting": 0,
+      "uncovered": []
+    },
+    "preview": {
+      "text": "03 JointLedger",
+      "opacity": "1",
+      "visible": true
+    }
+  },
+  "1920x1080": {
+    "field-notes": {
+      "band": {
+        "top": 20,
+        "bottom": 70.1875,
+        "left": 792,
+        "right": 1128
+      },
+      "clearance": {
+        "top": 0,
+        "bottom": 128,
+        "left": 576,
+        "right": 1344
+      },
+      "intersecting": 1,
+      "uncovered": []
+    },
+    "about": {
+      "band": {
+        "top": 20,
+        "bottom": 70.1875,
+        "left": 792,
+        "right": 1128
+      },
+      "clearance": {
+        "top": 0,
+        "bottom": 128,
+        "left": 576,
+        "right": 1344
+      },
+      "intersecting": 0,
+      "uncovered": []
+    },
+    "preview": {
+      "text": "03 JointLedger",
+      "opacity": "1",
+      "visible": true
+    }
+  }
+}

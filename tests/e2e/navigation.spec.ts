@@ -244,6 +244,84 @@ test.describe("V14.9: navigation and free scroll coexist", () => {
   });
 });
 
+test.describe("V14.14: the instrument's clearance and its destination preview", () => {
+  test("claims a clearance only where the page's own content runs under it", async ({ page }) => {
+    await enterRoute(page);
+    // Through the route the camera's 14vh inset already leaves the band empty.
+    await expect(page.locator("[data-nav-clearance]")).toHaveCount(0);
+
+    await page.locator('[data-nav-station="field-notes"]').click();
+    await settle(page);
+    await expect(page.locator("[data-nav-clearance]")).toHaveCount(1);
+  });
+
+  test("leaves no lower-world text colliding with the instrument's own marks", async ({ page }) => {
+    await enterRoute(page);
+    await page.locator('[data-nav-station="field-notes"]').click();
+    await settle(page);
+
+    // Every piece of page text that reaches the band the readout and rail
+    // occupy must be inside the clearance, not sharing pixels with the marks.
+    const uncovered = await page.evaluate(() => {
+      const rail = document.querySelector("[data-nav-rail] ol");
+      const readout = document.querySelector("[data-nav-readout]");
+      const clearance = document.querySelector("[data-nav-clearance] > div");
+      if (!rail || !readout || !clearance) return ["missing instrument"];
+      const r = rail.getBoundingClientRect();
+      const o = readout.getBoundingClientRect();
+      const c = clearance.getBoundingClientRect();
+      const band = {
+        top: Math.min(r.top, o.top),
+        bottom: Math.max(r.bottom, o.bottom),
+        left: Math.min(r.left, o.left),
+        right: Math.max(r.right, o.right),
+      };
+      const bad: string[] = [];
+      for (const el of document.querySelectorAll("main *, footer *")) {
+        if (el.closest("[data-route-navigator]")) continue;
+        if (!el.textContent?.trim() || el.children.length) continue;
+        const b = el.getBoundingClientRect();
+        if (b.width === 0 || b.height === 0) continue;
+        if (b.bottom < band.top || b.top > band.bottom) continue;
+        if (b.right < band.left || b.left > band.right) continue;
+        const covered =
+          Math.max(b.top, band.top) >= c.top &&
+          Math.min(b.bottom, band.bottom) <= c.bottom &&
+          Math.max(b.left, band.left) >= c.left &&
+          Math.min(b.right, band.right) <= c.right;
+        if (!covered) bad.push(el.textContent.trim().slice(0, 40));
+      }
+      return bad;
+    });
+    expect(uncovered).toEqual([]);
+  });
+
+  test("names a destination under the pointer, and nowhere else", async ({ page }) => {
+    await enterRoute(page);
+    const preview = page.locator('[data-nav-preview="jointledger"]');
+    // Present for nobody until the reader is on the tick.
+    expect(await preview.evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
+
+    await page.locator('[data-nav-station="jointledger"]').hover();
+    await expect.poll(async () => preview.evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+    expect((await preview.textContent())?.trim()).toBe("03 JointLedger");
+  });
+
+  test("names a destination on keyboard focus too, without disturbing its accessible name", async ({
+    page,
+  }) => {
+    await enterRoute(page);
+    await page.locator('[data-nav-station="about"]').focus();
+    await expect
+      .poll(async () =>
+        page.locator('[data-nav-preview="about"]').evaluate((el) => getComputedStyle(el).opacity),
+      )
+      .toBe("1");
+    // The visible preview is decorative: the tick keeps one accessible name.
+    await expect(page.locator('[data-nav-station="about"]')).toHaveAccessibleName("08, About");
+  });
+});
+
 test.describe("V14.10: the first-load cue", () => {
   test("suggests left/right once, then never again this session", async ({ page }) => {
     await page.goto("/");
