@@ -300,7 +300,10 @@ test.describe("V14.14: the instrument's clearance and its destination preview", 
     await enterRoute(page);
     const preview = page.locator('[data-nav-preview="jointledger"]');
     // Present for nobody until the reader is on the tick.
-    expect(await preview.evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
+    // The rail now shares one preview; it has no visible destination at rest.
+    expect(
+      await page.locator("[data-nav-preview]").evaluate((el) => getComputedStyle(el).opacity),
+    ).toBe("0");
 
     await page.locator('[data-nav-station="jointledger"]').hover();
     await expect.poll(async () => preview.evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
@@ -321,6 +324,85 @@ test.describe("V14.14: the instrument's clearance and its destination preview", 
     await expect(page.locator('[data-nav-station="about"]')).toHaveAccessibleName("08, About");
   });
 });
+
+for (const viewport of [
+  { width: 1440, height: 900 },
+  { width: 1920, height: 1080 },
+]) {
+  test.describe(`V14.15: exclusive destination preview at ${viewport.width}`, () => {
+    test.use({ viewport });
+
+    test("keyboard focus wins over a resting pointer and hover resumes on blur", async ({
+      page,
+    }) => {
+      await enterRoute(page);
+      const geometry = () =>
+        page.locator(`${RAIL} ol, [data-nav-station]`).evaluateAll((nodes) =>
+          nodes.map((node) => {
+            const { x, y, width, height } = node.getBoundingClientRect();
+            return { x, y, width, height };
+          }),
+        );
+      const original = await geometry();
+      expect(original[0]).toMatchObject({ width: 336, height: 24 });
+      const visible = () =>
+        page
+          .locator("[data-nav-preview]")
+          .evaluateAll((nodes) =>
+            nodes
+              .filter((node) => Number(getComputedStyle(node).opacity) > 0)
+              .map((node) => node.getAttribute("data-nav-preview")),
+          );
+      const check = async (id: string) => {
+        await expect.poll(visible).toEqual([id]);
+        expect(await geometry()).toEqual(original);
+        await expect(page.locator(`[data-nav-preview="${id}"]`)).toHaveAttribute(
+          "aria-hidden",
+          "true",
+        );
+      };
+      const field = page.locator('[data-nav-station="field-notes"]');
+      await field.hover();
+      await check("field-notes");
+      await field.click();
+      await settle(page);
+      await page.evaluate(() => {
+        const w = window as unknown as { __previewMax: number; __previewFrame: number };
+        w.__previewMax = 0;
+        const sample = () => {
+          w.__previewMax = Math.max(
+            w.__previewMax,
+            [...document.querySelectorAll("[data-nav-preview]")].filter(
+              (node) => Number(getComputedStyle(node).opacity) > 0,
+            ).length,
+          );
+          w.__previewFrame = requestAnimationFrame(sample);
+        };
+        sample();
+      });
+      await page.keyboard.press("Tab");
+      await expect(page.locator('[data-nav-station="about"]')).toBeFocused();
+      await check("about");
+      await page.waitForTimeout(250);
+      await check("about");
+      await expect(page.locator('[data-nav-station="about"]')).toHaveAccessibleName("08, About");
+      await page.mouse.move(700, 400);
+      await check("about");
+      await field.hover();
+      await check("about");
+      await page.locator('[data-nav-step="next"]').focus();
+      await check("field-notes");
+      await page.waitForTimeout(250);
+      expect(
+        await page.evaluate(() => {
+          const w = window as unknown as { __previewMax: number; __previewFrame: number };
+          cancelAnimationFrame(w.__previewFrame);
+          return w.__previewMax;
+        }),
+      ).toBe(1);
+    });
+  });
+}
 
 test.describe("V14.10: the first-load cue", () => {
   test("suggests left/right once, then never again this session", async ({ page }) => {

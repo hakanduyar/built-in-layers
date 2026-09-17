@@ -150,6 +150,17 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
   const snapshotRef = useRef<Snapshot>(IDLE);
   const presentedRef = useRef(0);
   const cueCancelledRef = useRef(false);
+  const [preview, setPreview] = useState<{
+    hovered: number | null;
+    focused: number | null;
+    last: number;
+  }>({ hovered: null, focused: null, last: 0 });
+  const updatePreview = (kind: "hovered" | "focused", index: number | null) => {
+    setPreview((previous) => {
+      const next = { ...previous, [kind]: index };
+      return { ...next, last: next.focused ?? next.hovered ?? previous.last };
+    });
+  };
 
   /** Read the document and compose the snapshot. The only writer of the store. */
   const read = useCallback((): Snapshot => {
@@ -306,6 +317,10 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
   const total = ROUTE_STATIONS.length;
   const travelled = total > 1 ? (active / (total - 1)) * 100 : 0;
   const label = current ? stationLabel(current, projectTitles) : "";
+  const previewIndex = preview.focused ?? preview.hovered ?? preview.last;
+  const previewStation = ROUTE_STATIONS[previewIndex]!;
+  const previewName = stationLabel(previewStation, projectTitles);
+  const previewVisible = preview.focused !== null || preview.hovered !== null;
 
   return (
     <>
@@ -402,10 +417,23 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
                       projectTitles={projectTitles}
                       state={index === active ? "active" : index < active ? "passed" : "ahead"}
                       onActivate={() => goTo(index)}
+                      onHover={(hovered) => updatePreview("hovered", hovered ? index : null)}
+                      onFocus={(focused) => updatePreview("focused", focused ? index : null)}
                     />
                   </li>
                 ))}
               </ol>
+              {/* One decorative preview for the whole rail: keyboard focus wins
+                  over hover. Keep the last destination while fading out, and
+                  reuse this element when switching so two labels never crossfade. */}
+              <span
+                aria-hidden="true"
+                data-nav-preview={previewStation.id}
+                style={{ left: `${((previewIndex + 0.5) / total) * 100}%` }}
+                className={`pointer-events-none absolute top-full mt-1.5 block -translate-x-1/2 whitespace-nowrap font-mono text-mono-meta tracking-mono-meta uppercase text-ink transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] ${previewVisible ? "opacity-100" : "opacity-0"}`}
+              >
+                {previewStation.index ? `${previewStation.index} ${previewName}` : previewName}
+              </span>
             </div>
           </div>
         </div>
@@ -439,11 +467,15 @@ function StationTick({
   projectTitles,
   state,
   onActivate,
+  onHover,
+  onFocus,
 }: {
   station: RouteStation;
   projectTitles: Record<string, string>;
   state: "active" | "passed" | "ahead";
   onActivate: () => void;
+  onHover: (hovered: boolean) => void;
+  onFocus: (focused: boolean) => void;
 }) {
   const name = stationLabel(station, projectTitles);
   return (
@@ -453,23 +485,13 @@ function StationTick({
       data-nav-state={state}
       aria-current={state === "active" ? "true" : undefined}
       onClick={onActivate}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      onFocus={(event) => onFocus(event.currentTarget.matches(":focus-visible"))}
+      onBlur={() => onFocus(false)}
       className="group relative flex h-6 w-6 items-center justify-center"
     >
       <span className="sr-only">{station.index ? `${station.index}, ${name}` : name}</span>
-      {/* THE DESTINATION, named only while the reader is on the tick. The ticks
-          were anonymous to a sighted reader -- their accessible names were
-          right, but choosing a distant station meant remembering the order.
-          This is the answer the edge chevrons already give: the name appears
-          under the pointer or on keyboard focus and nowhere else, so the rail
-          keeps its silence and gains no permanent labels. Absolutely
-          positioned, so revealing it cannot move the rail by a pixel. */}
-      <span
-        aria-hidden="true"
-        data-nav-preview={station.id}
-        className="pointer-events-none absolute left-1/2 top-full mt-1.5 block -translate-x-1/2 whitespace-nowrap font-mono text-mono-meta tracking-mono-meta uppercase text-ink opacity-0 transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover:opacity-100 group-focus-visible:opacity-100"
-      >
-        {station.index ? `${station.index} ${name}` : name}
-      </span>
       <span
         aria-hidden="true"
         data-nav-mark="true"
