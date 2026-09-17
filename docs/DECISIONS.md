@@ -1963,3 +1963,34 @@ of the reader. The mark is now named `data-nav-mark` and the selector targets it
 **Rejected:** a full-width or bordered backing (a header bar, which the brief rules out); moving or
 re-spacing lower-world content to avoid the overlap; hiding the navigator when content is beneath it
 (it would be unreliable exactly when it is needed); and permanent tick labels.
+
+## D-061 — One destination preview at a time; keyboard focus wins over a resting pointer
+
+**Date:** 2026-09-17 · **Gate:** V14.15 navigator micro-fix (implemented by Codex CLI 0.153.4 under
+owner brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` ·
+**Base:** `76897e2`. Owner acceptance PENDING.
+
+**Context.** The independent V14.14 review found one reproducible defect and made it the condition
+for freezing the navigator.
+
+- **The defect.** Each station tick showed its preview from independent per-element CSS
+  (`group-hover`, `group-focus-visible`), so two could be visible at once: click Field Notes, leave
+  the pointer on it, press Tab, and "07 FIELD NOTES" and "08 ABOUT" overlapped by 60.49 × 18 px,
+  unreadable, at both 1440×900 and 1920×1080.
+- **The fix.** The navigator owns which station is previewed rather than leaving it to per-element
+  CSS: hovered and focused indices are tracked, **focus takes priority**, and one shared
+  `aria-hidden` element follows the selected tick, so two labels can never crossfade. Focus
+  eligibility reads `:focus-visible` on entry, so a pointer click is not mistaken for keyboard focus;
+  blur restores hover; the last destination holds position while fading out.
+- **Measured at both sizes:** at rest 0 → 0 previews; hover alone 1 → 1 (hovered); focus alone 1 → 1
+  (focused); **hover and focus on different ticks 2 with overlap → 1 (focused)**; focus away 1 → 1
+  (hovered). The rail stays 336 × 24 px with every tick rectangle unmoved, and the About tick keeps
+  its single accessible name `08, About`.
+- **Why V14.14's contracts missed it:** they tested hover and keyboard focus separately. The new
+  contract drives the real click/Tab sequence at both viewports.
+
+**Rejected:** a CSS-only fix — per-element rules cannot express "another element's focus suppresses
+my hover"; and letting hover win, which would leave a keyboard user's own focus unannounced.
+
+**Explicitly out of scope and untouched:** the faint clearance halo at the surface-return handoff
+(+5 per channel at 1920, scrollY 5418), motion, and the 1920 composition.

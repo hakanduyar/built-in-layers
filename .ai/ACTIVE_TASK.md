@@ -2,7 +2,7 @@
 
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
-**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.14 (navigator refinement), V14.13 (motion feel gate), V14.12 (motion gate), V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
+**TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.15 (navigator micro-fix), V14.14 (navigator refinement), V14.13 (motion feel gate), V14.12 (motion gate), V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
 (the older SYSTEMS restored with the interlocking rails, the Machine's state stated, Selected
 Systems as a file, registers removed), with V14.4 and Gates E, D, C and B.** Fable V14 checkpoint `35c2c58`; Opus QA
 `27c4fca`; V14.1 engineering `c2ba26a` / `fa7c72c`; V14.1 Fable gate `f4bdab3`
@@ -38,9 +38,13 @@ package `docs/review/v14.5-visual-gate/README.md`).
 `.ai/handoffs/V14_13_MOTION_FEEL_RETURN.md`; report `docs/review/v14.13-motion-feel/REPORT.md`).
 · `V14.14 NAVIGATOR REFINEMENT COMPLETE` (checkpoint `76897e2`;
 `.ai/handoffs/V14_14_NAVIGATOR_RETURN.md`; package `docs/review/v14.14-navigator/README.md`).
-Owner acceptance **PENDING**. Motion is frozen as of V14.13 and V14.14 did not touch it. The one
-remaining finding from the independent review — reduced proportional density at 1920 — is NOT
-started. Do not merge. Do not start another gate or the final QA without the owner.
+· `V14.15 NAVIGATOR MICRO-FIX COMPLETE` (checkpoint `6e4e702`;
+`.ai/handoffs/V14_15_NAVIGATOR_FIX_RETURN.md`; report `docs/review/v14.15-navigator-fix/REPORT.md`).
+Owner acceptance **PENDING**. Motion is frozen as of V14.13 and neither V14.14 nor V14.15 touched it.
+The independent review's condition for freezing the NAVIGATOR is now met. Still open and NOT started:
+the faint clearance halo at the surface-return handoff, and reduced proportional density at 1920
+(which that review judged acceptable). Do not merge. Do not start another gate or the final QA
+without the owner.
 
 **V14.1 FABLE GATE (art direction only):** the owner's remaining findings corrected as systems —
 D-043 (the route as a track), D-044 (the ground drawn; presence as a state change), D-045 (the

@@ -111,9 +111,16 @@ with the readout and rail to none, at both sizes, with no lower-world content mo
 reads as a header bar. Each station tick now names its destination under the pointer or on keyboard
 focus, absolutely positioned and aria-hidden. Motion is frozen and byte-identical. Handoff:
 `.ai/handoffs/V14_14_NAVIGATOR_RETURN.md`. Checkpoint `76897e2`.
+**V14.15 NAVIGATOR MICRO-FIX (2026-09-17, Codex implemented, Claude orchestrated):** the navigator
+now owns which station is previewed instead of leaving it to per-element CSS — hovered and focused
+indices are tracked, focus wins over a resting pointer, and one shared aria-hidden element follows
+the selected tick, so the two overlapping labels the independent review reproduced (60.49×18px at
+both sizes) can no longer occur. Measured mixed input 2→1 preview at 1440 and 1920, with the rail
+unchanged at 336×24 and About keeping `08, About`. Motion frozen and byte-identical. Handoff:
+`.ai/handoffs/V14_15_NAVIGATOR_FIX_RETURN.md`. Checkpoint `6e4e702`.
 
 **VERDICT:** `V14.1 FABLE VISUAL GATE COMPLETE` · `FINAL OPUS ENGINEERING QA COMPLETE — PASS` ·
-`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE` · `V14.11 ENGINEERING GATE COMPLETE` · `V14.12 MOTION GATE COMPLETE` · `V14.13 MOTION FEEL GATE COMPLETE` · `V14.14 NAVIGATOR REFINEMENT COMPLETE`
+`V14.2 VISUAL GATE B COMPLETE` · `V14.2 VISUAL GATE C COMPLETE` · `V14.3 VISUAL GATE D COMPLETE` · `V14.3 VISUAL GATE E COMPLETE` · `V14.4 OWNER VISUAL CORRECTION COMPLETE` · `V14.5 VISUAL GATE COMPLETE` · `V14.6 CODEX MOTION GATE COMPLETE` · `V14.7 CODEX TIMING GATE COMPLETE` · `V14.8 VISUAL GATE COMPLETE` · `V14.9 NAVIGATION GATE COMPLETE` · `V14.10 NAVIGATION REFINEMENT COMPLETE` · `V14.11 ENGINEERING GATE COMPLETE` · `V14.12 MOTION GATE COMPLETE` · `V14.13 MOTION FEEL GATE COMPLETE` · `V14.14 NAVIGATOR REFINEMENT COMPLETE` · `V14.15 NAVIGATOR MICRO-FIX COMPLETE`
 (`.ai/handoffs/OPUS-V14_1-QA-RETURN.md`: independent, on its own fresh production build of the
 application tree `f4bdab3`; no defect, no source change). Owner acceptance **PENDING**. Do not merge.
 
