@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { animate } from "motion/react";
 import {
   ROUTE_STATIONS,
   activeStationIndex,
@@ -31,9 +32,8 @@ import { useSettledReducedMotion } from "@/lib/utils/useSettledReducedMotion";
 // moving the document IS moving the camera -- along the real route, through the
 // real cut, with the real filter and the real governor. `SpatialCamera` already
 // navigates this way for keyboard focus (`recenterOnScene` ->
-// `scrollToProgress`), with the same `behavior: "smooth"` and the same
-// next-frame re-assert; this reuses that mechanism rather than inventing a
-// parallel one. Nothing here touches scroll physics, the wheel governor, the
+// `scrollToProgress`). Arrow steps use an explicit duration and yield to manual
+// input. Nothing here touches scroll physics, the wheel governor, the
 // route's geometry or the break's timing.
 //
 // Camera scenes observe filtered presentation; lower sections observe document
@@ -147,6 +147,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
   const enabled = mounted && desktop && !reduceMotion;
 
   const targetsRef = useRef<number[]>([]);
+  const stepAnimation = useRef<{ stop: () => void } | null>(null);
   const snapshotRef = useRef<Snapshot>(IDLE);
   const presentedRef = useRef(0);
   const cueCancelledRef = useRef(false);
@@ -239,6 +240,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
    * command is issued.
    */
   const goTo = useCallback((index: number) => {
+    stepAnimation.current?.stop();
     const target = targetsRef.current[index];
     if (target === undefined) return;
     window.scrollTo({ top: target, behavior: "smooth" });
@@ -249,10 +251,29 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
     (direction: -1 | 1) => {
       const next = active + direction;
       if (next < 0 || next >= ROUTE_STATIONS.length) return;
-      goTo(next);
+      const target = targetsRef.current[next];
+      if (target === undefined) return;
+      stepAnimation.current?.stop();
+      window.scrollTo({ top: window.scrollY, behavior: "instant" });
+      stepAnimation.current = animate(window.scrollY, target, {
+        duration: 0.75,
+        ease: [0.25, 0.1, 0.25, 1],
+        onUpdate: (top) => window.scrollTo({ top, behavior: "instant" }),
+      });
     },
-    [active, goTo],
+    [active],
   );
+
+  useEffect(() => {
+    if (!enabled) return;
+    const cancel = () => stepAnimation.current?.stop();
+    const events = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+    events.forEach((event) => window.addEventListener(event, cancel, { passive: true, capture: true }));
+    return () => {
+      cancel();
+      events.forEach((event) => window.removeEventListener(event, cancel, true));
+    };
+  }, [enabled]);
 
   /**
    * THE FIRST-LOAD CUE. Once per session, and only until the reader moves.
@@ -375,7 +396,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
           focusable while invisible. */}
         <div
           data-nav-rail="true"
-          className={`absolute inset-x-0 top-0 flex justify-center pt-5 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] ${
+          className={`absolute inset-x-0 top-0 flex justify-center pt-3 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] ${
             entered ? "visible opacity-100" : "invisible opacity-0"
           }`}
         >
@@ -386,7 +407,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
             <p
               aria-hidden="true"
               data-nav-readout={current?.id}
-              className="mb-2 flex items-baseline justify-center gap-2.5 font-mono text-mono-label tracking-mono-label uppercase"
+              className="mb-1 flex items-baseline justify-center gap-2 font-mono text-mono-meta tracking-mono-meta uppercase"
             >
               {current?.index && <span className="text-ink-muted">{current.index}</span>}
               <span className="text-ink">{label}</span>

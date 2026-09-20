@@ -269,7 +269,7 @@ function Cluster({
       className={
         compact
           ? "absolute -top-1 left-0 max-w-[22rem] -translate-y-full pl-1"
-          : "absolute -top-1 right-0 max-w-[26rem] -translate-y-full pr-1 text-right"
+          : "absolute top-4 right-0 max-w-[min(26rem,100%)] break-words pr-1 text-right"
       }
     >
       <motion.div
