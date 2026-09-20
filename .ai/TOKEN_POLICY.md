@@ -92,3 +92,55 @@ Independently QA the committed checkpoint.
 Run the acceptance validation required by ACTIVE_TASK/TOKEN_POLICY.
 Do not redo art direction.
 ```
+
+## TOKEN-FIRST PROMPT GATE — MANDATORY
+
+Before every task:
+
+1. **MODEL** — use the cheapest sufficient model/effort (see Model policy above).
+2. **SCOPE** — maximum 2–3 objectives.
+3. **CONTEXT** — do not reload information already known or frozen.
+4. **VALIDATION** — validate only the changed scope (see Validation policy above).
+5. **REUSE** — never regenerate evidence that already passed unless the relevant code changed.
+
+### Micro-fix rules
+
+- Default orchestration: **Haiku / Low**.
+- Do not read STATE, HANDOFF, history, docs, screenshots or unrelated source unless the user
+  explicitly requires them.
+- No repo-wide exploration.
+- No browser capture, build or test during the implementation pass.
+- Produce the smallest local diff and STOP.
+- Implementation and validation are separate tasks.
+- Frozen/PASS areas must not be re-audited.
+
+### Claude → Codex delegation
+
+- When Claude is only the orchestrator, it must not independently analyse the repository.
+- Start Codex within at most 3 tool actions.
+- Do not duplicate Codex's investigation.
+- Do not repeatedly inspect `codex --help` if a working invocation is already known.
+- Keep verbose Codex output out of Claude context where possible.
+- Read/return only Codex's concise result.
+- If delegation cannot begin within 3 tool actions, STOP instead of investigating.
+
+### Validation (gate-specific)
+
+- Test only the touched scope.
+- Do not rerun previously-passing broad suites.
+- Full acceptance suite is reserved for a true final/release gate and should normally run once.
+
+### Model routing (gate-specific)
+
+- Micro-fix orchestration: Haiku / Low.
+- Coding/engineering implementation: Codex.
+- Visual art-direction: Fable High only when genuinely required.
+- Opus Medium/High only for unresolved critical reasoning or a specifically justified final task.
+- Never use a more expensive model simply to orchestrate another model.
+
+### STOP conditions
+
+- If scope expands beyond the requested objectives: STOP.
+- If previously frozen areas would need reopening: STOP and report why.
+- If a task begins consuming context through broad investigation before implementation/delegation:
+  STOP.
