@@ -25,10 +25,15 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
   const content = (
     <>
       <MonoLabel className="text-ink-muted">{project.categoryLabel}</MonoLabel>
+      {/* V13 (mobile gate, M4): the title is the card's route and was a 24px
+          tall target on phones; `touch-link` gives it 44px below `lg` without
+          moving the rule above or the description below. */}
       <h3 className="mt-2 font-display text-heading-m text-ink">
-        <TextLink href={`/work/${project.slug}`}>{displayTitle(project)}</TextLink>
+        <TextLink href={`/work/${project.slug}`} className="max-lg:inline-block max-lg:touch-link">
+          {displayTitle(project)}
+        </TextLink>
       </h3>
-      <p className="mt-2 max-w-[42rem] font-display text-body text-ink-muted">
+      <p className="mt-2 max-w-measure font-display text-body text-ink-muted">
         {project.description}
       </p>
       {/* CONTENT_MODEL §9: upstream disclosure is mandatory in any
@@ -48,13 +53,23 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
           title/description stay dominant, per DESIGN_SYSTEM §9's existing
           Figure frame (mat, corner ticks, honest caption). Shared with /work
           via this same component, so there is one image-selection path, not
-          two. */}
+          two.
+
+          V13 (mobile gate, ART-1 — D-031 addendum): the thumbnail opts into
+          the inspector. At 320px it shows a 1600-unit diagram at 0.2 of its
+          size under a caption that calls it verified evidence, and this
+          thumbnail is not a link (the title is), so on a phone the index was
+          the one surface where a figure the site had taught to open did not.
+          Below `lg` the caption row gains the same INSPECT control the case
+          studies carry; at `lg` and above the control does not render and the
+          index is what it was. */}
       {project.images[0] && (
         <div className="mt-4 max-w-xs">
           <Figure
             src={project.images[0].src}
             alt={project.images[0].alt}
             caption={project.images[0].caption}
+            inspect
           />
         </div>
       )}
@@ -62,7 +77,7 @@ export function ProjectCard({ project, revealDelayMs }: ProjectCardProps) {
   );
 
   return (
-    <li className="border-t border-line py-6 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:border-signal-ui focus-within:border-signal-ui">
+    <li className="border-t border-line py-6 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:border-ink focus-within:border-ink">
       {revealDelayMs !== undefined ? <Reveal delayMs={revealDelayMs}>{content}</Reveal> : content}
     </li>
   );

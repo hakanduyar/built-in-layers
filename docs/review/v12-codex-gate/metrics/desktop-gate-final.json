@@ -1,0 +1,580 @@
+{
+  "tag": "final",
+  "viewports": {
+    "1366x768": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 870,
+            "h": 721,
+            "L": 71,
+            "T": 30
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 709
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 909,
+            "h": 604,
+            "L": 71,
+            "T": 30
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 0,
+            "gap": 709
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 669
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 870,
+            "h": 573,
+            "L": 71,
+            "T": 30
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 671
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 709
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 870,
+            "h": 692,
+            "L": 71,
+            "T": 30
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 709
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 0,
+            "gap": 719
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 1751,
+            "h": 1372,
+            "L": -527,
+            "T": -328
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 111
+          },
+          "next": null,
+          "clippedBelow": 276
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "598x374"
+        }
+      }
+    },
+    "1440x900": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1045,
+            "h": 856,
+            "L": 88,
+            "T": 51
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 901
+          },
+          "clippedBelow": 7
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1093,
+            "h": 724,
+            "L": 89,
+            "T": 51
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 0,
+            "gap": 901
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 853
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1045,
+            "h": 686,
+            "L": 88,
+            "T": 51
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 854
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 901
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1045,
+            "h": 827,
+            "L": 89,
+            "T": 51
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 901
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 0,
+            "gap": 913
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2159,
+            "h": 1691,
+            "L": -650,
+            "T": -393
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 163
+          },
+          "next": null,
+          "clippedBelow": 398
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "721x450"
+        }
+      }
+    },
+    "1536x864": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1004,
+            "h": 821,
+            "L": 92,
+            "T": 45
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 865
+          },
+          "clippedBelow": 2
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1050,
+            "h": 695,
+            "L": 90,
+            "T": 45
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 0,
+            "gap": 865
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 819
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1004,
+            "h": 658,
+            "L": 91,
+            "T": 45
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 820
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 865
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1004,
+            "h": 794,
+            "L": 91,
+            "T": 45
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 865
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 0,
+            "gap": 876
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2159,
+            "h": 1693,
+            "L": -647,
+            "T": -401
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 126
+          },
+          "next": null,
+          "clippedBelow": 427
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "692x432"
+        }
+      }
+    },
+    "1920x1080": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1208,
+            "h": 987,
+            "L": 287,
+            "T": 84
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1264,
+            "h": 836,
+            "L": 287,
+            "T": 85
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 985
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1208,
+            "h": 793,
+            "L": 286,
+            "T": 84
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 987
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1208,
+            "h": 955,
+            "L": 286,
+            "T": 84
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 0,
+            "gap": 1055
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2599,
+            "h": 2037,
+            "L": -602,
+            "T": -453
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 152
+          },
+          "next": null,
+          "clippedBelow": 503
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "833x521"
+        }
+      }
+    },
+    "2560x1440": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1208,
+            "h": 1076,
+            "L": 607,
+            "T": 135
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1264,
+            "h": 836,
+            "L": 606,
+            "T": 135
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 985
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1208,
+            "h": 793,
+            "L": 606,
+            "T": 135
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 0,
+            "gap": 987
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1208,
+            "h": 955,
+            "L": 606,
+            "T": 135
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 1041
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 0,
+            "gap": 1055
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2599,
+            "h": 2036,
+            "L": -282,
+            "T": -403
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 0,
+            "gap": 152
+          },
+          "next": null,
+          "clippedBelow": 193
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "833x521"
+        }
+      }
+    }
+  }
+}

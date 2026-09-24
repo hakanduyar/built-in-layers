@@ -35,7 +35,7 @@ export default function WorkPage() {
       <h1 className="mt-4 font-display text-heading-l text-ink">Selected systems</h1>
 
       {groups.length === 0 ? (
-        <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">
+        <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
           {pendingCopy.work}
         </p>
       ) : (

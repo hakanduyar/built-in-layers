@@ -302,3 +302,1695 @@ Binding conditions attached to this approval — all already true of the current
 - **Trade-off:** The site now carries two different image-honesty regimes side by side (real screenshots vs. clearly-labelled verified/provisional diagrams) until real photography exists project-by-project; every future case study must keep the label and the underlying verified facts in sync, or the asset itself becomes a truthfulness violation.
 - **Schema/content-model impact:** `ProjectFrontmatter.images[].placeholder: boolean` is replaced by `images[].assetType: "real-screenshot" | "verified-diagram" | "provisional-illustration"` in `lib/content/schemas.ts` and CONTENT_MODEL §2 — a single field capturing the distinction this decision introduces, instead of layering a second boolean alongside the existing one (CONTENT_MODEL §8 already documents the parallel `[CONTENT REQUIRED]`-marker mechanism; this is a separate, image-specific concern, not restated there).
 - **Approval:** Hakan's explicit, dated decision (2026-08-05); implemented as directed, not independently proposed.
+
+## D-020 — Reduced motion disables motion, not design (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-08-16). **Not** in force on `main`, which remains governed by DESIGN_SYSTEM §§1–17.
+- **Decision:** Under `prefers-reduced-motion`, the spatial prototype disables **motion systems** while permitting **static design grammar** to remain. Camera travel, parallax, spline-driven travel, collision shake, animated repositioning, erosion animation, moving debris, directional-field movement and Editorial Drift movement must all be off. Strong editorial compositions, static System POV corners/brackets, real project metadata, static structural rails and non-animated system grammar may remain.
+- **Supersedes:** DESIGN_SYSTEM §18.9 (V4), whose concept was *reduced motion = zero spatial grammar*, verified as "zero of each". V4 itself is unchanged on its own branch; this decision changes the contract for V5 forward, not retroactively.
+- **Reason:** V4's rule was written to guarantee that a reduced-motion visitor was never subjected to residual movement, and it achieved that by deleting the entire spatial layer. In V5 that became the wrong trade: the System POV annotation carries *real, non-duplicated project facts* (which layer the lead evidence belongs to, and the project's real lifecycle phase), so deleting the layer wholesale removed genuine information from exactly the users least able to afford losing it. Motion is the accessibility hazard; composition is not.
+- **Binding conditions:** no fake telemetry in the static state; no duplicate screen-reader content — useful metadata appears exactly once and stays semantic; decorative static graphics remain `aria-hidden`; no partially destroyed functional text; the static state must be a designed composition, not a stripped dump.
+- **Rejected:** Keeping §18.9 unchanged (discards real metadata from reduced-motion users for no accessibility gain); rendering the spatial layer with animations merely slowed rather than removed (still motion, still a hazard); duplicating the metadata into a separate screen-reader-only block (creates two sources of truth for the same fact, and violates the no-duplicate-content rule).
+- **Trade-off:** Reduced motion is no longer verifiable by the simple assertion "zero spatial elements present". The E2E contract becomes finer-grained — *these specific things must not move, these specific things may exist statically* — which is more expressive but more test surface to maintain. That test coverage does **not yet exist** and is recorded as an open item in DESIGN_SYSTEM §19.13.
+- **Approval:** Hakan's explicit, dated instruction (2026-08-16), issued as an approved contract change during the V5 stabilization pass; implemented as directed, not independently proposed.
+
+## D-021 — Owner reorder, governed scroll, and the V7 system pass (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-08-31, owner brief). **Not** in force on `main`.
+- **Decisions, all owner-directed in one brief:**
+  1. **Project order** is now Software Factory → Kıvılcım → JointLedger → DropSpot (then Professional Systems on the Work index). This supersedes **D-016's order** wherever the two disagree; `order` frontmatter stays the single source of truth and now records 0/1/2/3/4.
+  2. **Software Factory and JointLedger become first-class spatial scenes.** Software Factory's content entry was published after a direct audit of the local repository (`C:\GitHub\software-factory`) — its delivery-loop diagram is traced to the repo's own README pipeline, constitution and ADR-0002 and labelled a verified diagram under D-019.
+  3. **Gate 1's DropSpot crop is reversed.** The uncropped screenshot returns at 84% width with the second-shot group restored and enlarged; `Figure`'s `frameRatio` capability remains but is unused.
+  4. **One supporting-plane grammar** (enter-before / register-at-focus / trail-on-exit) now runs on every project plane via `lib/spatial/planeChoreography.ts`, desktop and mobile.
+  5. **Scroll is governed inside the spatial route.** Wheel input is intent; progression is capped at `ROUTE_MAX_RATE` in both directions (`useRouteGovernor` + the route-wide visual glide ceiling). This deliberately extends the break event's fixed-playback philosophy to the whole route at the owner's explicit direction ("raw wheel = intent; the system decides progression"), and keeps the same escape guarantees: keyboard/scrollbar/programmatic scrolls are never captured and are adopted, ctrl+zoom passes through, touch stays native, reduced motion never sees any of it.
+  6. **"Built for real life" (dormant, zero entries) is replaced by the Selected Systems index** — loader-fed rows for every published system. Chosen over an "Operational Model" section because How I Build already carries the method; what the lower page lacked was a dense, navigable account of the systems just toured.
+- **Trade-offs recorded:** the route grew (640vh; ~64vh per segment, still far under V1's per-scene cost); the exit traverse's progress share fell below the old 10% guard (geometry unchanged, guard re-derived); two e2e settle-helpers needed longer proven-stable runs because arrival is now paced.
+- **Approval:** Hakan's explicit V7 brief; implemented as directed.
+
+## D-022 — The world fits the viewport it is in, on both axes (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decision:** The spatial world is composed against a reference viewport (1440 × 1040) and fitted
+  into the real one by a single scale on the one transformed parent every depth plane already shares:
+  `worldFit(w, h) = clamp(min(h / 1040, w / 1280), 0.74, 1)`. Separately, world POSITION is expressed
+  in the world's own unit — `min(1vw, 14.4px)` / `min(1vh, 10.4px)` — so scene separation stops
+  growing with the frame above the reference viewport.
+- **Reason:** measured, not inferred. Every input to a scene's size was width-derived or absolute, so
+  above ~1405px of viewport width the composition became a fixed 793px tall while its frame stayed
+  `100vh`. That is not a preference: at 1366×768 the flagship scene was 145px taller than the
+  viewport and clipped, at 1918×864 it lost 53px, and at the 1440×900 design viewport DropSpot lost
+  38px. Every one of those viewports reported **zero horizontal overflow**, so the standing overflow
+  matrix could never have found it. After the fit, zero scenes are clipped anywhere in the matrix.
+- **Binding conditions:** the fit never scales **up**, so 1920×1080 and 2560×1440 are pixel-untouched
+  and the approved large-display look is preserved exactly; the floor (0.74) exists so the world
+  cannot scale itself below legibility; the world unit governs position only, never content size,
+  because shrinking compositions to reveal their neighbours is the miniaturisation the brief rules
+  out; mobile is excluded from both — it is a deliberate vertical interpretation, not a compressed
+  desktop (§30), and has no width-derived height demand to correct.
+- **Rejected:** per-component media queries and font reductions (treats the symptom in N places and
+  leaves the compositions unrelated to each other); an aspect-ratio-only correction (measured wrong —
+  at a constant 1.778 aspect the frame share still ranged 0.719 to 1.092, because the binding
+  variable is absolute height, not aspect); folding viewport width into the fit at the design width
+  of 1440 (double-counts an axis the content already responds to); scaling content down on large
+  displays to bring neighbours into frame (explicitly ruled out by the brief).
+- **Trade-off:** the spatial world at 1440×900 now renders at 0.94 rather than 1.0, so the long-
+  standing "the approved 1440 frames are pixel-untouched" property of earlier passes no longer holds
+  at that viewport specifically. That is deliberate: 1440×900 is itself a short frame by this
+  measure, and it was one of the viewports measured as clipping content. Large displays are
+  unchanged.
+- **Approval:** Hakan's explicit V8 brief ("This is a world-fit problem, not a few media queries";
+  "large desktop retains the approved visual scale"); implemented as directed.
+
+## D-023 — One authoritative instance of each lower-page section (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decision:** The two `DestinationSurface` plates that previewed **Selected Systems** and **How I
+  Build** from the exit traverse are deleted, along with the component, the `PLANE_DEEP` depth plane
+  and the 167.2-unit empty diagonal that existed to carry them. The later, content-rich sections are
+  the single authoritative instances of both, and both were developed further rather than merely
+  retained. Supersedes **D-021 item 6**'s staging only — the Selected Systems index itself stands.
+- **Reason:** the homepage stated each of those two sections twice, the first time almost empty. The
+  previews were honest (loader-fed, `aria-hidden`, no invented copy) and that did not stop them being
+  previews. Removing them without removing their leg would have left 46vh of scroll through empty
+  world, which is the dead scroll the route-length cap exists to prevent.
+- **Binding conditions:** the concepts are not removed globally — only the early sparse instances;
+  the exit still hands over on a real bearing change rather than stopping dead (`TURN_WORLD`, 95.3
+  units at 59.5°); route one's pacing is held constant by lowering `ROUTE_LENGTH_VH` 640 → 600, so
+  removing dead scroll does not silently slow the four project scenes; the standing contract in
+  `tests/e2e/spatial-v5.spec.ts` tests component and route-stop **identity**, never heading-text
+  counts, because the two headings legitimately appear in more than one place in the markup.
+- **Rejected:** restyling, renaming, compressing or hiding the previews at one breakpoint (all
+  explicitly ruled out); replacing each removed preview with a new section (the brief asks for a
+  tighter journey, not a one-for-one swap); keeping the diagonal (an empty leg is the thing the
+  previews were invented to fix, so it cannot outlive them).
+- **Approval:** Hakan's explicit V8 brief and its follow-up correction distinguishing the early
+  sparse duplicates from the later full versions; implemented as directed.
+
+## D-024 — Homepage release candidate: derived facts, per-scene pacing, one link per system (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **Facts that describe the route are derived from the route.** The handoff sentence's project
+     count and the travel material's scene order are both computed from `TOUR_SLUGS` / `SCENE_IDS`
+     rather than written. Both had gone stale at the V7 reorder; one merely lied in prose, the other
+     framed an oversized word crop across the flagship's composition at progress 0.137 against a
+     focus of 0.141.
+  2. **The world's terminus frame carries the regime change.** "Back on the surface" renders inside
+     the sticky frame rather than after the section, because the route ends one viewport before the
+     section does and V8 emptied that frame when it removed the destination previews.
+  3. **Reading allowance is per scene** (`SCENE_ALLOWANCE`), largest of a segment's two anchors.
+     The scroll governor is untouched.
+  4. **One link per system, carrying its own affordance.** The "Open case study" / "Open system"
+     cue is `aria-hidden` inside the title's anchor, and its wording is derived from `depth` so it
+     cannot promise a case study the content does not contain.
+  5. **Review artifacts follow `docs/REVIEW_POLICY.md`**: metrics in Git, still matrices and
+     recordings outside it, V8's committed bundle left untouched.
+- **Reason:** every one of these was a measured defect, not a preference — a 360px run at 0.2%
+  content fill, a 0.004-progress collision between a material fragment and a scene focus, a 1.17
+  project-to-statement pacing ratio, a five-row register rendering term and value at the same 12px.
+- **Binding conditions:** no invented content anywhere — the About introduction is assembled only
+  from facts the repository already asserts, and what a longer biography would need is recorded in
+  `docs/CONTENT_GAPS.md` instead of guessed; per-scene allowance may not exceed what the world's
+  continuity contracts permit (measured ceiling recorded in `SCENE_ALLOWANCE`); the affordance may
+  never add a second link to the same destination.
+- **Rejected:** a second "Open case study" link per system (duplicate tab stops, and its accessible
+  name had to contain the title, making the row's links indistinguishable); replacing the removed
+  Field Notes composition with anything (`data/notes.ts` is empty by design under D-008, so the
+  footprint shrinks instead); widening scene spacing to keep neighbouring scenes out of frame at
+  focus (they do not overlap, and their visibility is the "zooming out reveals more of the same
+  world" behaviour D-022 was asked for); changing end geometry for the CTA's apparent hold, which
+  was measured and is not dead scroll.
+- **Approval:** Hakan's explicit V9 homepage-finalization brief; implemented as directed.
+
+## D-025 — One governed scroll model, bounded intent, and a ground that registers (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **The scroll governor bounds the whole document**, not just the spatial spacer, while its RATE
+     stays anchored to the route's span. The lower page was previously native and uncapped — two
+     scroll implementations on one page.
+  2. **Wheel intent is bounded in distance, not only in rate.** A gesture opposing the pending lead
+     discards it; intent may never lead real scroll by more than `INTENT_LEAD_VH` (0.6) of a
+     viewport. Measured, this took the post-input coast from 2827px/3.27vh/5.6s to 496px/0.57vh/0.6s
+     and reverse from 7 notches and 484–506px of wrong-way travel to 1 notch and 0px.
+  3. **Scene compositions align to the top of their box** (`items-start`), so a project's ground
+     registers against it at every viewport instead of drifting 207px and flipping sign.
+  4. **The acquisition annotation brackets the composition**, not the `72vh` frame, so it stops
+     being the one object in the world whose size tracks the viewport.
+  5. **The mirrored plate's inward overhang is removed** on the `counter` variant only.
+  6. **The drift seam is measured where the constant is demonstrably wrong**, and a field with no
+     body beneath its seam is not drawn.
+- **Reason:** all six are measured defects with reproduced numbers, recorded in DESIGN_SYSTEM §35.
+  Every one of the seven investigations that produced them was adversarially refuted first, and the
+  scope here is what survived that refutation.
+- **Binding conditions:** the rate ceiling is unchanged (`ROUTE_MAX_RATE` untouched) — only the
+  region it governs and the distance intent may lead; focus-slowness (`FOCUS_SPEED_RATIO`) is
+  untouched, so a constant world-speed cap was rejected; `planeShift()` is untouched, having been
+  verified exact (lead:lag 17/8, 0px at focus); no route geometry, anchor, `ROUTE_LENGTH_VH` or
+  `SCENE_MIN_HEIGHT` change, so every contract in `tests/unit/spatial-route.test.ts` holds unmodified.
+- **Rejected, with the measurement that rejected it:** a world-spread spacing system (buys less
+  clearance than the single overhang fix, at the cost of route geometry and page length);
+  re-deriving plane bounds from content (its width claim was an arithmetic identity; it would delete
+  the measured `x + w == 1.00` registration on two planes); `SCENE_MIN_HEIGHT` in world units (zero
+  visible gain at 50% zoom, −46% of the hero composition there); deleting the lower-page field motif
+  and replacing it with line work (the motif is not the defect; the seam was).
+- **Approval:** Hakan's explicit V10 brief; implemented as directed.
+
+## D-026 — The desktop system gate: a world large enough to isolate, and a fit that does not resample text (experimental branch scope)
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` only (2026-09-01, owner brief). **Not** in force on `main`.
+- **Decisions:**
+  1. **The project step is solved from focus isolation, not authored.** `stepPx >= viewportWidth −
+     cameraInset + margin` at every tested viewport gives `STEP_VW = 155` (2560 binds). SYSTEMS gets
+     a full step as a primary destination. Route two is translated 200vh, never reshaped.
+  2. **The world fit is a layout `zoom`, not a paint `transform: scale`.** Text and screenshots are
+     laid out and painted once at native scale.
+  3. **`ROUTE_MAX_RATE` falls with the world's growth**, 0.155 → 0.105, because it is a fraction of
+     the route per second and therefore sets `rate × worldLength` as the permitted world speed.
+  4. **The lower page's fields are linework, not fill** — seam rule, terminating ticks, and the route
+     continuing through the section. A field with less body than its overhang is not drawn.
+- **Reason:** measured. 25 of 25 focus-isolation cells failed, by up to 334,219px². The accumulated
+  transform scale over text measured 0.74/0.87/0.83 at the three viewports that looked soft and
+  exactly 1.0 at the two that looked sharp. Both are recorded with their numbers in
+  `docs/DESKTOP_FREEZE_ACCEPTANCE.md` and `DESIGN_SYSTEM §36`.
+- **Binding conditions:** the approved diagonal is preserved to a tenth of a degree; route two's
+  internal bearings and leg lengths are byte-identical; `ROUTE_LENGTH_VH` is untouched so page
+  length does not grow; the departure zoom stays a transform because it is a moving beat confined to
+  the last 5% of the route; mobile anchors are untouched (§29).
+- **Rejected, with the measurement that rejected it:** deriving ground bounds from project ink (the
+  validating case was an arithmetic identity, and adopting it would move an owner-approved plane
+  135.8 world px at 2560 and delete two measured `x + w == 1.00` registrations); raising
+  `ROUTE_LENGTH_VH` to pay for the bigger world (unnecessary — the ceiling is a fraction of the
+  route, so page length is independent of it); solving isolation with opacity or visibility windows
+  (explicitly ruled out, and it would have left the route too short underneath).
+- **Approval:** Hakan's explicit V11 final desktop system brief; implemented as directed.
+
+## D-027 — One global order, and navigation derived from it
+
+- **Status:** ACCEPTED for `feature/spatial-portfolio-v5` and its descendants (2026-09-02, owner
+  decision). **Not** in force on `main`.
+- **Context:** two orderings of the same five projects disagreed. `order` and the frozen homepage
+  ran Software Factory → Kıvılcım → JointLedger → DropSpot; a hand-authored `nextSlug` chain ran
+  Kıvılcım → DropSpot → JointLedger → Professional Systems. D-021 had already named `order` "the
+  single source of truth", so the `nextSlug` values were stale sequencing left over from D-016's
+  order, not an approved editorial signal. An independent architecture review confirmed this.
+- **Decisions:**
+  1. **`order` is a single GLOBAL editorial sequence**, not a position within a tier. The
+     published order is Software Factory 0, Kıvılcım 1, JointLedger 2, DropSpot 3, Professional
+     Systems 4. Tier may drive visual treatment, prominence and depth policy; it must never
+     silently reorder.
+  2. **`order` must be unique** across published projects. Duplicates fail the build
+     (`checkUniqueOrder`) rather than resolving through an undocumented sort tie-breaker.
+  3. **`sortByTierThenOrder` is renamed `sortByOrder`.** Its body was always a flat sort on
+     `order`; the old name asserted a two-key ordering the code never implemented and misled a
+     documentation pass into repeating the claim.
+  4. **`nextSlug` is removed** from the schema, from the three entries that carried it, and from
+     the test fixture. No manually-authored next-project graph returns unless a genuine non-linear
+     editorial requirement appears.
+  5. **Previous and next are derived** from one ordered collection, so they cannot disagree.
+     Boundaries are open — the first destination has no previous, the last has no next, and there
+     is no wrap-around, which would imply a cycle the editorial order does not have.
+  6. **Only case-study destinations participate.** A project enters the sequence when
+     `depth` is `full` or `short` — the same test `getProjectLayers` already uses. A preview index
+     such as Professional Systems has no case study, so offering it a position would invent a
+     relationship that does not exist.
+- **Consequence, accepted knowingly:** Software Factory is the flagship but is still
+  `depth: "preview"`, so it is not yet in the sequence and its page still has no onward link. It
+  joins automatically when its depth rises, with no code change. Recorded in `docs/CONTENT_GAPS.md`.
+- **Rejected:** keeping `nextSlug` as editorial sequencing (D-021 already settled the question);
+  adding a new `publicationRole` field to express eligibility (depth already draws that line, and a
+  second source of truth is what this decision exists to remove); tier-first sorting (owner
+  explicitly rejected it); memoising the publication gates to speed up derivation — measured at
+  ~1.2s per run either way, so the optimisation was removed rather than shipped unproven.
+- **Approval:** Hakan's owner-decision brief, 2026-09-02, sections B.4, B.5 and B.6.
+
+## D-028 — A project ground is anchored to the bottom of its evidence, not sized from its height
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable art-direction gate's
+  delegated authority (`.ai/handoffs/FABLE-GATE.md` §5, 2026-09-03; owner unavailable). Owner
+  review of the returned before/after evidence is still pending. **Not** in force on `main`.
+- **Context:** `lib/spatial/projectGround.ts` derived a ground's height from the evidence union's
+  height plus two block paddings while clamping `top` to a floor. For the two shallow compositions
+  (Kıvılcım, JointLedger) the top clamped and the whole surplus landed below the evidence: measured
+  on the production build at scene focus, the ground ran 153 / 184 / 177 / 213 / 213 px past the
+  evidence at 1366 / 1440 / 1536 / 1920 / 2560, and on exit the blank part trailed last (260 px of
+  ground below the evidence at early-exit, 1536×864) — a beige rectangle behind a card, which the
+  V12 freeze explicitly forbids. The file is fingerprinted in `docs/FROZEN_BOUNDARY.md` §1; this is
+  the measured regression that justifies moving it.
+- **Decisions:**
+  1. **The ground's lower edge is derived from where the evidence ends:** `bottom = union.bottom +
+     blockPadding`, `height = clamp(bottom − top, minHeight, maxHeight)`. `top` keeps its previous
+     derivation, so the lead the top edge gives the evidence is unchanged.
+  2. **`minHeight` falls 0.51 → 0.40.** The floor exists to keep a small group on a real plinth,
+     not to pad a shallow one; at 0.51 the floor alone reproduced most of the surplus.
+  3. **The Software Factory fallback visual is re-measured** for the foundation composition's new
+     shape (0 / 0.23 / 0.74 / 0.50), read from the production build, not typed.
+  4. **The contract in `tests/unit/project-ground.test.ts` is re-derived from the measured
+     visuals** (Kıvılcım, JointLedger, DropSpot and Software Factory unions read off the build) and
+     now asserts the anchoring itself: bottom-anchored grounds end exactly one `blockPadding` under
+     their evidence; grounds that hit `maxHeight` still end within that padding.
+- **Consequence:** at focus the ground now ends 42 / 51 / 49 / 59 / 59 px below the evidence at the
+  five viewports; Kıvılcım's exit trail (242 px at 1536, 340 at 1920) is within 5 px of DropSpot's
+  untouched values (237 / 335), so the residual trail is the frozen `resolveDown`/`resolveUp`
+  choreography, not the ground's shape. DropSpot's numbers are byte-identical before and after.
+- **Rejected:** hard-coded per-project ground offsets (the freeze's registration-by-measurement
+  principle); lowering `minHeight` alone (removes at most the floor's share and leaves the shape
+  rule that caused it); re-splitting the bleed by the evidence's own position (a second free
+  parameter with no measured need once the bottom is anchored).
+- **Approval:** delegated by the Fable gate brief; the before/after frames for the owner's review
+  are `docs/review/v13-fable-gate/stills/B--{before,after}--*.png` (numbers in
+  `docs/review/v13-fable-gate/metrics/{before,final}/fable-gate-all.json`, keys
+  `groundOutsideEvidence` and `phases`); the full frame sets are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-fable-gate\{before-HEAD-76c5660,final-build-VAodX66DmpweO6L6gBPZk}`
+  per `docs/REVIEW_POLICY.md`.
+
+## D-029 — The case-study destination opens with its evidence and its record
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable art-direction gate's
+  delegated authority (2026-09-03; owner unavailable). Owner review pending. **Not** in force on
+  `main`.
+- **Context:** no capture of any `/work/*` route existed in any review set (v8–v12). Measured on the
+  production build at 1440×900: the case-study `h1` was 40 px — the same size as the `heading-l`
+  section headings that followed it, and smaller than the 64 px the same project's title has on the
+  homepage; the first figure sat ~3000 px down inside a layer tab; everything ran in one 42 rem column
+  against a 1320 px container; and two fields the content model requires of every featured project
+  (`contribution`, and `aiDisclosure` whenever `aiAssisted`) were validated by the schema and
+  rendered nowhere on the site.
+- **Decisions:**
+  1. **The lead plate is chosen by the homepage's rule.** `CaseStudyHero` renders
+     `representativeAsset(project)` (`lib/spatial/systemPov.ts`) as a `Figure` with its real
+     caption, so the plate the reader arrives from is the plate the destination opens with. No
+     new asset, no crop.
+  2. **The record is shared vocabulary.** A `<dl>` of Provenance · Phase · Record · Stack · Access
+     uses the same reader-facing translations Selected Systems uses for the same fields; a field
+     that does not exist produces no row. Nothing is written per project.
+  3. **Contribution and AI assistance are rendered on the destination, and only there.** The
+     `/work` listing deliberately does not carry the disclosure; the destination always does.
+  4. **The composition follows DESIGN_SYSTEM §4's asymmetry** on the page's 12-column grid: title
+     on columns 1–10 at `display-l`, lead plate on 1–8 with the record on 10–12, contribution on
+     the reading column with the disclosure in the meta column; each decision one 12-column row
+     with the trade-off set in ink.
+  5. **Preview-depth destinations exit to the index.** A project that is not a case-study
+     destination (`isCaseStudyDestination` false — Software Factory, Professional Systems) gets a
+     single `/work` exit in the same `DestinationLink` register instead of neighbour navigation,
+     because D-027 gives it no position in the sequence.
+- **Consequence:** `h1` 64 px at desktop, 38 px tablet, 36 px mobile (51 px at the 1024 breakpoint,
+  where the fluid scale is mid-clamp); the first image's top is inside the first viewport on all
+  five routes at 375 / 768 / 1024 / 1280 / 1366 / 1440 / 1920, with no horizontal overflow; contribution
+  rendered on all five, AI disclosure on the two `aiAssisted` projects; Professional Systems reads
+  "Not yet verified" in its record and exits to `/work`. The unit assertion that the hero contained
+  `"text-heading-l"` moves to `"text-display-l"` — a contract update from the measured defect, not
+  a weakening.
+- **Rejected:** a bespoke per-project hero (would need per-project markup — the site's content
+  boundary forbids it); showing the disclosure on the `/work` cards too (a listing is not a
+  disclosure surface, and the card already links to the page that carries it); inventing a preview
+  illustration or status line for Professional Systems beyond its existing provisional asset and
+  its real `verificationStatus`.
+- **Approval:** delegated by the Fable gate brief; the before/after captures for the owner's review
+  are `docs/review/v13-fable-gate/stills/D--*.png` (numbers for all five routes at 375 / 768 /
+  1024 / 1280 / 1366 / 1440 / 1920 in `docs/review/v13-fable-gate/metrics/final/fable-gate-{all,work}.json`,
+  key `work`); the full route captures are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-fable-gate\final-build-VAodX66DmpweO6L6gBPZk\work\`.
+
+## D-030 — The mobile world has its own unit, and route two's mobile legs are sized from mobile ink
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (`docs/MOBILE_AUDIT.md` §"Fable Gate 4 decision", 2026-09-04; owner unavailable). Owner
+  review of the returned before/after evidence is still pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M3 measured the homepage at 11.3–14.8 screens on phones with
+  "roughly 67 % of the viewport empty above" an arriving project scene. Walked at 0.5 vh steps on
+  the production build (`tests/tools/mobile-route-probe.mjs`, `docs/review/v13-mobile-gate/before`),
+  the paper had two separate causes, neither of them the scenes. (1) Below `lg` the world's
+  vertical unit was pinned to `1vh` (V8, `lib/spatial/worldFit.ts`), so route one's 130-unit
+  project step — the floor at 320×568, where it keeps Software Factory's frame clear of the next
+  label — opened in exact proportion to the frame on taller phones while the px-sized scenes did
+  not grow: 7–41 vh of paper between projects at 320×568, 53–72 vh at 390×844, 60–76 vh at
+  430×932. (2) Route two's mobile anchors still carried the desktop legs' proportions
+  (98 / 128 / 124 / 58) for beats whose mobile ink is 0.13–0.45 vh tall: the 3.5–5.0 vh stretch of
+  the route rendered 1–12 % ink, `reorient` at focus was UNDERNEATH plus one sentence over 76 vh of
+  paper, `approach` had 50 vh of paper under its list. Three of the files are fingerprinted in
+  `docs/FROZEN_BOUNDARY.md` §1; the moves are recorded in its §5 with the desktop parity proof.
+- **Decisions:**
+  1. **The mobile world unit stops growing at the frame the route was composed on.**
+     `WORLD_UNIT_MOBILE = { x: "1vw", y: "max(0.78vh, min(1vh, 7px))" }` — exactly `1vh` up to a
+     700 px-tall reference (`MOBILE_WORLD_REFERENCE_HEIGHT`), 7 px above it, with a `0.78vh` floor
+     (`MOBILE_WORLD_UNIT_FLOOR`) that is the one-scene-per-frame guarantee on the tallest phones
+     and caps the densification at 22 %. The same decision as V8's `WORLD_UNIT` on desktop
+     (geometry in viewport units, content in px, neighbours retreat as fast as the room arrives),
+     made a second time from its own measurement. Position only: scene frames stay `92vw` wide,
+     their minimum height `72vh`, the camera inset `10vh`, the spacer untouched — the page is not
+     one pixel shorter.
+  2. **Route two's mobile legs are the smallest distance at which two beats' ink never overlaps at
+     320×568 while the next beat's first line is already in frame at the previous beat's focus on
+     tall phones:** `reorient → approach` 128 → 64, `approach → handoff` 124 → 90,
+     `handoff → turn` 58 → 48 (`TURN_MOBILE_WORLD` 1058 → 950). Not tighter, because the route's
+     total mobile length is what the shared speed ratios scale against and below ~945 units the
+     acquisition descent breaks the 8 % frame-to-frame speed ceiling
+     (`tests/unit/spatial-route.test.ts`): 950 measures 7.79 %, 928 fails at 8.13 %.
+  3. **`SpatialCamera` reads `WORLD_UNIT_MOBILE` on the `!isDesktop` side only.** The desktop
+     declarations are textually unchanged; route one's mobile anchors, the cut and every desktop
+     `world` anchor are byte-identical.
+- **Consequence** (`docs/review/v13-mobile-gate/{before,after}/metrics/mobile-route.json`, same
+  probe, same steps): near-empty route frames 3 → 0 at 360×800, 5 → 0 at 390×844, 5 → 2 at 430×932,
+  4 → 1 at 768×1024 (0 → 0 at 320×568 and 375×667, the frames the route was composed on); mean
+  route ink by DOM ranges 34 → 40 / 32 → 39 / 30 → 37 / 35 → 44 %, by rendered pixel rows
+  18 → 23 / 18 → 24 / 17 → 23 / 21 → 27 %; page height and screen count unchanged at every width
+  (14.8 / 12.2 / 13.1 / 11.9 / 11.3 / 10.7); the focus-to-focus steps are 1 / 0.5 × 3 / 1 / 0.5 × 3
+  vh at all six widths (768 was 0.5 / 1 before). The remaining near-empty frames are the end of the
+  route — the sticky release, where the handoff beat leaves through the top of the frame and the
+  lower world enters from the bottom, one viewport of paper that `position: sticky` makes
+  unavoidable and that the desktop composition shares (1.39 vh at 1440×900).
+- **Rejected:** stacking the scenes as cards below `lg` (the generic mobile the brief rules out);
+  shrinking the compositions to fit more per frame (miniaturisation); shortening the spacer (page
+  height is not the defect — the paper *between* beats was); a shorter route than 950 (speed
+  ceiling); moving the handoff anchor to the route's end to close the release frame (lengthens the
+  `approach → handoff` leg by the same amount, paper inside the argument instead of after it).
+- **Approval:** delegated by the gate brief; the decision pair is
+  `docs/review/v13-mobile-gate/stills/M3--{before,after}--430x932--4.00vh.png` (the same sweep
+  step, rendered ink rows 0.049 → 0.240) with the metrics above; the focus frames and the full
+  0.5 vh sweeps are outside the repository in
+  `C:\Users\hakan\portfolio-review\v13-mobile-gate\{before-HEAD-180c07c,final-build-mNkR9V8fwCm0nsmFjB2N2}\`
+  (`route-stills\`, `route-sweep\`) per `docs/REVIEW_POLICY.md`.
+
+## D-031 — A case-study figure below `lg` opens itself at reading width; nothing is redrawn
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M1 — every verified diagram rendered at 0.18–0.24 of its
+  intrinsic width on phones, its labels at 3–6 CSS px; these diagrams are the case studies' evidence,
+  present but unreadable. DESIGN_SYSTEM §9 had called this "expected, not a defect". The audit
+  named the four options: dedicated mobile artwork, a zoom/scroll affordance, a simplified variant,
+  or a "view on a larger screen" notice.
+- **Decisions:**
+  1. **One control, the same asset.** Below `lg` every case-study `Figure` (`inspect` prop; the MDX
+     `Figure` and `CaseStudyHero`'s lead plate set it) carries an **INSPECT** control in its caption
+     row. It opens a native `<dialog>` (`showModal`, so Escape, focus containment and the backdrop
+     are the platform's) on paper, with the figure laid out at `INSPECT_PLATE_WIDTH = 1400` px on a
+     `--soft-paper` mat with corner ticks, panning on both axes (`overflow: auto`,
+     `overscroll-contain` so a pan that runs out of diagram never scrolls the case study), the
+     browser's own pinch-zoom on top, and the caption as the dialog's name.
+  2. **1400 is derived, not chosen.** The 13 verified diagrams are 1600 units wide and their smallest
+     label is 14 units (`jointledger/book-data-model-diagram.svg`); at 1400 px that label is 12.25 px, the
+     `mono-meta` floor DESIGN_SYSTEM §3 sets for the smallest type on the site. Screenshots
+     (1400–1878 px) sit at or just under 1:1.
+  3. **The plate keeps its place in the argument** at column width; the page never carries a second
+     copy of the asset (the plate's `<img>` mounts only while open) and never fetches one it does not
+     show. The trigger is `lg:hidden`; a `<noscript>` rule hides it without a script, so the no-JS
+     page is the page as before.
+  4. **The homepage is untouched:** `SpatialProjectScene` renders `Figure` without `inspect`, so the
+     frozen tour's markup is byte-identical.
+- **Consequence:** at 320–768 every diagram label reads at ≥ 12.25 px inside the inspector; the figure
+  footer becomes a flex row (caption + control) with the caption's `min-w-0`, which adds one
+  `<span>` per inspectable figure to the case-study pages' geometry and nothing to the homepage's
+  (`docs/review/v13-mobile-gate/after/desktop-parity.txt`: desktop pixels identical). Contract:
+  `tests/unit/figure-inspect.test.tsx`.
+- **Rejected:** redrawn "mobile diagrams" (content that is not in the verified source SVG — invented
+  evidence); a phone-sized crop or a simplified variant (hides part of the evidence); a "view on a
+  larger screen" notice (a shrug where the evidence should be); CSS `zoom` on the in-column figure
+  (a 1400 px plate inside a 288 px column with no way to reach the rest of it); a third-party
+  lightbox (a dependency for a `<dialog>`).
+- **Approval:** delegated by the gate brief; the decision stills are
+  `docs/review/v13-mobile-gate/stills/M1--*--375x667--kivilcim-*.png` (the lead figure before and
+  after, the inspector open, the inspector panned); the full case-study matrix at 320 / 375 / 390 /
+  430 / 768 is outside the repository in `C:\Users\hakan\portfolio-review\v13-mobile-gate\` per
+  `docs/REVIEW_POLICY.md`.
+- **Addendum (2026-09-04, bounded final pass after the independent QA;
+  `.ai/handoffs/FABLE-MOBILE-RETURN.md`):**
+  1. **The `/work` index thumbnail opts in too (ART-1).** The QA found the index rendering the same
+     verified diagrams at 0.19–0.22 with no inspector. The reason given here and in `Figure.tsx` for
+     leaving it out — that the thumbnail "is itself a link" — was false: the card's title is the
+     link; the figure never was. The card's asset is `images[0]`, which on Kıvılcım, JointLedger and
+     Professional Systems is not the case-study hero's lead (`representativeAsset` prefers a real
+     screenshot, then a system-layer diagram), so from the index the readable copy of what the card
+     shows was a tap and a tab away. Below `lg` the card's caption row now carries the same control
+     (`ProjectCard` sets `inspect`); at `lg` and above the control does not render and the index is
+     what it was (`after/desktop-parity-final-pass.txt`: `/work` +5 `<span>` in geometry, pixels
+     identical at four desktop viewports; `after/figure-inspect.txt`: the thumbnail scale at every
+     width, `after/measure-768.txt`: every paragraph row unchanged). Decision stills:
+     `stills/ART-1--{before,after}--375x667--work-kivilcim-card.png`,
+     `ART-1--after--375x667--work-kivilcim-inspector.png`. Rejected: leaving the index as the one
+     surface where a figure the site has taught to open does not; a larger thumbnail (the card's
+     `max-w-xs` cap is what keeps the title and description dominant, on every width); dropping the
+     thumbnail on phones (the card's evidence, gone).
+  2. **The control is named for its figure (A11Y-1).** The QA heard "Inspect" up to five times in a
+     case study's buttons list. `FigureInspect` now sets `aria-label={inspectName(alt)}` =
+     `"Inspect: " + alt` — the visible label first (WCAG 2.5.3, label in name), then the figure's
+     own description, the one string that is distinct for every distinct figure (captions repeat:
+     "Verified architecture diagram, not a product screenshot." twice on JointLedger's and
+     DropSpot's system layers). A figure shown twice — the hero lead repeats one layer figure, and on
+     DropSpot that layer is the default Surface tab — is named the same twice: both controls open the
+     same plate. The dialog keeps the caption as its name. Name only: rendered text, geometry and
+     pixels are unchanged (`after/desktop-parity-final-pass.txt`: every case study identical;
+     `after/figure-inspect.txt`: the names as rendered). Contracts:
+     `tests/unit/figure-inspect.test.tsx`, `tests/unit/project-card-images.test.tsx`,
+     `tests/e2e/work.spec.ts`. Rejected: numbering the controls ("Inspect figure 3" — the number is
+     not the figure, and under D-001's `blockJS` the authored `index` never reaches the caption);
+     `aria-describedby` to the caption (repeats within a page); a visually-hidden suffix inside the
+     button (the row's 44 px geometry is the figure footer, and the name is not layout).
+
+## D-032 — The measure is a token, and below `lg` it is 34rem
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M2 — at 768 the body copy ran 82–95 characters per line
+  (`/work` 95, case studies 82–84, `/about` 83) because the 42 rem measure is wider than the readable
+  band at `body` size (42 rem = 672 px ≈ 84 ch at 16 px Archivo) and the tablet's 720 px column let it
+  run.
+- **Decisions:**
+  1. **One token.** `--container-measure` in `@theme` (`max-w-measure`): 42 rem, re-declared 34 rem
+     under `@media (width < 64rem)`. 34 rem = 544 px = 66–68 ch at `body`, inside the 45–75 band the
+     audit used, and wide enough for the case-study evidence captions and decision rows.
+  2. **Applied to every running-text block, not to columns:** MDX `h2`/`h3`/`p`/`ul`/`ol`, `Note`,
+     `DecisionCallout`, `DecisionList`'s `dd`, `ProjectCard`'s description, `CaseStudyHero`'s lead and
+     contribution, and the page-level prose on `/about`, `/lab`, `/notes`, `/work` and the 404. A
+     figure, a heading rule or a record row is not a line of prose and is not capped.
+  3. **The case-study record uses the tablet's width:** `CaseStudyHero`'s `<dl>` is two columns from
+     `sm` to `lg` and returns to the single meta column at `lg`.
+- **Consequence:** measured per element at 768 (`docs/review/v13-mobile-gate/after/measure-768.txt`),
+  every running-text block is 544 px wide; the audit probe's own per-route mean at 768 reads
+  `/work` 88, case studies 63–68, `/about` 66, `/` 74 — the `/work` figure is inflated by the card
+  `<li>` containers and single-line 12 px mono meta the probe averages in, which is why the
+  per-element table is the number of record. At `lg` and above the token resolves to the same 42 rem
+  as before and the desktop routes are pixel-identical (`after/desktop-parity.txt`).
+- **Rejected:** a 45 ch hard cap (too narrow for the evidence captions and the decision rows at
+  768); raising the type size at 768 instead (changes the type scale for one width); capping the
+  grid columns rather than the text (the figures and record rows need the column).
+- **Approval:** delegated by the gate brief; the decision pair is
+  `docs/review/v13-mobile-gate/stills/M2--{before,after}--768x1024--kivilcim-body.png` (the first
+  overview paragraph, 672 px / 94 characters per line → 544 px / 72) with `after/measure-768.txt`.
+- **Addendum (2026-09-04, bounded final pass after the independent QA;
+  `.ai/handoffs/FABLE-MOBILE-RETURN.md`) — the tablet's length is accepted (ART-2).** The QA
+  measured Kıvılcım at 768×1024 growing from 8865 to 9618 px (+8.5%) across the whole checkpoint
+  and asked for the measure's share to be accepted with a reason or adjusted. Measured alone
+  (`tests/tools/measure-768-probe.mjs`, `length` mode: the page as built, then with
+  `--container-measure` re-declared to 42 rem below `lg` from an injected rule, the override
+  verified by the widest `max-w-measure` box going 544 → 672 px; `after/tablet-length-768.txt`),
+  the measure costs Kıvılcım +821 px (9.3%), DropSpot +580 (7.3%), JointLedger +614 (8.1%),
+  Software Factory +112 (3.6%), `/about` +106 (6.2%), `/work` +52 (1.5%) — and buys, on the same
+  pages, a mean body line of 64 characters instead of 74–76 and a longest line of 74–78 instead of
+  90–94. **Accepted, because the alternative is the finding M2 opened with:** at 42 rem the longest
+  16 px line on a tablet is 94 characters, outside the 45–75 band the audit measured against and the
+  worst measure on the site at any width; a middle value (38 rem = 608 px, ≈ 87 at the longest line
+  by the same ratio) is still outside the band and would be a third measure to maintain; larger type
+  at 768 was rejected above. A longer page at a readable line is the ordinary cost of a measure on a one-column frame —
+  a paperback is longer than a broadsheet — and the M3 route work, not the measure, is what governs
+  how far a reader scrolls to reach anything. Not adjusted; recorded here and in DESIGN_SYSTEM
+  §37.8. Regenerated in the same pass: `after/measure-768.txt` now cites the tool in Git rather than
+  a scratch script (ARTIFACT-1; `docs/REVIEW_POLICY.md`).
+
+## D-033 — Touch targets grow without the layout moving
+
+- **Status:** ACCEPTED for `feature/project-architecture-v13` under the Fable mobile gate's delegated
+  authority (2026-09-04; owner unavailable). Owner review pending. **Not** in force on `main`.
+- **Context:** `docs/MOBILE_AUDIT.md` M4 — 6–20 sub-44 px targets per route: the homepage project
+  links at 24 px tall (the primary path into the work on mobile), case-study navigation at 31 px, the
+  mobile menu's rows at 27.5 px in a 51.5 px pitch (the target smaller than the gap between targets),
+  footer links at 21 px, "See every system" at 184×43. The audit deferred the fix to composition
+  because "adding vertical hit area changes rhythm".
+- **Decisions:**
+  1. **It does not have to change rhythm.** The `touch-link` utility (`styles/globals.css`) sets
+     `padding-block: max(0px, calc((2.8125rem − 1lh) / 2))` and gives the same amount back as
+     `margin-block: min(0px, calc((1lh − 2.8125rem) / 2))`, plus `--touch-slop-x` (0.5 rem) of inline
+     padding and negative margin. The hit box becomes 45 px tall; the glyphs, the line box and every
+     neighbour stay where the type set them.
+  2. **Every standalone link below `lg` carries `max-lg:inline-block max-lg:touch-link`:** the header
+     wordmark and nav (`--touch-slop-x: 0.75rem`), the mobile menu rows (`touch-link block`, full
+     panel width), Selected Systems' titles, "See all notes", the About preview's links, `/work` card
+     titles, `ProjectNeighbours`, the case-study Repository link, the 404's links and the footer's
+     social links. Links inside running sentences are exempt (WCAG 2.5.8's inline exception; making
+     them blocks would reflow the sentence). Three of the files are fingerprinted in
+     `docs/FROZEN_BOUNDARY.md` §1 (`SelectedSystems`, `FieldNotes`, `AboutPreview`); `max-lg:` only,
+     recorded in its §5.
+  3. **The tour's "See every system" is laid out in world space, so its floor is set from the plane
+     scale it is shown at:** the scene plane holds it at 0.89–0.995 across the stretch where it is on
+     screen (0.97 at focus, 0.89 at the route's end), so 44 px measured 39–44 on screen;
+     `max-lg:min-h-12.5` (50 px in world space) is ≥ 44.6 px at every tested width. `SpatialExperience`
+     (frozen, §5) — the desktop button is untouched.
+- **Consequence** (`docs/review/v13-mobile-gate/after/tap-targets.txt`): every measured standalone
+  link box across 8 routes × 3 widths is ≥ 44.98 px tall (Chromium's 1/64 px snapping on body-size
+  links; none under 44); menu rows 27.5 → 45 px; the full-page capture with the classes stripped from
+  the live DOM is pixel-identical to the page as built on every route at 320 / 375 / 768. The tour
+  CTA at handoff focus is in `after/metrics/mobile-route.json` (`tourTargets.handoff`) at all six
+  widths.
+- **Rejected:** larger type or looser leading for the links (changes the approved rhythm — the
+  reason the audit deferred); spacing-only compliance (WCAG's 24 px + spacing exception is below the
+  site's own 44 px rule, DESIGN_SYSTEM §10); wrapping links in `ButtonLink` (turns a register into a
+  row of buttons).
+- **Approval:** delegated by the gate brief; the strip-and-recapture proof and the inventory are in
+  `after/tap-targets.txt`.
+
+## D-034 — The world's decorative material is removed; every mark left states something
+
+- **Status:** V14 CANDIDATE on `feature/owner-visual-acceptance-v14` — pending the owner's visual
+  acceptance (2026-09-04). Made under the V14 brief's Fable authority. **Not** in force on `main`.
+- **Context:** the owner reviewed the accepted desktop (`5670234`) and rejected it: ghost typography
+  as noise and accidental cropping, "meaningless technical lines", "random crosshairs", a world that
+  reads as "components moving around a large canvas". On the baseline's own frames
+  (`docs/review/v14-owner-visual/baseline/stills`) every project frame carried one or two cropped
+  title fragments ("IVIL", "JOIN", "DRO", "ROFES") behind the composition; UNDERNEATH and Built in
+  Layers were dominated by blurred chevrons; twenty-six seeded crosshairs drifted behind everything.
+- **Decisions:**
+  1. **Deleted, not quietened:** the travel material (five oversized title crops on the distant
+     plane and seven near-plane hairlines — `TravelMaterial.tsx`), the hero's cropped "Surface"
+     ghost, the system field (26 crosshairs, 2 vectors — `SystemField.tsx`), both directional fields
+     (blurred chevrons — `DirectionalField.tsx`), the acquisition frame's graduated ruler, the lower
+     page's drift-route zigzag, its section fields and its settle mark. The a11y scan's one
+     exclusion (`[data-decorative="depth"]`) goes with them; the scan now runs with none.
+  2. **What replaces them is structure, drawn once:** the route as a stated topology (D-038), each
+     project's context plane (D-035), the strata route two climbs through (D-036), and the map at
+     the terminus and the finale. Nothing decorative was added.
+- **Consequence:** the world's marks are now the route, its stations, the planes, the strata, the
+  acquisition frame and the map — each derived from route geometry or real data, none authored to
+  fill space. Zoom-out frames no longer show fragments in the empty diagonal.
+- **Rejected:** lowering opacities further (the owner's objection was to what the marks *were*, not
+  how loud); keeping the hero's "Surface" as a legible word (the thesis line in the same frame
+  already states it in full ink; the world's state words are SYSTEMS and UNDERNEATH, set whole).
+
+## D-035 — A project stands on a stretch of ground laid along the route, not on a card
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the project planes: "beige cards behind projects". V10 had
+  measured the lead/register/trail grammar as exact (lead 55–70px, 0 at focus, trail 96–102px) and
+  the owner's verdict on the same frames was that "the behavior does not read visually". Both were
+  true: the plane was an axis-aligned soft-paper rectangle slightly larger than the evidence and
+  offset to one side — a card's backing — and against a 1180px composition a 70px lead is below the
+  threshold at which a surface reads as arriving rather than attached.
+- **Decisions:**
+  1. **One constructed edge.** The plane begins 0.07 scene units up-route of the whole composition
+     — a hairline rule with two registration ticks, outside the content it grounds — and runs 0.45
+     scene units past the composition down-route, where it is cut square to the route's own bearing
+     and dissolves. Its far boundary is the frame or the paper, never a second parallel edge.
+  2. **Tone, not material:** 4.5% ink over paper, a change of ground one step lighter than the old
+     fill, so it can never compete with a plate that is itself a soft-paper mat.
+  3. **Arrival and release are made visible:** `PLANE_LEAD` 8 → 24 units, `PLANE_LAG` 17 → 56
+     (~215px and ~500px at the reference viewport). The plane is in place before its composition
+     resolves onto it and stays behind by close to half a scene as the composition leaves.
+  4. **Presence** follows the scene's own acquisition exactly as before (0 outside the window, so no
+     plane can intrude on a neighbour); all geometry is static, only `transform` and `opacity`
+     animate. Mobile keeps the V13 slab.
+- **Consequence:** at focus the composition's structure (register, title, control) overhangs the
+  ground's top edge and the evidence stands on it; at zoom-out the four planes read as four
+  stretches of one track. `lib/spatial/projectGround.ts` is unchanged — the measured evidence
+  bounds still set the plane's vertical extent.
+- **Rejected:** a per-project authored shape (the freeze's registration-by-measurement principle);
+  deleting the plane (the V6.8 finding that a composition read as a place because it slid across a
+  second surface still holds — the surface just had to stop being a card).
+
+## D-036 — The surface that opens at SYSTEMS is the frame, and UNDERNEATH is its consequence
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the climax: "large SYSTEMS word + rotated gray slab". The
+  opened region was a 9.4em × 6em box filled at 5.5% ink; at 80% zoom and below its corners come
+  into view and at 50% it was the largest object in the world. UNDERNEATH then arrived as a word in
+  a corner with blurred chevrons filling the frame.
+- **Decisions:**
+  1. **The opened region spans the frame** (240vw × 200vh, centred on the word) so the seam is the
+     only constructed edge at every viewport and zoom; the recess falls to 2.5%; the mechanism is
+     unchanged (`data-systems-cut` translates along its local axis, `transform` only, the parent
+     rotated to the route's own bearing, the word untouched).
+  2. **What is revealed is the journey:** three full-width strata carrying the real
+     `layerDefinitions`, and between them the whole route drawn as a map (`RouteMap`, `revealed`) —
+     the four stations visited, the cut, and route two's climb ahead, dashed. Two polylines.
+  3. **The strata continue into route two's world** (`WorldGrammar` Strata): SYSTEM at UNDERNEATH's
+     depth, FLOW at Built in Layers, SURFACE at the handoff — each band labelled once beside the
+     scene that stands on it. The reorient rail's three duplicate labels are hidden at `lg`.
+  4. **UNDERNEATH and Built in Layers sit in the frame's middle band** (`lg:pt-[16vh]`,
+     `lg:pt-[12vh]`) rather than against its top with the rest of the frame empty.
+  5. Mobile keeps the V6.6 box construction (`SurfaceCut`) the V13 gate froze.
+- **Consequence:** SURFACE → OPENING → STRUCTURE is one event across the frame; the camera is
+  thrown to the bottom of the map it was just shown and climbs back through the layers it names.
+- **Rejected:** erosion, peel, fragment or collision effects (forbidden by the brief and already
+  retired in V6.4); a labelled map inside the reveal (the word is the only type that should be
+  read in that frame).
+
+## D-037 — The lower world is one continuous narrative, and travel is proportional to weight
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** measured on the baseline at 1440×900, the lower world was 4104px (4.6 viewports)
+  after the route ended, with a mean content fill of 0.116 against the route's 0.216; How I Build
+  alone was ~1,200px for four sentences; the terminus frame was empty; the drift zigzag, section
+  fields and settle mark added lines that described the layout rather than the content.
+- **Decisions:**
+  1. **The terminus frame is the map.** `RouteMap` (`mapped`) stands in the world at the handover
+     turn: the handoff's "These are four stops on a larger map" points down-route at it, the
+     camera's last move is onto it, and the surface-return marker sits beneath it. The work branch
+     is drawn on the map with the real Work-index names instead of as a separate branch beside the
+     handoff.
+  2. **Approach intervals at `lg`:** How I Build 22 → 6vh, Field Notes 14 → 4vh, About 14 → 6vh
+     (`gapVhDesktop`; mobile values untouched). Section top margin `lg:mt-32` → `lg:mt-20`.
+  3. **How I Build is two columns of two** — each principle registered to the same top rule with its
+     index, title and consequence arrow — read in one viewport. Copy unchanged.
+  4. **The finale is the resolved map** (`RouteMap`, `resolved`) beside the question, hidden by
+     `:has()` on pages without the journey; the four converging lines and the drift settle are
+     retired.
+  5. **Selected Systems keeps its register** (real layer coverage, provenance and verification per
+     system) with the verification line raised to label size at `lg`.
+- **Consequence:** measured in the V14 return (`docs/review/v14-owner-visual/after/metrics`):
+  lower-world height, mean fill and traverse time before/after.
+- **Rejected:** folding Field Notes into About (the section keeps its IA place and its e2e
+  contracts; its cost was the interval, not the section); a giant scene per section; decorative
+  filler to raise the fill metric.
+
+## D-038 — The route is the world's spine: stations, travelled state, survey, and one topology in four states
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the owner's reading of the zoom-out: "scattered components on an enormous design
+  canvas", "weak route visibility", "no convincing topology connecting destinations". The rail was
+  a one-pixel polyline at 8–20% opacity — half a device pixel at 50% zoom — so the one thing that
+  connected the scenes was not legible, and the brief asks that the route explain where we came
+  from, where we are, what is next and where the system changes state, without simply thickening
+  the line.
+- **Decisions:**
+  1. **Travelled / ahead.** Each route is one faint continuous rail (the route exists) and each leg
+     carries an ink rail revealed along the real curve exactly as far as the filtered camera has
+     come (`pathLength`). Behind the reader the route is a fact; ahead it is a proposal.
+  2. **Stations** on the rail, seven units up-route of each anchor: rings that fill as the scene is
+     acquired and stay present once passed; route two's in the resolved signal tone.
+  3. **The survey:** cross-ticks at even arc length, square to the local bearing — a measured track,
+     twice as dense per screen at zoom-out. **State changes:** two strokes across the rail's end at
+     the cut; the resolved corner where route two is picked up.
+  4. **Weight follows the frame:** stroke `max(1.5px, 0.09vw)` — heavier exactly when the CSS
+     viewport grows (zoom-out, wide displays). **Attention:** the spine recedes to a quarter of its
+     weight while a scene is in frame (`1 − 0.74·focusProximity`), so it never runs across a title.
+  5. **One topology, four states** (`components/spatial/RouteMap.tsx`, pure SVG from route math):
+     latent under the route (the rails), revealed at SYSTEMS, mapped at the terminus, resolved at
+     the finale. The same geometry every time; if the route moves, all four move.
+- **Consequence:** polyline budget inside the sticky frame: 2 base + 10 travelled + 3 on the
+  terminus map = 15 (bound: legs + 10 = 20); the cut's drawing holds 2. Every mark is aria-hidden.
+- **Rejected:** a thicker constant stroke (the brief's explicit exclusion); index labels at stations
+  (the acquisition frame already states "Case 01 / 04" at focus and the two collided); a grid.
+
+## D-039 — One scroll ceiling, measured in screen travel: the page is geared to the world
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** owner finding F, "the straight vertical/lower-world portion scrolls FAR TOO SLOWLY",
+  a material acceptance blocker. Measured on `5670234` at 1440×900
+  (`docs/review/v14-owner-visual/baseline/journey.json`): the lower world took 10.1s at a normal
+  wheel and 10.2s at an aggressive one — identical, because the ceiling binds — against 14.8s for
+  the whole route. The cause is not a wrong number: V10 unified the page under the route governor
+  and anchored the ceiling to the route's span, so both regions ran at the same scroll px/s. But a
+  scroll pixel moves the world `routeWorldLength × unitPx × fit / routeSpan` screen pixels — 3.6 at
+  1440×900 — and the page exactly one. The same ceiling was two different speeds to the eye.
+- **Decisions:**
+  1. **The ceiling is restated in the unit the reader perceives, screen travel per second, and held
+     constant.** Inside the pinned route the budget is byte-identical to V7–V11
+     (`ROUTE_MAX_RATE × routeSpan`); from the pinned end it is that budget multiplied by the world's
+     gearing (`pageGearing`, `governorBudget` in `lib/spatial/cameraFilter.ts`). Nothing is
+     authored: change the route, the unit or the fit and the page's cap follows.
+  2. **Everything else in the model is untouched:** intent, sign collapse, the lead cap, the break
+     event's ownership of its band, wheel-only scope, the edge hand-backs.
+  3. The brief's steps 1–3 are taken as well (D-037): the lower world is shorter before it is
+     faster.
+- **Consequence:** measured in the V14 return: lower-world traverse time at a normal wheel
+  before/after, peak px/s in the route (unchanged) and in the page, coast after input, reverse
+  latency.
+- **Rejected:** a per-region multiplier constant (`lowerWorldScrollBoost`) — the brief forbids it
+  unless mathematically unavoidable; this derivation is the mathematical justification, and the
+  gain is a measured ratio of two gearings rather than a chosen number; raising `ROUTE_MAX_RATE`
+  globally (the upper world's pace was not the complaint); moving the lower sections into the
+  camera world (re-argues the settled Editorial Drift decision and the no-JS/semantic contracts).
+
+## D-040 — Frame time is route speed: the attention group holds SVG only
+
+- **Status:** V14 CANDIDATE — pending owner visual acceptance. **Not** in force on `main`.
+- **Context:** the candidate's after-evidence showed the reverse traverse of the route at 21.0s
+  against the baseline's 12.9s at 1440×900, with forward unchanged, reverse latency still one
+  notch, and the governor's route budget byte-identical. A frame probe
+  (`tests/tools/frame-time-probe.mjs`) named the cause. The governor pays its travel budget per
+  frame and forfeits a dropped frame's share — by design since V7, so a stall is never repaid as a
+  lurch — which means a traverse runs exactly as fast as the page paints. A fresh page's first
+  forward traverse rendered at 17ms a frame; every traverse after it, reverse or forward again, at
+  25ms. The baseline held 17ms in all three cases. Hiding one suspect at a time: freezing the
+  attention opacity, or hiding the ninety survey tick spans, restored 17ms; hiding the rails, the
+  stations, the planes, the reveal layer, the images or the strata changed nothing. The D-038
+  attention wrapper writes its opacity on every frame the camera moves, and Chromium repaints
+  everything under a non-composited opacity change: ninety absolutely positioned, rotated spans
+  were the repaint. Promoting the wrapper (`will-change: opacity`) did not help — the group spans
+  the whole world, beyond what the compositor will hold as one layer.
+- **Decisions:**
+  1. **The survey is one `<path>` per route inside the base rail's SVG** (`data-rail-survey`) —
+     the same ticks at the same positions, bearings and opacities — so the attention group holds
+     twelve SVG elements and nothing else. Measured on the rebuilt candidate: reverse 17.2ms a
+     frame and 10.0s, against the baseline's 17.3ms and 10.1s; forward 17.2ms against 17.4ms.
+  2. **The rule.** Anything whose style is written per frame during travel is either
+     compositor-only (transform or opacity on an element the compositor can hold) or contains only
+     SVG, single-paint content. Guarded in `tests/e2e/spatial.spec.ts`: the attention group has
+     no non-SVG child, and the two survey paths exist.
+  3. **Frame time is part of the scroll evidence.** `frame-time-probe.mjs` joins the review-policy
+     tools; its output ships with every scroll-physics claim, baseline beside candidate, on the
+     same machine at the same load.
+- **Consequence:** no governor number moved — the fix is paint cost, and the route's time is
+  back to the baseline's. The tick is `1.1vh` in world measure rather than ten CSS pixels: the
+  same size at 1440×900, scaling with the rest of the route drawing elsewhere.
+- **Rejected:** quantising the attention so it writes less often (visible steps, and it hides the
+  cost rather than removing it); dropping the attention (the rail would run across titles again —
+  the owner's finding); per-tick opacity (the same ninety repaints).
+
+## D-041 — The world's fit is known before the first paint, not one commit after it
+
+- **Status:** V14.1 ENGINEERING. Owner visual acceptance of V14 remains **PENDING**; this changes
+  no composition on any surface a reader keeps.
+- **Context:** the owner reported that on first load "text/elements initially appear larger and then
+  visibly shrink into final composition". Measured on the accepted baseline at 1440×900
+  (`docs/review/v14.1-engineering/initial-paint/`): the hero paints 247.97px tall, and 83ms later
+  on a warm load — 231ms on a cold one — it is 225.41px. The ratio is 0.909, which is exactly
+  `worldFit(1440, 900)`. At 1920×1080 the fit clamps to 1 and there is no flash at all, which
+  identifies the cause precisely: not the tree swap, not fonts (the computed font-size never
+  changes), but the fit's *arrival*. It was a viewport measurement that existed only after React
+  mounted, so the server-rendered tree — what every JS visitor sees for the frames before
+  hydration — painted with no fit, and the world then replaced it carrying one.
+- **Decisions:**
+  1. **A boot script publishes the fit as a custom property, synchronously, in `<head>`**
+     (`worldFitBootScript()` in `lib/spatial/worldFit.ts`). Its source is generated from that
+     module's own constants, so the booted value and `worldFit()` cannot drift apart.
+  2. **CSS applies it** (`.world-fit-layer`, `styles/globals.css`), so the first painted
+     composition is the settled one — **as a transform, and deliberately not as `zoom`.** The
+     mounted world keeps `zoom` for V11's reason (a layout scale, so text is laid out at its final
+     size and painted once at native raster scale). This layer is the pre-hydration tree, replaced
+     ~100ms later, so what matters is that it is the right SIZE without changing the document's
+     layout on its way past. `zoom` does change the layout box, and that grew the shift the
+     hydration swap already causes: measured, homepage CLS went 0.0388 → 0.0777 at 1440×900 and
+     0.0155 → **0.1152** at 1366×768, past the 0.1 "good" threshold. With a transform the document
+     height is byte-identical to the baseline at every viewport and CLS lands at 0.0418 / 0.0312 /
+     0.0442 (1440 / 1920 / 1366) against the baseline's 0.0388 / 0.1474 / 0.0155 — the worst case
+     across the matrix falls from 0.1474 to 0.0442. The paint-time resampling V11 removed from the
+     world is accepted here, for the ~100ms this tree is on screen, and nothing that persists is
+     scaled.
+  3. **The pre-hydration tree paints through that layer**, and three classes of visitor are
+     deliberately skipped so nothing they see moves by a pixel: no JS (the script never runs),
+     `prefers-reduced-motion: reduce` (the linear tree is their *final* composition, and the world
+     the fit is composed for never mounts for them), and anything below the desktop breakpoint
+     (the fit is desktop-only by construction). All three fall back to `1`.
+  4. **`useWorldFit` reads during render** via `useSyncExternalStore` — the discipline
+     `lib/utils/useHasMounted.ts` already uses — instead of measuring in an effect. The server
+     snapshot is 1, so hydration still matches the served markup exactly, and the first render in
+     which the world exists already carries the measured fit.
+- **Consequence:** measured after, at 1440×900: first paint zoom 0.909091, hero 225.41px, **zero**
+  post-paint steps, cold and warm. The pre-hydration hero now equals the settled hero at every
+  desktop viewport (225.43/225.41 at 1440×900, 249.25 at 1920×1080, 182.47 at 1366×768) and the
+  document height is unchanged at all three. Verified unchanged: reduced motion 247.97px with the
+  property unset and CLS 0, no-JS 247.97px, mobile and tablet unset.
+- **Rejected:** hiding the page until hydration (the brief forbids it, and it trades a flash for a
+  blank); expressing the clamp in pure CSS (a viewport length cannot be divided into a unitless
+  number); `useLayoutEffect` (it still runs after the server-rendered tree has painted, so it fixes
+  only the second half of the defect).
+
+## D-042 — Motion sharpness and discrete scroll: measured, and left alone
+
+- **Status:** V14.1 ENGINEERING. No product change. Evidence:
+  `docs/review/v14.1-engineering/{sharpness,discrete-scroll}/`.
+- **Context:** the owner reported softness while scrolling and suspected that an isolated wheel
+  action travels too far. Both were treated as measurements rather than intuitions, and the
+  automated V12 sharpness PASS was not treated as an answer.
+- **Sharpness — every named mechanism tested, none reproduced the report.**
+  1. Edge acutance of the flagship scene's title, cropped at rest and while the camera translates,
+     at 1440×900 and 1920×1080 and at DPR 1, 1.5 and 2: **92–108% retained while moving**. No loss.
+  2. Sub-pixel landing, controlled: the world nudged in ⅛-px steps through a whole pixel while
+     parked. Acutance is flat (±1.6% at DPR 1) and **uncorrelated** with the distance to the nearest
+     device pixel. So `round(v × dpr) / dpr` snapping cannot buy sharpness here — its only certain
+     effect would be to quantise the motion the owner likes, so it is **tested and not kept**.
+  3. `zoom` itself: the same string rendered at the same final on-screen size inside the zoomed
+     world and outside it measures **1.5% sharper inside** (both DPRs). V11's claim that the fit is
+     a layout scale holds; it is not a softening mechanism.
+  4. Structural audit (`motion-sharpness-probe.mjs`): accumulated scale on every text and image
+     ancestor is **1.0000** at rest and in motion, with no `filter` anywhere in the chain.
+  5. Not reproducible headless, and stated as such: a screenshot forces a re-raster, so it cannot
+     observe a compositor reusing a cached raster; `LayerTree` reports nothing in headless
+     Chromium. `foreground-sharpness-probe.mjs` exists so the owner can re-run it on the real
+     display, which is the only place the remaining hypothesis lives.
+- **Discrete scroll — NORMAL, so unchanged (§5 of the brief).** One notch moves the target by its
+  own raw delta and the governor walks the page to it; measured at four positions, isolated
+  impulses deliver **exactly 120px per notch, 1.000 of the raw delta, with zero coast**, settling in
+  ~0.35s. Sustained input delivers the same 120px per notch until the lead cap engages and then
+  **less** (0.76 at twelve notches), with the coast bounded at ~500px, inside the 540px the cap
+  allows. There is no regime in which an isolated impulse travels further than the same notch does
+  during sustained scrolling, so there is nothing to correct on the input side.
+- **Observation for the next art-direction gate, not acted on:** a notch buys 120 scroll px
+  everywhere, but inside the world those 120px are ~460–580 screen px of camera travel and below it
+  they are 120. That 3.8× is the world's gearing (D-039) and it is identical for isolated and
+  sustained input; shortening an isolated progression would necessarily change the sustained pace
+  the owner accepted.
+- **Rejected:** DPR snapping (no measured benefit, certain jitter cost); any per-region speed
+  constant; scroll snapping of any kind.
+
+## D-043 — The route is a track: ahead and travelled are different drawings, drawn only in the open
+
+- **Status:** V14.1 FABLE VISUAL CORRECTION — pending owner visual acceptance. **Not** in force on
+  `main`. Evidence: `docs/review/v14.1-fable/{before,iter1..iter6,after}/`.
+- **Context:** the owner's V14.1 verdict — improvements, "but not yet what I asked for" — and the
+  brief's finding F: route hierarchy (travelled / current / ahead / stations / transitions) had to
+  read without a global stroke increase. Measured on the before set, D-038's rail encoded the two
+  states as two alphas on one stroke, drawn anchor to anchor: from a composition's own corner
+  straight through its title (hidden at focus by the attention dim), and at 50% zoom a 1.5px
+  stroke at 20% is not there. The survey cross-ticks were texture on top of it.
+- **Decisions:**
+  1. **Two drawings, not two alphas.** AHEAD is a dotted survey path (`pathLength={1}`, a fixed
+     dash rhythm per unit of arc, so the spacing is identical on every leg however the SVG box is
+     stretched); TRAVELLED is a solid polyline whose `pathLength` follows the filtered camera. The
+     difference survives any zoom because it is a difference of form.
+  2. **Only in the open.** `lib/spatial/railTravel.ts` — a leg draws from clear of the departing
+     composition (its anchor plus `RAIL_EXIT_X`) to seven screen units short of the arriving
+     station. Under a composition the ground carries the route (D-044). Legs with no open run — the
+     acquisition descent, the cut, the turn — draw nothing, and the e2e guard counts exactly the
+     legs that do.
+  3. **Stations scaled with the viewport** (`max(10px, 0.52vw)`, resolved `0.62vw`) with the
+     stop's index beside the ring while the stop is ahead; the label recedes as the ring fills.
+  4. **The rail group has no per-frame opacity any more**: nothing crosses a title, so nothing
+     needs to recede. The D-040 guard keeps its reason (SVG only in the rail group) and its bound.
+- **Rejected:** thickening every stroke; the survey ticks; keeping a dim-at-focus on the rails.
+
+## D-044 — The ground is drawn, not filled; presence is a change of state, not a fade
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** the owner, on D-036's constructed edge: it "can still read like a large pale
+  background card". The frames agreed: a filled region has as many edges as its silhouette, and in
+  the empty middle of every transition the only thing in frame was a pale parallelogram sliding by,
+  in the plate's own mat tone. Separately, a scene's presence ramped as one opacity, so a departing
+  description was left orphaned top-right while the arriving title was cut at the right edge.
+- **Decisions:**
+  1. **Section, not slab** (`ProjectPlane.tsx`, desktop): a DATUM (the up-route hairline with two
+     registration ticks), a FLOOR (a level hairline at the datum's foot, running under the
+     composition and on down-route to a cut square to the route's bearing) and a TREAD (three per
+     cent ink below the floor only, dissolving in a few viewport-hundredths). No fill above the
+     floor. The floor is **laid by acquisition** — a compositor-only `scaleX` from the datum
+     outward as proximity rises — so DETECTED shows an edge, ACQUIRED lays the ground, FOCUSED has
+     the tread under the composition, RELEASED leaves it behind for a moment.
+  2. **The floor is drawn 0.02 scene units above the ground box's foot** (`FLOOR_LIFT`): the frozen
+     ground policy (`projectGround.ts`, D-028) pads 0.05 below the evidence, which was right for a
+     slab and a 40–53px gap for a floor. Lifted, the line runs 7–18px under the composition's own
+     bracket feet at 1366, 1440 and 1920. The policy file is untouched.
+  3. **Presence as state** (`lib/spatial/systemPov.ts` `scenePresence`): a 0.34 floor while
+     detected, a short ramp to 1 across acquisition, held through focus, released to 0.34 — a step,
+     not a slope, so the arriving scene is already legible when the departing one lets go.
+  4. **Two voices at acquisition** (`SystemPOV.tsx`): the meta cluster (case index, layer, phase)
+     sits above the composition's top-right corner, right-aligned, so the identity owns the left
+     and the record the right at every viewport. **One action vocabulary**
+     (`SpatialProjectScene.tsx`, `FigureInspect.tsx`): a corner bracket, a rule and the label;
+     hover extends the rule and underlines the label — no CTA card, on the scene and on the
+     inspector trigger alike.
+- **Rejected:** any fill above the floor; a second mat tone; scaling the arriving composition.
+
+## D-045 — The acquired detail: a diagram frames the subsystem that is its argument
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding C, evidence legibility. Software Factory, Kıvılcım and JointLedger
+  stage 1600×1000-unit diagrams at a nine-column measure, which puts their body labels at 8–11
+  CSS px: a thumbnail of a document. The brief rules out scaling every diagram and inventing
+  anything, and lists what is allowed: focus a meaningful subsystem, crop to the relevant evidence,
+  make one fragment dominant.
+- **Decisions:**
+  1. `lib/spatial/evidenceDetail.ts` — an **evidence window** per asset path, in the asset's own
+     units, named by the diagram's **own heading** for that region (present in the SVG text, never
+     a new claim): Software Factory "The delivery loop" (the gated path; the integration mandate
+     beneath it reads in the inspector); Kıvılcım "On-device — no mandatory backend" (right edge at
+     944, the inner rows' border, because the dashed arrow to the optional external request starts
+     there); JointLedger "Book, BookMember, BookInvitation".
+  2. `Figure.tsx` takes `detail`: the frame is the window's aspect, the image is laid out at
+     (intrinsic ÷ window) of the frame and offset to the window's origin; the caption states
+     `Detail: <heading>.` before the registered caption, and INSPECT opens the whole drawing.
+     Presentation geometry keyed by path: a project with no window renders as before (DropSpot's
+     real screenshots stay whole, per the owner's V7 decision).
+  3. **The detail column stands beside the identity** (`lg:grid-cols-12`, identity 8 / detail 4)
+     above a full-width plate, so the plate earns the whole measure; scene fit stays clear at all
+     five viewports (`after/metrics/scene-fit.json`).
+  4. `scene-fit-probe.mjs` now clips a composition's ink to its overflow ancestors: the window's
+     image box legitimately extends past its clipping frame and produced a false 73–109px
+     overflow on the first run.
+- **Measured:** Kıvılcım's core labels ≈1.7× their V14 size at 1440; the delivery loop's stage
+  labels read at the full measure; nothing added to any project.
+- **Rejected:** scaling every diagram up; a "zoomed" second asset; any window whose name is not
+  in the drawing.
+
+## D-046 — Strata are floors; UNDERNEATH stands on the SYSTEM line; the terminus map clears the surface return
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding D, SYSTEMS→UNDERNEATH as one causal event, and E, the lower world
+  as a narrative. On the before set UNDERNEATH stood bare after the cut, the SURFACE horizon
+  crossed the Built in Layers reveal as a fourth unlabelled line, the recess showed a hard
+  vertical edge at 50% zoom, and the terminus map's branch labels ran into "Back on the surface"
+  during the map's rise (p≈0.98, all three viewports).
+- **Decisions:**
+  1. **Strata as floors** (`WorldGrammar.tsx`): the three bands sit at the compositions' feet
+     (`STRATA_FOOT_VH` per scene) with their labels inside the band, so UNDERNEATH is a
+     composition standing on the SYSTEM line, not a heading floating between rules. The recess
+     below the SURFACE horizon spans the lower route with both ends faded; the horizon stops at
+     x=760 so it never enters the reveal.
+  2. **Reorient and approach pad down** (`lg:pt-[28vh]`, `lg:pt-[20vh]`) to stand on their bands.
+     No route distance, no scroll math, no world height was changed: these are paddings inside
+     compositions the camera already frames.
+  3. **The terminus map** sits at `TERMINUS_MAP_OFFSET = {x: 28, y: −14}` world units from the
+     turn: its rise past the fixed surface-return header no longer crosses the header's text at
+     1366, 1440 or 1920 (`iter6/motion/*--handoff--to--1.png`), and at the terminus the map reads
+     whole above the junction.
+  4. **The surface-return junction stands on the lower rail's datum** (`SpatialExperience.tsx`):
+     the dashed signal route arrives from the frame's left edge and terminates exactly where the
+     page's rail will descend (`--drift-pad`), so D-047's rail is literally its continuation.
+- **On the cut itself, unchanged:** the V4 `SceneBreak` — seven ink rails closing from alternating
+  sides over a solid ink field that guarantees the frame is opaque at the instant the route jumps
+  — is what the transition sheets show as black frames at p≈0.70–0.73. Verified by DOM probe
+  (`data-scene-break`, `data-break-rail`), identical in the before set, and left as designed.
+- **Rejected:** lengthening the lower world; a second cut device; per-region speed.
+
+## D-047 — The route continues down the page: one rail, stations at every section, the map's index
+
+- **Status:** V14.1 FABLE — pending owner acceptance. Not on `main`.
+- **Context:** owner finding E: "a spatial first half followed by an editorial website". Below the
+  surface return nothing inherited the world's structure; each lower section re-opened its own
+  hairline spine on bare paper, so four sections read as four documents wearing the same chrome,
+  and the drift read as misalignment because its datum had been removed (D-037) and nothing
+  replaced it.
+- **Decisions:**
+  1. **`LowerRoute.tsx`** (new, desktop): the route turns the corner at the junction and runs down
+     the page as one rail at the drift track's datum — dotted AHEAD, solid TRAVELLED laid by the
+     page's own scroll (`scaleY`), a station ring per section at its register line carrying the
+     section's real index (05–08) and filling on arrival, a closed corner at the foot. It measures
+     the sections it draws (`data-node-register`, `data-node-index`) and draws nothing that is not
+     true. Reduced motion renders it resolved. The drift container clips laterally only
+     (`overflow-x-clip`) so the first station is whole.
+  2. **Arms** (`SystemNode.tsx`, `EditorialDrift.tsx`): each register carries a hairline back to
+     the rail whose length is the block's own drift (`--drift-arm`, published by the block), so the
+     drift is displacement *from* something, stated.
+  3. **Selected Systems is the map's index**: each row's index carries the station glyph (visited
+     = filled ink ring, the branch = signal ring), the same symbol as the world's stations and the
+     map's dots. **How I Build is four rows** (index / principle / consequence) on rules, not four
+     paragraphs with arrows. **About is a station**: the name at display-l, resolving as before,
+     with the register's spacing.
+  4. **The finale map carries the lower page** (`RouteMap.tsx` `tail`, `SiteFooter.tsx`): below the
+     branch, a vertical from the terminus with filled dots 05–08 and a closing bar — SYSTEM
+     RESOLVED → COMPLEXITY MAPPED → OPERATOR ADDRESSABLE, with the CTA copy unchanged.
+- **Rejected:** a second spine per section; any new copy; any change to the lower world's length
+  or pacing (D-039 gearing untouched).
+
+## D-048 — The cut is the underside of the surface: the world opens, the ground is exposed, UNDERNEATH stands on it, the surface comes back up
+
+- **Status:** V14.2 GATE B (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.2-gate-b/{before,iterations,after}/`.
+- **Context:** the owner's reading of the SYSTEMS → UNDERNEATH sequence as it stood through V14.1:
+  the black `SceneBreak` "reads like a glitch / render transition rather than the world
+  structurally opening", reverse traversal makes the black block more disruptive, SYSTEMS' momentum
+  is broken, UNDERNEATH arrives as a sparse heading rather than as the consequence of the revealed
+  system, and "Back on the surface" is too weak to read as a state change. The desired sequence:
+  SYSTEMS → the world changes state → the surface opens → the underlying structure is exposed →
+  UNDERNEATH is the consequence → the return to the surface is clear. Constraints: SYSTEMS
+  typography intact, no peel, no damaged letters, no collision / recoil / shock, the scroll
+  mathematics and the guarded break timing untouched, first paint untouched, mobile untouched.
+- **What was measured first** (`before/motion/`, twelve settled frames each way at 1440×900):
+  forward, the seam SYSTEMS stands on rises up-left with the word as the camera descends toward
+  the cut, and at p≈0.709 eleven raked ink rails snap shut over a world that is already 70% recess;
+  two frames of solid ink; rails open onto UNDERNEATH. Reverse, the same ink block interrupts
+  UNDERNEATH before SYSTEMS is back. The ink was doing one job — guaranteeing opacity at the
+  jump — in a material the world never uses anywhere else.
+- **Decisions:**
+  1. **The cover is the recess** (`components/spatial/SceneBreak.tsx`, `lib/spatial/surfaceCover.ts`).
+     On desktop the frame is covered by an opaque plane in the ground's own material — the page's
+     paper token under the same 2.5% ink the opened surface already shows beneath the seam and the
+     world lays under route two. Same timing constants, same contract (fully opaque from
+     `BREAK_COVER_CLOSED` to `BREAK_REVEAL_START`, nothing outside the window), different material
+     — and therefore no wipe: a plane of the ground's own tone has no edge worth drawing, so it
+     arrives by opacity while the world's own seam finishes rising past the frame. What the reader
+     watches is the opening the world was already making, completing.
+  2. **The exposed structure is the section at rest.** On the plane: the three strata with their
+     names, at the reveal's own stratum step in the SYSTEMS word's em (0.96em, two hundredths
+     tighter than the reveal's 0.98 so SURFACE and its name stay inside a 900px frame), the SYSTEM
+     line at the screen height where UNDERNEATH's own SYSTEM stratum arrives (49.5%, measured
+     48.6vh / 50.3vh at 1440 / 1920), and **the descent** — a hairline from the surface line to
+     SYSTEM at the x where UNDERNEATH's depth rail arrives, fitted through the world fit the boot
+     script publishes (`calc(47.3vw · fit − 292px)`, 24.5vw → 22.7vw at 1440, 33.6 → 32.1 at 1920).
+     The section travels with the landing as the cover lets go (13 world-vw, the measured
+     decompression of the reorient composition), so its line and the world's rail coincide within
+     a few pixels through the crossfade; the labels lead out within the first quarter of the
+     reveal so the world's SYSTEM label never doubles theirs; SURFACE and FLOW stay with the field
+     (the world has no such line in the landing frame) so UNDERNEATH is read standing at the foot
+     of a section that is still there.
+  3. **Reverse is the same event backwards** — UNDERNEATH lets go under the section, the section
+     stands, the surface closes down over it as SYSTEMS returns with its seam — because every
+     value is a pure function of progress, as everything else in the world is.
+  4. **Back on the surface is a plane** (`SpatialExperience.tsx` `SurfaceReturn`,
+     `SpatialCamera.tsx`): the junction's rule is the SURFACE stratum, labelled once inside the band
+     in the strata's grammar; from the rule down the frame is the page's paper, an opaque plane
+     that runs to the frame's foot and continues without a seam into the lower page; and the plane
+     **rises** 24vh into the frame over the same window its opacity resolves in, so the terminus map
+     climbs out from behind it. Above the rule the world's recess; below it the surface. One
+     compositor-only `y` on the existing wrapper; nothing else in the exit moves.
+  5. **Mobile keeps the V4 rails** exactly as the V13 gate froze them (`lg:hidden`); the cover is
+     `hidden lg:block`. The mobile route probe at the recorded step is identical to the engineering
+     record.
+- **Tests:** `tests/e2e/spatial.spec.ts` — the two rail contracts restated for the cover without
+  loss of intent: *fully opaque at the cut, spanning the frame* (same derived sweep, same settle
+  poll) and *the world's own ground, not a wipe* (mid-arrival by opacity alone at 40% of the
+  closing; no transform, no clip-path; background equals the frame's paper; three strata and one
+  descent; the rails hidden on desktop). Reduced motion asserts `[data-surface-cover]` absent as
+  well as `[data-break-rail]`. `tests/unit/surface-cover.test.ts` — the curves' contract (absent
+  outside the window, exactly 1 through the dwell, monotone each side, labels out by a quarter).
+- **Not changed, by the brief:** `lib/spatial/sceneRoute.ts` (its `breakBandOffset` /
+  `breakWipeOffset` now drive the mobile rails only), every scroll constant, the guarded playback,
+  the reorient and approach compositions, Built in Layers (it now reads as the definition of the
+  strata the section just exposed, and was left as it was), the lower page.
+- **Rejected:** a rising opaque plane with a drawn edge (it passed over the word's last letters
+  ahead of the world's own seam — an occlusion the word's principle forbids); the route map on the
+  cover (a static copy of the drawing the reader had just watched move); mirroring the landing's
+  4vh vertical settle (it lifted the SURFACE line off the frame through the dwell); darkening the
+  recess to make the surface plane read (out of scope, and a panel at zoom-out).
+
+## D-049 — The lower world is one system: the index is a section, the method stands in it, the notes are an entry, the operator is a station, the finale is the resolved state
+
+- **Status:** V14.2 GATE C (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.2-gate-c/{before,iterations,after,metrics}/`.
+- **Context:** the owner's finding after Gate B: the route now continues through the lower world
+  (D-047), but the CONTENT itself does not — it "still feels too much like a conventional editorial
+  website placed after the spatial project world". Section by section: Selected Systems reads as a
+  dashboard table; How I Build as clean but conventional horizontal editorial rows; Field Notes is
+  too visually weak to justify a scene; About reads as a standard portfolio bio; the final CTA still
+  partly reads as a large footer with a diagram beside it. Target: SYSTEMS / UNDERNEATH → larger-
+  world context → Selected Systems → method → notes → operator reveal → resolved final state, as
+  one continuous system, without increasing page length or changing scroll physics. Use only
+  verified existing content; do not fabricate Professional Systems material; do not add fake process
+  stages; remove microtext that functions only as texture.
+- **What was measured first** (`before/stills/`, `before/motion/`, `metrics/`): at 1440×900 the
+  lower world ran from the surface return at 4561 to 7806 (3245 px): a five-row coverage table with
+  a five-name column header (≈720 px), four ruled rows (≈690 px), a heading-scale Field Notes for one
+  sentence (≈140 px), a two-column bio (≈380 px), then a footer opened by a page-wide rule with the
+  resolved map beside the question. Every section drew its own rules and grids on bare paper; none
+  of them used the strata, the stations or the descent the reader had just been shown at the cut.
+- **Decisions** (desktop, `lg` and above; the mobile composition below `lg` is the V13 gate's and is
+  byte-identical on the mobile route probe at the recorded step):
+  1. **Selected Systems is a section drawing, not a table** (`components/sections/SelectedSystems.tsx`).
+     The three strata run across the whole register as floors, named once in a gutter as every band
+     in the world is named; each of the five systems stands on the surface as a station — the same
+     glyph the route and the map give it (visited ring for the four toured, the branch's signal ring
+     for Professional Systems) — and descends from that station through the floors to the deepest
+     layer its validated record reaches (`projectDepth`), with a filled mark on every floor the record
+     documents and a hollow one on every floor it does not; provenance, verification and phase are
+     its footing under the SYSTEM line. Professional Systems, whose record documents no layer, stands
+     on the surface with no descent and hollow marks: not yet surveyed, which is what its "Not yet
+     verified" already says. Every mark is the same loader-fed fact the rows carried
+     (`[data-layer-record]` count unchanged at 15). A CSS subgrid keeps the floors level across
+     columns whatever the names wrap to. The column-header row is gone.
+  2. **How I Build is the method inside the same section** (`components/sections/HowIBuild.tsx`).
+     The site already states the movement the owner asked for, in the operator's own words, on
+     `/about` (`aboutIntro.method`: a system problem wearing an interface — four open questions —
+     worked through three layers, the last of which is the one usually underestimated). That
+     statement opens the section in the editorial serif the world reserves for the site's own voice,
+     and beneath it the three strata are drawn again as floors with the descent from the surface
+     station ending on the world's resolved corner at SYSTEM. The four principles stand beside it as
+     the commitments that hold on every floor: an ordered list on the line's weight, at the
+     column's measure — not cards, not stages (the "not sequenced" decision of V6.7 stands).
+  3. **Field Notes is compressed to one entry on the route** (`components/sections/FieldNotes.tsx`,
+     `SystemNode` `compact`). The empty state is a station on the rail and ONE line on ONE rule: the
+     heading at the register's heading scale, the sentence, the site's index, one baseline. The
+     writing is a branch off the route to an external archive and the entry carries the weight of
+     a branch. The populated state (three verified notes) is unchanged in kind.
+  4. **About is the operator revealed, in the systems' grammar** (`components/sections/AboutPreview.tsx`).
+     Classification above the name, as every project scene reads identity under its category line;
+     the name resolving as before; the two routes out under the name; and where a system carried its
+     description, the operator's statement (`aboutIntro.lead`) in the site's own serif voice — the
+     voice the finale then speaks in — with the honesty rule beneath it as the record. The accent bar
+     is gone: signal is the route's colour and is spent where the route is. One `nav` in the DOM,
+     placed by the grid.
+  5. **The finale is the resolved final state** (`components/layout/SiteFooter.tsx`,
+     `styles/globals.css`). On the homepage it stands on the lower world's own datum: the finale's
+     axis is the lower rail's x (4vw), drawn from the footer's top edge — clipped there — down to the
+     action, where the world's closed corner terminates it, so the line the reader came down ends on
+     the button; the content starts 2rem inside it as every register does. The page-wide rule that
+     opened the footer is dropped on the homepage. The caption states the route's resolved state
+     once, in the world's register — SYSTEM RESOLVED · COMPLEXITY MAPPED · OPERATOR ADDRESSABLE —
+     the map beside it being the second clause and the action the third. The core copy is
+     untouched. Off the homepage the caption, the axis and the map are hidden together and the CTA
+     stands in the shared container exactly as before; below `lg` the caption is the V9 "End of
+     route", verbatim.
+- **Voice, at one scale:** the two operator statements (How I Build, About) are set at 1.375rem
+  serif italic — above the body, below the finale's single `statement` line — so the operator's
+  voice enters the lower world once, quietly, and the finale's line is the only statement at full
+  scale.
+- **Page length:** the lower world is shorter, not longer — 3245 → 3000 px at 1440×900 (docMax
+  7806 → 7561), with no interval, approach gap or scroll constant touched.
+- **Tests:** `tests/unit/selected-systems.test.ts` (`projectDepth`: the four toured systems reach
+  SYSTEM, Professional Systems draws no descent). The existing contracts hold unchanged: the
+  fifteen layer records, "Resolved by layer and record", the fork disclosure, the Field Notes
+  links, the About links, the CTA destination, one heading per drift block, the reveal on How I
+  Build. New evidence tool: `tests/tools/lower-world-sheet.mjs`.
+- **Not changed, by the brief:** every scroll module (`lib/spatial/*` byte-identical), the project
+  scenes, evidence and grounds, the Gate B cut and surface return, `LowerRoute`, `RouteMap`, the
+  drift table and its intervals (`editorialDrift.ts`), `app/`, the mobile art direction, the
+  external repositories.
+- **Rejected:** a route map inside Selected Systems (a third copy of the drawing the reader has
+  watched twice); mapping the four principles onto the strata (a relationship the copy does not
+  state); an input → decision → implementation → validation arc (fake stages); the statements at
+  the finale's `statement` scale (they ran to eleven lines and lengthened the page); a second
+  `nav` for the About links (duplicated in the DOM).
+
+## D-050 — One mark, one meaning; no orange; every line a fact
+
+- **Status:** V14.3 GATE D (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.3-gate-d/{before,after,metrics}/`.
+- **Context:** the owner's three findings on the Gate C checkpoint. Duplicated project/frame corner
+  marks, especially a redundant second top-left corner — rule: one mark = one semantic meaning. All
+  visible orange to go, replaced only with the existing neutral system, no new bright accent. And an
+  audit of the visible portfolio for generic connected-dot / node-network graphics, especially at
+  SYSTEMS and the finale: every remaining line, dot or bracket must represent a real route/station,
+  state, boundary, dependency, registration, classification, handoff or surface/layer relationship —
+  restrained Person of Interest / The Machine system language, not AI/network/HUD decoration.
+  Preserved: scroll physics and pacing, the first-paint fix, presence/fade timing, vertical spacing,
+  project evidence and content, the Gate B transition, the Gate C lower-world IA, the mobile art
+  direction.
+- **What was measured first** (`before/stills/`, 3× crops of the Software Factory frame): at every
+  project scene the world's registration tick (`WorldGrammar`) and the acquisition frame's top-left
+  bracket (`SystemPOV`) stood nested at one point — two corners, one meaning; inside the four
+  brackets the evidence plate's own `Figure` ticks made a third corner at each; the scene's OPEN
+  affordance borrowed the bracket glyph for a fourth meaning. Orange in twenty-three places: route
+  two's rails, stations and landing corner in the world and on both maps, the surface-return dash,
+  the case-index dash, the branch ring in Selected Systems, the About bar below `lg`, the mobile
+  break rails, every link and button hover, the Layer Explorer's active dot, the Work index card's
+  hover boundary, the OG image, and the accent strokes inside thirteen owned D-019 diagrams. And the
+  same route map drawn three times — under the opened SYSTEMS surface, at the handoff, at the finale
+  — with a ring at the branch junction where nothing stops.
+- **Decisions:**
+  1. **One corner per corner.** On desktop the registration tick is not drawn at the four project
+     scenes — the bracket is the mark there; it stays at the hero, SYSTEMS and route two, where
+     nothing else registers the anchor, and everywhere on mobile as the V13 gate froze it. Inside
+     the spatial tour the `Figure` primitive's four ticks are hidden at `lg` (`data-figure-tick`,
+     one homepage-scoped rule in `styles/globals.css`); off the tour the primitive is unchanged. The
+     OPEN affordance's open corner is gone: the rule that extends on hover and the word in ink are
+     the affordance.
+  2. **Signal retired.** `--color-signal`, `--color-signal-text` and `--color-signal-ui` are removed
+     from the theme and from every usage. The palette is paper, soft paper, line, ink-muted (the
+     graphite) and ink. Route two is ink like route one, told apart by construction — the strata it
+     climbs through, its larger resolved stations, its dashed ahead state. Hovers are ink-muted on
+     text and ink-muted under paper on the primary button; the Layer Explorer's active dot, the
+     Work index card's hover boundary and the OG image's rule are ink / graphite. Below `lg` the
+     colour swaps are colour only — the mobile break rails' hairline is the line token, the About
+     bar is ink — and the mobile route probe at the recorded step is identical. The thirteen owned
+     diagrams' accent strokes are graphite (`#504e48`): the diagrams' content and geometry are
+     untouched; only the emphasis tone changed, and it is still an emphasis.
+  3. **Every line a fact.** The route map under the opened SYSTEMS surface is removed: what the
+     surface exposes is the structure — the strata, and the descent the Gate B cover draws to
+     SYSTEM — not a third copy of the map the handoff sentence names and the finale resolves. On the
+     two maps that remain, the ring at the branch junction is gone (nothing stops there; the dotted
+     branch leaves the route and the corner at its end registers the Work index). Kept, each with
+     its meaning: the rails (route), the station rings (station / visited), the dotted ahead state
+     (state), the cut's two strokes (boundary), the landing corner (registration), the brackets
+     (classification: in frame), the strata (surface/layer relationship), the branch (handoff), the
+     lower rail's stations and terminus, Selected Systems' descents and marks.
+- **Tests:** the SYSTEMS cut's polyline ceiling (≤ 2) holds at 0; every other contract unchanged.
+  Focused Chromium and the full Chromium project on the checkpoint build; unit suite unchanged.
+- **Not changed, by the brief:** every scroll module, `SceneBreak`'s cover and timing, the surface
+  return's geometry, the lower world's IA and composition, the case-study layouts, `app/`.
+- **Rejected:** darkening route two to a second ink tone (a second accent by another name); keeping
+  the SYSTEMS map in ink (the finding was the drawing, not its colour); keeping the affordance's
+  corner as "the bounded thing" (a fourth meaning for one glyph).
+
+## D-051 — Readable on arrival: earlier presence, controlled breathing room, information at a readable weight
+
+- **Status:** V14.3 GATE E (owner visual gate, Fable) — pending owner visual acceptance. **Not** in
+  force on `main`. Evidence: `docs/review/v14.3-gate-e/{before,after,metrics}/`.
+- **Context:** the owner's three findings on the Gate D checkpoint. Sections remain faded for too
+  long and often become fully clear only near the middle of the viewport — desired: first visible
+  slightly muted, fully readable after a short travel, never waiting for centre or focus; departure
+  may still resolve or fade. The lower world (Selected Systems → How I Build → Field Notes → About →
+  CTA) feels slightly too compressed — modest, intentional room, major beats more, minor beats
+  compact, not the old long travel. Microtext and secondary contrast: information readable at
+  desktop scale, texture reduced or removed, nothing washed-out, nothing heavy. Preserved: scroll
+  physics and discrete-wheel behaviour, first paint, the Gate B transition, the Gate C structure,
+  the Gate D rules, evidence, the mobile art direction.
+- **What was measured first** (`before/metrics/entry.txt`, at 1440×900): Selected Systems' index
+  drawing at opacity 0 until the section's top reached 50% of the viewport (the reveal fired on a
+  fifth of a 400px element); How I Build's principles at 0 until 65%; the register's marks ramping
+  from 0.38 to a 0.65 peak over a third of the section's passage; About's name at 0.55 on entry and
+  1.0 only with the section's top at 30%; a project scene's composition at 0.34 with a third of it
+  in frame, full only near focus (`before/motion/1440--software-factory--to--kivilcim.png`). Gaps:
+  134 / 92 / 134 / 64 px between the lower sections and the finale; a state word (DETECTED /
+  ACQUIRED / RESOLVED) beside every register at 0.5–0.8 opacity; classifications and verification
+  lines at 12px muted.
+- **Decisions** (desktop, `lg` and above; every curve below `lg` is the V13 composition's, verified
+  by the mobile route probe):
+  1. **Earlier presence, same physics.** The project scene's composition is detected at 0.45 and
+     acquired between approach −0.66 and −0.38 instead of −0.42 to −0.14 (`lib/spatial/systemPov.ts`
+     `scenePresence`, desktop branch); the acquisition frame's brackets and its two facts arrive on
+     the same earlier window (`SystemPOV`). In the lower world the reveal fires as soon as an
+     element's top is 10% of the viewport inside it (`Reveal` `early`), the register's presence is
+     full by 16% of the section's passage rather than a third (`SystemNode`), and About's name is
+     resolved by 30% of its passage rather than 75%. Release curves are unchanged: departure still
+     sets a composition down. No scroll constant, route distance or velocity moved.
+  2. **Controlled breathing room.** The three major beats (Selected Systems, How I Build, About)
+     open with 128px above the register at `lg` instead of 80 (`SystemNode` `major`); Field Notes
+     keeps its compact 56; the finale gains 32px above it on the homepage. Lower world 3000 → 3194 px
+     at 1440×900 — under the 3245 the owner found long before Gate C.
+  3. **Information at a readable weight; texture removed.** The register's marks peak at 0.85 / 0.55
+     instead of 0.65 / 0.4. The state word beside every register is removed on desktop — with the
+     plates it echoed long deleted and the rail's stations already filling on acquisition, it stated
+     nothing the reader could use. Selected Systems' classifications are label size and its
+     verification line is ink; Field Notes' index link is label size. Nothing else was enlarged or
+     darkened: the strata names, the indices and the captions stay muted at label size, which
+     measures 7.2:1.
+- **Tests:** the unit suite unchanged (`spatial-system-pov` 23/23 on the new curve); every homepage
+  contract holds (the reveal on How I Build, the layer records, the links).
+- **Not changed, by the brief:** every scroll module, `SceneBreak`, the surface return, the route
+  geometry, the project scenes' compositions and evidence, SYSTEMS, the CTA's composition, the IA,
+  `editorialDrift.ts` and its approach intervals, mobile.
+- **Rejected:** changing the reveal's threshold globally (the case studies and the Work index keep
+  §13); shortening the release (departure is the owner's to keep); enlarging every muted line to
+  ink (heavy everywhere is the opposite failure).
+
+## D-052 — SYSTEMS as a decisive black state; the operator reveal owns its frame; registers instead of maps
+
+- **Status:** V14.4 OWNER VISUAL CORRECTION (Fable-only visual gate) — pending owner visual
+  acceptance. **Not** in force on `main`. Evidence: `docs/review/v14.4-owner-correction/`.
+- **Context:** the owner rejected the Gate B–E state of three systems. SYSTEMS: fully clear only
+  near the viewport centre; the pale diagonal transition and the weak, arbitrary shapes beneath and
+  around the word rejected; the stronger black transition of the older accepted direction wanted —
+  SYSTEMS → decisive black state → the underlying system revealed → UNDERNEATH, intentional in both
+  directions, without touching scroll physics. The lower world: still too dense and tiring; more
+  room between major beats, minor beats compact, no huge dead distances; ABOUT / HAKAN DUYAR as a
+  clean operator reveal that dominates its viewport with the previous section gone and the CTA not
+  yet competing; simplify where overloaded. Person of Interest / The Machine grammar through
+  structure, not decoration; every remaining line, dot or bracket must encode a real relationship
+  or state — no semantic meaning, remove it — especially around SYSTEMS, the larger-map / Work index
+  areas and the finale.
+- **What was measured first** (`before/motion/`, `before/stills/`, 1440×900): SYSTEMS at 0.6–0.75
+  presence through two of the eight approach frames, full only at the seventh; the transition a
+  pale plane with a diagonal seam, a 2.5% recess and three strata rising under the word, two cut
+  strokes floating mid-frame; the terminus map and the finale map as route polylines with nine
+  dots, a dotted branch and a ring; the lower world's gaps 128 / 181 / 93 / 181 / 96 px with the
+  finale's caption in the same frame as the operator's name.
+- **Decisions:**
+  1. **SYSTEMS stands clean and is read whole before the centre.** The word's presence is never
+     below 0.9 and is full a tenth into its approach (`systemsWordPresence`, desktop), held until
+     the black state has taken the frame; the project scenes keep the Gate E curve. On desktop the
+     surface behind the word is no longer opened: the diagonal seam, the recess and the revealed
+     strata (`SystemsWord` `SurfaceReveal`) are removed; the mobile compact cut is untouched.
+  2. **The black state.** The cover (`SceneBreak`, `surfaceCover.ts`) is the ink token, arriving by
+     opacity within the first 40% of the closing window and leaving within the last 40% of the
+     reveal — a state change with a clear edge in time — on the same protected timing and the same
+     guaranteed dwell. On the black it carries the underlying system in paper: the three strata
+     with their names at label size, and the descent to SYSTEM. Reverse is the same event backwards
+     by construction.
+  3. **Nothing beneath SYSTEMS.** The world's strata and recess exist only from the cut on
+     (`WorldGrammar` `Strata`, stepped under the opaque cover): before it the surface is whole. The
+     cut's two strokes and the landing corner (`StateChanges`) are removed; the black state is the
+     boundary and the route-two registration tick marks the landing.
+  4. **Registers, not maps.** The terminus map at the handoff is a route register — ROUTE 01, the
+     four stations by real title in the route's order, "4 STATIONS · TRACKED", the branch by real
+     name — drawn where the map stood so the camera's last move is onto it. The finale's map is the
+     resolved register: the same four stations, the branch, the lower world's four stations, under
+     RESOLVED. `RouteMap.tsx` is deleted. Every line in the world now encodes a route, a station, a
+     state, a boundary, a registration, a classification, a stratum or a handoff.
+  5. **The lower world's rhythm.** Major beats open with 160px above them (`SystemNode` `major`);
+     Field Notes keeps 56; the finale gains 80px above it. About is a stage (`SystemNode` `stage`):
+     at least 64vh tall at `lg`, with the name at 7vw — at its primary position the previous
+     section is above the frame and the finale below it. How I Build's second floors drawing is
+     removed (the index above draws the strata; the statement names them). Lower world
+     3194 → ~3600 px at 1440×900: more than Gate E, calmer than the pre-Gate-C page it replaces,
+     and every scroll constant untouched.
+- **Tests:** the SYSTEMS contracts restated — the black state exists under default motion; the
+  cover is ink, arrives by opacity, carries three strata and one descent, is opaque at the cut; no
+  desktop cut, one compact cut below `lg`; the V6.6 seam-bearing and opening-monotonicity tests are
+  skipped with the reason recorded (no desktop element left to hold them against). Unit:
+  `surface-cover` 5/5 on the steeper curve, `spatial-system-pov` 23/23.
+- **Not changed, by the brief:** every scroll module, the guarded break timing, first paint, project
+  content and order, the no-orange palette, mobile.
+- **Rejected:** raked ink rails (the "glitch" reading the owner gave them); a dark-grey cover (a
+  second tone, not a state); a typographic register that invents states per station ("tracked"
+  is said once, of the route the reader has just travelled).
+
+## D-053 — The older SYSTEMS experience restored; the Machine's state stated; the index as a file
+
+- **Status:** V14.5 VISUAL GATE (Fable-only) — pending owner visual acceptance. **Not** in force
+  on `main`. Evidence: `docs/review/v14.5-visual-gate/`.
+- **Context:** the owner's three goals after V14.4. Restore the older SYSTEMS experience with
+  `f4bdab3` as the reference: a very short, slightly muted entrance then fully clear well before
+  focus; restrained straight rules and textual system marks beneath the word; the older interlocking
+  black transition where black planes close into the frame; intentional forward and reverse; clean
+  typography; no orange, no node graphics. Strengthen the Person of Interest / Machine behaviour
+  through acquisition, classification, registration, state, boundaries and controlled transitions —
+  no fan art, no HUD, no fake telemetry, every mark with a purpose. Replace the ROUTE 01 / 4 STATIONS ·
+  TRACKED register treatment and make Selected Systems calmer, stronger in hierarchy, more present,
+  architecturally meaningful and in the Machine's language. Preserved: scroll mechanics, first paint,
+  content and order, no orange, the V14.4 lower-world spacing, About, mobile.
+- **What was measured first** (`before/motion/`, `before/stills/` at `ec37eb1`): the word at 0.9
+  through its approach with nothing beneath it; the V14.4 black arriving by opacity as one plane;
+  the terminus and finale registers; the five-column index drawing.
+- **Decisions:**
+  1. **The entrance** (`systemsWordPresence`, desktop): 0.72 while far, full by approach −0.88 — a
+     short, slightly muted arrival, whole two frames before focus — and held until the rails have
+     taken the frame.
+  2. **The structure beneath the word** (`SystemsWord` `StructureBeneath`, desktop): the three
+     strata as straight, frame-wide rules with their real names anchored just inside the word's
+     left edge, resolving as the word is acquired and holding — the rules and marks the `f4bdab3`
+     reveal drew, without its seam, its recess and its map. The word is never touched.
+  3. **The interlocking black transition** (`SceneBreak`): the V4 rails run on desktop again —
+     black planes closing into the frame from alternating sides over the base field, on the
+     protected timing — and what the black carries is the underlying system in paper: SURFACE, FLOW,
+     SYSTEM and the descent to SYSTEM, standing above the rails and present only through the dwell,
+     from the moment every rail is home to the moment the first lets go. The V14.4 opacity cover and
+     `lib/spatial/surfaceCover.ts` are removed. Reverse is the same event backwards by construction.
+     The rails' hairline is the line token (no orange, since Gate D).
+  4. **The Machine's state, stated** (`SystemPOV`): the acquisition frame's index line carries the
+     frame's own state — DETECTED while the composition approaches, ACQUIRED while it is read,
+     RELEASED as it leaves — derived from the same signed approach every mark reads. Desktop only.
+  5. **Registers out** (`WorldGrammar`, `SiteFooter`, `SpatialCamera`, `SpatialExperience`): the
+     terminus register and the finale register are removed; the handoff's sentence and action carry
+     the handoff, and the finale is the operator's address alone.
+  6. **Selected Systems as a file** (`SelectedSystems`, `lg`): each system is one entry at reading
+     scale — the station and its index, the name at heading scale, its classification beneath, the
+     record (provenance · verification · phase) filed on one line under the name, and the three
+     layers as labelled marks on the right, filled where the validated record documents the layer.
+     Five entries on rules, one column. Every fact the drawing carried, none of its lines. Mobile
+     untouched.
+- **Tests:** the two `f4bdab3` rail contracts restored unchanged (every rail home at the cut; rails
+  converging from alternating sides); the atmosphere test asserts the structure and the rails; the
+  reduced-motion contracts unchanged. `tests/unit/surface-cover.test.ts` removed with its module.
+- **Not changed, by the brief:** scroll modules, first paint, content and order, the V14.4 lower
+  world, About, mobile; the items reserved for the Codex gate.
+- **Rejected:** restoring the diagonal seam (rejected in V14.4); a map or dots beneath the word;
+  per-station state words in the index (the state belongs to the frame that acquires, not to a list).
+
+## D-054 — The strata beneath SYSTEMS classified and stated; the frame closes on its subject; a wide tier for the lower world
+
+**Date:** 2026-09-09 · **Gate:** V14.8 visual gate (Fable; completed by Opus after the Fable limit
+was reached mid-gate) · **Branch:** `feature/owner-visual-acceptance-v14` · **Base:** `518984a`
+(the V14.7 Codex timing checkpoint `2d40c65`). Owner acceptance PENDING.
+
+**Context.** The owner accepted the V14.5 transition direction and rejected the supporting design
+beneath SYSTEMS as too weak; asked for the Person of Interest / Machine atmosphere to be carried by
+behaviour and grammar rather than by decoration; and reported the last two or three sections as
+underscaled on wide displays.
+
+- **The strata beneath SYSTEMS are a classification, not three names.** Each frame-wide rule now
+  carries its index, its name and its real definition from `layerDefinitions`, with the stratum's
+  state at the word's right edge — SURFACE acquired, FLOW and SYSTEM detected — and a dotted descent
+  down the left, in the rail's own AHEAD grammar, drawn down as the cut approaches. Rule weight
+  increases with depth. The word itself is still never touched.
+- **The black is the same drawing, after the state change.** On the ink the same three strata carry
+  index and name in paper and the state the cut has changed them to: SURFACE released, SYSTEM
+  acquired — which is where UNDERNEATH lands. One drawing, two materials, one boundary. The
+  definitions are read once, on paper, and are not repeated on the black (at 1440 they collided with
+  the descent).
+- **The acquisition frame closes on its subject.** The four brackets stand off the composition while
+  it is detected, close onto its edges as it is acquired, and stand off again as it is released —
+  each along its own diagonal, from the same signed approach, as a compositor translate. The state
+  word is now a ruled box on the index line that fills with ink while the composition is acquired.
+  Desktop only; the compact mobile frame is the V13 gate's.
+- **The lower world has a wide tier.** From 1536px up, the homepage's lower sections and the finale
+  re-resolve the type-scale theme variables through linear clamps whose minimum is today's size, so
+  1440 and 1536 are byte-identical and the tier grows about 12% at 1920 and about 33% at 2560 before
+  capping. The drift track's measure and the finale's max-width grow on the same schedule. Hierarchy
+  and intervals are unchanged: every step scales at roughly one rate.
+
+**Rejected:** reopening the SYSTEMS typography or the V14.5 transition timing; any node, network or
+telemetry graphic; a `vw`-multiple type scale (it would not clear the existing caps until ~2100px);
+and scaling the wide tier by changing section intervals, which would move the lower world's rhythm.
+
+## D-055 — The route navigator: one ordered journey, addressed by the document's own scroll
+
+**Date:** 2026-09-09 · **Gate:** V14.9 navigation gate (Opus 5) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `69d57f5` (the V14.8 checkpoint `b385675`). Owner
+acceptance PENDING.
+
+**Context.** The page is two worlds joined by a cut — a governed camera route addressed by PROGRESS,
+and an ordinary document below it addressed by POSITION — and nothing described them as one
+sequence. The owner asked for a restrained top navigator, previous/next controls and arrow-key
+navigation, all coexisting with completely free scrolling.
+
+- **One list, not three.** `lib/spatial/routeNavigation.ts` holds the journey as a single ordered
+  array of fourteen stations: the nine real camera scenes, the four real drift sections and the
+  finale. The navigator's ticks, the PREVIOUS/NEXT controls, the arrow keys and the active readout
+  are all pure functions of that array, so they cannot disagree. A station must name a real
+  `SceneId`, a real `DriftSectionId` or the finale — there is no way to express an animation state
+  as a destination, which is the brief's "no navigation stops for minor animation states" enforced
+  by the data's shape and asserted by unit test.
+- **Labels and indices are the product's own.** Every label is a string the site already ships or a
+  derivation of one (the hero line's two state words, `layerDefinitions[0]`, the projects' real
+  frontmatter titles, the section headings, `footerCtaLabel` without its destination). Indices
+  appear only where the product already assigns one — 01..04 for the cases, 05..08 for the IA — so
+  the hero, route two's three framework scenes and the finale carry none, matching the rule
+  `WorldGrammar` already applies. `sectionIndex` gained `fieldNotes` and `about`, which were
+  literals inside their own components; identical output, one source.
+- **Navigation is one `window.scrollTo`, not a second engine.** The camera is a pure function of
+  document scroll, so moving the document IS moving the camera — along the real route, through the
+  real cut, with the real filter and the real governor. This is the mechanism `SpatialCamera` already
+  uses for keyboard focus (`recenterOnScene` → `scrollToProgress`), including `behavior: "smooth"`
+  and the next-frame re-assert. Measured: five stations reach their target with 19–66 moving frames
+  and settle in 388–1150 ms; zero teleports.
+- **Free scroll is the single source of truth for state.** The active station is never set by a
+  click or a keypress. It is read from `window.scrollY` by `activeStationIndex` on every frame the
+  document moves, so a reader can interrupt a navigation mid-flight with the wheel and the navigator
+  stays correct. ArrowLeft/ArrowRight step the route; ArrowUp/ArrowDown, PageUp/PageDown, Home/End
+  and space are deliberately untouched — they are the reader's own scrolling, and the break guard
+  already listens for them as real input.
+- **It stands down where it would mean nothing.** Below `lg`, under reduced motion, without
+  JavaScript, and at the very top of the page until the reader has moved — so the first painted
+  frame is exactly what it was before this gate. Hidden with `visibility`, not opacity, so fourteen
+  buttons are never focusable over the hero.
+
+**Rejected:** a fixed full-width bar (a navbar, and it would have covered the top of every scene); a
+tween or scroll library (a second engine); wrapping at the ends; setting the active station from the
+control that was pressed (two sources of truth); and reusing `data-route-station`, which the world's
+own rail already owns — the navigator's attributes are `data-nav-*`.
+
+## D-056 — The governor owns the route, not the page; the navigator is centred, edge-armed and self-introducing
+
+**Date:** 2026-09-10 · **Gate:** V14.10 navigation refinement (Opus 5) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `0f8ad8a` (the V14.9 checkpoint `b244a4d`). Owner
+acceptance PENDING.
+
+**Context.** The owner accepted the V14.9 navigator's mechanism and asked for three refinements: a
+centred, quieter navigator that does not read as a header bar; free scrolling that is genuinely
+free again; and subtle left/right controls with a brief first-load suggestion that navigation
+exists.
+
+- **Free scroll: the governed region is now the route, not the document.** V10 (§G) extended the
+  governor to the whole page so there would be no hand-back seam at the route's end. The cost was a
+  speed limit on the ordinary document below the pinned route — the surface return, the four lower
+  sections and the finale. Measured at 1536×864 before this gate: an aggressive run through the
+  lower world peaked at **1543 px/s** and coasted **471 px** after input stopped. Below
+  `bounds.pinnedEnd` the wheel is now handed back to the browser untouched: native rate, native
+  momentum, no ceiling, no lead cap, no coast of ours. After: **8333 px/s, 0 px of coast** — 5.4×
+  faster and no residual movement. The one exception is an upward gesture within a viewport of the
+  boundary, which keeps the governor so re-entering the route from below is as controlled as
+  leaving it.
+- **The route itself is untouched, deliberately.** `ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, the break's
+  absorber, the lead cap and reverse are the accepted scroll model
+  (`safety-v14-scroll-baseline`) and this gate does not reopen them: route aggressive 516 → 529 px/s
+  (run-to-run noise), coast 494 px unchanged, reverse 2 notches with 0 wrong-way pixels, geometry
+  identical. The fast path *through* the route is the navigation layer, which is what this gate
+  exists to make good.
+- **The rail is centred.** It stood at the lower rail's `4vw` datum, which read as a corner element.
+  Centred on the frame — readout above, route below — it reads as the instrument the frame is
+  travelling through. No background, no border, no bar.
+- **The two directions moved to the frame's edges.** PREVIOUS and NEXT left the rail (which is now
+  ticks and a readout only, less noise) and became one arrow on each edge, vertically centred: a
+  chevron built the way every other mark in this world is built, two hairlines meeting at a corner
+  turned 45°, at a quarter of ink at rest, resolving under pointer or focus with the destination
+  named beside it. They step the same canonical list as the ticks and the arrow keys.
+- **A first-load cue, once per session.** On a reader's first visit both arrows breathe twice
+  (opacity 0.24 → 0.62 on the control, a 3px drift on the chevron) and stop for good. No overlay, no
+  text, no dismiss. It also ends the instant the reader scrolls, because at that point they have
+  found their own way. Stored in `sessionStorage` behind try/catch, read in a lazy state initialiser
+  so no state is set from an effect.
+
+**Rejected:** raising `ROUTE_MAX_RATE` to make the route itself fast (it would change the accepted
+cinematic pacing, and the brief says not to break the route logic); a full-width bar; glyph or icon
+arrows; a tutorial overlay or any dismissible tip; and keeping prev/next in the rail as well as on
+the edges, which would have stated the same thing twice.
+
+## D-057 — The instrument reports the camera's subject; the handoff is a blend; the frame registers on the evidence
+
+**Date:** 2026-09-13 · **Gate:** V14.11 engineering (implemented by Codex CLI 0.153.4 under owner
+brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` · **Base:**
+`1ec2726` (application baseline `60a6708`). Owner acceptance PENDING.
+
+**Context.** A measured Codex audit of `60a6708` found three defects the owner scoped into one gate.
+
+- **The navigator named a subject the camera had not reached.** The readout derived the active
+  station from raw `window.scrollY` plus a 0.35-viewport lead while the visible composition followed
+  the camera's filtered progress. Measured at 1440×900: "Kıvılcım" appeared at 205ms with its
+  evidence still 2319px outside the viewport. A read-only bridge (`lib/spatial/routePresentation.ts`)
+  publishes the existing filtered motion value without changing it, and a scene station is now
+  selected when its signed approach enters the ACQUIRED range the acquisition frame already uses,
+  holding the last subject between acquisitions. Lower-world stations still use document position —
+  one component, one clock per question. After: first named at 927ms with the evidence inside the
+  frame. `lib/spatial/routeNavigation.ts` remains the one canonical station list; ticks, chevrons and
+  keys still step it, and navigation still only scrolls the document.
+- **The instrument vanished on the black.** Its marks now composite against the material beneath
+  them, so they read as paper on ink and ink on paper without a timing switch, a background or a
+  panel — and without touching `SceneBreak` or the break's timing. On a settled black frame at
+  progress 0.72 the navigator crop carries 274 pixels above mean channel 150 where the old treatment
+  carried 0.
+- **The cue could restart, and advertised a direction that did not exist.** Cancellation is now
+  latched into the observable snapshot, so returning to the top cannot re-trigger it, and completion
+  ends eligibility. A disabled PREVIOUS no longer animates.
+- **The governed/native boundary was a gear change.** The wheel handler released downward input at a
+  binary `pinnedEnd` test and reacquired upward input a full viewport early. A finite 0.75-viewport
+  band below `pinnedEnd` now mixes native displacement with the existing governed intent, the native
+  share rising continuously across the band; beyond it the browser owns the event outright.
+  Downward steps ramp 20/48/48/56/48/48/53/70/108/207/341/400 where they previously jumped 64 → 452;
+  upward ramps instead of braking early. The lower world keeps native-order speed (7273 px/s, 0px
+  coast) and the route model — `ROUTE_MAX_RATE`, `INTENT_LEAD_VH`, the lead cap, reverse, the break
+  absorber — is untouched, with `lib/spatial/{sceneRoute,scenes,cameraFilter}.ts` and `SceneBreak`
+  byte-identical.
+- **The acquisition frame missed its evidence.** `SystemPOV` inset to the composition wrapper while
+  the evidence extended past it. A desktop-only measurement of the union of the wrapper and every
+  evidence source now supplies the frame's horizontal overhang. Kıvılcım's right brackets went from
+  58.86px INSIDE its diagram to 12.72px clear at 1440, and 64.75px inside to 14.00px clear at 1920 —
+  the same clearance the other three scenes already had. Every evidence edge is unmoved and the
+  scene's own design overhang is unchanged.
+
+**Rejected:** changing the camera, its filter or its smoothing to make the readout true (that would
+retune motion to fix an instrument); a background or plate behind the navigator to survive the black;
+taking the document back under the governor to smooth the handoff; and special-casing Kıvılcım rather
+than fixing the registration mechanism for all four scenes.
+
+**Explicitly not addressed, by the brief:** the global camera-lag / perceived-blur problem — the
+audit measured the composition still travelling ~2068 screen px/s for ~251ms after document scrolling
+stopped. That gets its own measured motion gate.
+
+## D-058 — The camera tracks the reader; the glide cap leaves desktop presentation
+
+**Date:** 2026-09-13 · **Gate:** V14.12 motion / readability (implemented by Codex CLI 0.153.4 under
+owner brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` ·
+**Base:** `e37e77b`. Owner acceptance PENDING.
+
+**Context.** The V14.10 audit found the composition still moving after the reader had stopped
+scrolling, and fast scrolling hard to read. The owner reopened camera smoothing for this gate
+specifically.
+
+- **Two mechanisms, not one.** Measurement separated the filter's own settling from `glideStep`,
+  which capped VISUAL progress a second time after the document's wheel governor had already paced
+  the input. That second cap is what allowed a large visual backlog — it is why a navigation jump
+  left 1496px of camera still to travel. Its constants are shared with accepted wheel pacing, so
+  changing the constants would have fixed the wrong mechanism; desktop presentation simply stops
+  applying it. Mobile keeps it, and keeps the original response.
+- **A tighter camera, not no camera.** The desktop branch responds in 12ms falling to 8ms per stage
+  instead of 48ms falling to 22ms, capped at 0.7 frame intervals so high-refresh displays cannot
+  make it snap. Both fractional stages remain: this is not pass-through, and the world still does not
+  jump between frames.
+- **Measured, at 1440×900, movement continuing after the document stops:** aggressive forward
+  71.17px / 250.5ms → **1.96px / 16.9ms**; slow forward 23.18 → 1.66px; aggressive reverse 77.56 →
+  0.65px; navigation followed immediately by a wheel event **1496.51px / 997.2ms → 0.49px / 0ms**.
+  At 1920×1080 the same cases fall to 1.63, 0.93, 0.36 and 0.18px. The audit's 519px figure was not
+  reproduced by explicit input profiles; the navigation case is where that magnitude actually lived,
+  and it is now essentially gone.
+- **Readability was addressed by the same change, and nothing else was touched.** The defensible
+  proxy is the P95 distance between visible evidence and where the route says it should be: 296.13 →
+  **26.02px** on aggressive forward at 1440, 125.62 → 11.34px at 1920. The traces did not establish
+  composition opacity, `Reveal`, `EditorialDrift` or the departure scale as material contributors —
+  acquired evidence is already at opacity 1 through the measured intervals — so none of them was
+  changed, `lib/spatial/systemPov.ts` is untouched, and the accepted V14.7 timing and V14.8 curves
+  need no re-acceptance.
+- **A latent defect fixed on the way.** Before, the document reversed but the camera followed 4 (1440)
+  / 3 (1920) presentation frames later with 27.95 / 24.50px of wrong-way travel. After, the camera
+  reverses on the next presentation frame with 0px of wrong-way travel from that frame onward.
+
+**Rejected:** disabling the camera or setting the filter to pass-through; retuning `ROUTE_MAX_RATE`,
+`INTENT_LEAD_VH` or any wheel-governor constant (they pace the document, not the picture, and are
+accepted); changing opacity curves or secondary motion that measurement did not implicate; and
+applying the desktop response to mobile, whose art direction is frozen.
+
+**Disclosed:** an abrupt programmatic document jump — a stress control, not a wheel gesture — still
+produces a large movement, now concentrated into about 60ms rather than 1442ms.
+
+## D-059 — Speed follows demand, distance stays bounded; a wheel outranks a navigation
+
+**Date:** 2026-09-14 · **Gate:** V14.13 motion feel (Claude Opus 5, single writer) · **Branch:**
+`feature/owner-visual-acceptance-v14` · **Base:** `1944e25`. Owner acceptance PENDING.
+
+**Context.** After V14.12 the owner reported that normal wheel/trackpad scrolling still felt
+artificially capped, and asked for free scrolling to be genuinely free without creating runaway.
+
+- **One constant was doing two jobs.** `ROUTE_MAX_RATE` is a flat ceiling, so the route could not be
+  crossed in under ~9.5s however hard the reader pushed; and because the same flat rate drained the
+  540px intent queue, letting go left the page travelling for 1.6s. It would not go fast, and it
+  would not stop. The ceiling now follows DEMAND — the squared fraction of the unchanged lead cap
+  that pending intent occupies, 1× at reading pace to 4× under sustained intent — while DISTANCE
+  stays bounded by exactly the same `INTENT_LEAD_VH`. Speed is granted; travel is not. Measured at
+  1536×864: route aggressive peak **431 → 1259 px/s**, coast **502 → 288 px**, reading pace
+  415 → 474 px/s, geometry identical, and reverse improved from 2 notches to **1 notch with 0
+  wrong-way pixels**.
+- **Bounded coast, not forward debt.** Reversing the same gesture while the queue drains gives 2px
+  of wrong-way travel; reversing after it drains gives 0. Debt would survive the wait. The metric
+  that once measured 484-506px of forward debt is not regressing.
+- **A wheel gesture now outranks an in-flight navigation.** A navigation runs a native smooth
+  scroll, and while it is in flight the browser re-applies its own target every frame — so the
+  governor read that as someone else driving and stood down. A wheel event 120ms into a navigation
+  still let the document travel a further 503px to the navigation's destination. The wheel handler
+  now cancels the animation by re-issuing the current position with an explicit instant behaviour:
+  zero pixels of movement, a no-op for the governor's own already-instant writes. After: **0px over
+  6ms** (1440) and 0px over 5ms (1920).
+- **The camera response was deliberately NOT relaxed.** Two candidates were built and measured.
+  Raising the frame cap is the only way to get a real trail at 60Hz, because desktop tau is clamped
+  to 0.7·dt — and it measurably cost the reverse guarantee (0 → 3px wrong-way, 1 → 2 notches).
+  Raising only the constants preserved reverse but bought about **1px** of extra trail, below
+  perception, while breaking V14.12's contract that the filter settles within 80ms. Neither trade
+  was worth making, so the response is byte-identical to V14.12 and what actually changes the felt
+  character of the motion is the much wider speed range above.
+
+**Rejected:** raising `ROUTE_MAX_RATE` itself (it would speed up reading pace, which is the accepted
+cinematic pacing); reducing `INTENT_LEAD_VH` to shorten coast (it would make fast scrolling stop
+abruptly); loosening the 80ms settling contract to justify a 1px change; and relaxing the frame cap
+at the cost of the zero-wrong-way guarantee the owner listed as preserved.
+
+## D-060 — The instrument clears the ground it reads; the ticks name their destination
+
+**Date:** 2026-09-16 · **Gate:** V14.14 navigator refinement (Claude Opus 5, single writer) ·
+**Branch:** `feature/owner-visual-acceptance-v14` · **Base:** `5ccbf5c`. Owner acceptance PENDING.
+
+**Context.** The independent V14.13 review returned two MINOR findings against the navigator: it
+overlaps real lower-world text, and its station ticks are anonymous to sighted readers. Motion was
+frozen for this gate and is untouched.
+
+- **A clearance, not a bar.** Through the route the camera's own 14vh inset leaves the navigator's
+  band empty; below the pinned route the page is an ordinary document whose lines pass under the
+  instrument. Measured at 1920×1080, the Field Notes landing put the readout and rail on top of How
+  I Build's last line, glyph over glyph — difference compositing keeps the marks dark but cannot
+  separate two sets of letterforms in the same pixels. The instrument now clears the ground it needs
+  to read, and only there: a field of the page's own paper, sized to the cluster and masked away at
+  its rim, with no full-bleed edge, no rule, no border and no shadow. It exists only at and below the
+  pin, where the ground is always paper, so it can never appear over the black transition, and it
+  sits OUTSIDE `.route-navigator` because that layer composites with difference and a clearance
+  inside it would invert itself. Lower-world content was not moved. Measured: at both sizes the Field
+  Notes landing goes from one uncovered line in the band to **zero**.
+- **The ticks name their destination.** Under the pointer or on keyboard focus, each tick shows its
+  canonical station name and nothing else — the same answer the edge chevrons already gave. It is
+  absolutely positioned, so revealing it cannot move the rail by a pixel, and `aria-hidden`, so the
+  tick keeps exactly one accessible name. The rail gains no permanent labels.
+
+**Two defects found while verifying, both fixed:** the preview inherited a raw ink colour instead of
+the navigator's remapped token and so rendered faint under difference compositing; and V14.11's
+`[data-nav-state="ahead"] > span[aria-hidden]` rule, written when the tick mark was the only
+`aria-hidden` child of a station button, was forcing the new preview visible on every station ahead
+of the reader. The mark is now named `data-nav-mark` and the selector targets it.
+
+**Rejected:** a full-width or bordered backing (a header bar, which the brief rules out); moving or
+re-spacing lower-world content to avoid the overlap; hiding the navigator when content is beneath it
+(it would be unreliable exactly when it is needed); and permanent tick labels.
+
+## D-061 — One destination preview at a time; keyboard focus wins over a resting pointer
+
+**Date:** 2026-09-17 · **Gate:** V14.15 navigator micro-fix (implemented by Codex CLI 0.153.4 under
+owner brief; Claude orchestrator only) · **Branch:** `feature/owner-visual-acceptance-v14` ·
+**Base:** `76897e2`. Owner acceptance PENDING.
+
+**Context.** The independent V14.14 review found one reproducible defect and made it the condition
+for freezing the navigator.
+
+- **The defect.** Each station tick showed its preview from independent per-element CSS
+  (`group-hover`, `group-focus-visible`), so two could be visible at once: click Field Notes, leave
+  the pointer on it, press Tab, and "07 FIELD NOTES" and "08 ABOUT" overlapped by 60.49 × 18 px,
+  unreadable, at both 1440×900 and 1920×1080.
+- **The fix.** The navigator owns which station is previewed rather than leaving it to per-element
+  CSS: hovered and focused indices are tracked, **focus takes priority**, and one shared
+  `aria-hidden` element follows the selected tick, so two labels can never crossfade. Focus
+  eligibility reads `:focus-visible` on entry, so a pointer click is not mistaken for keyboard focus;
+  blur restores hover; the last destination holds position while fading out.
+- **Measured at both sizes:** at rest 0 → 0 previews; hover alone 1 → 1 (hovered); focus alone 1 → 1
+  (focused); **hover and focus on different ticks 2 with overlap → 1 (focused)**; focus away 1 → 1
+  (hovered). The rail stays 336 × 24 px with every tick rectangle unmoved, and the About tick keeps
+  its single accessible name `08, About`.
+- **Why V14.14's contracts missed it:** they tested hover and keyboard focus separately. The new
+  contract drives the real click/Tab sequence at both viewports.
+
+**Rejected:** a CSS-only fix — per-element rules cannot express "another element's focus suppresses
+my hover"; and letting hover win, which would leave a keyboard user's own focus unannounced.
+
+**Explicitly out of scope and untouched:** the faint clearance halo at the surface-return handoff
+(+5 per channel at 1920, scrollY 5418), motion, and the 1920 composition.

@@ -42,7 +42,7 @@
 
   <!-- Stage 3: Backfill records (signal accent) -->
   <g>
-    <rect x="832" y="380" width="330" height="220" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="832" y="380" width="330" height="220" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="862" y="436" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="24" font-weight="600" fill="#161616">Backfill records</text>
     <line x1="862" y1="458" x2="1132" y2="458" stroke="#b8b5ac" stroke-width="1" />
     <text x="862" y="492" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">

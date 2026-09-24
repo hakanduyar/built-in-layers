@@ -18,6 +18,14 @@ const routes = [
   "/lab",
 ];
 
+// V14 REMOVED THE SCAN'S ONE EXCLUSION, because the material it excluded is
+// gone. V8 excluded `[data-decorative="depth"]` -- the hero's oversized "Surface"
+// ghost and the travel material's cropped title fragments, all at 5.5-6% opacity
+// -- from the contrast rules, on the grounds that they were depth rather than
+// content. The V14 owner review rejected them as visual noise and they were
+// deleted (see SpatialExperience). Nothing on the site now carries the
+// attribute, so the scan runs with no exclusion at all, which is the stronger
+// form of the acceptance criterion it was written to protect.
 async function scan(page: import("@playwright/test").Page) {
   return new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
@@ -84,5 +92,17 @@ test.describe("Accessibility: axe scan, interactive states", () => {
     await page.goto("/work", { waitUntil: "networkidle" });
     await page.getByRole("link", { name: /Kıvılcım/ }).focus();
     reportViolations("Project card — keyboard focused", await scan(page));
+  });
+});
+
+// V14: the guard on the exclusion inverts with it. The exclusion existed for
+// `[data-decorative="depth"]` material that has now been deleted; the contract
+// that survives is that nothing quietly re-adopts the marker to opt back out of
+// the contrast scan.
+test.describe("Accessibility: no element opts out of the contrast scan", () => {
+  test("the decorative-depth marker is gone from the page", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("section[aria-label='Spatial system tour']").waitFor();
+    await expect(page.locator('[data-decorative="depth"]')).toHaveCount(0);
   });
 });

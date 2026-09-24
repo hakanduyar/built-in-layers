@@ -1,0 +1,51 @@
+{
+  "generatedBy": "tests/unit/route-focus-dump.test.ts",
+  "ROUTE_LENGTH_VH": 600,
+  "BREAK_CUT": 0.7166468990695347,
+  "EXIT_FROM": 0.9592567411824426,
+  "VW_PER_VH": 1.6,
+  "exit": {
+    "length": 95.25509669032671,
+    "bearing": 59.481769321124766,
+    "vw": 28,
+    "vh": 76
+  },
+  "desktop": {
+    "hero": 0,
+    "software-factory": 0.15943269200674015,
+    "kivilcim": 0.28866152036855164,
+    "jointledger": 0.4151851869433107,
+    "dropspot": 0.5417088535180697,
+    "tail": 0.6682325207262532,
+    "reorient": 0.7577835481053027,
+    "approach": 0.8630083411688465,
+    "handoff": 0.9592567411824426
+  },
+  "mobile": {
+    "hero": 0,
+    "software-factory": 0.1457859946407258,
+    "kivilcim": 0.273650782757937,
+    "jointledger": 0.39748833345413365,
+    "dropspot": 0.5213258841503303,
+    "tail": 0.6451634348465269,
+    "reorient": 0.7672003622764955,
+    "approach": 0.850594783458982,
+    "handoff": 0.9492586057030505
+  },
+  "worldLength": {
+    "desktop": {
+      "one": 1494.82,
+      "two": 606.84,
+      "total": 2101.66
+    },
+    "mobile": {
+      "one": 728,
+      "two": 216.08,
+      "total": 944.08
+    }
+  },
+  "averageCameraSpeed": {
+    "desktop": 2100.14,
+    "mobile": 943.6
+  }
+}

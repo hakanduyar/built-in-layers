@@ -1,0 +1,6360 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "generated": "phase6-mobile-audit",
+  "routes": {
+    "home": {
+      "path": "/",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 8385,
+          "screens": 14.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 33,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 276,
+              "renderedH": 173,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 276,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1285,
+          "firstFigureScreens": 2.26,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 568,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 9758,
+          "screens": 12.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 38,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 312,
+              "renderedH": 195,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 312,
+              "renderedH": 142,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1583,
+          "firstFigureScreens": 1.98,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 800,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 8736,
+          "screens": 13.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 39,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 326,
+              "renderedH": 204,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 326,
+              "renderedH": 148,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1397,
+          "firstFigureScreens": 2.09,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 667,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10021,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 339,
+              "renderedH": 212,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 339,
+              "renderedH": 154,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1600,
+          "firstFigureScreens": 1.9,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 844,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 10541,
+          "screens": 11.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 45,
+          "h1Px": 48,
+          "h1Height": 79,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 48
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 48
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 36
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 375,
+              "renderedH": 234,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 375,
+              "renderedH": 171,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.27,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1703,
+          "firstFigureScreens": 1.83,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 932,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 10917,
+          "screens": 10.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "See every system",
+              "w": 184,
+              "h": 43
+            },
+            {
+              "text": "Software Factory↗",
+              "w": 185,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım↗",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "JointLedger↗",
+              "w": 136,
+              "h": 24
+            },
+            {
+              "text": "DropSpot↗",
+              "w": 114,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems↗",
+              "w": 231,
+              "h": 24
+            },
+            {
+              "text": "hakanduyar.medium.com ↗︎ (opens in new t",
+              "w": 195,
+              "h": 17
+            },
+            {
+              "text": "See all notes",
+              "w": 100,
+              "h": 15
+            },
+            {
+              "text": "Read the full introduction",
+              "w": 180,
+              "h": 24
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            },
+            {
+              "px": 12,
+              "text": "Verified against source · Active develop"
+            }
+          ],
+          "avgMeasureChars": 74,
+          "h1Px": 81,
+          "h1Height": 132,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 81
+            },
+            {
+              "level": "H2",
+              "px": 16
+            },
+            {
+              "level": "H3",
+              "px": 61
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 38
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 677,
+              "renderedH": 423,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.42,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 677,
+              "renderedH": 308,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.48,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 0,
+              "renderedH": 0,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 1802,
+          "firstFigureScreens": 1.76,
+          "pinned": [
+            {
+              "tag": "div",
+              "pos": "sticky",
+              "h": 1024,
+              "pctOfViewport": 100
+            }
+          ],
+          "consoleErrors": []
+        }
+      }
+    },
+    "work-index": {
+      "path": "/work",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 3396,
+          "screens": 6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 39,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 521,
+          "firstFigureScreens": 0.92,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 3537,
+          "screens": 4.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 44,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.62,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 3410,
+          "screens": 5.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 46,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.74,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 3556,
+          "screens": 4.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 48,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.59,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 3628,
+          "screens": 3.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 54,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 494,
+          "firstFigureScreens": 0.53,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 3477,
+          "screens": 3.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Software Factory",
+              "w": 165,
+              "h": 24
+            },
+            {
+              "text": "Kıvılcım — \"Spark\"",
+              "w": 181,
+              "h": 24
+            },
+            {
+              "text": "JointLedger",
+              "w": 117,
+              "h": 24
+            },
+            {
+              "text": "DropSpot",
+              "w": 95,
+              "h": 24
+            },
+            {
+              "text": "Professional Systems",
+              "w": 212,
+              "h": 24
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "React · TypeScript · Vite · Tailwind CSS"
+            },
+            {
+              "px": 12,
+              "text": "Go · Vue · TypeScript · PostgreSQL · Doc"
+            },
+            {
+              "px": 12,
+              "text": "React · Vite · Tailwind CSS · Node.js · "
+            }
+          ],
+          "avgMeasureChars": 95,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H3",
+              "px": 22
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 310,
+              "renderedH": 141,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 310,
+              "renderedH": 194,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 451,
+          "firstFigureScreens": 0.44,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-software-factory": {
+      "path": "/work/software-factory",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 3415,
+          "screens": 6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.67,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 3396,
+          "screens": 4.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 39,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.47,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 3278,
+          "screens": 4.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.57,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 3403,
+          "screens": 4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 43,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 378,
+          "firstFigureScreens": 0.45,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 3332,
+          "screens": 3.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 48,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 3205,
+          "screens": 3.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 82,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "factory-loop-diagram.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 334,
+          "firstFigureScreens": 0.33,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-kivilcim": {
+      "path": "/work/kivilcim",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 13345,
+          "screens": 23.5,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 12563,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.61,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 12321,
+          "screens": 15.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 11421,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 11914,
+          "screens": 17.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 42,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 11123,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 11848,
+          "screens": 14,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 44,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 10913,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 11151,
+          "screens": 12,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 49,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 10143,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 126
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 8865,
+          "screens": 8.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 83,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "local-first-architecture.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "product-areas-map.svg",
+              "renderedW": 662,
+              "renderedH": 414,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.41,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 596,
+                "y": 7824,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 305,
+          "firstFigureScreens": 0.3,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-jointledger": {
+      "path": "/work/jointledger",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 11325,
+          "screens": 19.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 36,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 10449,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 16,
+                "y": 10542,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.7,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 10476,
+          "screens": 13.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 9483,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 16,
+                "y": 9576,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.5,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 10148,
+          "screens": 15.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 43,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 9264,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 16,
+                "y": 9357,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.6,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10048,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 45,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 9019,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 16,
+                "y": 9112,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.47,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 9612,
+          "screens": 10.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 50,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 16,
+                "y": 8511,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 16,
+                "y": 8604,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": true,
+            "height": 187
+          },
+          "firstFigureTop": 400,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 7692,
+          "screens": 7.5,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "ezBookkeeping ↗︎ (opens in new tab)",
+              "w": 117,
+              "h": 15
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "Kıvılcım",
+              "w": 96,
+              "h": 31
+            },
+            {
+              "text": "DropSpot",
+              "w": 120,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [
+            {
+              "px": 12,
+              "text": "A fork of ezBookkeeping ↗︎ (opens in new"
+            }
+          ],
+          "avgMeasureChars": 84,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "book-data-model-diagram.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "upstream-extension-map.svg",
+              "renderedW": 662,
+              "renderedH": 414,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.41,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 2,
+            "links": [
+              {
+                "text": "Kıvılcım",
+                "x": 24,
+                "y": 6650,
+                "w": 96,
+                "h": 31
+              },
+              {
+                "text": "DropSpot",
+                "x": 624,
+                "y": 6650,
+                "w": 120,
+                "h": 31
+              }
+            ],
+            "stacked": false,
+            "height": 94
+          },
+          "firstFigureTop": 339,
+          "firstFigureScreens": 0.33,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-dropspot": {
+      "path": "/work/dropspot",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 11173,
+          "screens": 19.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 35,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 278,
+              "renderedH": 126,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 278,
+              "renderedH": 134,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.16,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 278,
+              "renderedH": 120,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.15,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 10390,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.61,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 10465,
+          "screens": 13.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 318,
+              "renderedH": 145,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 318,
+              "renderedH": 145,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.23,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 318,
+              "renderedH": 154,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.18,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 318,
+              "renderedH": 137,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.17,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 9565,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.43,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 10140,
+          "screens": 15.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 42,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 333,
+              "renderedH": 152,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 333,
+              "renderedH": 152,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.24,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 333,
+              "renderedH": 161,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 333,
+              "renderedH": 143,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.18,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 9349,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 10003,
+          "screens": 11.9,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 44,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 348,
+              "renderedH": 158,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.25,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 348,
+              "renderedH": 158,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.25,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 348,
+              "renderedH": 168,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.2,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 348,
+              "renderedH": 150,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.19,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 9067,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 9464,
+          "screens": 10.2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 49,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 388,
+              "renderedH": 177,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.28,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 388,
+              "renderedH": 177,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.28,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 388,
+              "renderedH": 188,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.22,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 388,
+              "renderedH": 167,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.21,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 16,
+                "y": 8456,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 7927,
+          "screens": 7.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Repository ↗︎ (opens in new tab)",
+              "w": 93,
+              "h": 17
+            },
+            {
+              "text": "JointLedger",
+              "w": 148,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 83,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 710,
+              "renderedH": 323,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.51,
+              "fetchPriority": "high"
+            },
+            {
+              "src": "browse-drops.webp",
+              "renderedW": 662,
+              "renderedH": 301,
+              "naturalW": 1400,
+              "naturalH": 637,
+              "scale": 0.47,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "drop-detail.webp",
+              "renderedW": 662,
+              "renderedH": 320,
+              "naturalW": 1731,
+              "naturalH": 837,
+              "scale": 0.38,
+              "fetchPriority": "low"
+            },
+            {
+              "src": "admin-panel.webp",
+              "renderedW": 662,
+              "renderedH": 285,
+              "naturalW": 1878,
+              "naturalH": 808,
+              "scale": 0.35,
+              "fetchPriority": "low"
+            }
+          ],
+          "neighbours": {
+            "count": 1,
+            "links": [
+              {
+                "text": "JointLedger",
+                "x": 24,
+                "y": 6885,
+                "w": 148,
+                "h": 31
+              }
+            ],
+            "stacked": null,
+            "height": 94
+          },
+          "firstFigureTop": 305,
+          "firstFigureScreens": 0.3,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "cs-professional-systems": {
+      "path": "/work/professional-systems",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 2125,
+          "screens": 3.7,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 33,
+          "h1Px": 36,
+          "h1Height": 72,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 278,
+              "renderedH": 174,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.17,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 414,
+          "firstFigureScreens": 0.73,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 2220,
+          "screens": 2.8,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 38,
+          "h1Px": 36,
+          "h1Height": 72,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 318,
+              "renderedH": 199,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.2,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 414,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 2055,
+          "screens": 3.1,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 40,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 333,
+              "renderedH": 208,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.21,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.52,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 2209,
+          "screens": 2.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 41,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 348,
+              "renderedH": 218,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.22,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.41,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 2306,
+          "screens": 2.5,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 46,
+          "h1Px": 36,
+          "h1Height": 36,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 36
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 388,
+              "renderedH": 243,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.24,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 348,
+          "firstFigureScreens": 0.37,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 2423,
+          "screens": 2.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Selected systems",
+              "w": 220,
+              "h": 31
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 78,
+          "h1Px": 38,
+          "h1Height": 38,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 38
+            },
+            {
+              "level": "H2",
+              "px": 13
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [
+            {
+              "src": "professional-systems-overview.svg",
+              "renderedW": 710,
+              "renderedH": 444,
+              "naturalW": 1600,
+              "naturalH": 1000,
+              "scale": 0.44,
+              "fetchPriority": "high"
+            }
+          ],
+          "neighbours": null,
+          "firstFigureTop": 305,
+          "firstFigureScreens": 0.3,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    },
+    "about": {
+      "path": "/about",
+      "viewports": {
+        "320x568": {
+          "vw": 320,
+          "vh": 568,
+          "docHeight": 1944,
+          "screens": 3.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "work index",
+              "w": 287,
+              "h": 43
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 35,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "360x800": {
+          "vw": 360,
+          "vh": 800,
+          "docHeight": 1926,
+          "screens": 2.4,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "work index",
+              "w": 287,
+              "h": 43
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 325,
+              "h": 43
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 40,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "375x667": {
+          "vw": 375,
+          "vh": 667,
+          "docHeight": 1764,
+          "screens": 2.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 42,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "390x844": {
+          "vw": 390,
+          "vh": 844,
+          "docHeight": 1909,
+          "screens": 2.3,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 44,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "430x932": {
+          "vw": 430,
+          "vh": 932,
+          "docHeight": 1899,
+          "screens": 2,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 49,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 40
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        },
+        "768x1024": {
+          "vw": 768,
+          "vh": 1024,
+          "docHeight": 1672,
+          "screens": 1.6,
+          "overflowPx": 0,
+          "overflowOffenders": [],
+          "smallTapTargets": [
+            {
+              "text": "Skip to content",
+              "w": 1,
+              "h": 1
+            },
+            {
+              "text": "Hakan Duyar",
+              "w": 156,
+              "h": 28
+            },
+            {
+              "text": "Home",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Work",
+              "w": 35,
+              "h": 17
+            },
+            {
+              "text": "Notes",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "Lab",
+              "w": 27,
+              "h": 17
+            },
+            {
+              "text": "About",
+              "w": 44,
+              "h": 17
+            },
+            {
+              "text": "work index",
+              "w": 76,
+              "h": 17
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 17
+            },
+            {
+              "text": "GitHub ↗︎ (opens in new tab)",
+              "w": 66,
+              "h": 21
+            },
+            {
+              "text": "LinkedIn ↗︎ (opens in new tab)",
+              "w": 76,
+              "h": 21
+            },
+            {
+              "text": "Medium ↗︎ (opens in new tab)",
+              "w": 75,
+              "h": 21
+            }
+          ],
+          "bodyTooSmall": [],
+          "avgMeasureChars": 83,
+          "h1Px": 28,
+          "h1Height": 31,
+          "headings": [
+            {
+              "level": "H1",
+              "px": 28
+            },
+            {
+              "level": "H2",
+              "px": 54
+            }
+          ],
+          "figures": [],
+          "neighbours": null,
+          "firstFigureTop": null,
+          "firstFigureScreens": null,
+          "pinned": [],
+          "consoleErrors": []
+        }
+      }
+    }
+  }
+}

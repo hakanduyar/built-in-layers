@@ -13,7 +13,7 @@ type ButtonLinkProps = {
 // DESIGN_SYSTEM.md §10: mono-label text, radius-1, 12x24 padding, 44px
 // minimum target, active state translates down 1px (no scale).
 const variantClassName: Record<"primary" | "secondary", string> = {
-  primary: "bg-ink text-paper hover:bg-signal hover:text-ink",
+  primary: "bg-ink text-paper hover:bg-ink-muted hover:text-paper",
   secondary: "border border-ink text-ink hover:bg-ink/8",
 };
 
@@ -34,7 +34,7 @@ export function ButtonLink({
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={sharedClassName}>
         {children}
-        <span aria-hidden="true"> ↗</span>
+        <span aria-hidden="true">{" \u2197\uFE0E"}</span>
         <span className="sr-only"> (opens in new tab)</span>
       </a>
     );

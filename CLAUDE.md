@@ -1,308 +1,70 @@
-# CLAUDE.md — Hakan Duyar Portfolio
+# CLAUDE.md — durable rules
 
-## 1. Project authority
+Permanent constitution for this repository. Rules only — no history, no current state.
+Current state lives in `.ai/STATE.md`; the current assignment in `.ai/ACTIVE_TASK.md`.
 
-This file and the documents under `/docs` are the source of truth.
+## Project
 
-Priority order:
+Active repository: `C:\GitHub\portfolio` — the **Built in Layers** portfolio (Next.js App Router,
+TypeScript strict, Tailwind, pnpm). Owner: Hakan Duyar.
 
-1. The user's latest explicit instruction
-2. `CLAUDE.md`
-3. `docs/PROJECT_SPEC.md`
-4. Approved task/ticket document
-5. `docs/ARCHITECTURE.md`
-6. `docs/DESIGN_SYSTEM.md`
-7. Existing implementation
+## Git safety
 
-When two sources conflict, stop and report the conflict. Do not silently choose one.
+- Never merge to `main` without an explicit owner request. Never force push, `reset --hard`, or
+  `git clean`.
+- Never discard unknown owner work. Preserve recovery evidence (snapshots, bundles) when it exists.
+- Normal feature-branch commits and pushes are allowed and expected at stable checkpoints.
+- Verify `local HEAD == origin` after every push.
 
-## 2. Operating mode
+## Single writer
 
-- Never implement an unapproved phase or task.
-- Work on exactly one active task at a time.
-- Before editing, read all documents relevant to the active task.
-- First explain the files you intend to change and why.
-- Do not broaden the task while implementing it.
-- Do not refactor unrelated code.
-- Do not add speculative features.
-- Do not change the design direction without explicit approval.
-- Do not invent professional history, metrics, client details, project results, testimonials, dates, technologies, or personal information.
-- Use clearly labelled placeholders where content is missing.
-- Never claim that a private or incomplete project is production-ready unless the user confirms it.
-- Stop after the requested task is implemented, verified, documented, and summarized.
+One implementation writer per working tree. Never run two implementation or art-direction gates
+against the same checkout. Before starting a gate, confirm no other session is writing — check
+`ListAgents` and recent file mtimes, **not** one `.claude/projects/<dir>`, which cannot see a session
+working from another project directory.
 
-## 3. Required workflow for every task
+## External repositories
 
-1. Read:
-   - `CLAUDE.md`
-   - `docs/PROJECT_SPEC.md`
-   - `docs/ARCHITECTURE.md`
-   - `docs/DESIGN_SYSTEM.md`
-   - the active task
-   - any relevant content files
+Read-only unless explicitly authorized. Never confuse a portfolio *project* with a similarly named
+external repo or agent session (e.g. "Software Factory" the case study vs. the `software-factory`
+repository vs. a `software-factory-*` session).
 
-2. Inspect:
-   - existing repository structure
-   - package scripts
-   - related components
-   - current tests
-   - current Git diff
+## Model routing
 
-3. Plan:
-   - exact files to create/change
-   - implementation approach
-   - risks and assumptions
-   - verification commands
+- **Opus 5** — engineering, architecture, orchestration, implementation, QA.
+- **Fable 5.1** — visual and art-direction gates only.
+- Do not run the same full job on both. Effort tiers: `.ai/TOKEN_POLICY.md`.
 
-4. Implement:
-   - only the approved scope
-   - small, reviewable changes
-   - no unrelated cleanup
+## Frozen systems
 
-5. Verify:
-   - type checking
-   - linting
-   - unit/component tests where applicable
-   - production build
-   - relevant browser/E2E checks when available
+Frozen systems are listed in `.ai/STATE.md` and fingerprinted in `docs/FROZEN_BOUNDARY.md`. Do not
+reopen one without a **measured** regression or an explicit new phase. If a frozen file must move,
+it needs a stated reason, before/after measurement, proof the other platform is unchanged, and a
+row in `FROZEN_BOUNDARY.md` §5.
 
-6. Document:
-   - update `docs/PROGRESS.md`
-   - add architectural decisions to `docs/DECISIONS.md` only when a real decision was made
-   - mark task acceptance criteria truthfully
+## Truth
 
-7. Stop:
-   - provide a concise summary
-   - list changed files
-   - list commands run and outcomes
-   - list remaining issues
-   - wait for approval
+Never fabricate project facts, architecture, metrics, outcomes, timelines, URLs or evidence. Missing
+facts go to `docs/CONTENT_GAPS.md`. Distinguish repository, live and demo links — never relabel one
+as another. Report results faithfully: if a check did not run, say so.
 
-## 4. Product identity
+## Validation
 
-Project name: **Built in Layers**
+Targeted validation while iterating; the full matrix once, at the acceptance gate. Do not repeat an
+expensive suite merely to reconfirm another agent's independent result unless the evidence is
+inconsistent. Never weaken an assertion to make a gate pass — fix the product, or report it.
 
-Owner: **Hakan Duyar**
+## Owner interruption
 
-Primary positioning:
+Resolve routine engineering decisions autonomously. Stop only for: a decision needing private owner
+facts, an unsafe or destructive action, confidential data, a merge to `main`, an uncontrolled
+concurrent writer that cannot be isolated, or a material design fork no existing decision resolves.
 
-**Frontend & Product Engineer**
+## Task routing
 
-Primary line:
+1. `.ai/STATE.md` — current truth
+2. `.ai/ACTIVE_TASK.md` — the one current assignment
+3. `.ai/HANDOFF.md` — only if a handoff is pending
 
-**Interfaces on the surface. Systems underneath.**
-
-Supporting statement:
-
-**I design clear interfaces and build the systems that make them work.**
-
-The site must communicate:
-
-- strong frontend engineering
-- product thinking
-- system design awareness
-- real-world problem solving
-- honest and specific project storytelling
-- controlled, editorial visual quality
-
-## 5. Design direction
-
-Required:
-
-- editorial and technical visual language
-- warm paper background
-- dark ink typography
-- one restrained signal accent
-- strong typography
-- visible layout rhythm
-- subtle grid/measurement details
-- asymmetric but disciplined compositions
-- real project assets and diagrams
-- restrained motion
-- clear hierarchy
-- accessible interaction states
-
-Forbidden unless explicitly approved:
-
-- generic AI portfolio aesthetics
-- purple/blue neon gradients
-- glassmorphism as a primary language
-- random 3D objects
-- WebGL in the MVP
-- giant decorative blobs
-- excessive bento grids
-- continuous marquee technology logos
-- forced custom cursor
-- scroll hijacking
-- long horizontal scroll sections
-- background videos
-- excessive parallax
-- animation on every text block
-- dark mode in the MVP
-- unapproved stock imagery
-- invented screenshots
-- excessive rounded cards
-- template-like “crafting digital experiences” copy
-
-## 6. Signature interaction
-
-The core portfolio concept is:
-
-- `SURFACE`: interface, layout, responsiveness, design system, accessibility
-- `FLOW`: journeys, states, forms, transitions, user and data flow
-- `SYSTEM`: architecture, data model, APIs, permissions, offline strategy, deployment
-
-This concept must be meaningful, not decorative.
-
-The MVP should first work as static content. Motion and advanced transitions are added only after layout and content are approved.
-
-## 7. Technical contract
-
-Unless the user explicitly changes these decisions:
-
-- Framework: Next.js App Router
-- Language: TypeScript with strict mode
-- Package manager: pnpm
-- Styling: Tailwind CSS plus CSS custom properties for design tokens
-- Content: local MDX and typed metadata; no CMS in MVP
-- Rendering: Server Components by default
-- Client Components: only where interaction requires them
-- Motion: Motion for React, added only in the motion phase
-- Validation: Zod for content/frontmatter validation where useful
-- Unit/component tests: Vitest and React Testing Library
-- End-to-end/smoke tests: Playwright
-- Formatting: Prettier
-- Linting: ESLint
-- Deployment target: Vercel-compatible static/server rendering
-- No database, authentication, admin panel, contact backend, analytics, GSAP, Three.js, or global state library in MVP unless approved
-
-Do not install a dependency when the platform or a small local utility is sufficient.
-
-## 8. Architecture principles
-
-- Prefer Server Components.
-- Keep content separate from presentation.
-- Keep design tokens centralized.
-- Keep project metadata typed and validated.
-- Keep components small enough to understand, but do not fragment trivial markup into unnecessary files.
-- Avoid “one component per div”.
-- Avoid generic abstractions before a repeated pattern actually exists.
-- Use semantic HTML.
-- Preserve keyboard navigation.
-- Respect reduced-motion preferences.
-- Maintain stable layout to avoid cumulative layout shift.
-- Use optimized responsive images.
-- Keep page-specific components close to their domain.
-- Keep reusable primitives in `/components/ui`.
-- No barrel files unless they improve a real import boundary.
-- No duplicate source of truth for project content.
-- No hard-coded project data inside presentation components.
-
-## 9. Target repository structure
-
-The architecture document may refine names, but not the separation of responsibilities:
-
-```text
-app/
-  page.tsx
-  work/
-    page.tsx
-    [slug]/
-      page.tsx
-  lab/
-    page.tsx
-  notes/
-    page.tsx
-  about/
-    page.tsx
-  not-found.tsx
-components/
-  layout/
-  sections/
-  project/
-  ui/
-content/
-  work/
-  lab/
-  notes/
-data/
-lib/
-  content/
-  seo/
-  utils/
-public/
-  images/
-    projects/
-styles/
-docs/
-  tasks/
-tests/
-```
-
-## 10. MVP pages
-
-Required:
-
-- Home
-- Work index
-- Project case-study route
-- About
-- Notes index
-- Lab index or honest placeholder
-- Custom 404
-- Contact call-to-action in the site footer
-
-Not required in the first release:
-
-- contact form
-- blog CMS
-- user accounts
-- admin panel
-- database
-- full Turkish translation
-- advanced WebGL/3D
-- every repository
-- every professional case study
-
-## 11. Content rules
-
-- English is the MVP content language.
-- Architecture must remain translation-ready, but do not add an i18n library before the Turkish phase is approved.
-- Use real content when confirmed.
-- Use `[CONTENT REQUIRED: ...]` placeholders for missing information.
-- Never fabricate outcomes, conversion rates, performance gains, team sizes, users, revenue, clients, dates, or technical contributions.
-- Clearly distinguish:
-  - personal work
-  - professional work
-  - internship work
-  - learning/early experiments
-  - forks or adapted open-source work
-  - AI-assisted work
-- Every featured project must state Hakan's specific contribution.
-
-## 12. Quality gates
-
-A task is not complete until applicable checks pass:
-
-- TypeScript has no errors
-- lint passes
-- tests pass
-- production build passes
-- keyboard navigation works
-- visible focus states exist
-- reduced motion is respected
-- responsive layouts are checked at mobile, tablet, and desktop widths
-- no obvious overflow
-- no placeholder content is presented as fact
-- no unapproved dependency was added
-- task acceptance criteria are checked honestly
-
-## 13. Git discipline
-
-- Inspect `git status` before and after work.
-- Never discard user changes.
-- Never rewrite history.
-- Never force-push.
-- Do not commit unless the user explicitly asks.
-- Keep changes limited to the active task.
-- Report all modified, added, and removed files.
+Read deeper documents (`docs/**`, review artifacts, historical handoffs) **only** when ACTIVE_TASK
+names them. Do not load history by default.

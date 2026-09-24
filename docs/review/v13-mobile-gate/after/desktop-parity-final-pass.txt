@@ -1,0 +1,54 @@
+PROVENANCE — bounded final pass after the independent QA (V13 mobile gate, 2026-09-04).
+A (baseline) = 4c788b4 (the QA-verified checkpoint), built in a separate worktree (BUILD_ID Mq6FB1tNUNie_1D-OvUb8), served on :3300.
+B (candidate) = the final-pass tree: A11Y-1 (aria-label on the INSPECT control) + ART-1 (ProjectCard opts into the inspector) (BUILD_ID ylJ7vp5r0If_WQBLNsV0P), served on :3210.
+Tool: tests/tools/desktop-parity-probe.mjs, eleven routes x four desktop viewports. Expected and found: /work differs in geometry by exactly the five caption <span>s ART-1 adds (131 -> 136 elements) with every pixel identical; every other route identical in geometry and pixels; the spatial homepage within its own same-build raster jitter (three steps re-examined below).
+DESKTOP PARITY  A=http://127.0.0.1:3300 (baseline)  B=http://127.0.0.1:3210 (candidate)  motion=no-preference  step=0.5  cell=4px tolerance=12/255
+1280x800 /                height 8919 -> 8919  steps 22  elements 897 -> 897  geometry identical  pixels worst 2246px, cell max 3.2/255, 0 cells out (same-build floor 2470px, cell max 3.8)  => parity  [400:1101px/0.3 800:2228px/0.5 1200:2246px/0.5 1600:121px/0.3 2000:1208px/3.2 2400:7px/0.2 2800:77px/0.5]
+1280x800 /work            height 3355 -> 3355  steps 8  elements 131 -> 136  geometry DIFFERS  pixels identical  => parity  [0:0px/0.0 GEOMETRY DIFFERS 400:0px/0.0 GEOMETRY DIFFERS 800:0px/0.0 GEOMETRY DIFFERS 1200:0px/0.0 GEOMETRY DIFFERS 1600:0px/0.0 GEOMETRY DIFFERS 2000:0px/0.0 GEOMETRY DIFFERS 2400:0px/0.0 GEOMETRY DIFFERS 2555:0px/0.0 GEOMETRY DIFFERS]
+1280x800 /work/kivilcim   height 8161 -> 8161  steps 20  elements 231 -> 231  geometry identical  pixels identical  => parity
+1280x800 /work/dropspot   height 7425 -> 7425  steps 18  elements 220 -> 220  geometry identical  pixels identical  => parity
+1280x800 /work/software-factory height 2712 -> 2712  steps 6  elements 106 -> 106  geometry identical  pixels identical  => parity
+1280x800 /work/jointledger height 7121 -> 7121  steps 17  elements 205 -> 205  geometry identical  pixels identical  => parity
+1280x800 /work/professional-systems height 2294 -> 2294  steps 5  elements 87 -> 87  geometry identical  pixels identical  => parity
+1280x800 /about           height 1550 -> 1550  steps 3  elements 67 -> 67  geometry identical  pixels identical  => parity
+1280x800 /notes           height 1135 -> 1135  steps 2  elements 62 -> 62  geometry identical  pixels identical  => parity
+1280x800 /lab             height 1135 -> 1135  steps 2  elements 59 -> 59  geometry identical  pixels identical  => parity
+1280x800 /nope            height 1222 -> 1222  steps 3  elements 64 -> 64  geometry identical  pixels identical  => parity
+1440x900 /                height 9565 -> 9565  steps 21  elements 897 -> 897  geometry identical  pixels worst 4776px, cell max 19.9/255, 24 cells out (same-build floor 4154px, cell max 1.6)  => parity  [450:290px/0.3 900:4154px/0.5 1350:4776px/19.9 24 CELLS OUT (re-examined: jitter) 1800:1250px/0.3 2700:1468px/0.4 3150:92px/0.5 4050:3px/0.1]
+          re-examined y=1350: 3+3 fresh captures, same-build cell max 4.9, cross-build 0.3-4.9 => jitter
+1440x900 /work            height 3388 -> 3388  steps 7  elements 131 -> 136  geometry DIFFERS  pixels identical  => parity  [0:0px/0.0 GEOMETRY DIFFERS 450:0px/0.0 GEOMETRY DIFFERS 900:0px/0.0 GEOMETRY DIFFERS 1350:0px/0.0 GEOMETRY DIFFERS 1800:0px/0.0 GEOMETRY DIFFERS 2250:0px/0.0 GEOMETRY DIFFERS 2488:0px/0.0 GEOMETRY DIFFERS]
+1440x900 /work/kivilcim   height 8221 -> 8221  steps 18  elements 231 -> 231  geometry identical  pixels identical  => parity
+1440x900 /work/dropspot   height 7479 -> 7479  steps 16  elements 220 -> 220  geometry identical  pixels identical  => parity
+1440x900 /work/software-factory height 2762 -> 2762  steps 6  elements 106 -> 106  geometry identical  pixels identical  => parity
+1440x900 /work/jointledger height 7180 -> 7180  steps 15  elements 205 -> 205  geometry identical  pixels identical  => parity
+1440x900 /work/professional-systems height 2344 -> 2344  steps 5  elements 87 -> 87  geometry identical  pixels identical  => parity
+1440x900 /about           height 1583 -> 1583  steps 3  elements 67 -> 67  geometry identical  pixels identical  => parity
+1440x900 /notes           height 1168 -> 1168  steps 2  elements 62 -> 62  geometry identical  pixels identical  => parity
+1440x900 /lab             height 1168 -> 1168  steps 2  elements 59 -> 59  geometry identical  pixels identical  => parity
+1440x900 /nope            height 1255 -> 1255  steps 2  elements 64 -> 64  geometry identical  pixels identical  => parity
+1536x864 /                height 9331 -> 9331  steps 21  elements 897 -> 897  geometry identical  pixels worst 1518px, cell max 14.3/255, 5 cells out (same-build floor 1865px, cell max 14.3)  => parity  [432:1485px/0.4 864:153px/0.3 1296:17px/0.3 1728:1518px/14.3 5 CELLS OUT (re-examined: jitter) 2160:170px/1.8 2592:496px/0.3 3024:85px/0.3 3888:15px/0.8]
+          re-examined y=1728: 3+3 fresh captures, same-build cell max 14.3, cross-build 0.3-14.3 => jitter
+1536x864 /work            height 3374 -> 3374  steps 7  elements 131 -> 136  geometry DIFFERS  pixels identical  => parity  [0:0px/0.0 GEOMETRY DIFFERS 432:0px/0.0 GEOMETRY DIFFERS 864:0px/0.0 GEOMETRY DIFFERS 1296:0px/0.0 GEOMETRY DIFFERS 1728:0px/0.0 GEOMETRY DIFFERS 2160:0px/0.0 GEOMETRY DIFFERS 2510:0px/0.0 GEOMETRY DIFFERS]
+1536x864 /work/kivilcim   height 8207 -> 8207  steps 18  elements 231 -> 231  geometry identical  pixels identical  => parity
+1536x864 /work/dropspot   height 7464 -> 7464  steps 17  elements 220 -> 220  geometry identical  pixels identical  => parity
+1536x864 /work/software-factory height 2747 -> 2747  steps 6  elements 106 -> 106  geometry identical  pixels identical  => parity
+1536x864 /work/jointledger height 7165 -> 7165  steps 16  elements 205 -> 205  geometry identical  pixels identical  => parity
+1536x864 /work/professional-systems height 2329 -> 2329  steps 5  elements 87 -> 87  geometry identical  pixels identical  => parity
+1536x864 /about           height 1569 -> 1569  steps 3  elements 67 -> 67  geometry identical  pixels identical  => parity
+1536x864 /notes           height 1153 -> 1153  steps 2  elements 62 -> 62  geometry identical  pixels identical  => parity
+1536x864 /lab             height 1153 -> 1153  steps 2  elements 59 -> 59  geometry identical  pixels identical  => parity
+1536x864 /nope            height 1240 -> 1240  steps 2  elements 64 -> 64  geometry identical  pixels identical  => parity
+1920x1080 /                height 10832 -> 10832  steps 20  elements 897 -> 897  geometry identical  pixels worst 3392px, cell max 18.7/255, 23 cells out (same-build floor 8214px, cell max 8.5)  => parity  [540:2380px/0.6 1080:649px/0.3 1620:902px/0.3 2160:3392px/18.7 23 CELLS OUT (re-examined: jitter) 2700:884px/2.4 3780:842px/8.5 4860:1px/0.1]
+          re-examined y=2160: 3+3 fresh captures, same-build cell max 18.7, cross-build 0.3-18.7 => jitter
+1920x1080 /work            height 3536 -> 3536  steps 6  elements 131 -> 136  geometry DIFFERS  pixels identical  => parity  [0:0px/0.0 GEOMETRY DIFFERS 540:0px/0.0 GEOMETRY DIFFERS 1080:0px/0.0 GEOMETRY DIFFERS 1620:0px/0.0 GEOMETRY DIFFERS 2160:0px/0.0 GEOMETRY DIFFERS 2456:0px/0.0 GEOMETRY DIFFERS]
+1920x1080 /work/kivilcim   height 8369 -> 8369  steps 15  elements 231 -> 231  geometry identical  pixels identical  => parity
+1920x1080 /work/dropspot   height 7626 -> 7626  steps 14  elements 220 -> 220  geometry identical  pixels identical  => parity
+1920x1080 /work/software-factory height 2909 -> 2909  steps 5  elements 106 -> 106  geometry identical  pixels identical  => parity
+1920x1080 /work/jointledger height 7327 -> 7327  steps 13  elements 205 -> 205  geometry identical  pixels identical  => parity
+1920x1080 /work/professional-systems height 2491 -> 2491  steps 4  elements 87 -> 87  geometry identical  pixels identical  => parity
+1920x1080 /about           height 1731 -> 1731  steps 3  elements 67 -> 67  geometry identical  pixels identical  => parity
+1920x1080 /notes           height 1315 -> 1315  steps 2  elements 62 -> 62  geometry identical  pixels identical  => parity
+1920x1080 /lab             height 1315 -> 1315  steps 2  elements 59 -> 59  geometry identical  pixels identical  => parity
+1920x1080 /nope            height 1402 -> 1402  steps 2  elements 64 -> 64  geometry identical  pixels identical  => parity
+
+DESKTOP PARITY: every route at parity on every viewport

@@ -1,0 +1,322 @@
+"use client";
+
+import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
+import { MonoLabel } from "@/components/ui/MonoLabel";
+import type { SystemAnnotation, SystemAnnotationRow } from "@/lib/spatial/systemPov";
+
+// Spatial Portfolio V5 (feature/spatial-portfolio-v5, not merged to main --
+// see docs/DESIGN_SYSTEM.md §19). The ACQUISITION half of the V5 transition
+// vocabulary (§32).
+//
+// WHAT THIS IS NOT
+//
+// Not a HUD. There is no always-visible panel, no telemetry, no status feed,
+// no code rain, no reticle following the pointer. Nothing here renders unless
+// the camera is approaching the scene it belongs to, and at its fullest the
+// whole layer is: four corner brackets, one hairline, one case index, and two
+// lines of real metadata -- §11's exact budget. The project is the hero; this
+// is the system noticing it.
+//
+// THE LIFECYCLE (§10)
+//
+// Driven by the SIGNED approach value, so the three phases genuinely differ:
+//
+//   approaching  sparse corner geometry appears -- the frame, nothing in it
+//   focused      the case index, then the classification, resolve inside it
+//   departing    the classification goes first, and the brackets shorten to
+//                stubs before fading, so the frame dissolves toward the route
+//                residue rather than switching off
+//
+// Under reduced motion and before hydration the `approach` prop is null and a
+// constant stands in for it, so the frame is simply drawn in its resolved
+// state: a composition rather than an animation (§37).
+//
+// ACCESSIBILITY (§44). The metadata rows carry real, non-duplicated project
+// facts -- which layer the lead evidence belongs to, and the project's real
+// phase -- so they are exposed as a definition list. The brackets, hairline
+// and case index are orientation marks and are hidden.
+
+type SystemPOVProps = {
+  annotation: SystemAnnotation;
+  /** -1 ahead, 0 framed, +1 past. `null` renders the resolved state, static. */
+  approach: MotionValue<number> | null;
+  /** Mobile keeps two corners and one row (§36). */
+  compact?: boolean;
+  /** After the reposition the world's marks tighten (§25). */
+  resolved?: boolean;
+};
+
+/** How far outside the scene block the brackets sit. */
+const BRACKET_INSET = -14;
+
+export function SystemPOV({
+  annotation,
+  approach,
+  compact = false,
+  resolved = false,
+}: SystemPOVProps) {
+  // A constant stand-in keeps the hook order identical in the static tree, so
+  // the pre-hydration -> enhanced swap can never reorder hooks.
+  const still = useMotionValue(0);
+  const state = approach ?? still;
+  const animated = approach !== null;
+
+  const corners = compact ? COMPACT_CORNERS : CORNERS;
+  const rows = compact ? annotation.rows.slice(0, 2) : annotation.rows;
+
+  return (
+    <div
+      data-system-pov="true"
+      className="pointer-events-none absolute"
+      style={{
+        // V7: the compact (mobile) frame tucks in less — at a 4vw camera inset
+        // a full -14px bracket overhang ran the metadata labels off the left
+        // screen edge (measured: 'LAYER' clipped to 'AYER' at 390px).
+        left: compact ? -6 : `calc(${BRACKET_INSET}px - var(--frame-overhang-left, 0px))`,
+        right: compact ? -6 : `calc(${BRACKET_INSET}px - var(--frame-overhang-right, 0px))`,
+        top: compact ? -6 : BRACKET_INSET,
+        bottom: compact ? -6 : BRACKET_INSET,
+      }}
+    >
+      {corners.map((corner) => (
+        <Bracket
+          key={corner.key}
+          corner={corner}
+          state={state}
+          animated={animated}
+          resolved={resolved}
+          compact={compact}
+        />
+      ))}
+      {/* V14 (owner finding A) REMOVED THE GRADUATED SCALE that sat on the
+          frame's lower edge: a ruler with thirteen unnumbered ticks, added in
+          V6 so the frame would read as "an instrument". A ruler that measures
+          nothing is the "fake telemetry" and "meaningless technical lines" the
+          owner's list names. The frame keeps what states something: the
+          brackets (the system has this composition in frame), the case index
+          (its position in the sequence) and the two real metadata rows. */}
+      <Cluster
+        index={annotation.index}
+        rows={rows}
+        state={state}
+        animated={animated}
+        resolved={resolved}
+        compact={compact}
+      />
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- brackets */
+
+type Corner = {
+  key: string;
+  box: string;
+  arm: string;
+  origin: string;
+  /** The corners the camera leaves behind hold on marginally longer. */
+  trailing: boolean;
+};
+
+const CORNERS: Corner[] = [
+  {
+    key: "tl",
+    box: "left-0 top-0",
+    arm: "left-0 top-0",
+    origin: "origin-top-left",
+    trailing: false,
+  },
+  {
+    key: "tr",
+    box: "right-0 top-0",
+    arm: "right-0 top-0",
+    origin: "origin-top-right",
+    trailing: true,
+  },
+  {
+    key: "bl",
+    box: "left-0 bottom-0",
+    arm: "left-0 bottom-0",
+    origin: "origin-bottom-left",
+    trailing: false,
+  },
+  {
+    key: "br",
+    box: "right-0 bottom-0",
+    arm: "right-0 bottom-0",
+    origin: "origin-bottom-right",
+    trailing: true,
+  },
+];
+
+const COMPACT_CORNERS = CORNERS.filter((corner) => corner.key === "tl" || corner.key === "br");
+
+function Bracket({
+  corner,
+  state,
+  animated,
+  resolved,
+  compact,
+}: {
+  corner: Corner;
+  state: MotionValue<number>;
+  animated: boolean;
+  resolved: boolean;
+  compact: boolean;
+}) {
+  // Resolved marks are a shade more present and a shade larger after the
+  // reposition (§25): the same grammar held more strictly, not a new theme.
+  const peak = resolved ? 0.6 : 0.46;
+  const size = resolved ? 26 : 22;
+
+  const opacity = useTransform(
+    state,
+    // V14.3 Gate E: on desktop the brackets are at peak by -0.38, with the
+    // composition; the compact (mobile) frame keeps the V14.1 timing.
+    compact
+      ? [-1, -0.55, -0.12, 0.12, corner.trailing ? 0.72 : 0.5, 1]
+      : [-1, -0.7, -0.38, 0.12, corner.trailing ? 0.72 : 0.5, 1],
+    [0, 0.14, peak, peak, 0.1, 0],
+  );
+  const scale = useTransform(state, [-1, 0, 1], [0.55, 1, 0.28]);
+  // V14.8 (owner: the Machine through behaviour) -- THE FRAME CLOSES ON THE
+  // SUBJECT. While the composition is detected the four corners stand off
+  // it, wide; they close onto its edges as it is acquired and stand off
+  // again as it is released. Acquisition as a movement, not a fade: the
+  // same signed approach, a compositor translate only, desktop only (the
+  // compact frame is the V13 gate's). Outward is away from the frame's centre,
+  // so each corner moves along its own diagonal.
+  const reach = useTransform(
+    state,
+    [-1, -0.7, -0.38, 0.12, corner.trailing ? 0.72 : 0.5, 1],
+    compact ? [0, 0, 0, 0, 0, 0] : [30, 22, 0, 0, 12, 18],
+  );
+  const dx = useTransform(reach, (value) => (corner.key.endsWith("l") ? -value : value));
+  const dy = useTransform(reach, (value) => (corner.key.startsWith("t") ? -value : value));
+
+  return (
+    <motion.span
+      aria-hidden="true"
+      data-system-bracket={corner.key}
+      className={`absolute block ${corner.box} ${corner.origin}`}
+      style={
+        animated
+          ? { width: size, height: size, opacity, scaleX: scale, scaleY: scale, x: dx, y: dy }
+          : { width: size, height: size, opacity: peak }
+      }
+    >
+      <span className={`absolute block h-px w-full bg-ink ${corner.arm}`} />
+      <span className={`absolute block h-full w-px bg-ink ${corner.arm}`} />
+    </motion.span>
+  );
+}
+
+/* ---------------------------------------------------------------- cluster */
+
+function Cluster({
+  index,
+  rows,
+  state,
+  animated,
+  resolved,
+  compact,
+}: {
+  index: string;
+  rows: SystemAnnotationRow[];
+  state: MotionValue<number>;
+  animated: boolean;
+  resolved: boolean;
+  /** The compact (mobile) frame keeps the V13 gate's left-hand cluster. */
+  compact: boolean;
+}) {
+  const indexOpacity = useTransform(state, [-0.7, -0.32, 0.34, 0.68], [0, 1, 1, 0]);
+  // V14.5 (owner: the Machine's behaviour through state): the frame states
+  // what it is doing with the composition -- detected while it approaches,
+  // acquired while it is read, released as it leaves. Derived from the same
+  // signed approach every mark here reads; never authored, never a number.
+  const stateWord = useTransform<number, string>(state, (value) =>
+    value < -0.35 ? "Detected" : value <= 0.2 ? "Acquired" : "Released",
+  );
+  // V14.8 (owner): the state is a LABEL, in the Machine's grammar -- a ruled
+  // box on the index line -- and the state change is visible as well as
+  // read: the box fills with ink while the composition is acquired, and
+  // stands open while it is only detected or has been released. Written
+  // only when the word changes (three times per passage), never per frame.
+  const stateFill = useTransform<number, string>(state, (value) =>
+    value >= -0.35 && value <= 0.2 ? "var(--color-ink)" : "transparent",
+  );
+  const stateInk = useTransform<number, string>(state, (value) =>
+    value >= -0.35 && value <= 0.2 ? "var(--color-paper)" : "var(--color-ink)",
+  );
+  // V14.3 Gate E: on desktop the two facts are legible by -0.36, as the
+  // composition is; the compact (mobile) cluster keeps the V14.1 timing.
+  const rowsOpacity = useTransform(
+    state,
+    compact ? [-0.42, -0.1, 0.16, 0.4] : [-0.62, -0.36, 0.16, 0.4],
+    [0, 1, 1, 0],
+  );
+  const slide = useTransform(state, compact ? [-0.42, 0] : [-0.62, -0.2], [8, 0]);
+
+  // V14.1 (owner §6, scene hierarchy) -- TWO VOICES, TWO CORNERS. Through V14
+  // this cluster stood in the composition's own column, eight pixels above
+  // its register line, in the same mono type: three identical rows stacked
+  // over every title, and the observer indistinguishable from the subject. The
+  // system now speaks from the acquisition frame's far corner -- the top-RIGHT
+  // bracket -- and the composition keeps the left. Same facts, same type; a
+  // different position is what makes it a different agent's mark.
+  return (
+    <div
+      className={
+        compact
+          ? "absolute -top-1 left-0 max-w-[22rem] -translate-y-full pl-1"
+          : "absolute top-4 right-0 max-w-[min(26rem,100%)] break-words pr-1 text-right"
+      }
+    >
+      <motion.div
+        aria-hidden="true"
+        className={compact ? "flex items-center gap-2" : "flex items-center justify-end gap-2"}
+        style={animated ? { opacity: indexOpacity } : undefined}
+      >
+        {/* V14.3 Gate D: the dash before the case index is graphite, not
+            signal -- the portfolio carries no orange. */}
+        <span className="block h-px w-3 bg-ink-muted" />
+        <MonoLabel className="text-ink-muted">Case {index}</MonoLabel>
+        {!compact && animated && (
+          <>
+            <span aria-hidden="true" className="block h-px w-3 bg-ink-muted" />
+            <motion.span
+              data-system-state
+              className="block border border-ink px-1.5 py-px font-mono text-mono-label leading-[1.3] tracking-mono-label uppercase"
+              style={{ backgroundColor: stateFill, color: stateInk }}
+            >
+              {stateWord}
+            </motion.span>
+          </>
+        )}
+      </motion.div>
+
+      {rows.length > 0 && (
+        <motion.dl
+          className={`mt-1.5 flex flex-wrap gap-x-5 gap-y-0.5 pt-1.5 ${compact ? "" : "justify-end "}${
+            resolved ? "border-t border-ink" : "border-t border-line"
+          }`}
+          style={animated ? { opacity: rowsOpacity, y: slide } : undefined}
+        >
+          {/* V14 (§21): mono-meta -> mono-label. At the world fit these rows
+              rendered at 10px on a 1440 laptop; the two real facts the frame
+              states are not microtype. */}
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-baseline gap-2">
+              <dt className="font-mono text-mono-meta tracking-mono-meta uppercase text-ink-muted lg:text-mono-label lg:tracking-mono-label">
+                {row.label}
+              </dt>
+              <dd className="font-mono text-mono-meta tracking-mono-meta text-ink lg:text-mono-label lg:tracking-mono-label">
+                {row.value}
+              </dd>
+            </div>
+          ))}
+        </motion.dl>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,375 @@
+V13 mobile gate -- M4 tap targets, measured on the final build.
+Tool: tests/tools/touch-target-probe.mjs (Chromium via Playwright, deviceScaleFactor 1, hasTouch,
+reducedMotion: reduce), PROBE_BASE=http://127.0.0.1:3210, PROBE_WIDTHS=320,375,768.
+
+BEFORE (starting HEAD 180c07c, docs/MOBILE_AUDIT.md M4; 375 unless noted):
+  header wordmark 156x28; primary nav at 768: Home 35x17, Work 35x17, Notes 44x17, Lab 27x17, About 44x17
+  mobile menu rows 27.5px tall in a 51.5px pitch (target smaller than the gap between targets)
+  homepage register titles 185x24 / 95x24 / 136x24 / 114x24 / 231x24; "See all notes" 100x15
+  About preview "Read the full introduction" 180x24, "LinkedIn" 76x24
+  /work card titles 165x24 .. 212x24; case-study "Repository" 93x17; ProjectNeighbours "JointLedger" 148x31
+  404 "Home" 43x21, "Work" 37x21; footer social GitHub 66x21, LinkedIn 76x21, Medium 75x21
+
+AFTER: every standalone link below `lg` carries `max-lg:inline-block max-lg:touch-link`
+(mobile menu rows: `touch-link block`). 193 measured boxes across 8 routes x 3 widths: 181 at
+45.00px, 12 at 44.98px (body-size links; Chromium 1/64px snapping), none under 44. Smallest
+width 50.53px ("Lab", primary nav at 768). Remaining sub-44 anchors are links inside running
+sentences only (exempt, WCAG 2.5.8 "inline"; making them blocks would reflow the sentence):
+  /, /notes  "hakanduyar.medium.com" 194.7x17 (FieldNotes pending copy / notes page)
+  /about     "work index" 75.6x17, "LinkedIn" 75.1x17
+
+LAYOUT: the full-page screenshot with the M4 classes stripped from the live DOM is pixel-identical
+to the page as built on every route at 320, 375 and 768 (strip verified: wordmark 45 -> 27.5px).
+MENU: rows 272/327/382 x 27.5 -> 288/343/398 x 45 (full panel width); <li> and text rects unchanged.
+
+TOUR CTA ("See every system", laid out in world space, so measured by the route probe rather than
+this one -- metrics/mobile-route.json, viewports[*].summary.tourTargets.handoff, live scroll, no
+reduced-motion): the audit's 184x43 is the 44px minimum under the scene plane's 0.973 entry scale.
+The button now carries `max-lg:min-h-12.5` (50px in world space); at handoff focus it measures
+185x49 (320x568), 182x48 (360x800), 184x48 (375x667), 182x48 (390x844), 181x48 (430x932), 178x47
+(768x1024), and at the route's end -- the plane's lowest scale on screen, 0.893 -- 44.6px. Desktop:
+`max-lg:` only, see desktop-parity.txt.
+
+---- tests/tools/touch-target-probe.mjs output ----
+INVENTORY: every touch-link box, then every remaining sub-44 element ('@' = document y)
+
+== 320px /
+  touch-link targets (12):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     200.53 x 45     a   "Software Factory↗"  @5034
+     111.08 x 45     a   "Kıvılcım↗"  @5272
+     151.91 x 45     a   "JointLedger↗"  @5510
+     129.89 x 45     a   "DropSpot↗"  @5747
+     247.34 x 45     a   "Professional Systems↗"  @5967
+     115.84 x 45     a   "See all notes"  @7972
+     195.72 x 45     a   "Read the full introduction"  @8729
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @8765
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @9640
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @9640
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @9640
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @7943
+
+== 320px /work
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     181.25 x 45     a   "Software Factory"  @351
+     197.33 x 45     a   "Kıvılcım — "Spark""  @839
+     132.63 x 45     a   "JointLedger"  @1318
+     110.61 x 45     a   "DropSpot"  @1805
+     228.06 x 45     a   "Professional Systems"  @2218
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3407
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3407
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3407
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 320px /work/kivilcim
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @978
+     164.44 x 44.98  a   "JointLedger"  @12601
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @13400
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @13400
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @13400
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 320px /work/dropspot
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @941
+     164.44 x 44.98  a   "JointLedger"  @10446
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @11245
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @11245
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @11245
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 320px /about
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1954
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1954
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1954
+  remaining under 44px: 0 standalone, 2 inline-sentence (exempt, WCAG 2.5.8)
+     286.56 x 43.39  inline a   "work index"  @1118
+      75.08 x 17     inline a   "LinkedIn ↗︎ (opens in new tab)"  @1171
+
+== 320px /notes
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1051
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1051
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1051
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @267
+
+== 320px /lab
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1077
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1077
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1077
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 320px /nope
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+      58.89 x 45     a   "Home"  @314
+      53.22 x 45     a   "Work"  @314
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1110
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1110
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1110
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /
+  touch-link targets (12):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     200.53 x 45     a   "Software Factory↗"  @4891
+     111.08 x 45     a   "Kıvılcım↗"  @5129
+     151.91 x 45     a   "JointLedger↗"  @5367
+     129.89 x 45     a   "DropSpot↗"  @5604
+     247.34 x 45     a   "Professional Systems↗"  @5824
+     115.84 x 45     a   "See all notes"  @7678
+     195.72 x 45     a   "Read the full introduction"  @8380
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @8380
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @9255
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @9255
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @9255
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @7649
+
+== 375px /work
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     181.25 x 45     a   "Software Factory"  @351
+     197.33 x 45     a   "Kıvılcım — "Spark""  @832
+     132.63 x 45     a   "JointLedger"  @1331
+     110.61 x 45     a   "DropSpot"  @1820
+     228.06 x 45     a   "Professional Systems"  @2249
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3413
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3413
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3413
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /work/kivilcim
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @1012
+     164.44 x 44.98  a   "JointLedger"  @11143
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @11942
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @11942
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @11942
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /work/dropspot
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @966
+     164.44 x 44.98  a   "JointLedger"  @9405
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @10204
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @10204
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @10204
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /about
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1766
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1766
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1766
+  remaining under 44px: 0 standalone, 2 inline-sentence (exempt, WCAG 2.5.8)
+      75.56 x 17     inline a   "work index"  @956
+      75.08 x 17     inline a   "LinkedIn ↗︎ (opens in new tab)"  @983
+
+== 375px /notes
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1051
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1051
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1051
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @267
+
+== 375px /lab
+  touch-link targets (4):
+     172.44 x 45     a   "Hakan Duyar"  @16
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1051
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1051
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1051
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /nope
+  touch-link targets (6):
+     172.44 x 45     a   "Hakan Duyar"  @16
+      58.89 x 45     a   "Home"  @288
+      53.22 x 45     a   "Work"  @288
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1084
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1084
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1084
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /
+  touch-link targets (17):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+     200.53 x 45     a   "Software Factory↗"  @5508
+     111.08 x 45     a   "Kıvılcım↗"  @5727
+     151.91 x 45     a   "JointLedger↗"  @5947
+     129.89 x 45     a   "DropSpot↗"  @6167
+     247.34 x 45     a   "Professional Systems↗"  @6386
+     115.84 x 45     a   "See all notes"  @8143
+     195.72 x 45     a   "Read the full introduction"  @8813
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @8813
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @9849
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @9849
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @9849
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @8115
+
+== 768px /work
+  touch-link targets (14):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+     181.25 x 45     a   "Software Factory"  @335
+     197.33 x 45     a   "Kıvılcım — "Spark""  @816
+     132.63 x 45     a   "JointLedger"  @1270
+     110.61 x 45     a   "DropSpot"  @1733
+     228.06 x 45     a   "Professional Systems"  @2117
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3455
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3455
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3455
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /work/kivilcim
+  touch-link targets (11):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @1057
+     164.44 x 44.98  a   "JointLedger"  @8571
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @9544
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @9544
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @9544
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /work/dropspot
+  touch-link targets (11):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+     108.52 x 44.98  a   "Repository ↗︎ (opens in new tab)"  @937
+     164.44 x 44.98  a   "JointLedger"  @7444
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @8417
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @8417
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @8417
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /about
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1732
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1732
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1732
+  remaining under 44px: 0 standalone, 2 inline-sentence (exempt, WCAG 2.5.8)
+      75.56 x 17     inline a   "work index"  @748
+      75.08 x 17     inline a   "LinkedIn ↗︎ (opens in new tab)"  @775
+
+== 768px /notes
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1182
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1182
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1182
+  remaining under 44px: 0 standalone, 1 inline-sentence (exempt, WCAG 2.5.8)
+      194.7 x 17     inline a   "hakanduyar.medium.com ↗︎ (opens in"  @224
+
+== 768px /lab
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1208
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1208
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1208
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /nope
+  touch-link targets (11):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+      58.89 x 45     a   "Home"  @274
+      53.22 x 45     a   "Work"  @274
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @1243
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @1243
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @1243
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+LAYOUT: pixel diff, as built (A2) vs the M4 classes stripped (B); A1/A2 = noise floor
+ 320 /                stripped=22 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x9757
+ 320 /work            stripped=19 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x3523
+ 320 /work/kivilcim   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x13516
+ 320 /work/dropspot   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x11362
+ 320 /about           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x2071
+ 320 /notes           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x1167
+ 320 /lab             stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x1194
+ 320 /nope            stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  320x1226
+ 375 /                stripped=22 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x9371
+ 375 /work            stripped=19 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x3529
+ 375 /work/kivilcim   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x12059
+ 375 /work/dropspot   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x10321
+ 375 /about           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x1883
+ 375 /notes           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x1167
+ 375 /lab             stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x1167
+ 375 /nope            stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  375x1200
+ 768 /                stripped=22 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=3px  A2-vs-B=0px  768x9924
+ 768 /work            stripped=19 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x3529
+ 768 /work/kivilcim   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x9618
+ 768 /work/dropspot   stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x8491
+ 768 /about           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x1807
+ 768 /notes           stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x1256
+ 768 /lab             stripped=14 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x1283
+ 768 /nope            stripped=16 wordmark after strip 27.5px/pad 0px  noise(A1,A2)=0px  A2-vs-B=0px  768x1318
+
+MENU: row hit box / <li> / text rect, stripped -> as built
+== 320
+  Home   box 24x100x272x27.5 -> 16x91.25x288x45   li 100/27.5 -> 100/27.5   text 24,101,67.06,24 -> 24,101,67.06,24  text unchanged
+  Work   box 24x151.5x272x27.5 -> 16x142.75x288x45   li 151.5/27.5 -> 151.5/27.5   text 24,152.5,67.95,24 -> 24,152.5,67.95,24  text unchanged
+  Notes  box 24x203x272x27.5 -> 16x194.25x288x45   li 203/27.5 -> 203/27.5   text 24,204,76.06,24 -> 24,204,76.06,24  text unchanged
+  Lab    box 24x254.5x272x27.5 -> 16x245.75x288x45   li 254.5/27.5 -> 254.5/27.5   text 24,255.5,42.16,24 -> 24,255.5,42.16,24  text unchanged
+  About  box 24x306x272x27.5 -> 16x297.25x288x45   li 306/27.5 -> 306/27.5   text 24,307,77.13,24 -> 24,307,77.13,24  text unchanged
+== 375
+  Home   box 24x100x327x27.5 -> 16x91.25x343x45   li 100/27.5 -> 100/27.5   text 24,101,67.06,24 -> 24,101,67.06,24  text unchanged
+  Work   box 24x151.5x327x27.5 -> 16x142.75x343x45   li 151.5/27.5 -> 151.5/27.5   text 24,152.5,67.95,24 -> 24,152.5,67.95,24  text unchanged
+  Notes  box 24x203x327x27.5 -> 16x194.25x343x45   li 203/27.5 -> 203/27.5   text 24,204,76.06,24 -> 24,204,76.06,24  text unchanged
+  Lab    box 24x254.5x327x27.5 -> 16x245.75x343x45   li 254.5/27.5 -> 254.5/27.5   text 24,255.5,42.16,24 -> 24,255.5,42.16,24  text unchanged
+  About  box 24x306x327x27.5 -> 16x297.25x343x45   li 306/27.5 -> 306/27.5   text 24,307,77.13,24 -> 24,307,77.13,24  text unchanged

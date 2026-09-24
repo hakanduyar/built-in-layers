@@ -1,0 +1,23 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "focusFile": "docs/review/v13-fable-gate/metrics/route-focus.json",
+  "viewports": {},
+  "zoom": {
+    "1920x1080@100": {
+      "cssViewport": "1920x1080",
+      "worldUnitPx": null
+    },
+    "1920x1080@80": {
+      "cssViewport": "2400x1350",
+      "worldUnitPx": null
+    },
+    "1920x1080@67": {
+      "cssViewport": "2866x1612",
+      "worldUnitPx": null
+    },
+    "1920x1080@50": {
+      "cssViewport": "3840x2160",
+      "worldUnitPx": null
+    }
+  }
+}

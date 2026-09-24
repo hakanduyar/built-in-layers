@@ -1,0 +1,48 @@
+TAP TARGETS ON /work — bounded final pass (ART-1, V13 mobile QA): the five new INSPECT controls, checked against M4
+Tool: tests/tools/touch-target-probe.mjs, PROBE_MODE=inventory, PROBE_PAGES=/work, PROBE_WIDTHS=320,375,768, on the candidate build ylJ7vp5r0If_WQBLNsV0P (:3210).
+The control is a <button class="min-h-11 ..."> (44px), not a touch-link, so it is absent from the touch-link list; what matters is the last line of each block: no standalone element under 44px, so the index gained five targets and no sub-44 ones. The e2e contract (tests/e2e/work.spec.ts, ART-1 describe) asserts each control >= 44px at 375.
+INVENTORY: every touch-link box, then every remaining sub-44 element ('@' = document y)
+
+== 320px /work
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     181.25 x 45     a   "Software Factory"  @351
+     197.33 x 45     a   "Kıvılcım — "Spark""  @857
+     132.63 x 45     a   "JointLedger"  @1354
+     110.61 x 45     a   "DropSpot"  @1859
+     228.06 x 45     a   "Professional Systems"  @2290
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3497
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3497
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3497
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 375px /work
+  touch-link targets (9):
+     172.44 x 45     a   "Hakan Duyar"  @16
+     181.25 x 45     a   "Software Factory"  @351
+     197.33 x 45     a   "Kıvılcım — "Spark""  @832
+     132.63 x 45     a   "JointLedger"  @1331
+     110.61 x 45     a   "DropSpot"  @1828
+     228.06 x 45     a   "Professional Systems"  @2275
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3457
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3457
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3457
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)
+
+== 768px /work
+  touch-link targets (14):
+     172.44 x 45     a   "Hakan Duyar"  @7
+      59.38 x 45     a   "Home"  @9
+      59.38 x 45     a   "Work"  @9
+       68.2 x 45     a   "Notes"  @9
+      50.53 x 45     a   "Lab"  @9
+       68.2 x 45     a   "About"  @9
+     181.25 x 45     a   "Software Factory"  @335
+     197.33 x 45     a   "Kıvılcım — "Spark""  @816
+     132.63 x 45     a   "JointLedger"  @1270
+     110.61 x 45     a   "DropSpot"  @1741
+     228.06 x 45     a   "Professional Systems"  @2143
+       82.2 x 45     a   "GitHub ↗︎ (opens in new tab)"  @3499
+      91.63 x 45     a   "LinkedIn ↗︎ (opens in new tab)"  @3499
+      90.98 x 45     a   "Medium ↗︎ (opens in new tab)"  @3499
+  remaining under 44px: 0 standalone, 0 inline-sentence (exempt, WCAG 2.5.8)

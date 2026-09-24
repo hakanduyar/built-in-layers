@@ -1,0 +1,429 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "viewport": "1440x900",
+  "mode": "warm",
+  "frames": 239,
+  "enhancedTreeAtMs": 103.6,
+  "zoom": {
+    "firstPainted": "1",
+    "settled": "0.909091",
+    "steps": [
+      {
+        "t": 36.7,
+        "value": "1"
+      },
+      {
+        "t": 103.6,
+        "value": "0.909091"
+      }
+    ]
+  },
+  "heroHeight": {
+    "firstPainted": 225.43,
+    "settled": 225.41,
+    "resizeRatio": 0.9999,
+    "resizePx": 0.02,
+    "steps": [
+      {
+        "t": 36.7,
+        "value": 225.43
+      },
+      {
+        "t": 103.6,
+        "value": 225.41
+      }
+    ]
+  },
+  "heroFontSize": {
+    "steps": [
+      {
+        "t": 36.7,
+        "value": "151.2px"
+      }
+    ]
+  },
+  "foreground": {
+    "heroX": [
+      {
+        "t": 36.7,
+        "value": 149.09
+      },
+      {
+        "t": 103.6,
+        "value": 104.72
+      }
+    ],
+    "heroY": [
+      {
+        "t": 36.7,
+        "value": 157.03
+      },
+      {
+        "t": 103.6,
+        "value": 213.38
+      }
+    ],
+    "heroW": [
+      {
+        "t": 36.7,
+        "value": 890.61
+      },
+      {
+        "t": 103.6,
+        "value": 836.72
+      }
+    ],
+    "inkX": [
+      {
+        "t": 36.7,
+        "value": 149.09
+      },
+      {
+        "t": 103.6,
+        "value": 104.72
+      }
+    ],
+    "inkY": [
+      {
+        "t": 36.7,
+        "value": 137.94
+      },
+      {
+        "t": 103.6,
+        "value": 194.38
+      }
+    ],
+    "inkW": [
+      {
+        "t": 36.7,
+        "value": 890.61
+      },
+      {
+        "t": 103.6,
+        "value": 836.72
+      }
+    ],
+    "inkH": [
+      {
+        "t": 36.7,
+        "value": 262.71
+      },
+      {
+        "t": 103.6,
+        "value": 262.7
+      }
+    ],
+    "glyphW": [
+      {
+        "t": 36.7,
+        "value": 449.9
+      },
+      {
+        "t": 103.6,
+        "value": 449.88
+      }
+    ],
+    "glyphH": [
+      {
+        "t": 36.7,
+        "value": 150
+      }
+    ],
+    "fonts": [
+      {
+        "t": 36.7,
+        "value": "loading"
+      },
+      {
+        "t": 103.6,
+        "value": "loaded"
+      }
+    ]
+  },
+  "samples": [
+    {
+      "t": 36.7,
+      "zoom": "1",
+      "enhanced": false,
+      "heroW": 890.61,
+      "heroH": 225.43,
+      "heroFont": "151.2px",
+      "heroX": 149.09,
+      "heroY": 157.03,
+      "inkX": 149.09,
+      "inkY": 137.94,
+      "inkW": 890.61,
+      "inkH": 262.71,
+      "glyphW": 449.9,
+      "glyphH": 150,
+      "fonts": "loading",
+      "ancestors": [
+        {
+          "tag": "H1",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "Archivo, \"Archivo Fallback\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "matrix(0.909091, 0, 0, 0.909091, 0, 0)",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "SECTION",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "MAIN",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "BODY",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "HTML",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        }
+      ]
+    },
+    {
+      "t": 48.5,
+      "zoom": "1",
+      "enhanced": false,
+      "heroW": 890.61,
+      "heroH": 225.43,
+      "heroFont": "151.2px",
+      "heroX": 149.09,
+      "heroY": 157.03,
+      "inkX": 149.09,
+      "inkY": 137.94,
+      "inkW": 890.61,
+      "inkH": 262.71,
+      "glyphW": 449.9,
+      "glyphH": 150,
+      "fonts": "loading",
+      "ancestors": [
+        {
+          "tag": "H1",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "Archivo, \"Archivo Fallback\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "matrix(0.909091, 0, 0, 0.909091, 0, 0)",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "SECTION",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "MAIN",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "BODY",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "HTML",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        }
+      ]
+    },
+    {
+      "t": 103.6,
+      "zoom": "0.909091",
+      "enhanced": true,
+      "heroW": 836.72,
+      "heroH": 225.41,
+      "heroFont": "151.2px",
+      "heroX": 104.72,
+      "heroY": 213.38,
+      "inkX": 104.72,
+      "inkY": 194.38,
+      "inkW": 836.72,
+      "inkH": 262.7,
+      "glyphW": 449.88,
+      "glyphH": 150,
+      "fonts": "loaded",
+      "ancestors": [
+        {
+          "tag": "H1",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "Archivo, \"Archivo Fallback\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "0.909091",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "DIV",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "SECTION",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "MAIN",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "BODY",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        },
+        {
+          "tag": "HTML",
+          "transform": "none",
+          "zoom": "1",
+          "opacity": "1",
+          "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+        }
+      ]
+    }
+  ],
+  "verdict": "FIRST PAINT == SETTLED",
+  "samplesCount": 239,
+  "samplesTruncated": "full array in C:/Users/hakan/portfolio-review/v14.6-codex-motion (REVIEW_POLICY)"
+}

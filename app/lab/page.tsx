@@ -15,7 +15,7 @@ export default function LabPage() {
     <Container className="py-16">
       <SectionHeading label="LAB" />
       <h1 className="mt-4 font-display text-heading-l text-ink">Lab</h1>
-      <p className="mt-4 max-w-[42rem] font-display text-body text-ink-muted">{pendingCopy.lab}</p>
+      <p className="mt-4 max-w-measure font-display text-body text-ink-muted">{pendingCopy.lab}</p>
     </Container>
   );
 }

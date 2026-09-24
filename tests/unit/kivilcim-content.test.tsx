@@ -14,7 +14,12 @@ import {
   containsContentRequiredMarker,
   validatePublicationGates,
 } from "@/lib/content/validate";
-import { getProjectBySlug, getProjectIndexBody, getProjectLayers } from "@/lib/content/work";
+import {
+  getCaseStudyNeighbours,
+  getProjectBySlug,
+  getProjectIndexBody,
+  getProjectLayers,
+} from "@/lib/content/work";
 
 // Real content, not a fixture — this is TASK-005's Kıvılcım entry itself.
 // Published under D-019 (docs/DECISIONS.md): text and repository claims are
@@ -208,8 +213,11 @@ describe("Kıvılcım real content — genuine semantic rendering of the full te
     expect(decisionsHtml).toContain("Local-first storage instead of a mandatory backend");
     expect(decisionsHtml).toContain("Routines as their own table, not an extension of Habits");
 
-    // nextSlug now points at DropSpot (TASK-006) — valid because DropSpot is
-    // itself published, so this never links to a route that would 404.
-    expect(project.nextSlug).toBe("dropspot");
+    // D-027: neighbours are derived from the global `order` sequence.
+    // Kıvılcım is order 1 and the first case-study destination, so it has
+    // no previous and JointLedger (order 2) follows it.
+    const { previous, next } = getCaseStudyNeighbours(project.slug);
+    expect(previous).toBeUndefined();
+    expect(next?.slug).toBe("jointledger");
   });
 });

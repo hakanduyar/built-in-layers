@@ -1,0 +1,12 @@
+{
+  "after": {
+    "brightPixels": 274,
+    "peakMeanChannel": 215.33333333333334,
+    "blend": "difference"
+  },
+  "baseline-style": {
+    "brightPixels": 0,
+    "peakMeanChannel": 127.66666666666667,
+    "blend": "normal"
+  }
+}

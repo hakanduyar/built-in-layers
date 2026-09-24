@@ -1,0 +1,37 @@
+{
+  "label": "before",
+  "base": "http://127.0.0.1:3200",
+  "viewport": "1440x900",
+  "devicePixelRatio": 1,
+  "element": "section[aria-label='Spatial system tour'] [data-scene=\"software-factory\"] h3",
+  "rest": {
+    "pixels": 92070,
+    "meanGradient": 14.155,
+    "p99Gradient": 173,
+    "maxGradient": 173.1,
+    "geometry": {
+      "x": 887.793,
+      "y": 292.414,
+      "w": 703.02,
+      "h": 151.63,
+      "devicePixelOffsetX": 0.2072,
+      "devicePixelOffsetY": 0.414
+    }
+  },
+  "moving": {
+    "pixels": 92070,
+    "meanGradient": 15.184,
+    "p99Gradient": 183,
+    "maxGradient": 183,
+    "geometry": {
+      "x": 866.508,
+      "y": 290.17,
+      "w": 703.02,
+      "h": 151.62,
+      "devicePixelOffsetX": 0.4921,
+      "devicePixelOffsetY": 0.1698
+    },
+    "movedDuringCaptureCssPx": 33.13
+  },
+  "acutanceRetainedWhileMoving": 1.0727
+}

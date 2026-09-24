@@ -1,0 +1,72 @@
+{
+  "baseline": "docs/review/v14.11-engineering/mobile-route.json",
+  "current": "C:/Users/hakan/portfolio-review/v14.12-motion/mobile/metrics/mobile-route.json",
+  "step": 2,
+  "viewports": [
+    "320x568",
+    "360x800",
+    "375x667",
+    "390x844",
+    "430x932",
+    "768x1024"
+  ],
+  "nonPixelDifferences": [
+    {
+      "path": ".viewports.390x844.frames.5.inkCoverage",
+      "before": 0.435,
+      "after": 0.436,
+      "delta": 0.0010000000000000009
+    }
+  ],
+  "pixelDifferences": [
+    {
+      "path": ".viewports.320x568.frames.5.px.inkRows",
+      "before": 0.44,
+      "after": 0.444,
+      "delta": 0.0040000000000000036
+    },
+    {
+      "path": ".viewports.360x800.summary.meanPxInkRows.lower",
+      "before": 0.287,
+      "after": 0.288,
+      "delta": 0.0010000000000000009
+    },
+    {
+      "path": ".viewports.360x800.frames.4.px.inkRows",
+      "before": 0.307,
+      "after": 0.31,
+      "delta": 0.0030000000000000027
+    },
+    {
+      "path": ".viewports.375x667.summary.meanPxInkRows.lower",
+      "before": 0.165,
+      "after": 0.166,
+      "delta": 0.0010000000000000009
+    },
+    {
+      "path": ".viewports.375x667.frames.4.px.inkRows",
+      "before": 0.145,
+      "after": 0.148,
+      "delta": 0.0030000000000000027
+    },
+    {
+      "path": ".viewports.430x932.summary.meanPxInkRows.lower",
+      "before": 0.248,
+      "after": 0.249,
+      "delta": 0.0010000000000000009
+    },
+    {
+      "path": ".viewports.430x932.frames.4.px.inkRows",
+      "before": 0.355,
+      "after": 0.359,
+      "delta": 0.0040000000000000036
+    },
+    {
+      "path": ".viewports.430x932.frames.4.px.materialRows",
+      "before": 0.601,
+      "after": 0.605,
+      "delta": 0.0040000000000000036
+    }
+  ],
+  "totalDifferences": 9
+}

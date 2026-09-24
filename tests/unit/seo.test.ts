@@ -20,12 +20,13 @@ describe("sitemap", () => {
     }
   });
 
-  it("includes exactly the four published project routes, in D-016 order", () => {
+  it("includes exactly the five published project routes, in owner order (D-021)", () => {
     const projectPaths = urls.map((u) => new URL(u).pathname).filter((p) => p.startsWith("/work/"));
     expect(projectPaths).toEqual([
+      "/work/software-factory",
       "/work/kivilcim",
-      "/work/dropspot",
       "/work/jointledger",
+      "/work/dropspot",
       "/work/professional-systems",
     ]);
   });
@@ -159,9 +160,10 @@ describe("SITE_URL: derivation once a real domain is configured (test-only)", ()
     }
     const projectPaths = urls.map((u) => new URL(u).pathname).filter((p) => p.startsWith("/work/"));
     expect(projectPaths).toEqual([
+      "/work/software-factory",
       "/work/kivilcim",
-      "/work/dropspot",
       "/work/jointledger",
+      "/work/dropspot",
       "/work/professional-systems",
     ]);
   });

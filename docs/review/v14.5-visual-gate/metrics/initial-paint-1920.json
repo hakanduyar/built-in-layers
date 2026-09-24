@@ -1,0 +1,38 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "viewport": "1920x1080",
+  "mode": "cold",
+  "frames": 224,
+  "enhancedTreeAtMs": 364.5,
+  "zoom": {
+    "firstPainted": "1",
+    "settled": "1",
+    "steps": [
+      {
+        "t": 157.5,
+        "value": "1"
+      }
+    ]
+  },
+  "heroHeight": {
+    "firstPainted": 249.25,
+    "settled": 249.25,
+    "resizeRatio": 1,
+    "resizePx": 0,
+    "steps": [
+      {
+        "t": 157.5,
+        "value": 249.25
+      }
+    ]
+  },
+  "heroFontSize": {
+    "steps": [
+      {
+        "t": 157.5,
+        "value": "152px"
+      }
+    ]
+  },
+  "verdict": "FIRST PAINT == SETTLED"
+}

@@ -36,7 +36,7 @@
 
   <!-- Right: JointLedger additions (signal accent) -->
   <g>
-    <rect x="980" y="280" width="556" height="440" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="980" y="280" width="556" height="440" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="1010" y="336" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="28" font-weight="600" fill="#161616">JointLedger</text>
     <text x="1010" y="366" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="18" fill="#504e48">Hakan's additions, this branch</text>
     <line x1="1010" y1="388" x2="1506" y2="388" stroke="#b8b5ac" stroke-width="1" />
@@ -53,7 +53,7 @@
       <tspan x="1010" dy="0">Idempotent personal-book</tspan>
       <tspan x="1010" dy="26">backfill migration</tspan>
     </text>
-    <text x="1010" y="656" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#b8380e">
+    <text x="1010" y="656" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="17" fill="#504e48">
       <tspan x="1010" dy="0">Not transactions (schema only) —</tspan>
       <tspan x="1010" dy="24">not the frontend UI</tspan>
     </text>

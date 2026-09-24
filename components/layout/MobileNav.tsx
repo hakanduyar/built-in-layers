@@ -68,13 +68,18 @@ export function MobileNav({ items }: MobileNavProps) {
           </button>
         </div>
         <nav aria-label="Primary">
+          {/* V13 (mobile gate, M4): each route was a 27.5px-tall row in a
+              51.5px pitch -- the space between rows was larger than the
+              target. `touch-link` on a `block` makes the whole row a 45px
+              target and gives the padding back as margin, so the pitch, the
+              type and the panel are unchanged (styles/globals.css). */}
           <ul className="mt-8 flex flex-col gap-6">
             {items.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block font-display text-heading-m uppercase text-ink"
+                  className="touch-link block font-display text-heading-m uppercase text-ink"
                 >
                   {item.label}
                 </Link>

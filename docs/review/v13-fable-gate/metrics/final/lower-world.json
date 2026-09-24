@@ -1,0 +1,392 @@
+{
+  "1366x768": {
+    "after": {
+      "howIBuild": {
+        "title": {
+          "left": 359.257080078125,
+          "right": 703.928955078125,
+          "top": 249.953125,
+          "bottom": 371.203125,
+          "width": 344.671875
+        },
+        "mark": {
+          "left": 359.257080078125,
+          "right": 703.928955078125,
+          "top": 353.953125,
+          "bottom": 359.953125,
+          "width": 344.671875
+        },
+        "rule": {
+          "left": 359.257080078125,
+          "right": 689.928955078125,
+          "top": 356.453125,
+          "bottom": 357.453125,
+          "width": 330.671875
+        },
+        "head": {
+          "left": 696.686279296875,
+          "right": 705.171630859375,
+          "top": 352.71044921875,
+          "bottom": 361.19580078125,
+          "width": 8.4853515625
+        },
+        "consequence": {
+          "left": 735.928955078125,
+          "right": 1149.553955078125,
+          "top": 255.953125,
+          "bottom": 274.140625,
+          "width": 413.625
+        },
+        "consequenceTag": "P"
+      },
+      "selectedSystems": {
+        "labelLeft": 879.83935546875,
+        "labelRight": 1093.72998046875,
+        "recordLeft": 879.83935546875,
+        "headingRight": 683.9174652099609,
+        "registerRight": 1093.729965209961,
+        "registerLeft": 110.21434020996094
+      }
+    },
+    "before": {
+      "imageSize": [
+        1366,
+        768
+      ],
+      "runs": [
+        {
+          "y": 356,
+          "len": 40,
+          "ruleRight": 399
+        },
+        {
+          "y": 542,
+          "len": 40,
+          "ruleRight": 399
+        },
+        {
+          "y": 672,
+          "len": 40,
+          "ruleRight": 399
+        }
+      ],
+      "headRight": 414,
+      "consequenceLeft": 736
+    }
+  },
+  "1440x900": {
+    "after": {
+      "howIBuild": {
+        "title": {
+          "left": 371.0190734863281,
+          "right": 731.98779296875,
+          "top": 266,
+          "bottom": 376,
+          "width": 360.9687194824219
+        },
+        "mark": {
+          "left": 371.0190734863281,
+          "right": 731.98779296875,
+          "top": 370,
+          "bottom": 376,
+          "width": 360.9687194824219
+        },
+        "rule": {
+          "left": 371.0190734863281,
+          "right": 717.98779296875,
+          "top": 372.5,
+          "bottom": 373.5,
+          "width": 346.9687194824219
+        },
+        "head": {
+          "left": 724.7451171875,
+          "right": 733.23046875,
+          "top": 368.75732421875,
+          "bottom": 377.24267578125,
+          "width": 8.4853515625
+        },
+        "consequence": {
+          "left": 763.98779296875,
+          "right": 1197.15966796875,
+          "top": 272,
+          "bottom": 290.1875,
+          "width": 433.171875
+        },
+        "consequenceTag": "P"
+      },
+      "selectedSystems": {
+        "labelLeft": 920.4703369140625,
+        "labelRight": 1143.4703369140625,
+        "recordLeft": 920.4703369140625,
+        "headingRight": 718.4703369140625,
+        "registerRight": 1143.470329284668,
+        "registerLeft": 123.47032928466797
+      }
+    },
+    "before": {
+      "imageSize": [
+        1440,
+        900
+      ],
+      "runs": [
+        {
+          "y": 373,
+          "len": 40,
+          "ruleRight": 411
+        },
+        {
+          "y": 547,
+          "len": 40,
+          "ruleRight": 411
+        },
+        {
+          "y": 677,
+          "len": 40,
+          "ruleRight": 411
+        },
+        {
+          "y": 876,
+          "len": 40,
+          "ruleRight": 411
+        }
+      ],
+      "headRight": 426,
+      "consequenceLeft": 764
+    }
+  },
+  "1536x864": {
+    "after": {
+      "howIBuild": {
+        "title": {
+          "left": 416.5572509765625,
+          "right": 777.5260009765625,
+          "top": 262.078125,
+          "bottom": 372.078125,
+          "width": 360.96875
+        },
+        "mark": {
+          "left": 416.5572509765625,
+          "right": 777.5260009765625,
+          "top": 366.078125,
+          "bottom": 372.078125,
+          "width": 360.96875
+        },
+        "rule": {
+          "left": 416.5572509765625,
+          "right": 763.5260009765625,
+          "top": 368.578125,
+          "bottom": 369.578125,
+          "width": 346.96875
+        },
+        "head": {
+          "left": 770.2833251953125,
+          "right": 778.7686767578125,
+          "top": 364.83544921875,
+          "bottom": 373.32080078125,
+          "width": 8.4853515625
+        },
+        "consequence": {
+          "left": 809.5260009765625,
+          "right": 1242.6978759765625,
+          "top": 268.078125,
+          "bottom": 286.265625,
+          "width": 433.171875
+        },
+        "consequenceTag": "P"
+      },
+      "selectedSystems": {
+        "labelLeft": 942.1116943359375,
+        "labelRight": 1165.1116943359375,
+        "recordLeft": 942.1116943359375,
+        "headingRight": 740.1116638183594,
+        "registerRight": 1165.1116638183594,
+        "registerLeft": 145.11166381835938
+      }
+    },
+    "before": {
+      "imageSize": [
+        1536,
+        864
+      ],
+      "runs": [
+        {
+          "y": 369,
+          "len": 40,
+          "ruleRight": 457
+        },
+        {
+          "y": 543,
+          "len": 40,
+          "ruleRight": 457
+        },
+        {
+          "y": 673,
+          "len": 40,
+          "ruleRight": 457
+        }
+      ],
+      "headRight": 472,
+      "consequenceLeft": 810
+    }
+  },
+  "1920x1080": {
+    "after": {
+      "howIBuild": {
+        "title": {
+          "left": 573.8714599609375,
+          "right": 934.8402099609375,
+          "top": 287.59375,
+          "bottom": 397.59375,
+          "width": 360.96875
+        },
+        "mark": {
+          "left": 573.8714599609375,
+          "right": 934.8402099609375,
+          "top": 391.59375,
+          "bottom": 397.59375,
+          "width": 360.96875
+        },
+        "rule": {
+          "left": 573.8714599609375,
+          "right": 920.8402099609375,
+          "top": 394.09375,
+          "bottom": 395.09375,
+          "width": 346.96875
+        },
+        "head": {
+          "left": 927.5975341796875,
+          "right": 936.0828857421875,
+          "top": 390.35107421875,
+          "bottom": 398.83642578125,
+          "width": 8.4853515625
+        },
+        "consequence": {
+          "left": 966.8402099609375,
+          "right": 1400.0120849609375,
+          "top": 293.59375,
+          "bottom": 311.78125,
+          "width": 433.171875
+        },
+        "consequenceTag": "P"
+      },
+      "selectedSystems": {
+        "labelLeft": 1045.5540771484375,
+        "labelRight": 1268.5540771484375,
+        "recordLeft": 1045.5540771484375,
+        "headingRight": 843.5541076660156,
+        "registerRight": 1268.5541076660156,
+        "registerLeft": 248.55410766601562
+      }
+    },
+    "before": {
+      "imageSize": [
+        1920,
+        1080
+      ],
+      "runs": [
+        {
+          "y": 394,
+          "len": 40,
+          "ruleRight": 614
+        },
+        {
+          "y": 568,
+          "len": 40,
+          "ruleRight": 614
+        },
+        {
+          "y": 698,
+          "len": 40,
+          "ruleRight": 614
+        },
+        {
+          "y": 898,
+          "len": 40,
+          "ruleRight": 614
+        }
+      ],
+      "headRight": 629,
+      "consequenceLeft": 967
+    }
+  },
+  "2560x1440": {
+    "after": {
+      "howIBuild": {
+        "title": {
+          "left": 811.318359375,
+          "right": 1172.287109375,
+          "top": 330.796875,
+          "bottom": 440.796875,
+          "width": 360.96875
+        },
+        "mark": {
+          "left": 811.318359375,
+          "right": 1172.287109375,
+          "top": 434.796875,
+          "bottom": 440.796875,
+          "width": 360.96875
+        },
+        "rule": {
+          "left": 811.318359375,
+          "right": 1158.287109375,
+          "top": 437.296875,
+          "bottom": 438.296875,
+          "width": 346.96875
+        },
+        "head": {
+          "left": 1165.04443359375,
+          "right": 1173.52978515625,
+          "top": 433.55419921875,
+          "bottom": 442.03955078125,
+          "width": 8.4853515625
+        },
+        "consequence": {
+          "left": 1204.287109375,
+          "right": 1637.458984375,
+          "top": 336.796875,
+          "bottom": 354.984375,
+          "width": 433.171875
+        },
+        "consequenceTag": "P"
+      },
+      "selectedSystems": {
+        "labelLeft": 1234.88232421875,
+        "labelRight": 1457.88232421875,
+        "recordLeft": 1234.88232421875,
+        "headingRight": 1032.8823547363281,
+        "registerRight": 1457.8823547363281,
+        "registerLeft": 437.8823547363281
+      }
+    },
+    "before": {
+      "imageSize": [
+        2560,
+        1440
+      ],
+      "runs": [
+        {
+          "y": 437,
+          "len": 40,
+          "ruleRight": 851
+        },
+        {
+          "y": 611,
+          "len": 40,
+          "ruleRight": 851
+        },
+        {
+          "y": 741,
+          "len": 40,
+          "ruleRight": 851
+        },
+        {
+          "y": 941,
+          "len": 40,
+          "ruleRight": 851
+        }
+      ],
+      "headRight": 866,
+      "consequenceLeft": 1204
+    }
+  }
+}

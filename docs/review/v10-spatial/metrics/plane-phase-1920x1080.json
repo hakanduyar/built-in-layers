@@ -1,0 +1,441 @@
+{
+  "viewport": "1920x1080",
+  "projects": {
+    "software-factory": {
+      "rows": [
+        {
+          "approach": -0.75,
+          "relX": -243,
+          "relY": 86,
+          "shiftX": -67.8,
+          "shiftY": -22.8,
+          "opacity": 0.012
+        },
+        {
+          "approach": -0.5,
+          "relX": -3,
+          "relY": 134,
+          "shiftX": -45.3,
+          "shiftY": -15.2,
+          "opacity": 0.227
+        },
+        {
+          "approach": -0.25,
+          "relX": 207,
+          "relY": 171,
+          "shiftX": -22.6,
+          "shiftY": -7.6,
+          "opacity": 0.443
+        },
+        {
+          "approach": 0,
+          "relX": 353,
+          "relY": 212,
+          "shiftX": -0.1,
+          "shiftY": 0,
+          "opacity": 0.658
+        },
+        {
+          "approach": 0.25,
+          "relX": 440,
+          "relY": 245,
+          "shiftX": -16.9,
+          "shiftY": -5.7,
+          "opacity": 0.488
+        },
+        {
+          "approach": 0.5,
+          "relX": 559,
+          "relY": 309,
+          "shiftX": -51.6,
+          "shiftY": -17.3,
+          "opacity": 0.316
+        },
+        {
+          "approach": 0.75,
+          "relX": 664,
+          "relY": 375,
+          "shiftX": -98.9,
+          "shiftY": -33.2,
+          "opacity": 0.144
+        }
+      ],
+      "shift": [
+        {
+          "approach": -0.75,
+          "dx": -67.8,
+          "dy": -22.8,
+          "mag": 71.5
+        },
+        {
+          "approach": -0.5,
+          "dx": -45.3,
+          "dy": -15.2,
+          "mag": 47.8
+        },
+        {
+          "approach": -0.25,
+          "dx": -22.6,
+          "dy": -7.6,
+          "mag": 23.8
+        },
+        {
+          "approach": 0,
+          "dx": -0.1,
+          "dy": 0,
+          "mag": 0.1
+        },
+        {
+          "approach": 0.25,
+          "dx": -16.9,
+          "dy": -5.7,
+          "mag": 17.8
+        },
+        {
+          "approach": 0.5,
+          "dx": -51.6,
+          "dy": -17.3,
+          "mag": 54.4
+        },
+        {
+          "approach": 0.75,
+          "dx": -98.9,
+          "dy": -33.2,
+          "mag": 104.3
+        }
+      ],
+      "leadPx": 71.5,
+      "trailPx": 104.3,
+      "focusAlignPx": 0.1,
+      "phaseShifted": true,
+      "trailExceedsLead": true
+    },
+    "kivilcim": {
+      "rows": [
+        {
+          "approach": -0.75,
+          "relX": -482,
+          "relY": -153,
+          "shiftX": -51,
+          "shiftY": -25.6,
+          "opacity": 0.15
+        },
+        {
+          "approach": -0.5,
+          "relX": -302,
+          "relY": -63,
+          "shiftX": -34,
+          "shiftY": -17,
+          "opacity": 0.32
+        },
+        {
+          "approach": -0.25,
+          "relX": -125,
+          "relY": 34,
+          "shiftX": -17,
+          "shiftY": -8.5,
+          "opacity": 0.49
+        },
+        {
+          "approach": 0,
+          "relX": 0,
+          "relY": 99,
+          "shiftX": -0.1,
+          "shiftY": 0,
+          "opacity": 0.659
+        },
+        {
+          "approach": 0.25,
+          "relX": 84,
+          "relY": 140,
+          "shiftX": -15.1,
+          "shiftY": -7.6,
+          "opacity": 0.496
+        },
+        {
+          "approach": 0.5,
+          "relX": 208,
+          "relY": 201,
+          "shiftX": -46.2,
+          "shiftY": -23.2,
+          "opacity": 0.33
+        },
+        {
+          "approach": 0.75,
+          "relX": 320,
+          "relY": 256,
+          "shiftX": -88.4,
+          "shiftY": -44.3,
+          "opacity": 0.165
+        }
+      ],
+      "shift": [
+        {
+          "approach": -0.75,
+          "dx": -51,
+          "dy": -25.6,
+          "mag": 57.1
+        },
+        {
+          "approach": -0.5,
+          "dx": -34,
+          "dy": -17,
+          "mag": 38
+        },
+        {
+          "approach": -0.25,
+          "dx": -17,
+          "dy": -8.5,
+          "mag": 19
+        },
+        {
+          "approach": 0,
+          "dx": -0.1,
+          "dy": 0,
+          "mag": 0.1
+        },
+        {
+          "approach": 0.25,
+          "dx": -15.1,
+          "dy": -7.6,
+          "mag": 16.9
+        },
+        {
+          "approach": 0.5,
+          "dx": -46.2,
+          "dy": -23.2,
+          "mag": 51.7
+        },
+        {
+          "approach": 0.75,
+          "dx": -88.4,
+          "dy": -44.3,
+          "mag": 98.9
+        }
+      ],
+      "leadPx": 57.1,
+      "trailPx": 98.9,
+      "focusAlignPx": 0.1,
+      "phaseShifted": true,
+      "trailExceedsLead": true
+    },
+    "jointledger": {
+      "rows": [
+        {
+          "approach": -0.75,
+          "relX": -178,
+          "relY": -144,
+          "shiftX": -49.7,
+          "shiftY": -24.6,
+          "opacity": 0.163
+        },
+        {
+          "approach": -0.5,
+          "relX": 3,
+          "relY": -53,
+          "shiftX": -33.1,
+          "shiftY": -16.4,
+          "opacity": 0.329
+        },
+        {
+          "approach": -0.25,
+          "relX": 182,
+          "relY": 36,
+          "shiftX": -16.6,
+          "shiftY": -8.2,
+          "opacity": 0.494
+        },
+        {
+          "approach": 0,
+          "relX": 306,
+          "relY": 99,
+          "shiftX": -0.1,
+          "shiftY": 0,
+          "opacity": 0.659
+        },
+        {
+          "approach": 0.25,
+          "relX": 391,
+          "relY": 139,
+          "shiftX": -15.2,
+          "shiftY": -7.5,
+          "opacity": 0.496
+        },
+        {
+          "approach": 0.5,
+          "relX": 515,
+          "relY": 199,
+          "shiftX": -46.3,
+          "shiftY": -23,
+          "opacity": 0.33
+        },
+        {
+          "approach": 0.75,
+          "relX": 628,
+          "relY": 254,
+          "shiftX": -88.6,
+          "shiftY": -43.9,
+          "opacity": 0.165
+        }
+      ],
+      "shift": [
+        {
+          "approach": -0.75,
+          "dx": -49.7,
+          "dy": -24.6,
+          "mag": 55.5
+        },
+        {
+          "approach": -0.5,
+          "dx": -33.1,
+          "dy": -16.4,
+          "mag": 36.9
+        },
+        {
+          "approach": -0.25,
+          "dx": -16.6,
+          "dy": -8.2,
+          "mag": 18.5
+        },
+        {
+          "approach": 0,
+          "dx": -0.1,
+          "dy": 0,
+          "mag": 0.1
+        },
+        {
+          "approach": 0.25,
+          "dx": -15.2,
+          "dy": -7.5,
+          "mag": 16.9
+        },
+        {
+          "approach": 0.5,
+          "dx": -46.3,
+          "dy": -23,
+          "mag": 51.7
+        },
+        {
+          "approach": 0.75,
+          "dx": -88.6,
+          "dy": -43.9,
+          "mag": 98.9
+        }
+      ],
+      "leadPx": 55.5,
+      "trailPx": 98.9,
+      "focusAlignPx": 0.1,
+      "phaseShifted": true,
+      "trailExceedsLead": true
+    },
+    "dropspot": {
+      "rows": [
+        {
+          "approach": -0.75,
+          "relX": -323,
+          "relY": -12,
+          "shiftX": -52.4,
+          "shiftY": -27.8,
+          "opacity": 0.131
+        },
+        {
+          "approach": -0.5,
+          "relX": -141,
+          "relY": 79,
+          "shiftX": -34.9,
+          "shiftY": -18.5,
+          "opacity": 0.308
+        },
+        {
+          "approach": -0.25,
+          "relX": 40,
+          "relY": 170,
+          "shiftX": -17.5,
+          "shiftY": -9.3,
+          "opacity": 0.483
+        },
+        {
+          "approach": 0,
+          "relX": 165,
+          "relY": 236,
+          "shiftX": -0.1,
+          "shiftY": 0,
+          "opacity": 0.659
+        },
+        {
+          "approach": 0.25,
+          "relX": 238,
+          "relY": 275,
+          "shiftX": -15.1,
+          "shiftY": -8,
+          "opacity": 0.495
+        },
+        {
+          "approach": 0.5,
+          "relX": 342,
+          "relY": 334,
+          "shiftX": -45.9,
+          "shiftY": -24.3,
+          "opacity": 0.33
+        },
+        {
+          "approach": 0.75,
+          "relX": 433,
+          "relY": 388,
+          "shiftX": -87.5,
+          "shiftY": -46.4,
+          "opacity": 0.165
+        }
+      ],
+      "shift": [
+        {
+          "approach": -0.75,
+          "dx": -52.4,
+          "dy": -27.8,
+          "mag": 59.3
+        },
+        {
+          "approach": -0.5,
+          "dx": -34.9,
+          "dy": -18.5,
+          "mag": 39.5
+        },
+        {
+          "approach": -0.25,
+          "dx": -17.5,
+          "dy": -9.3,
+          "mag": 19.8
+        },
+        {
+          "approach": 0,
+          "dx": -0.1,
+          "dy": 0,
+          "mag": 0.1
+        },
+        {
+          "approach": 0.25,
+          "dx": -15.1,
+          "dy": -8,
+          "mag": 17.1
+        },
+        {
+          "approach": 0.5,
+          "dx": -45.9,
+          "dy": -24.3,
+          "mag": 51.9
+        },
+        {
+          "approach": 0.75,
+          "dx": -87.5,
+          "dy": -46.4,
+          "mag": 99
+        }
+      ],
+      "leadPx": 59.3,
+      "trailPx": 99,
+      "focusAlignPx": 0.1,
+      "phaseShifted": true,
+      "trailExceedsLead": true
+    }
+  }
+}

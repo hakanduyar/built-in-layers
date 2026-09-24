@@ -1,0 +1,4416 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "tag": "before",
+  "matrix": {
+    "1366x768": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 1366,
+            "h": 768
+          },
+          "scene": {
+            "left": 81,
+            "top": 80,
+            "right": 930,
+            "bottom": 745
+          },
+          "ground": {
+            "left": 259,
+            "top": 266,
+            "right": 930,
+            "bottom": 742
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 81,
+            "top": 354,
+            "right": 650,
+            "bottom": 745
+          },
+          "media": {
+            "left": 85,
+            "top": 358,
+            "right": 646,
+            "bottom": 708
+          },
+          "title": {
+            "top": 126,
+            "left": 81,
+            "bottom": 345
+          },
+          "labelTop": 100,
+          "groundOutsideEvidence": {
+            "above": 87,
+            "below": -3,
+            "left": -178,
+            "right": 280
+          },
+          "groundSize": {
+            "w": 671,
+            "h": 476
+          },
+          "evidenceSize": {
+            "w": 569,
+            "h": 391
+          },
+          "frame": {
+            "plateBottomClearance": 23,
+            "plateTopClearance": 354,
+            "labelTopClearance": 100
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 1366,
+            "h": 768
+          },
+          "scene": {
+            "left": 81,
+            "top": 80,
+            "right": 931,
+            "bottom": 489
+          },
+          "ground": {
+            "left": 81,
+            "top": 148,
+            "right": 789,
+            "bottom": 634
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 374,
+            "top": 80,
+            "right": 981,
+            "bottom": 481
+          },
+          "media": {
+            "left": 378,
+            "top": 84,
+            "right": 977,
+            "bottom": 458
+          },
+          "title": {
+            "top": 194,
+            "left": 81,
+            "bottom": 289
+          },
+          "labelTop": 169,
+          "groundOutsideEvidence": {
+            "above": -68,
+            "below": 153,
+            "left": 293,
+            "right": -191
+          },
+          "groundSize": {
+            "w": 708,
+            "h": 486
+          },
+          "evidenceSize": {
+            "w": 606,
+            "h": 401
+          },
+          "frame": {
+            "plateBottomClearance": 287,
+            "plateTopClearance": 80,
+            "labelTopClearance": 169
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 1366,
+            "h": 768
+          },
+          "scene": {
+            "left": 81,
+            "top": 80,
+            "right": 930,
+            "bottom": 489
+          },
+          "ground": {
+            "left": 268,
+            "top": 148,
+            "right": 930,
+            "bottom": 603
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 81,
+            "top": 80,
+            "right": 637,
+            "bottom": 450
+          },
+          "media": {
+            "left": 85,
+            "top": 84,
+            "right": 634,
+            "bottom": 426
+          },
+          "title": {
+            "top": 174,
+            "left": 667,
+            "bottom": 269
+          },
+          "labelTop": 149,
+          "groundOutsideEvidence": {
+            "above": -68,
+            "below": 153,
+            "left": -187,
+            "right": 293
+          },
+          "groundSize": {
+            "w": 662,
+            "h": 455
+          },
+          "evidenceSize": {
+            "w": 556,
+            "h": 370
+          },
+          "frame": {
+            "plateBottomClearance": 318,
+            "plateTopClearance": 80,
+            "labelTopClearance": 149
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 1366,
+            "h": 768
+          },
+          "scene": {
+            "left": 81,
+            "top": 80,
+            "right": 930,
+            "bottom": 700
+          },
+          "ground": {
+            "left": 115,
+            "top": 229,
+            "right": 930,
+            "bottom": 722
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 81,
+            "top": 241,
+            "right": 930,
+            "bottom": 689
+          },
+          "media": {
+            "left": 85,
+            "top": 245,
+            "right": 926,
+            "bottom": 666
+          },
+          "title": {
+            "top": 126,
+            "left": 81,
+            "bottom": 220
+          },
+          "labelTop": 100,
+          "groundOutsideEvidence": {
+            "above": 12,
+            "below": 33,
+            "left": -34,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 815,
+            "h": 492
+          },
+          "evidenceSize": {
+            "w": 849,
+            "h": 448
+          },
+          "frame": {
+            "plateBottomClearance": 79,
+            "plateTopClearance": 241,
+            "labelTopClearance": 100
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 857,
+          "recordColumnLeft": 934,
+          "labelToColumnPx": 77,
+          "headingRight": 734,
+          "registerRight": 1147
+        },
+        "howIBuild": {
+          "titleRight": 704,
+          "markLeft": 359,
+          "markRight": 704,
+          "consequenceLeft": 736,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "1440x900": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 1440,
+            "h": 900
+          },
+          "scene": {
+            "left": 100,
+            "top": 109,
+            "right": 1121,
+            "bottom": 900
+          },
+          "ground": {
+            "left": 314,
+            "top": 334,
+            "right": 1121,
+            "bottom": 905
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 100,
+            "top": 431,
+            "right": 784,
+            "bottom": 900
+          },
+          "media": {
+            "left": 105,
+            "top": 435,
+            "right": 780,
+            "bottom": 857
+          },
+          "title": {
+            "top": 164,
+            "left": 100,
+            "bottom": 420
+          },
+          "labelTop": 133,
+          "groundOutsideEvidence": {
+            "above": 97,
+            "below": 5,
+            "left": -214,
+            "right": 337
+          },
+          "groundSize": {
+            "w": 807,
+            "h": 571
+          },
+          "evidenceSize": {
+            "w": 684,
+            "h": 469
+          },
+          "frame": {
+            "plateBottomClearance": 0,
+            "plateTopClearance": 431,
+            "labelTopClearance": 133
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 1440,
+            "h": 900
+          },
+          "scene": {
+            "left": 101,
+            "top": 110,
+            "right": 1122,
+            "bottom": 670
+          },
+          "ground": {
+            "left": 100,
+            "top": 191,
+            "right": 952,
+            "bottom": 775
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 453,
+            "top": 110,
+            "right": 1182,
+            "bottom": 591
+          },
+          "media": {
+            "left": 457,
+            "top": 114,
+            "right": 1178,
+            "bottom": 564
+          },
+          "title": {
+            "top": 250,
+            "left": 101,
+            "bottom": 361
+          },
+          "labelTop": 220,
+          "groundOutsideEvidence": {
+            "above": -81,
+            "below": 184,
+            "left": 353,
+            "right": -230
+          },
+          "groundSize": {
+            "w": 852,
+            "h": 584
+          },
+          "evidenceSize": {
+            "w": 729,
+            "h": 482
+          },
+          "frame": {
+            "plateBottomClearance": 309,
+            "plateTopClearance": 110,
+            "labelTopClearance": 220
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 1440,
+            "h": 900
+          },
+          "scene": {
+            "left": 100,
+            "top": 109,
+            "right": 1121,
+            "bottom": 670
+          },
+          "ground": {
+            "left": 325,
+            "top": 191,
+            "right": 1121,
+            "bottom": 737
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 100,
+            "top": 109,
+            "right": 769,
+            "bottom": 553
+          },
+          "media": {
+            "left": 105,
+            "top": 114,
+            "right": 765,
+            "bottom": 526
+          },
+          "title": {
+            "top": 226,
+            "left": 804,
+            "bottom": 337
+          },
+          "labelTop": 195,
+          "groundOutsideEvidence": {
+            "above": -82,
+            "below": 184,
+            "left": -224,
+            "right": 352
+          },
+          "groundSize": {
+            "w": 797,
+            "h": 546
+          },
+          "evidenceSize": {
+            "w": 669,
+            "h": 444
+          },
+          "frame": {
+            "plateBottomClearance": 347,
+            "plateTopClearance": 109,
+            "labelTopClearance": 195
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 1440,
+            "h": 900
+          },
+          "scene": {
+            "left": 101,
+            "top": 109,
+            "right": 1122,
+            "bottom": 849
+          },
+          "ground": {
+            "left": 141,
+            "top": 286,
+            "right": 1121,
+            "bottom": 878
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 101,
+            "top": 299,
+            "right": 1122,
+            "bottom": 836
+          },
+          "media": {
+            "left": 105,
+            "top": 304,
+            "right": 1117,
+            "bottom": 809
+          },
+          "title": {
+            "top": 164,
+            "left": 101,
+            "bottom": 275
+          },
+          "labelTop": 134,
+          "groundOutsideEvidence": {
+            "above": 13,
+            "below": 42,
+            "left": -40,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 980,
+            "h": 592
+          },
+          "evidenceSize": {
+            "w": 1021,
+            "h": 537
+          },
+          "frame": {
+            "plateBottomClearance": 64,
+            "plateTopClearance": 299,
+            "labelTopClearance": 134
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 897,
+          "recordColumnLeft": 977,
+          "labelToColumnPx": 80,
+          "headingRight": 771,
+          "registerRight": 1200
+        },
+        "howIBuild": {
+          "titleRight": 732,
+          "markLeft": 371,
+          "markRight": 732,
+          "consequenceLeft": 764,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "1536x864": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 860
+          },
+          "ground": {
+            "left": 308,
+            "top": 316,
+            "right": 1083,
+            "bottom": 865
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 410,
+            "right": 760,
+            "bottom": 860
+          },
+          "media": {
+            "left": 108,
+            "top": 414,
+            "right": 756,
+            "bottom": 819
+          },
+          "title": {
+            "top": 153,
+            "left": 103,
+            "bottom": 399
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 93,
+            "below": 5,
+            "left": -205,
+            "right": 323
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 657,
+            "h": 450
+          },
+          "frame": {
+            "plateBottomClearance": 4,
+            "plateTopClearance": 410,
+            "labelTopClearance": 124
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 100,
+            "right": 1082,
+            "bottom": 617
+          },
+          "ground": {
+            "left": 102,
+            "top": 179,
+            "right": 920,
+            "bottom": 740
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 440,
+            "top": 100,
+            "right": 1140,
+            "bottom": 563
+          },
+          "media": {
+            "left": 444,
+            "top": 105,
+            "right": 1136,
+            "bottom": 537
+          },
+          "title": {
+            "top": 235,
+            "left": 102,
+            "bottom": 342
+          },
+          "labelTop": 206,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 177,
+            "left": 338,
+            "right": -220
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 700,
+            "h": 462
+          },
+          "frame": {
+            "plateBottomClearance": 301,
+            "plateTopClearance": 100,
+            "labelTopClearance": 206
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 618
+          },
+          "ground": {
+            "left": 318,
+            "top": 179,
+            "right": 1083,
+            "bottom": 703
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 101,
+            "right": 745,
+            "bottom": 527
+          },
+          "media": {
+            "left": 107,
+            "top": 105,
+            "right": 741,
+            "bottom": 501
+          },
+          "title": {
+            "top": 213,
+            "left": 779,
+            "bottom": 319
+          },
+          "labelTop": 183,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 176,
+            "left": -215,
+            "right": 337
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 642,
+            "h": 426
+          },
+          "frame": {
+            "plateBottomClearance": 337,
+            "plateTopClearance": 101,
+            "labelTopClearance": 183
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 101,
+            "right": 1083,
+            "bottom": 811
+          },
+          "ground": {
+            "left": 141,
+            "top": 270,
+            "right": 1083,
+            "bottom": 839
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 102,
+            "top": 283,
+            "right": 1083,
+            "bottom": 798
+          },
+          "media": {
+            "left": 107,
+            "top": 287,
+            "right": 1078,
+            "bottom": 772
+          },
+          "title": {
+            "top": 153,
+            "left": 102,
+            "bottom": 259
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 12,
+            "below": 41,
+            "left": -39,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 980,
+            "h": 516
+          },
+          "frame": {
+            "plateBottomClearance": 66,
+            "plateTopClearance": 283,
+            "labelTopClearance": 124
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 936,
+          "recordColumnLeft": 1016,
+          "labelToColumnPx": 80,
+          "headingRight": 810,
+          "registerRight": 1239
+        },
+        "howIBuild": {
+          "titleRight": 778,
+          "markLeft": 417,
+          "markRight": 778,
+          "consequenceLeft": 810,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "1920x1080": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 301,
+            "top": 152,
+            "right": 1481,
+            "bottom": 1064
+          },
+          "ground": {
+            "left": 548,
+            "top": 411,
+            "right": 1481,
+            "bottom": 1071
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 301,
+            "top": 522,
+            "right": 1092,
+            "bottom": 1064
+          },
+          "media": {
+            "left": 306,
+            "top": 527,
+            "right": 1087,
+            "bottom": 1015
+          },
+          "title": {
+            "top": 214,
+            "left": 301,
+            "bottom": 510
+          },
+          "labelTop": 180,
+          "groundOutsideEvidence": {
+            "above": 111,
+            "below": 7,
+            "left": -247,
+            "right": 389
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 791,
+            "h": 542
+          },
+          "frame": {
+            "plateBottomClearance": 16,
+            "plateTopClearance": 522,
+            "labelTopClearance": 180
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 301,
+            "top": 152,
+            "right": 1481,
+            "bottom": 929
+          },
+          "ground": {
+            "left": 301,
+            "top": 246,
+            "right": 1285,
+            "bottom": 921
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 708,
+            "top": 152,
+            "right": 1551,
+            "bottom": 708
+          },
+          "media": {
+            "left": 713,
+            "top": 157,
+            "right": 1546,
+            "bottom": 677
+          },
+          "title": {
+            "top": 314,
+            "left": 301,
+            "bottom": 442
+          },
+          "labelTop": 279,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 372,
+            "plateTopClearance": 152,
+            "labelTopClearance": 279
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 300,
+            "top": 151,
+            "right": 1480,
+            "bottom": 929
+          },
+          "ground": {
+            "left": 560,
+            "top": 246,
+            "right": 1480,
+            "bottom": 877
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 300,
+            "top": 151,
+            "right": 1073,
+            "bottom": 664
+          },
+          "media": {
+            "left": 305,
+            "top": 156,
+            "right": 1068,
+            "bottom": 633
+          },
+          "title": {
+            "top": 285,
+            "left": 1113,
+            "bottom": 413
+          },
+          "labelTop": 251,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -260,
+            "right": 407
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 416,
+            "plateTopClearance": 151,
+            "labelTopClearance": 251
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 300,
+            "top": 151,
+            "right": 1480,
+            "bottom": 1005
+          },
+          "ground": {
+            "left": 347,
+            "top": 355,
+            "right": 1480,
+            "bottom": 1039
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 300,
+            "top": 370,
+            "right": 1480,
+            "bottom": 990
+          },
+          "media": {
+            "left": 305,
+            "top": 375,
+            "right": 1475,
+            "bottom": 959
+          },
+          "title": {
+            "top": 214,
+            "left": 300,
+            "bottom": 342
+          },
+          "labelTop": 179,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 50,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 90,
+            "plateTopClearance": 370,
+            "labelTopClearance": 179
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 1093,
+          "recordColumnLeft": 1172,
+          "labelToColumnPx": 80,
+          "headingRight": 967,
+          "registerRight": 1395
+        },
+        "howIBuild": {
+          "titleRight": 935,
+          "markLeft": 574,
+          "markRight": 935,
+          "consequenceLeft": 967,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "2560x1440": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 2560,
+            "h": 1440
+          },
+          "scene": {
+            "left": 621,
+            "top": 202,
+            "right": 1801,
+            "bottom": 1239
+          },
+          "ground": {
+            "left": 762,
+            "top": 461,
+            "right": 1801,
+            "bottom": 1146
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 621,
+            "top": 589,
+            "right": 1518,
+            "bottom": 1197
+          },
+          "media": {
+            "left": 626,
+            "top": 594,
+            "right": 1513,
+            "bottom": 1148
+          },
+          "title": {
+            "top": 264,
+            "left": 621,
+            "bottom": 560
+          },
+          "labelTop": 230,
+          "groundOutsideEvidence": {
+            "above": 127,
+            "below": -51,
+            "left": -141,
+            "right": 283
+          },
+          "groundSize": {
+            "w": 1039,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 897,
+            "h": 608
+          },
+          "frame": {
+            "plateBottomClearance": 243,
+            "plateTopClearance": 589,
+            "labelTopClearance": 230
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 2560,
+            "h": 1440
+          },
+          "scene": {
+            "left": 620,
+            "top": 202,
+            "right": 1800,
+            "bottom": 1239
+          },
+          "ground": {
+            "left": 620,
+            "top": 296,
+            "right": 1605,
+            "bottom": 971
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1027,
+            "top": 202,
+            "right": 1870,
+            "bottom": 758
+          },
+          "media": {
+            "left": 1032,
+            "top": 207,
+            "right": 1865,
+            "bottom": 727
+          },
+          "title": {
+            "top": 364,
+            "left": 620,
+            "bottom": 492
+          },
+          "labelTop": 329,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 682,
+            "plateTopClearance": 202,
+            "labelTopClearance": 329
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 2560,
+            "h": 1440
+          },
+          "scene": {
+            "left": 620,
+            "top": 202,
+            "right": 1800,
+            "bottom": 1239
+          },
+          "ground": {
+            "left": 880,
+            "top": 296,
+            "right": 1800,
+            "bottom": 927
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 620,
+            "top": 202,
+            "right": 1394,
+            "bottom": 715
+          },
+          "media": {
+            "left": 625,
+            "top": 207,
+            "right": 1389,
+            "bottom": 684
+          },
+          "title": {
+            "top": 336,
+            "left": 1434,
+            "bottom": 464
+          },
+          "labelTop": 302,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -259,
+            "right": 407
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 725,
+            "plateTopClearance": 202,
+            "labelTopClearance": 302
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 2560,
+            "h": 1440
+          },
+          "scene": {
+            "left": 620,
+            "top": 202,
+            "right": 1800,
+            "bottom": 1239
+          },
+          "ground": {
+            "left": 667,
+            "top": 405,
+            "right": 1800,
+            "bottom": 1090
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 620,
+            "top": 420,
+            "right": 1800,
+            "bottom": 1040
+          },
+          "media": {
+            "left": 625,
+            "top": 425,
+            "right": 1795,
+            "bottom": 1009
+          },
+          "title": {
+            "top": 264,
+            "left": 620,
+            "bottom": 392
+          },
+          "labelTop": 230,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 50,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 400,
+            "plateTopClearance": 420,
+            "labelTopClearance": 230
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 1354,
+          "recordColumnLeft": 1433,
+          "labelToColumnPx": 80,
+          "headingRight": 1228,
+          "registerRight": 1656
+        },
+        "howIBuild": {
+          "titleRight": 1172,
+          "markLeft": 811,
+          "markRight": 1172,
+          "consequenceLeft": 1204,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "2400x1350@80": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 2400,
+            "h": 1350
+          },
+          "scene": {
+            "left": 540,
+            "top": 189,
+            "right": 1720,
+            "bottom": 1184
+          },
+          "ground": {
+            "left": 681,
+            "top": 449,
+            "right": 1720,
+            "bottom": 1133
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 540,
+            "top": 576,
+            "right": 1437,
+            "bottom": 1184
+          },
+          "media": {
+            "left": 545,
+            "top": 581,
+            "right": 1432,
+            "bottom": 1135
+          },
+          "title": {
+            "top": 251,
+            "left": 540,
+            "bottom": 548
+          },
+          "labelTop": 217,
+          "groundOutsideEvidence": {
+            "above": 127,
+            "below": -51,
+            "left": -141,
+            "right": 283
+          },
+          "groundSize": {
+            "w": 1039,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 897,
+            "h": 608
+          },
+          "frame": {
+            "plateBottomClearance": 166,
+            "plateTopClearance": 576,
+            "labelTopClearance": 217
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 2400,
+            "h": 1350
+          },
+          "scene": {
+            "left": 541,
+            "top": 189,
+            "right": 1720,
+            "bottom": 1161
+          },
+          "ground": {
+            "left": 540,
+            "top": 284,
+            "right": 1525,
+            "bottom": 959
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 947,
+            "top": 189,
+            "right": 1790,
+            "bottom": 746
+          },
+          "media": {
+            "left": 952,
+            "top": 194,
+            "right": 1785,
+            "bottom": 715
+          },
+          "title": {
+            "top": 351,
+            "left": 541,
+            "bottom": 479
+          },
+          "labelTop": 317,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 604,
+            "plateTopClearance": 189,
+            "labelTopClearance": 317
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 2400,
+            "h": 1350
+          },
+          "scene": {
+            "left": 541,
+            "top": 189,
+            "right": 1721,
+            "bottom": 1161
+          },
+          "ground": {
+            "left": 800,
+            "top": 284,
+            "right": 1720,
+            "bottom": 915
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 541,
+            "top": 189,
+            "right": 1314,
+            "bottom": 702
+          },
+          "media": {
+            "left": 546,
+            "top": 194,
+            "right": 1309,
+            "bottom": 671
+          },
+          "title": {
+            "top": 323,
+            "left": 1354,
+            "bottom": 451
+          },
+          "labelTop": 289,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -259,
+            "right": 406
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 648,
+            "plateTopClearance": 189,
+            "labelTopClearance": 289
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 2400,
+            "h": 1350
+          },
+          "scene": {
+            "left": 541,
+            "top": 189,
+            "right": 1721,
+            "bottom": 1161
+          },
+          "ground": {
+            "left": 588,
+            "top": 393,
+            "right": 1720,
+            "bottom": 1077
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 541,
+            "top": 407,
+            "right": 1721,
+            "bottom": 1028
+          },
+          "media": {
+            "left": 546,
+            "top": 412,
+            "right": 1716,
+            "bottom": 997
+          },
+          "title": {
+            "top": 251,
+            "left": 541,
+            "bottom": 379
+          },
+          "labelTop": 217,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 49,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 322,
+            "plateTopClearance": 407,
+            "labelTopClearance": 217
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 1289,
+          "recordColumnLeft": 1368,
+          "labelToColumnPx": 80,
+          "headingRight": 1163,
+          "registerRight": 1591
+        },
+        "howIBuild": {
+          "titleRight": 1115,
+          "markLeft": 754,
+          "markRight": 1115,
+          "consequenceLeft": 1147,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "2866x1612@67": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 2866,
+            "h": 1612
+          },
+          "scene": {
+            "left": 773,
+            "top": 226,
+            "right": 1953,
+            "bottom": 1386
+          },
+          "ground": {
+            "left": 914,
+            "top": 485,
+            "right": 1953,
+            "bottom": 1170
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 773,
+            "top": 612,
+            "right": 1670,
+            "bottom": 1220
+          },
+          "media": {
+            "left": 778,
+            "top": 617,
+            "right": 1665,
+            "bottom": 1171
+          },
+          "title": {
+            "top": 288,
+            "left": 773,
+            "bottom": 584
+          },
+          "labelTop": 254,
+          "groundOutsideEvidence": {
+            "above": 127,
+            "below": -51,
+            "left": -141,
+            "right": 283
+          },
+          "groundSize": {
+            "w": 1039,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 897,
+            "h": 608
+          },
+          "frame": {
+            "plateBottomClearance": 392,
+            "plateTopClearance": 612,
+            "labelTopClearance": 254
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 2866,
+            "h": 1612
+          },
+          "scene": {
+            "left": 774,
+            "top": 226,
+            "right": 1954,
+            "bottom": 1387
+          },
+          "ground": {
+            "left": 773,
+            "top": 320,
+            "right": 1758,
+            "bottom": 995
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1180,
+            "top": 226,
+            "right": 2023,
+            "bottom": 783
+          },
+          "media": {
+            "left": 1185,
+            "top": 231,
+            "right": 2018,
+            "bottom": 752
+          },
+          "title": {
+            "top": 388,
+            "left": 774,
+            "bottom": 516
+          },
+          "labelTop": 354,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 829,
+            "plateTopClearance": 226,
+            "labelTopClearance": 354
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 2866,
+            "h": 1612
+          },
+          "scene": {
+            "left": 773,
+            "top": 226,
+            "right": 1953,
+            "bottom": 1386
+          },
+          "ground": {
+            "left": 1033,
+            "top": 320,
+            "right": 1953,
+            "bottom": 951
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 773,
+            "top": 226,
+            "right": 1547,
+            "bottom": 739
+          },
+          "media": {
+            "left": 778,
+            "top": 231,
+            "right": 1542,
+            "bottom": 708
+          },
+          "title": {
+            "top": 360,
+            "left": 1587,
+            "bottom": 488
+          },
+          "labelTop": 326,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -259,
+            "right": 406
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 873,
+            "plateTopClearance": 226,
+            "labelTopClearance": 326
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 2866,
+            "h": 1612
+          },
+          "scene": {
+            "left": 773,
+            "top": 226,
+            "right": 1953,
+            "bottom": 1386
+          },
+          "ground": {
+            "left": 820,
+            "top": 429,
+            "right": 1953,
+            "bottom": 1114
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 773,
+            "top": 444,
+            "right": 1953,
+            "bottom": 1064
+          },
+          "media": {
+            "left": 778,
+            "top": 449,
+            "right": 1948,
+            "bottom": 1033
+          },
+          "title": {
+            "top": 288,
+            "left": 773,
+            "bottom": 416
+          },
+          "labelTop": 254,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 50,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 548,
+            "plateTopClearance": 444,
+            "labelTopClearance": 254
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 1479,
+          "recordColumnLeft": 1558,
+          "labelToColumnPx": 80,
+          "headingRight": 1353,
+          "registerRight": 1781
+        },
+        "howIBuild": {
+          "titleRight": 1278,
+          "markLeft": 917,
+          "markRight": 1278,
+          "consequenceLeft": 1310,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    },
+    "3840x2160@50": {
+      "scenes": {
+        "software-factory": {
+          "viewport": {
+            "w": 3840,
+            "h": 2160
+          },
+          "scene": {
+            "left": 1261,
+            "top": 303,
+            "right": 2441,
+            "bottom": 1858
+          },
+          "ground": {
+            "left": 1402,
+            "top": 562,
+            "right": 2440,
+            "bottom": 1246
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1261,
+            "top": 689,
+            "right": 2157,
+            "bottom": 1297
+          },
+          "media": {
+            "left": 1266,
+            "top": 694,
+            "right": 2152,
+            "bottom": 1248
+          },
+          "title": {
+            "top": 365,
+            "left": 1261,
+            "bottom": 661
+          },
+          "labelTop": 331,
+          "groundOutsideEvidence": {
+            "above": 127,
+            "below": -51,
+            "left": -141,
+            "right": 283
+          },
+          "groundSize": {
+            "w": 1039,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 897,
+            "h": 608
+          },
+          "frame": {
+            "plateBottomClearance": 863,
+            "plateTopClearance": 689,
+            "labelTopClearance": 331
+          }
+        },
+        "kivilcim": {
+          "viewport": {
+            "w": 3840,
+            "h": 2160
+          },
+          "scene": {
+            "left": 1260,
+            "top": 303,
+            "right": 2440,
+            "bottom": 1858
+          },
+          "ground": {
+            "left": 1260,
+            "top": 397,
+            "right": 2245,
+            "bottom": 1072
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1667,
+            "top": 303,
+            "right": 2510,
+            "bottom": 859
+          },
+          "media": {
+            "left": 1672,
+            "top": 308,
+            "right": 2505,
+            "bottom": 828
+          },
+          "title": {
+            "top": 464,
+            "left": 1260,
+            "bottom": 592
+          },
+          "labelTop": 430,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 1301,
+            "plateTopClearance": 303,
+            "labelTopClearance": 430
+          }
+        },
+        "jointledger": {
+          "viewport": {
+            "w": 3840,
+            "h": 2160
+          },
+          "scene": {
+            "left": 1260,
+            "top": 302,
+            "right": 2440,
+            "bottom": 1858
+          },
+          "ground": {
+            "left": 1520,
+            "top": 397,
+            "right": 2440,
+            "bottom": 1028
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1260,
+            "top": 302,
+            "right": 2033,
+            "bottom": 815
+          },
+          "media": {
+            "left": 1265,
+            "top": 307,
+            "right": 2028,
+            "bottom": 784
+          },
+          "title": {
+            "top": 437,
+            "left": 2073,
+            "bottom": 565
+          },
+          "labelTop": 402,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -260,
+            "right": 407
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 1345,
+            "plateTopClearance": 302,
+            "labelTopClearance": 402
+          }
+        },
+        "dropspot": {
+          "viewport": {
+            "w": 3840,
+            "h": 2160
+          },
+          "scene": {
+            "left": 1260,
+            "top": 303,
+            "right": 2440,
+            "bottom": 1858
+          },
+          "ground": {
+            "left": 1307,
+            "top": 506,
+            "right": 2440,
+            "bottom": 1191
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 1260,
+            "top": 521,
+            "right": 2440,
+            "bottom": 1141
+          },
+          "media": {
+            "left": 1265,
+            "top": 526,
+            "right": 2435,
+            "bottom": 1110
+          },
+          "title": {
+            "top": 365,
+            "left": 1260,
+            "bottom": 493
+          },
+          "labelTop": 331,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 50,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 1019,
+            "plateTopClearance": 521,
+            "labelTopClearance": 331
+          }
+        }
+      },
+      "landmarks": {
+        "selectedSystems": {
+          "labelLeft": 1876,
+          "recordColumnLeft": 1956,
+          "labelToColumnPx": 80,
+          "headingRight": 1750,
+          "registerRight": 2179
+        },
+        "howIBuild": {
+          "titleRight": 1595,
+          "markLeft": 1234,
+          "markRight": 1595,
+          "consequenceLeft": 1627,
+          "markToConsequencePx": 32
+        }
+      },
+      "errors": []
+    }
+  },
+  "phases": {
+    "1536x864": {
+      "software-factory": {
+        "entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 1909,
+            "top": 363,
+            "right": 2863,
+            "bottom": 1101
+          },
+          "ground": {
+            "left": 1364,
+            "top": 457,
+            "right": 2139,
+            "bottom": 1005
+          },
+          "groundOpacity": 0.019,
+          "evidence": {
+            "left": 1909,
+            "top": 680,
+            "right": 2548,
+            "bottom": 1118
+          },
+          "media": {
+            "left": 1914,
+            "top": 685,
+            "right": 2544,
+            "bottom": 1079
+          },
+          "title": {
+            "top": 401,
+            "left": 1909,
+            "bottom": 641
+          },
+          "labelTop": 373,
+          "groundOutsideEvidence": {
+            "above": 223,
+            "below": -113,
+            "left": 545,
+            "right": -410
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 639,
+            "h": 438
+          },
+          "frame": {
+            "plateBottomClearance": -254,
+            "plateTopClearance": 680,
+            "labelTopClearance": 373
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 832,
+            "top": 229,
+            "right": 1799,
+            "bottom": 977
+          },
+          "ground": {
+            "left": 728,
+            "top": 385,
+            "right": 1503,
+            "bottom": 933
+          },
+          "groundOpacity": 0.339,
+          "evidence": {
+            "left": 832,
+            "top": 542,
+            "right": 1480,
+            "bottom": 986
+          },
+          "media": {
+            "left": 836,
+            "top": 546,
+            "right": 1476,
+            "bottom": 946
+          },
+          "title": {
+            "top": 274,
+            "left": 832,
+            "bottom": 517
+          },
+          "labelTop": 245,
+          "groundOutsideEvidence": {
+            "above": 157,
+            "below": -53,
+            "left": 104,
+            "right": 23
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 648,
+            "h": 444
+          },
+          "frame": {
+            "plateBottomClearance": -122,
+            "plateTopClearance": 542,
+            "labelTopClearance": 245
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 860
+          },
+          "ground": {
+            "left": 308,
+            "top": 316,
+            "right": 1083,
+            "bottom": 865
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 410,
+            "right": 760,
+            "bottom": 860
+          },
+          "media": {
+            "left": 108,
+            "top": 414,
+            "right": 756,
+            "bottom": 819
+          },
+          "title": {
+            "top": 153,
+            "left": 103,
+            "bottom": 399
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 93,
+            "below": 5,
+            "left": -205,
+            "right": 323
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 657,
+            "h": 450
+          },
+          "frame": {
+            "plateBottomClearance": 4,
+            "plateTopClearance": 410,
+            "labelTopClearance": 124
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -538,
+            "top": -124,
+            "right": 432,
+            "bottom": 627
+          },
+          "ground": {
+            "left": -120,
+            "top": 167,
+            "right": 655,
+            "bottom": 715
+          },
+          "groundOpacity": 0.4,
+          "evidence": {
+            "left": -538,
+            "top": 188,
+            "right": 112,
+            "bottom": 634
+          },
+          "media": {
+            "left": -533,
+            "top": 193,
+            "right": 108,
+            "bottom": 593
+          },
+          "title": {
+            "top": -77,
+            "left": -538,
+            "bottom": 166
+          },
+          "labelTop": -106,
+          "groundOutsideEvidence": {
+            "above": 22,
+            "below": 81,
+            "left": -418,
+            "right": 543
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 650,
+            "h": 445
+          },
+          "frame": {
+            "plateBottomClearance": 230,
+            "plateTopClearance": 188,
+            "labelTopClearance": -106
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -1379,
+            "top": -496,
+            "right": -420,
+            "bottom": 246
+          },
+          "ground": {
+            "left": -701,
+            "top": -82,
+            "right": 74,
+            "bottom": 467
+          },
+          "groundOpacity": 0.141,
+          "evidence": {
+            "left": -1379,
+            "top": -180,
+            "right": -737,
+            "bottom": 260
+          },
+          "media": {
+            "left": -1375,
+            "top": -176,
+            "right": -741,
+            "bottom": 220
+          },
+          "title": {
+            "top": -455,
+            "left": -1379,
+            "bottom": -214
+          },
+          "labelTop": -483,
+          "groundOutsideEvidence": {
+            "above": -98,
+            "below": 206,
+            "left": -679,
+            "right": 811
+          },
+          "groundSize": {
+            "w": 775,
+            "h": 548
+          },
+          "evidenceSize": {
+            "w": 642,
+            "h": 440
+          },
+          "frame": {
+            "plateBottomClearance": 604,
+            "plateTopClearance": -180,
+            "labelTopClearance": -483
+          }
+        }
+      },
+      "kivilcim": {
+        "entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 1594,
+            "top": 745,
+            "right": 2553,
+            "bottom": 1251
+          },
+          "ground": {
+            "left": 978,
+            "top": 558,
+            "right": 1796,
+            "bottom": 1119
+          },
+          "groundOpacity": 0.154,
+          "evidence": {
+            "left": 1924,
+            "top": 759,
+            "right": 2610,
+            "bottom": 1211
+          },
+          "media": {
+            "left": 1929,
+            "top": 763,
+            "right": 2605,
+            "bottom": 1186
+          },
+          "title": {
+            "top": 867,
+            "left": 1594,
+            "bottom": 971
+          },
+          "labelTop": 839,
+          "groundOutsideEvidence": {
+            "above": 201,
+            "below": -93,
+            "left": 946,
+            "right": -813
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 685,
+            "h": 453
+          },
+          "frame": {
+            "plateBottomClearance": -347,
+            "plateTopClearance": 759,
+            "labelTopClearance": 839
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 736,
+            "top": 380,
+            "right": 1706,
+            "bottom": 891
+          },
+          "ground": {
+            "left": 471,
+            "top": 342,
+            "right": 1289,
+            "bottom": 902
+          },
+          "groundOpacity": 0.406,
+          "evidence": {
+            "left": 1070,
+            "top": 387,
+            "right": 1763,
+            "bottom": 844
+          },
+          "media": {
+            "left": 1075,
+            "top": 391,
+            "right": 1759,
+            "bottom": 819
+          },
+          "title": {
+            "top": 508,
+            "left": 736,
+            "bottom": 613
+          },
+          "labelTop": 479,
+          "groundOutsideEvidence": {
+            "above": 45,
+            "below": 58,
+            "left": 599,
+            "right": -474
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 693,
+            "h": 458
+          },
+          "frame": {
+            "plateBottomClearance": 20,
+            "plateTopClearance": 387,
+            "labelTopClearance": 479
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 100,
+            "right": 1082,
+            "bottom": 617
+          },
+          "ground": {
+            "left": 102,
+            "top": 179,
+            "right": 920,
+            "bottom": 740
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 440,
+            "top": 100,
+            "right": 1140,
+            "bottom": 563
+          },
+          "media": {
+            "left": 444,
+            "top": 105,
+            "right": 1136,
+            "bottom": 537
+          },
+          "title": {
+            "top": 235,
+            "left": 102,
+            "bottom": 342
+          },
+          "labelTop": 206,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 177,
+            "left": 338,
+            "right": -220
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 700,
+            "h": 462
+          },
+          "frame": {
+            "plateBottomClearance": 301,
+            "plateTopClearance": 100,
+            "labelTopClearance": 206
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -520,
+            "top": -154,
+            "right": 450,
+            "bottom": 357
+          },
+          "ground": {
+            "left": -311,
+            "top": 9,
+            "right": 507,
+            "bottom": 570
+          },
+          "groundOpacity": 0.414,
+          "evidence": {
+            "left": -186,
+            "top": -148,
+            "right": 507,
+            "bottom": 310
+          },
+          "media": {
+            "left": -182,
+            "top": -143,
+            "right": 503,
+            "bottom": 284
+          },
+          "title": {
+            "top": -26,
+            "left": -520,
+            "bottom": 80
+          },
+          "labelTop": -55,
+          "groundOutsideEvidence": {
+            "above": -157,
+            "below": 260,
+            "left": 125,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 693,
+            "h": 458
+          },
+          "frame": {
+            "plateBottomClearance": 554,
+            "plateTopClearance": -148,
+            "labelTopClearance": -55
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -1377,
+            "top": -505,
+            "right": -417,
+            "bottom": 1
+          },
+          "ground": {
+            "left": -895,
+            "top": -230,
+            "right": -77,
+            "bottom": 330
+          },
+          "groundOpacity": 0.166,
+          "evidence": {
+            "left": -1046,
+            "top": -492,
+            "right": -360,
+            "bottom": -39
+          },
+          "media": {
+            "left": -1042,
+            "top": -487,
+            "right": -365,
+            "bottom": -64
+          },
+          "title": {
+            "top": -383,
+            "left": -1377,
+            "bottom": -279
+          },
+          "labelTop": -411,
+          "groundOutsideEvidence": {
+            "above": -261,
+            "below": 369,
+            "left": -151,
+            "right": 284
+          },
+          "groundSize": {
+            "w": 818,
+            "h": 561
+          },
+          "evidenceSize": {
+            "w": 686,
+            "h": 453
+          },
+          "frame": {
+            "plateBottomClearance": 903,
+            "plateTopClearance": -492,
+            "labelTopClearance": -411
+          }
+        }
+      },
+      "jointledger": {
+        "entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 1607,
+            "top": 719,
+            "right": 2567,
+            "bottom": 1225
+          },
+          "ground": {
+            "left": 1203,
+            "top": 542,
+            "right": 1968,
+            "bottom": 1066
+          },
+          "groundOpacity": 0.164,
+          "evidence": {
+            "left": 1607,
+            "top": 733,
+            "right": 2236,
+            "bottom": 1150
+          },
+          "media": {
+            "left": 1612,
+            "top": 737,
+            "right": 2232,
+            "bottom": 1125
+          },
+          "title": {
+            "top": 819,
+            "left": 2269,
+            "bottom": 923
+          },
+          "labelTop": 790,
+          "groundOutsideEvidence": {
+            "above": 191,
+            "below": -84,
+            "left": 404,
+            "right": -268
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 629,
+            "h": 417
+          },
+          "frame": {
+            "plateBottomClearance": -286,
+            "plateTopClearance": 733,
+            "labelTopClearance": 790
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 742,
+            "top": 363,
+            "right": 1712,
+            "bottom": 875
+          },
+          "ground": {
+            "left": 690,
+            "top": 332,
+            "right": 1455,
+            "bottom": 856
+          },
+          "groundOpacity": 0.412,
+          "evidence": {
+            "left": 742,
+            "top": 370,
+            "right": 1377,
+            "bottom": 792
+          },
+          "media": {
+            "left": 746,
+            "top": 375,
+            "right": 1373,
+            "bottom": 767
+          },
+          "title": {
+            "top": 469,
+            "left": 1410,
+            "bottom": 574
+          },
+          "labelTop": 440,
+          "groundOutsideEvidence": {
+            "above": 39,
+            "below": 64,
+            "left": 51,
+            "right": 78
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 636,
+            "h": 422
+          },
+          "frame": {
+            "plateBottomClearance": 72,
+            "plateTopClearance": 370,
+            "labelTopClearance": 440
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 103,
+            "top": 101,
+            "right": 1083,
+            "bottom": 618
+          },
+          "ground": {
+            "left": 318,
+            "top": 179,
+            "right": 1083,
+            "bottom": 703
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 103,
+            "top": 101,
+            "right": 745,
+            "bottom": 527
+          },
+          "media": {
+            "left": 107,
+            "top": 105,
+            "right": 741,
+            "bottom": 501
+          },
+          "title": {
+            "top": 213,
+            "left": 779,
+            "bottom": 319
+          },
+          "labelTop": 183,
+          "groundOutsideEvidence": {
+            "above": -78,
+            "below": 176,
+            "left": -215,
+            "right": 337
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 642,
+            "h": 426
+          },
+          "frame": {
+            "plateBottomClearance": 337,
+            "plateTopClearance": 101,
+            "labelTopClearance": 183
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -522,
+            "top": -155,
+            "right": 448,
+            "bottom": 356
+          },
+          "ground": {
+            "left": -97,
+            "top": 9,
+            "right": 668,
+            "bottom": 533
+          },
+          "groundOpacity": 0.413,
+          "evidence": {
+            "left": -522,
+            "top": -148,
+            "right": 114,
+            "bottom": 274
+          },
+          "media": {
+            "left": -518,
+            "top": -144,
+            "right": 109,
+            "bottom": 248
+          },
+          "title": {
+            "top": -49,
+            "left": 146,
+            "bottom": 56
+          },
+          "labelTop": -78,
+          "groundOutsideEvidence": {
+            "above": -157,
+            "below": 259,
+            "left": -425,
+            "right": 554
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 636,
+            "h": 422
+          },
+          "frame": {
+            "plateBottomClearance": 590,
+            "plateTopClearance": -148,
+            "labelTopClearance": -78
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -1378,
+            "top": -506,
+            "right": -419,
+            "bottom": 0
+          },
+          "ground": {
+            "left": -680,
+            "top": -231,
+            "right": 85,
+            "bottom": 294
+          },
+          "groundOpacity": 0.166,
+          "evidence": {
+            "left": -1378,
+            "top": -492,
+            "right": -749,
+            "bottom": -75
+          },
+          "media": {
+            "left": -1374,
+            "top": -488,
+            "right": -753,
+            "bottom": -100
+          },
+          "title": {
+            "top": -406,
+            "left": -717,
+            "bottom": -302
+          },
+          "labelTop": -435,
+          "groundOutsideEvidence": {
+            "above": -262,
+            "below": 369,
+            "left": -698,
+            "right": 834
+          },
+          "groundSize": {
+            "w": 765,
+            "h": 524
+          },
+          "evidenceSize": {
+            "w": 629,
+            "h": 417
+          },
+          "frame": {
+            "plateBottomClearance": 939,
+            "plateTopClearance": -492,
+            "labelTopClearance": -435
+          }
+        }
+      },
+      "dropspot": {
+        "entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 1606,
+            "top": 721,
+            "right": 2566,
+            "bottom": 1416
+          },
+          "ground": {
+            "left": 1026,
+            "top": 633,
+            "right": 1967,
+            "bottom": 1202
+          },
+          "groundOpacity": 0.165,
+          "evidence": {
+            "left": 1606,
+            "top": 912,
+            "right": 2566,
+            "bottom": 1417
+          },
+          "media": {
+            "left": 1610,
+            "top": 917,
+            "right": 2561,
+            "bottom": 1392
+          },
+          "title": {
+            "top": 762,
+            "left": 1606,
+            "bottom": 866
+          },
+          "labelTop": 734,
+          "groundOutsideEvidence": {
+            "above": 279,
+            "below": -215,
+            "left": 580,
+            "right": -598
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 960,
+            "h": 505
+          },
+          "frame": {
+            "plateBottomClearance": -553,
+            "plateTopClearance": 912,
+            "labelTopClearance": 734
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 740,
+            "top": 364,
+            "right": 1710,
+            "bottom": 1067
+          },
+          "ground": {
+            "left": 513,
+            "top": 423,
+            "right": 1454,
+            "bottom": 991
+          },
+          "groundOpacity": 0.412,
+          "evidence": {
+            "left": 740,
+            "top": 551,
+            "right": 1710,
+            "bottom": 1061
+          },
+          "media": {
+            "left": 744,
+            "top": 555,
+            "right": 1706,
+            "bottom": 1035
+          },
+          "title": {
+            "top": 411,
+            "left": 740,
+            "bottom": 516
+          },
+          "labelTop": 382,
+          "groundOutsideEvidence": {
+            "above": 128,
+            "below": -70,
+            "left": 227,
+            "right": -256
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 970,
+            "h": 510
+          },
+          "frame": {
+            "plateBottomClearance": -197,
+            "plateTopClearance": 551,
+            "labelTopClearance": 382
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": 102,
+            "top": 101,
+            "right": 1083,
+            "bottom": 811
+          },
+          "ground": {
+            "left": 141,
+            "top": 270,
+            "right": 1083,
+            "bottom": 839
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 102,
+            "top": 283,
+            "right": 1083,
+            "bottom": 798
+          },
+          "media": {
+            "left": 107,
+            "top": 287,
+            "right": 1078,
+            "bottom": 772
+          },
+          "title": {
+            "top": 153,
+            "left": 102,
+            "bottom": 259
+          },
+          "labelTop": 124,
+          "groundOutsideEvidence": {
+            "above": 12,
+            "below": 41,
+            "left": -39,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 980,
+            "h": 516
+          },
+          "frame": {
+            "plateBottomClearance": 66,
+            "plateTopClearance": 283,
+            "labelTopClearance": 124
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -524,
+            "top": -155,
+            "right": 446,
+            "bottom": 548
+          },
+          "ground": {
+            "left": -274,
+            "top": 100,
+            "right": 667,
+            "bottom": 668
+          },
+          "groundOpacity": 0.413,
+          "evidence": {
+            "left": -524,
+            "top": 32,
+            "right": 446,
+            "bottom": 542
+          },
+          "media": {
+            "left": -520,
+            "top": 37,
+            "right": 442,
+            "bottom": 517
+          },
+          "title": {
+            "top": -108,
+            "left": -524,
+            "bottom": -2
+          },
+          "labelTop": -137,
+          "groundOutsideEvidence": {
+            "above": -68,
+            "below": 126,
+            "left": -250,
+            "right": 221
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 970,
+            "h": 510
+          },
+          "frame": {
+            "plateBottomClearance": 322,
+            "plateTopClearance": 32,
+            "labelTopClearance": -137
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1536,
+            "h": 864
+          },
+          "scene": {
+            "left": -1380,
+            "top": -504,
+            "right": -420,
+            "bottom": 191
+          },
+          "ground": {
+            "left": -858,
+            "top": -139,
+            "right": 84,
+            "bottom": 429
+          },
+          "groundOpacity": 0.165,
+          "evidence": {
+            "left": -1380,
+            "top": -313,
+            "right": -420,
+            "bottom": 192
+          },
+          "media": {
+            "left": -1376,
+            "top": -308,
+            "right": -424,
+            "bottom": 167
+          },
+          "title": {
+            "top": -463,
+            "left": -1380,
+            "bottom": -359
+          },
+          "labelTop": -491,
+          "groundOutsideEvidence": {
+            "above": -173,
+            "below": 237,
+            "left": -522,
+            "right": 504
+          },
+          "groundSize": {
+            "w": 941,
+            "h": 569
+          },
+          "evidenceSize": {
+            "w": 960,
+            "h": 505
+          },
+          "frame": {
+            "plateBottomClearance": 672,
+            "plateTopClearance": -313,
+            "labelTopClearance": -491
+          }
+        }
+      }
+    },
+    "1920x1080": {
+      "software-factory": {
+        "entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 2475,
+            "top": 529,
+            "right": 3623,
+            "bottom": 1416
+          },
+          "ground": {
+            "left": 1819,
+            "top": 615,
+            "right": 2752,
+            "bottom": 1275
+          },
+          "groundOpacity": 0.019,
+          "evidence": {
+            "left": 2475,
+            "top": 910,
+            "right": 3245,
+            "bottom": 1437
+          },
+          "media": {
+            "left": 2480,
+            "top": 915,
+            "right": 3240,
+            "bottom": 1390
+          },
+          "title": {
+            "top": 574,
+            "left": 2475,
+            "bottom": 862
+          },
+          "labelTop": 541,
+          "groundOutsideEvidence": {
+            "above": 295,
+            "below": -162,
+            "left": 656,
+            "right": -493
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 769,
+            "h": 527
+          },
+          "frame": {
+            "plateBottomClearance": -357,
+            "plateTopClearance": 910,
+            "labelTopClearance": 541
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 1177,
+            "top": 335,
+            "right": 2341,
+            "bottom": 1235
+          },
+          "ground": {
+            "left": 1052,
+            "top": 510,
+            "right": 1985,
+            "bottom": 1170
+          },
+          "groundOpacity": 0.339,
+          "evidence": {
+            "left": 1177,
+            "top": 711,
+            "right": 1957,
+            "bottom": 1246
+          },
+          "media": {
+            "left": 1182,
+            "top": 716,
+            "right": 1952,
+            "bottom": 1198
+          },
+          "title": {
+            "top": 389,
+            "left": 1177,
+            "bottom": 681
+          },
+          "labelTop": 355,
+          "groundOutsideEvidence": {
+            "above": 202,
+            "below": -76,
+            "left": 124,
+            "right": 28
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 780,
+            "h": 534
+          },
+          "frame": {
+            "plateBottomClearance": -166,
+            "plateTopClearance": 711,
+            "labelTopClearance": 355
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 301,
+            "top": 152,
+            "right": 1481,
+            "bottom": 1064
+          },
+          "ground": {
+            "left": 548,
+            "top": 411,
+            "right": 1481,
+            "bottom": 1071
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 301,
+            "top": 522,
+            "right": 1092,
+            "bottom": 1064
+          },
+          "media": {
+            "left": 306,
+            "top": 527,
+            "right": 1087,
+            "bottom": 1015
+          },
+          "title": {
+            "top": 214,
+            "left": 301,
+            "bottom": 510
+          },
+          "labelTop": 180,
+          "groundOutsideEvidence": {
+            "above": 111,
+            "below": 7,
+            "left": -247,
+            "right": 389
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 791,
+            "h": 542
+          },
+          "frame": {
+            "plateBottomClearance": 16,
+            "plateTopClearance": 522,
+            "labelTopClearance": 180
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -468,
+            "top": -174,
+            "right": 699,
+            "bottom": 728
+          },
+          "ground": {
+            "left": 34,
+            "top": 195,
+            "right": 967,
+            "bottom": 855
+          },
+          "groundOpacity": 0.401,
+          "evidence": {
+            "left": -468,
+            "top": 201,
+            "right": 314,
+            "bottom": 737
+          },
+          "media": {
+            "left": -463,
+            "top": 206,
+            "right": 309,
+            "bottom": 688
+          },
+          "title": {
+            "top": -119,
+            "left": -468,
+            "bottom": 174
+          },
+          "labelTop": -153,
+          "groundOutsideEvidence": {
+            "above": 6,
+            "below": 118,
+            "left": -502,
+            "right": 653
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 782,
+            "h": 536
+          },
+          "frame": {
+            "plateBottomClearance": 343,
+            "plateTopClearance": 201,
+            "labelTopClearance": -153
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -1484,
+            "top": -715,
+            "right": -330,
+            "bottom": 177
+          },
+          "ground": {
+            "left": -667,
+            "top": -166,
+            "right": 266,
+            "bottom": 494
+          },
+          "groundOpacity": 0.141,
+          "evidence": {
+            "left": -1484,
+            "top": -336,
+            "right": -711,
+            "bottom": 194
+          },
+          "media": {
+            "left": -1479,
+            "top": -331,
+            "right": -716,
+            "bottom": 146
+          },
+          "title": {
+            "top": -667,
+            "left": -1484,
+            "bottom": -377
+          },
+          "labelTop": -700,
+          "groundOutsideEvidence": {
+            "above": -170,
+            "below": 300,
+            "left": -817,
+            "right": 976
+          },
+          "groundSize": {
+            "w": 933,
+            "h": 660
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 530
+          },
+          "frame": {
+            "plateBottomClearance": 886,
+            "plateTopClearance": -336,
+            "labelTopClearance": -700
+          }
+        }
+      },
+      "kivilcim": {
+        "entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 2096,
+            "top": 1086,
+            "right": 3250,
+            "bottom": 1846
+          },
+          "ground": {
+            "left": 1355,
+            "top": 794,
+            "right": 2339,
+            "bottom": 1469
+          },
+          "groundOpacity": 0.154,
+          "evidence": {
+            "left": 2494,
+            "top": 1102,
+            "right": 3318,
+            "bottom": 1647
+          },
+          "media": {
+            "left": 2498,
+            "top": 1107,
+            "right": 3314,
+            "bottom": 1616
+          },
+          "title": {
+            "top": 1232,
+            "left": 2096,
+            "bottom": 1357
+          },
+          "labelTop": 1198,
+          "groundOutsideEvidence": {
+            "above": 308,
+            "below": -177,
+            "left": 1139,
+            "right": -979
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 825,
+            "h": 545
+          },
+          "frame": {
+            "plateBottomClearance": -567,
+            "plateTopClearance": 1102,
+            "labelTopClearance": 1198
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 1060,
+            "top": 554,
+            "right": 2228,
+            "bottom": 1324
+          },
+          "ground": {
+            "left": 742,
+            "top": 480,
+            "right": 1727,
+            "bottom": 1155
+          },
+          "groundOpacity": 0.407,
+          "evidence": {
+            "left": 1462,
+            "top": 563,
+            "right": 2296,
+            "bottom": 1113
+          },
+          "media": {
+            "left": 1467,
+            "top": 568,
+            "right": 2291,
+            "bottom": 1083
+          },
+          "title": {
+            "top": 708,
+            "left": 1060,
+            "bottom": 835
+          },
+          "labelTop": 675,
+          "groundOutsideEvidence": {
+            "above": 82,
+            "below": 42,
+            "left": 720,
+            "right": -570
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 834,
+            "h": 551
+          },
+          "frame": {
+            "plateBottomClearance": -33,
+            "plateTopClearance": 563,
+            "labelTopClearance": 675
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 301,
+            "top": 152,
+            "right": 1481,
+            "bottom": 929
+          },
+          "ground": {
+            "left": 301,
+            "top": 246,
+            "right": 1285,
+            "bottom": 921
+          },
+          "groundOpacity": 0.659,
+          "evidence": {
+            "left": 708,
+            "top": 152,
+            "right": 1551,
+            "bottom": 708
+          },
+          "media": {
+            "left": 713,
+            "top": 157,
+            "right": 1546,
+            "bottom": 677
+          },
+          "title": {
+            "top": 314,
+            "left": 301,
+            "bottom": 442
+          },
+          "labelTop": 279,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 213,
+            "left": 407,
+            "right": -265
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 843,
+            "h": 557
+          },
+          "frame": {
+            "plateBottomClearance": 372,
+            "plateTopClearance": 152,
+            "labelTopClearance": 279
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -450,
+            "top": -218,
+            "right": 717,
+            "bottom": 551
+          },
+          "ground": {
+            "left": -198,
+            "top": -1,
+            "right": 787,
+            "bottom": 674
+          },
+          "groundOpacity": 0.413,
+          "evidence": {
+            "left": -48,
+            "top": -210,
+            "right": 786,
+            "bottom": 341
+          },
+          "media": {
+            "left": -43,
+            "top": -205,
+            "right": 781,
+            "bottom": 310
+          },
+          "title": {
+            "top": -64,
+            "left": -450,
+            "bottom": 63
+          },
+          "labelTop": -98,
+          "groundOutsideEvidence": {
+            "above": -210,
+            "below": 334,
+            "left": 150,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 834,
+            "h": 551
+          },
+          "frame": {
+            "plateBottomClearance": 739,
+            "plateTopClearance": -210,
+            "labelTopClearance": -98
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -1484,
+            "top": -728,
+            "right": -328,
+            "bottom": 34
+          },
+          "ground": {
+            "left": -902,
+            "top": -348,
+            "right": 82,
+            "bottom": 327
+          },
+          "groundOpacity": 0.165,
+          "evidence": {
+            "left": -1085,
+            "top": -712,
+            "right": -260,
+            "bottom": -167
+          },
+          "media": {
+            "left": -1081,
+            "top": -707,
+            "right": -265,
+            "bottom": -197
+          },
+          "title": {
+            "top": -581,
+            "left": -1484,
+            "bottom": -456
+          },
+          "labelTop": -614,
+          "groundOutsideEvidence": {
+            "above": -363,
+            "below": 493,
+            "left": -183,
+            "right": 343
+          },
+          "groundSize": {
+            "w": 985,
+            "h": 675
+          },
+          "evidenceSize": {
+            "w": 825,
+            "h": 545
+          },
+          "frame": {
+            "plateBottomClearance": 1247,
+            "plateTopClearance": -712,
+            "labelTopClearance": -614
+          }
+        }
+      },
+      "jointledger": {
+        "entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 2111,
+            "top": 1048,
+            "right": 3266,
+            "bottom": 1809
+          },
+          "ground": {
+            "left": 1625,
+            "top": 772,
+            "right": 2545,
+            "bottom": 1403
+          },
+          "groundOpacity": 0.164,
+          "evidence": {
+            "left": 2111,
+            "top": 1064,
+            "right": 2868,
+            "bottom": 1566
+          },
+          "media": {
+            "left": 2116,
+            "top": 1069,
+            "right": 2863,
+            "bottom": 1536
+          },
+          "title": {
+            "top": 1167,
+            "left": 2907,
+            "bottom": 1293
+          },
+          "labelTop": 1134,
+          "groundOutsideEvidence": {
+            "above": 292,
+            "below": -163,
+            "left": 486,
+            "right": -323
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 757,
+            "h": 502
+          },
+          "frame": {
+            "plateBottomClearance": -486,
+            "plateTopClearance": 1064,
+            "labelTopClearance": 1134
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 1070,
+            "top": 532,
+            "right": 2237,
+            "bottom": 1302
+          },
+          "ground": {
+            "left": 1008,
+            "top": 467,
+            "right": 1928,
+            "bottom": 1098
+          },
+          "groundOpacity": 0.412,
+          "evidence": {
+            "left": 1070,
+            "top": 541,
+            "right": 1835,
+            "bottom": 1048
+          },
+          "media": {
+            "left": 1075,
+            "top": 546,
+            "right": 1830,
+            "bottom": 1018
+          },
+          "title": {
+            "top": 659,
+            "left": 1875,
+            "bottom": 786
+          },
+          "labelTop": 625,
+          "groundOutsideEvidence": {
+            "above": 73,
+            "below": 50,
+            "left": 62,
+            "right": 94
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 765,
+            "h": 508
+          },
+          "frame": {
+            "plateBottomClearance": 32,
+            "plateTopClearance": 541,
+            "labelTopClearance": 625
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 300,
+            "top": 151,
+            "right": 1480,
+            "bottom": 929
+          },
+          "ground": {
+            "left": 560,
+            "top": 246,
+            "right": 1480,
+            "bottom": 877
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 300,
+            "top": 151,
+            "right": 1073,
+            "bottom": 664
+          },
+          "media": {
+            "left": 305,
+            "top": 156,
+            "right": 1068,
+            "bottom": 633
+          },
+          "title": {
+            "top": 285,
+            "left": 1113,
+            "bottom": 413
+          },
+          "labelTop": 251,
+          "groundOutsideEvidence": {
+            "above": -94,
+            "below": 212,
+            "left": -260,
+            "right": 407
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 773,
+            "h": 513
+          },
+          "frame": {
+            "plateBottomClearance": 416,
+            "plateTopClearance": 151,
+            "labelTopClearance": 251
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -453,
+            "top": -220,
+            "right": 714,
+            "bottom": 550
+          },
+          "ground": {
+            "left": 59,
+            "top": -1,
+            "right": 980,
+            "bottom": 630
+          },
+          "groundOpacity": 0.413,
+          "evidence": {
+            "left": -453,
+            "top": -212,
+            "right": 312,
+            "bottom": 296
+          },
+          "media": {
+            "left": -448,
+            "top": -207,
+            "right": 307,
+            "bottom": 265
+          },
+          "title": {
+            "top": -93,
+            "left": 351,
+            "bottom": 34
+          },
+          "labelTop": -127,
+          "groundOutsideEvidence": {
+            "above": -210,
+            "below": 334,
+            "left": -513,
+            "right": 668
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 765,
+            "h": 508
+          },
+          "frame": {
+            "plateBottomClearance": 784,
+            "plateTopClearance": -212,
+            "labelTopClearance": -127
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -1483,
+            "top": -727,
+            "right": -328,
+            "bottom": 34
+          },
+          "ground": {
+            "left": -642,
+            "top": -348,
+            "right": 278,
+            "bottom": 283
+          },
+          "groundOpacity": 0.165,
+          "evidence": {
+            "left": -1483,
+            "top": -711,
+            "right": -726,
+            "bottom": -209
+          },
+          "media": {
+            "left": -1478,
+            "top": -706,
+            "right": -731,
+            "bottom": -239
+          },
+          "title": {
+            "top": -608,
+            "left": -686,
+            "bottom": -482
+          },
+          "labelTop": -641,
+          "groundOutsideEvidence": {
+            "above": -363,
+            "below": 492,
+            "left": -841,
+            "right": 1004
+          },
+          "groundSize": {
+            "w": 920,
+            "h": 631
+          },
+          "evidenceSize": {
+            "w": 757,
+            "h": 502
+          },
+          "frame": {
+            "plateBottomClearance": 1289,
+            "plateTopClearance": -711,
+            "labelTopClearance": -641
+          }
+        }
+      },
+      "dropspot": {
+        "entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 2112,
+            "top": 1049,
+            "right": 3267,
+            "bottom": 1885
+          },
+          "ground": {
+            "left": 1413,
+            "top": 881,
+            "right": 2546,
+            "bottom": 1566
+          },
+          "groundOpacity": 0.164,
+          "evidence": {
+            "left": 2112,
+            "top": 1279,
+            "right": 3267,
+            "bottom": 1886
+          },
+          "media": {
+            "left": 2117,
+            "top": 1284,
+            "right": 3262,
+            "bottom": 1856
+          },
+          "title": {
+            "top": 1098,
+            "left": 2112,
+            "bottom": 1223
+          },
+          "labelTop": 1065,
+          "groundOutsideEvidence": {
+            "above": 397,
+            "below": -320,
+            "left": 699,
+            "right": -721
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1155,
+            "h": 607
+          },
+          "frame": {
+            "plateBottomClearance": -806,
+            "plateTopClearance": 1279,
+            "labelTopClearance": 1065
+          }
+        },
+        "mid-entry": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 1067,
+            "top": 531,
+            "right": 2234,
+            "bottom": 1376
+          },
+          "ground": {
+            "left": 794,
+            "top": 575,
+            "right": 1927,
+            "bottom": 1260
+          },
+          "groundOpacity": 0.412,
+          "evidence": {
+            "left": 1067,
+            "top": 755,
+            "right": 2234,
+            "bottom": 1369
+          },
+          "media": {
+            "left": 1072,
+            "top": 760,
+            "right": 2229,
+            "bottom": 1338
+          },
+          "title": {
+            "top": 587,
+            "left": 1067,
+            "bottom": 714
+          },
+          "labelTop": 553,
+          "groundOutsideEvidence": {
+            "above": 180,
+            "below": -109,
+            "left": 273,
+            "right": -308
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1168,
+            "h": 614
+          },
+          "frame": {
+            "plateBottomClearance": -289,
+            "plateTopClearance": 755,
+            "labelTopClearance": 553
+          }
+        },
+        "focus": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": 300,
+            "top": 151,
+            "right": 1480,
+            "bottom": 1005
+          },
+          "ground": {
+            "left": 347,
+            "top": 355,
+            "right": 1480,
+            "bottom": 1039
+          },
+          "groundOpacity": 0.66,
+          "evidence": {
+            "left": 300,
+            "top": 370,
+            "right": 1480,
+            "bottom": 990
+          },
+          "media": {
+            "left": 305,
+            "top": 375,
+            "right": 1475,
+            "bottom": 959
+          },
+          "title": {
+            "top": 214,
+            "left": 300,
+            "bottom": 342
+          },
+          "labelTop": 179,
+          "groundOutsideEvidence": {
+            "above": 15,
+            "below": 50,
+            "left": -47,
+            "right": 0
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1180,
+            "h": 620
+          },
+          "frame": {
+            "plateBottomClearance": 90,
+            "plateTopClearance": 370,
+            "labelTopClearance": 179
+          }
+        },
+        "early-exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -452,
+            "top": -219,
+            "right": 715,
+            "bottom": 626
+          },
+          "ground": {
+            "left": -152,
+            "top": 108,
+            "right": 980,
+            "bottom": 793
+          },
+          "groundOpacity": 0.413,
+          "evidence": {
+            "left": -452,
+            "top": 5,
+            "right": 715,
+            "bottom": 619
+          },
+          "media": {
+            "left": -447,
+            "top": 10,
+            "right": 710,
+            "bottom": 588
+          },
+          "title": {
+            "top": -163,
+            "left": -452,
+            "bottom": -37
+          },
+          "labelTop": -197,
+          "groundOutsideEvidence": {
+            "above": -103,
+            "below": 174,
+            "left": -300,
+            "right": 265
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1168,
+            "h": 614
+          },
+          "frame": {
+            "plateBottomClearance": 461,
+            "plateTopClearance": 5,
+            "labelTopClearance": -197
+          }
+        },
+        "exit": {
+          "viewport": {
+            "w": 1920,
+            "h": 1080
+          },
+          "scene": {
+            "left": -1482,
+            "top": -726,
+            "right": -327,
+            "bottom": 110
+          },
+          "ground": {
+            "left": -854,
+            "top": -238,
+            "right": 279,
+            "bottom": 446
+          },
+          "groundOpacity": 0.166,
+          "evidence": {
+            "left": -1482,
+            "top": -496,
+            "right": -327,
+            "bottom": 111
+          },
+          "media": {
+            "left": -1477,
+            "top": -491,
+            "right": -332,
+            "bottom": 81
+          },
+          "title": {
+            "top": -677,
+            "left": -1482,
+            "bottom": -552
+          },
+          "labelTop": -710,
+          "groundOutsideEvidence": {
+            "above": -258,
+            "below": 335,
+            "left": -628,
+            "right": 606
+          },
+          "groundSize": {
+            "w": 1133,
+            "h": 684
+          },
+          "evidenceSize": {
+            "w": 1155,
+            "h": 607
+          },
+          "frame": {
+            "plateBottomClearance": 969,
+            "plateTopClearance": -496,
+            "labelTopClearance": -710
+          }
+        }
+      }
+    }
+  },
+  "work": {
+    "1366x768": {
+      "software-factory": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1311,
+        "containerRight": 1343,
+        "pageHeight": 1619,
+        "hasContribution": false,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.A personal software factory: one",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 3168,
+        "firstImageInFold": false,
+        "contentRight": 1311,
+        "containerRight": 1343,
+        "pageHeight": 7156,
+        "hasContribution": false,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.One-minute summary Kıvılcım is a personal, local-first PWA for pl",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2438,
+        "firstImageInFold": false,
+        "contentRight": 1311,
+        "containerRight": 1343,
+        "pageHeight": 5997,
+        "hasContribution": false,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2237,
+        "firstImageInFold": false,
+        "contentRight": 1311,
+        "containerRight": 1343,
+        "pageHeight": 6554,
+        "hasContribution": false,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.One-minute summary DropSpot is a fair-claim and waitlist system",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1311,
+        "containerRight": 1343,
+        "pageHeight": 1229,
+        "hasContribution": false,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Selected professional work is being ",
+        "errors": []
+      }
+    },
+    "1440x900": {
+      "software-factory": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1348,
+        "containerRight": 1380,
+        "pageHeight": 1636,
+        "hasContribution": false,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.A personal software factory: one",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 3168,
+        "firstImageInFold": false,
+        "contentRight": 1348,
+        "containerRight": 1380,
+        "pageHeight": 7173,
+        "hasContribution": false,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.One-minute summary Kıvılcım is a personal, local-first PWA for pl",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2438,
+        "firstImageInFold": false,
+        "contentRight": 1348,
+        "containerRight": 1380,
+        "pageHeight": 6015,
+        "hasContribution": false,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2237,
+        "firstImageInFold": false,
+        "contentRight": 1348,
+        "containerRight": 1380,
+        "pageHeight": 6572,
+        "hasContribution": false,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.One-minute summary DropSpot is a fair-claim and waitlist system",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1348,
+        "containerRight": 1380,
+        "pageHeight": 1247,
+        "hasContribution": false,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Selected professional work is being ",
+        "errors": []
+      }
+    },
+    "1920x1080": {
+      "software-factory": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1588,
+        "containerRight": 1620,
+        "pageHeight": 1784,
+        "hasContribution": false,
+        "textSample": "AUTONOMOUS DELIVERY SYSTEMSoftware FactoryAn orchestration core that routes work through test, review, and human-approval gates.A personal software factory: one",
+        "errors": []
+      },
+      "kivilcim": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 3168,
+        "firstImageInFold": false,
+        "contentRight": 1588,
+        "containerRight": 1620,
+        "pageHeight": 7321,
+        "hasContribution": false,
+        "textSample": "PERSONAL OPERATING SYSTEMKıvılcımA local-first system for planning, focus, and personal growth.One-minute summary Kıvılcım is a personal, local-first PWA for pl",
+        "errors": []
+      },
+      "jointledger": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2438,
+        "firstImageInFold": false,
+        "contentRight": 1588,
+        "containerRight": 1620,
+        "pageHeight": 6162,
+        "hasContribution": false,
+        "textSample": "SHARED FINANCE SYSTEMJointLedgerPersonal accounts. Shared financial life. One coordinated system.A fork of ezBookkeeping ↗︎ (opens in new tab), not an original ",
+        "errors": []
+      },
+      "dropspot": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": 2237,
+        "firstImageInFold": false,
+        "contentRight": 1588,
+        "containerRight": 1620,
+        "pageHeight": 6720,
+        "hasContribution": false,
+        "textSample": "FAIR DISTRIBUTION SYSTEMDropSpotA fair claim and waitlist system for limited-stock product drops.One-minute summary DropSpot is a fair-claim and waitlist system",
+        "errors": []
+      },
+      "professional-systems": {
+        "h1FontPx": 40,
+        "h1Top": 165,
+        "firstImageTop": null,
+        "firstImageInFold": false,
+        "contentRight": 1588,
+        "containerRight": 1620,
+        "pageHeight": 1395,
+        "hasContribution": false,
+        "textSample": "PROFESSIONAL SYSTEMSProfessional SystemsDesigning usable interfaces within complex technical and organizational constraints.Selected professional work is being ",
+        "errors": []
+      }
+    }
+  }
+}

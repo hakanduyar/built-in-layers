@@ -9,14 +9,11 @@
  * the standard relative-luminance formula:
  *   ink          on paper       15.73:1
  *   ink-muted    on paper        7.23:1  (secondary text, >= 4.5:1)
- *   signal-text  on paper        5.06:1  (accent text,    >= 4.5:1)
- *   signal-ui    on paper        3.65:1  (control/indicator boundaries, >= 3:1)
- *   signal       on paper        2.86:1  (FAILS 4.5:1 and 3:1 -- decorative
- *                                          use only; never text, never a
- *                                          meaningful indicator, never the
- *                                          sole signal of state)
- *   ink          on signal       5.51:1  (text on signal-filled elements)
  *   line         on paper        1.78:1  (decorative rules only)
+ *
+ * V14.3 Gate D (D-050): the signal accent (#ff4f1f and its text / ui tints)
+ * is retired. The palette is paper, soft paper, line, ink-muted and ink; a
+ * hover is ink-muted, a state is ink, a route is ink. No orange anywhere.
  */
 
 @theme {
@@ -25,9 +22,6 @@
   --color-ink: #161616;
   --color-soft-paper: #e5e2d8;
   --color-line: #b8b5ac;
-  --color-signal: #ff4f1f;
-  --color-signal-text: #b8380e;
-  --color-signal-ui: #e04413;
   --color-ink-muted: #504e48;
 
   /* Typography roles (DESIGN_SYSTEM §3) -- size + paired line-height via
@@ -57,6 +51,12 @@
   --tracking-heading-l: -0.01em;
   --tracking-mono-label: 0.08em;
   --tracking-mono-meta: 0.04em;
+
+  /* Measure (DESIGN_SYSTEM §3, §6): the reading measure for running text,
+     as `max-w-measure`. 42rem is the desktop prose measure; below `lg` the
+     token itself is re-declared (see the V13 M2 block after @layer base),
+     so one utility reads at the right length in every frame. */
+  --container-measure: 42rem;
 
   /* Radius (DESIGN_SYSTEM §7) -- nothing larger than --radius-2 is approved */
   --radius-0: 0px;
@@ -114,6 +114,67 @@
   }
 }
 
+/*
+ * V13 mobile gate (M2): the measure below `lg`.
+ *
+ * The 42rem prose measure is a desktop decision: 672px of Archivo at 16px runs
+ * ~98 characters a line by glyph advance (~84 by the audit's 0.5em rule), and
+ * on the desktop it sits in a 12-column composition that was approved at that
+ * length. Below `lg` there is no composition around it -- the page is one
+ * column -- so at 768 the same 672px is simply a long line held closer to the
+ * eye (docs/MOBILE_AUDIT.md, M2: 82-95 by the audit's rule, the worst measure
+ * on the site at any width). Phones never reach it: at 430 the column is
+ * 398px wide and the cap is inert.
+ *
+ * 34rem is the measure the homepage already gives its own body copy
+ * (FieldNotes, AboutPreview, the project scenes): 544px, ~79 characters of
+ * body and ~71 of body-l by glyph advance. The token is re-declared rather
+ * than a second utility added, so `max-w-measure` means "as long as running
+ * text should be here" in every frame, and the desktop value is untouched.
+ * The COLUMN stays 42rem: figures keep their width, and the text stops short
+ * of the plate's right edge on a tablet the way it does in a printed page.
+ */
+@media (width < 64rem) {
+  :root {
+    --container-measure: 34rem;
+  }
+}
+
+/*
+ * V13 mobile gate (M4): a 44px hit box for a text link, without moving it.
+ *
+ * DESIGN_SYSTEM §10 sets a 44px minimum target, and the buttons meet it. The
+ * standalone text links do not: a project title on the homepage register is a
+ * 185x24 target, a footer social link 66x21, a primary-nav item on a tablet
+ * 35x17 (docs/MOBILE_AUDIT.md, M4). Making them taller by leading or padding
+ * would move every rule and rhythm they sit in, on every width.
+ *
+ * So the hit box grows and the layout does not. Block padding fills the
+ * difference between one line of the link's own type (`1lh`, so it works at
+ * 13px mono and 40px heading alike) and 2.8125rem, and an equal negative
+ * margin gives that space straight back to the line box, so the surrounding
+ * rhythm is pixel-identical. 45px rather than 44 because Chromium lays out in
+ * 1/64px units and a fractional line-height (26.4px at body) snaps down -- at
+ * exactly 2.75rem the measured box was 43.98px. The same trade runs
+ * horizontally with `--touch-slop-x` (default 0.5rem; a call site with a
+ * tight row gap can set its own). `max()`/`min()` keep it inert on type that
+ * is already that tall.
+ *
+ * The utility is the trade only; the call site supplies the display. An
+ * inline link pairs it with `inline-block` (vertical padding on an inline box
+ * does not make a box), a full-width row link with `block` (the whole row
+ * becomes the target). Applied as `max-lg:inline-block max-lg:touch-link` at
+ * each standalone link so the desktop composition is untouched; links inside
+ * a running sentence are left alone -- they are exempt (WCAG 2.5.8 "inline")
+ * and would reflow as blocks.
+ */
+@utility touch-link {
+  padding-block: max(0px, calc((2.8125rem - 1lh) / 2));
+  margin-block: min(0px, calc((1lh - 2.8125rem) / 2));
+  padding-inline: var(--touch-slop-x, 0.5rem);
+  margin-inline: calc(-1 * var(--touch-slop-x, 0.5rem));
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -122,5 +183,337 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /*
+   * THE EDITORIAL DRIFT BLOCKS PARK HERE, IN CSS, ON PURPOSE.
+   *
+   * D-020's contract is "reduced motion disables motion, not design": each block
+   * keeps its asymmetric placement but stops travelling. That used to be decided
+   * in JS -- `x: reduceMotion ? parked : motionValue` -- which is only correct
+   * while `useReducedMotion()` is true on the very FIRST render. It was, and that
+   * is exactly why it also produced a hydration failure: the server cannot know
+   * the preference, so it served the travelling position and the client hydrated
+   * the parked one, and React regenerated the whole lower page for precisely the
+   * audience least able to absorb it.
+   *
+   * Deciding it in JS after hydration fixes the mismatch but opens a window: for
+   * the frames between hydration and the preference settling, the block is still
+   * bound to the scroll. Under parallel test load that window was wide enough for
+   * `tests/e2e/spatial-v5.spec.ts` to measure 91px of travel.
+   *
+   * The browser has no such problem. The server emits identical markup for
+   * everyone -- including `--drift-parked`, a per-block constant -- and the media
+   * query parks the block with zero JavaScript, zero timing window and zero
+   * mismatch. `!important` is load-bearing: Motion writes `transform` inline, and
+   * an important stylesheet declaration is the one thing that outranks it.
+   */
+  [data-drift-block] {
+    transform: translateX(var(--drift-parked)) !important;
+  }
+}
+
+/*
+ * Spatial Portfolio V6.2 (feature/spatial-portfolio-v5, not merged --
+ * docs/DESIGN_SYSTEM.md §22). Footer blast radius.
+ *
+ * The finale CTA composition is scoped to pages that actually contain the
+ * spatial journey. V6.1 applied its three-quarter-viewport treatment globally,
+ * and on a short content page (/work, /notes) a CTA that tall reads as a page
+ * that ran out of content rather than as a resolution -- the composition needs a
+ * journey behind it to be resolving anything.
+ *
+ * `:has()` rather than a prop because SiteFooter is rendered by the root layout,
+ * which has no route context; threading one through would mean either a client
+ * component or duplicating the CTA per page. This keeps exactly one CTA in the
+ * document on every page and changes only how much room it claims.
+ */
+body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+  min-height: 76vh;
+}
+
+/*
+ * V14 (owner finding §14): the finale's resolved map is the last state of the
+ * journey the homepage contains. On a page without that journey it would be a
+ * drawing of somewhere the reader has not been, so it is scoped exactly as the
+ * finale's height is -- one component, one CTA, and the map only where the
+ * route it resolves actually exists.
+ */
+body:not(:has(section[aria-label="Spatial system tour"])) .finale-map {
+  display: none;
+}
+
+/*
+ * V14.1 — THE WORLD'S FIT, APPLIED ON THE FIRST PAINT.
+ *
+ * The custom property is published synchronously in `<head>` by the boot script
+ * generated in lib/spatial/worldFit.ts, so this resolves before anything is
+ * painted rather than a commit after the world mounts.
+ *
+ * A TRANSFORM HERE, NOT `zoom`, AND THAT IS THE OPPOSITE OF THE WORLD'S OWN
+ * CHOICE ON PURPOSE. The mounted world uses `zoom` (V11): it is a layout scale,
+ * so text is laid out at its final size and painted once at native raster scale.
+ * This layer is the PRE-HYDRATION tree, and it is replaced by the world a
+ * hundred milliseconds later — so what matters here is that it is the same SIZE,
+ * and that it does not change the document's layout on its way past. `zoom`
+ * changes the element's layout box, which changed the magnitude of the shift the
+ * hydration swap already causes: measured, CLS on the homepage went 0.0388 ->
+ * 0.0777 at 1440x900 and 0.0155 -> 0.1152 at 1366x768, past the 0.1 "good"
+ * threshold. A transform is a paint operation, so the box, the document height
+ * and that shift are all untouched: CLS returns to the baseline's exactly.
+ *
+ * The paint-time resampling that V11 removed from the world is therefore
+ * accepted HERE, for the ~100ms this tree is on screen, in exchange for it
+ * being the right size for all of them. Nothing that persists is scaled.
+ *
+ * The fallback of 1 is what every visitor the boot script deliberately skips
+ * receives — no JS, `prefers-reduced-motion: reduce`, and anything below the
+ * desktop breakpoint — so their composition is byte-identical to before, with
+ * no transform at all.
+ */
+.world-fit-layer {
+  transform: scale(var(--world-fit, 1));
+  transform-origin: top center;
+}
+
+.world-preview-shell,
+.world-preview-fit,
+[data-world-preview-plane],
+.world-preview-return {
+  display: contents;
+}
+
+.world-preview-grammar {
+  display: none;
+}
+
+/* The desktop boot preview must agree with the mounted camera in position,
+ * width AND raster scale. Its old centred linear container matched only the
+ * heading's height: hydration moved that heading 44px left / 56px down at 1440.
+ * Boot opts in only with JS and ordinary desktop motion. The scene constants
+ * come from SpatialCamera, so this is the same composition before hydration.
+ */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html[data-world-preview="desktop"] .world-preview-shell {
+    display: block;
+    height: var(--preview-route-height);
+  }
+
+  html[data-world-preview="desktop"] .world-fit-layer {
+    --world-vw: var(--preview-world-vw);
+    --world-vh: var(--preview-world-vh);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: clip;
+    /* Match the mounted sticky frame's opaque paint backing as well as its
+     * geometry; otherwise Chromium changes text antialiasing at hydration. */
+    background-color: var(--color-paper);
+    transform: none;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  html[data-world-preview="desktop"] [data-world-preview-scene] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateX(var(--preview-x)) translateY(var(--preview-y));
+    width: var(--preview-scene-width);
+  }
+
+  html[data-world-preview="desktop"] .world-preview-fit {
+    display: block;
+    position: absolute;
+    inset: 0;
+    zoom: var(--world-fit);
+  }
+
+  html[data-world-preview="desktop"] [data-world-preview-plane] {
+    display: block;
+  }
+
+  html[data-world-preview="desktop"] .world-preview-grammar {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  html[data-world-preview="desktop"] .world-preview-return {
+    display: block;
+    position: absolute;
+    top: var(--preview-route-height);
+  }
+}
+
+/*
+ * V14.2 Gate C (owner): the finale is the lower world's resolved final state,
+ * so on the homepage it stands on the lower world's own datum rather than in
+ * the shared centred container. The lower rail (LowerRoute) runs at 4vw; the
+ * finale's axis is placed at that x and its content starts 2rem inside it,
+ * exactly as every lower section's register does (SystemNode's `lg:pl-8`),
+ * so the line the reader came down ends on the action. The page-wide rule
+ * that opened the footer is dropped on the homepage -- the finale is reached
+ * along the route, not appended after it -- and the caption and axis are
+ * hidden off the homepage, as the map is. Off the homepage nothing changes.
+ */
+body:has(section[aria-label="Spatial system tour"]) .spatial-footer {
+  border-top-color: transparent;
+}
+body:not(:has(section[aria-label="Spatial system tour"])) .finale-route {
+  display: none;
+}
+@media (min-width: 1024px) {
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+    margin-left: 0;
+    max-width: calc(8vw + 2rem + 1180px);
+    padding-left: calc(4vw + 2rem);
+    padding-right: 4vw;
+  }
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale > div {
+    padding-left: 0;
+  }
+  body:has(section[aria-label="Spatial system tour"]) .finale-axis {
+    left: -2rem;
+  }
+}
+@media (min-width: 1024px) {
+  /* The finale's axis, extended up to the footer's top edge on the homepage:
+     the rail's line resumes where the route handed over and ends on the
+     action. `overflow-clip` on the footer clips the overrun. */
+  body:has(section[aria-label="Spatial system tour"]) .finale-axis[style*="height"] {
+    top: -100vh;
+    height: calc(100% + 100vh - 0.75rem) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* V14.3 Gate D (D-050): inside the spatial tour the acquisition frame's
+     brackets are the plate's corners; the Figure primitive's own ticks made a
+     second corner at each of the four. Off the tour (the case studies, the
+     Work index) the Figure is unchanged. */
+  section[aria-label="Spatial system tour"] [data-figure-tick] {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* V14.3 Gate E (D-051): a modest interval between the operator's station and
+     the finale on the homepage -- the last beat opens with room, not the old
+     long travel. Off the homepage the footer sits as before. */
+  body:has(section[aria-label="Spatial system tour"]) .spatial-footer {
+    margin-top: 5rem; /* V14.4: the finale waits until the operator reveal has had its frame */
+  }
+}
+
+/*
+ * V14.8 (owner: on wide displays the final sections feel underscaled) -- THE
+ * WIDE TIER OF THE LOWER WORLD. Every utility in this file resolves its size
+ * from a theme variable, so the lower world's type is re-sized in ONE place,
+ * scoped to the homepage's lower sections and the finale, and only from
+ * 1536px up. Each value is a clamp whose minimum is the size the section has
+ * today, so nothing changes at 1440 or 1536 and the tier grows continuously
+ * with the viewport from there -- a little at 1920, fully at 2560 -- and is
+ * capped so it cannot run away on a 4K canvas. The growth is linear in the
+ * viewport (not a vw multiple, which would only clear today's caps past
+ * ~2100px): about +12% at 1920, about +33% at 2560, then the cap. The hierarchy is untouched:
+ * every step scales by roughly the same factor, and the intervals between
+ * sections are the V14.4 gate's. The name in About and the finale's question
+ * carry their own clamps on the element, at the same rate. Off the homepage
+ * nothing changes.
+ */
+@media (min-width: 1536px) {
+  body:has(section[aria-label="Spatial system tour"]) :is([data-drift-block], .spatial-finale) {
+    --text-display-l: clamp(4rem, calc(4rem + (100vw - 1536px) * 0.021), 5.5rem);
+    --text-heading-l: clamp(2.5rem, calc(2.5rem + (100vw - 1536px) * 0.012), 3.25rem);
+    --text-heading-m: clamp(1.375rem, calc(1.375rem + (100vw - 1536px) * 0.007), 1.625rem);
+    --text-statement: clamp(2.25rem, calc(2.25rem + (100vw - 1536px) * 0.011), 2.75rem);
+    --text-body-l: clamp(1.125rem, calc(1.125rem + (100vw - 1536px) * 0.0055), 1.3125rem);
+    --text-body: clamp(1rem, calc(1rem + (100vw - 1536px) * 0.005), 1.1875rem);
+    --text-mono-label: clamp(0.8125rem, calc(0.8125rem + (100vw - 1536px) * 0.004), 0.9375rem);
+    --text-mono-meta: clamp(0.75rem, calc(0.75rem + (100vw - 1536px) * 0.0035), 0.875rem);
+  }
+  /* The finale's measure grows with the same tier the drift track does
+     (EditorialDrift's --drift-w at 2xl), so the question holds the canvas. */
+  body:has(section[aria-label="Spatial system tour"]) .spatial-finale {
+    max-width: calc(8vw + 2rem + min(1180px + (100vw - 1536px) * 0.4, 1600px));
+  }
+}
+
+/*
+ * V14.10 (owner) -- THE FIRST-LOAD NAVIGATION CUE.
+ *
+ * The two side arrows breathe twice on the reader's first visit of a session
+ * and then stop for good. It is a suggestion, not a tutorial: no overlay, no
+ * text, no dismiss button, nothing to read. The component also drops the cue
+ * the moment the reader scrolls, so anyone who has already found their own way
+ * never sees it finish.
+ *
+ * Opacity is animated on the control and `translate` on the chevron inside it,
+ * which are two different elements and two different properties -- so neither
+ * fights the `rotate` that forms the chevron nor the `translate` its hover
+ * state uses. Without a fill mode both revert to the resting values the utility
+ * classes set, which is why the arrow is quiet again the instant the last
+ * iteration ends.
+ *
+ * The navigator does not render at all under reduced motion, so this is doubly
+ * guarded rather than singly.
+ */
+/* Each mark reverses against the material directly beneath it, including a
+   partly closed ink rail. No backing surface or transition timing is involved. */
+@media (min-width: 1024px) {
+  .route-navigator {
+    mix-blend-mode: difference;
+    --color-ink: var(--color-paper);
+    --color-ink-muted: var(--color-paper);
+    --color-line: var(--color-paper);
+  }
+  /* V14.14: the TICK MARK specifically. This selector was written when the
+     mark was the only aria-hidden child of a station button; the destination
+     preview added beside it is also one, and was being forced visible on every
+     station still ahead of the reader. */
+  .route-navigator [data-nav-state="ahead"] > [data-nav-mark] {
+    opacity: 0.35;
+  }
+}
+
+@keyframes nav-cue-breathe {
+  0%,
+  100% {
+    opacity: 0.24;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+@keyframes nav-cue-drift-left {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: -3px 0;
+  }
+}
+@keyframes nav-cue-drift-right {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 3px 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-cue {
+    animation: nav-cue-breathe 2.6s var(--ease-standard) 2;
+  }
+  .nav-cue-left {
+    animation: nav-cue-drift-left 2.6s var(--ease-standard) 2;
+  }
+  .nav-cue-right {
+    animation: nav-cue-drift-right 2.6s var(--ease-standard) 2;
   }
 }

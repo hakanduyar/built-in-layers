@@ -1,0 +1,186 @@
+{
+  "base": "http://127.0.0.1:3200",
+  "focusFile": "docs/review/v14-owner-visual/after/metrics/route-focus.json",
+  "viewports": {
+    "1440x900": {
+      "journeys": {
+        "forward": {
+          "route": {
+            "notches": 110,
+            "seconds": 18.6,
+            "from": 0,
+            "to": 5089,
+            "px": 5089,
+            "peakPxPerSec": 487,
+            "coastPxAfterInput": 433
+          },
+          "lower": {
+            "notches": 23,
+            "seconds": 3.8,
+            "from": 5089,
+            "to": 7737,
+            "px": 2648,
+            "peakPxPerSec": 1530,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1440x900--forward.webm"
+        },
+        "reverse": {
+          "lower": {
+            "notches": 27,
+            "seconds": 5,
+            "from": 7737,
+            "to": 4497,
+            "px": 3240,
+            "peakPxPerSec": 1207,
+            "coastPxAfterInput": -44
+          },
+          "route": {
+            "notches": 106,
+            "seconds": 16.3,
+            "from": 4497,
+            "to": 0,
+            "px": 4497,
+            "peakPxPerSec": 479,
+            "coastPxAfterInput": -26
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1440x900--reverse.webm"
+        },
+        "lower-world": {
+          "normal": {
+            "notches": 27,
+            "seconds": 3.7,
+            "from": 4561,
+            "to": 7737,
+            "px": 3176,
+            "peakPxPerSec": 1500,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1440x900--lower-world.webm"
+        },
+        "lower-world-aggressive": {
+          "aggressive": {
+            "notches": 28,
+            "seconds": 3.2,
+            "from": 4561,
+            "to": 7737,
+            "px": 3176,
+            "peakPxPerSec": 1981,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1440x900--lower-world-aggressive.webm"
+        }
+      },
+      "geom": {
+        "routeStart": 61,
+        "routeEnd": 4561,
+        "docMax": 7737,
+        "vh": 900,
+        "vw": 1440
+      }
+    },
+    "1920x1080": {
+      "journeys": {
+        "forward": {
+          "route": {
+            "notches": 120,
+            "seconds": 19.7,
+            "from": 0,
+            "to": 6098,
+            "px": 6098,
+            "peakPxPerSec": 897,
+            "coastPxAfterInput": 593
+          },
+          "lower": {
+            "notches": 23,
+            "seconds": 4,
+            "from": 6098,
+            "to": 8802,
+            "px": 2704,
+            "peakPxPerSec": 1307,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1920x1080--forward.webm"
+        },
+        "reverse": {
+          "lower": {
+            "notches": 28,
+            "seconds": 4.5,
+            "from": 8802,
+            "to": 5442,
+            "px": 3360,
+            "peakPxPerSec": 1409,
+            "coastPxAfterInput": -2
+          },
+          "route": {
+            "notches": 114,
+            "seconds": 19.3,
+            "from": 5442,
+            "to": 0,
+            "px": 5442,
+            "peakPxPerSec": 615,
+            "coastPxAfterInput": -60
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1920x1080--reverse.webm"
+        },
+        "lower-world": {
+          "normal": {
+            "notches": 28,
+            "seconds": 4.6,
+            "from": 5461,
+            "to": 8802,
+            "px": 3341,
+            "peakPxPerSec": 1295,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1920x1080--lower-world.webm"
+        },
+        "lower-world-aggressive": {
+          "aggressive": {
+            "notches": 25,
+            "seconds": 3.8,
+            "from": 5461,
+            "to": 8802,
+            "px": 3341,
+            "peakPxPerSec": 1830,
+            "coastPxAfterInput": 0
+          },
+          "consoleErrors": 0,
+          "video": "docs/review/v14.1-fable/before/recordings/1920x1080--lower-world-aggressive.webm"
+        }
+      },
+      "geom": {
+        "routeStart": 61,
+        "routeEnd": 5461,
+        "docMax": 8802,
+        "vh": 1080,
+        "vw": 1920
+      }
+    }
+  },
+  "zoom": {
+    "1920x1080@100": {
+      "cssViewport": "1920x1080",
+      "worldUnitPx": null
+    },
+    "1920x1080@80": {
+      "cssViewport": "2400x1350",
+      "worldUnitPx": null
+    },
+    "1920x1080@67": {
+      "cssViewport": "2866x1612",
+      "worldUnitPx": null
+    },
+    "1920x1080@50": {
+      "cssViewport": "3840x2160",
+      "worldUnitPx": null
+    }
+  }
+}

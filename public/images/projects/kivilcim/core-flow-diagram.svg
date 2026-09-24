@@ -42,7 +42,7 @@
 
   <!-- Stage 3: Focus (signal accent — the one meaningful indicator) -->
   <g>
-    <rect x="792" y="380" width="300" height="220" fill="none" stroke="#e04413" stroke-width="2" />
+    <rect x="792" y="380" width="300" height="220" fill="none" stroke="#504e48" stroke-width="2" />
     <text x="822" y="440" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="32" font-weight="600" fill="#161616">Focus</text>
     <line x1="822" y1="462" x2="1062" y2="462" stroke="#b8b5ac" stroke-width="1" />
     <text x="822" y="500" font-family="ui-sans-serif, 'Archivo', system-ui, sans-serif" font-size="20" fill="#504e48">

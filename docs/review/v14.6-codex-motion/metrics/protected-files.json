@@ -1,0 +1,80 @@
+[
+  {
+    "file": "components/spatial/SystemsWord.tsx",
+    "before": "dfb7411b8c241c43feb992d5da1ed1aedbdc894af5c70d3fc4be7135441a44d8",
+    "after": "dfb7411b8c241c43feb992d5da1ed1aedbdc894af5c70d3fc4be7135441a44d8",
+    "unchanged": true
+  },
+  {
+    "file": "components/spatial/SceneBreak.tsx",
+    "before": "e5fd3e2f2c1fa2b0edda15d353c66d26f838a7f694d976eae663a451bd30047a",
+    "after": "e5fd3e2f2c1fa2b0edda15d353c66d26f838a7f694d976eae663a451bd30047a",
+    "unchanged": true
+  },
+  {
+    "file": "components/spatial/SystemPOV.tsx",
+    "before": "6fecaa4b47ee8a70ca3cbd097519d94b678f4d867cb1c6a692cc7b4fd33d224a",
+    "after": "6fecaa4b47ee8a70ca3cbd097519d94b678f4d867cb1c6a692cc7b4fd33d224a",
+    "unchanged": true
+  },
+  {
+    "file": "components/spatial/WorldGrammar.tsx",
+    "before": "2da62e44d34ed464afc96231a118ecf1aac5fd7ee24392478d894ce8318270e2",
+    "after": "2da62e44d34ed464afc96231a118ecf1aac5fd7ee24392478d894ce8318270e2",
+    "unchanged": true
+  },
+  {
+    "file": "lib/spatial/sceneRoute.ts",
+    "before": "897c7808b6e2490b8c8b82251b44c7a0e0fc7c997fd2e8b22426d0379557e0eb",
+    "after": "897c7808b6e2490b8c8b82251b44c7a0e0fc7c997fd2e8b22426d0379557e0eb",
+    "unchanged": true
+  },
+  {
+    "file": "components/sections/SelectedSystems.tsx",
+    "before": "69a13cb801db1b2d1673b5ef9b08abc983e2e6f37b46865b4af3040d33eea881",
+    "after": "69a13cb801db1b2d1673b5ef9b08abc983e2e6f37b46865b4af3040d33eea881",
+    "unchanged": true
+  },
+  {
+    "file": "components/ui/motion/Reveal.tsx",
+    "before": "8eff2a98e312e85463eee1aa250e86039fb7c424150910c207bb578f00efc93f",
+    "after": "8eff2a98e312e85463eee1aa250e86039fb7c424150910c207bb578f00efc93f",
+    "unchanged": true
+  },
+  {
+    "file": "components/spatial/SystemNode.tsx",
+    "before": "04f3f8d2d7cc2601a7fed1abaaf67bb318d793fa663d07ff1de09a0f6e457819",
+    "after": "04f3f8d2d7cc2601a7fed1abaaf67bb318d793fa663d07ff1de09a0f6e457819",
+    "unchanged": true
+  },
+  {
+    "file": "lib/spatial/systemPov.ts",
+    "before": "799c240666c411242c2e3c74e24928e8736ffc808cba885eba9f704eb7abb879",
+    "after": "799c240666c411242c2e3c74e24928e8736ffc808cba885eba9f704eb7abb879",
+    "unchanged": true
+  },
+  {
+    "file": "components/sections/AboutPreview.tsx",
+    "before": "4a98e3c2fbcf43cd806ebb2afc655edc32883de5671f6b53fd35fa980cc72517",
+    "after": "4a98e3c2fbcf43cd806ebb2afc655edc32883de5671f6b53fd35fa980cc72517",
+    "unchanged": true
+  },
+  {
+    "file": "lib/spatial/cameraFilter.ts",
+    "before": "07016d29acf2c93b146ffe63523d433d242626bd75dec35757d5e47914db1ff8",
+    "after": "07016d29acf2c93b146ffe63523d433d242626bd75dec35757d5e47914db1ff8",
+    "unchanged": true
+  },
+  {
+    "file": "lib/spatial/scenes.ts",
+    "before": "94bee8693b932b884f7d425fad7d1ce9370b8e3c03a9a5fe4c9bc1a9c3849e18",
+    "after": "94bee8693b932b884f7d425fad7d1ce9370b8e3c03a9a5fe4c9bc1a9c3849e18",
+    "unchanged": true
+  },
+  {
+    "file": "app/layout.tsx",
+    "before": "349d4e95e3cdd06f2093e37b7fbd9e89e499938a02a07dc75aa4caf4451b3816",
+    "after": "349d4e95e3cdd06f2093e37b7fbd9e89e499938a02a07dc75aa4caf4451b3816",
+    "unchanged": true
+  }
+]

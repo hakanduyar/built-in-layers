@@ -1,0 +1,1584 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "states": {
+      "rest": {
+        "count": 0,
+        "previews": [],
+        "overlap": null,
+        "rail": {
+          "x": 552,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 552,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 576,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 600,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 624,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 648,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 672,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 696,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 720,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 744,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 768,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": null
+      },
+      "hoverOnly": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "field-notes",
+            "text": "07 Field notes",
+            "opacity": 1,
+            "box": {
+              "x": 774.234375,
+              "y": 76.1875,
+              "width": 107.53125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 552,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 552,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 576,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 600,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 624,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 648,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 672,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 696,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 720,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 744,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 768,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": null
+      },
+      "mixed": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "about",
+            "text": "08 About",
+            "opacity": 1,
+            "box": {
+              "x": 821.2734375,
+              "y": 76.1875,
+              "width": 61.453125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 552,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 552,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 576,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 600,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 624,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 648,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 672,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 696,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 720,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 744,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 768,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": "about",
+        "clearance": {
+          "box": {
+            "x": 336,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      },
+      "focusOnly": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "about",
+            "text": "08 About",
+            "opacity": 1,
+            "box": {
+              "x": 821.2734375,
+              "y": 76.1875,
+              "width": 61.453125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 552,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 552,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 576,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 600,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 624,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 648,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 672,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 696,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 720,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 744,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 768,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": "about",
+        "clearance": {
+          "box": {
+            "x": 336,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      },
+      "focusAway": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "field-notes",
+            "text": "07 Field notes",
+            "opacity": 1,
+            "box": {
+              "x": 774.234375,
+              "y": 76.1875,
+              "width": 107.53125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 552,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 552,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 576,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 600,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 624,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 648,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 672,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 696,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 720,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 744,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 768,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": {
+          "box": {
+            "x": 336,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      }
+    },
+    "transitionMax": 1,
+    "accessibility": "- list:\n  - listitem:\n    - button \"Surface\"\n  - listitem:\n    - button \"01, Software Factory\"\n  - listitem:\n    - button \"02, Kıvılcım\"\n  - listitem:\n    - button \"03, JointLedger\"\n  - listitem:\n    - button \"04, DropSpot\"\n  - listitem:\n    - button \"Systems\"\n  - listitem:\n    - button \"Underneath\"\n  - listitem:\n    - button \"Built in Layers\"\n  - listitem:\n    - button \"A larger map\"\n  - listitem:\n    - button \"05, Selected systems\"\n  - listitem:\n    - button \"06, How I build\"\n  - listitem:\n    - button \"07, Field notes\"\n  - listitem:\n    - button \"08, About\"\n  - listitem:\n    - button \"Get in touch\""
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "states": {
+      "rest": {
+        "count": 0,
+        "previews": [],
+        "overlap": null,
+        "rail": {
+          "x": 792,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 888,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 912,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 936,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 960,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 984,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 1008,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 1032,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 1056,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 1080,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 1104,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": null
+      },
+      "hoverOnly": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "field-notes",
+            "text": "07 Field notes",
+            "opacity": 1,
+            "box": {
+              "x": 1014.234375,
+              "y": 76.1875,
+              "width": 107.53125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 792,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 888,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 912,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 936,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 960,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 984,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 1008,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 1032,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 1056,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 1080,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 1104,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": null
+      },
+      "mixed": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "about",
+            "text": "08 About",
+            "opacity": 1,
+            "box": {
+              "x": 1061.2734375,
+              "y": 76.1875,
+              "width": 61.453125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 792,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 888,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 912,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 936,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 960,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 984,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 1008,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 1032,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 1056,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 1080,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 1104,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": "about",
+        "clearance": {
+          "box": {
+            "x": 576,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      },
+      "focusOnly": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "about",
+            "text": "08 About",
+            "opacity": 1,
+            "box": {
+              "x": 1061.2734375,
+              "y": 76.1875,
+              "width": 61.453125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 792,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 888,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 912,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 936,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 960,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 984,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 1008,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 1032,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 1056,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 1080,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 1104,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": "about",
+        "clearance": {
+          "box": {
+            "x": 576,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      },
+      "focusAway": {
+        "count": 1,
+        "previews": [
+          {
+            "id": "field-notes",
+            "text": "07 Field notes",
+            "opacity": 1,
+            "box": {
+              "x": 1014.234375,
+              "y": 76.1875,
+              "width": 107.53125,
+              "height": 18
+            },
+            "ariaHidden": "true"
+          }
+        ],
+        "overlap": null,
+        "rail": {
+          "x": 792,
+          "y": 46.1875,
+          "width": 336,
+          "height": 24
+        },
+        "ticks": [
+          {
+            "id": "hero",
+            "box": {
+              "x": 792,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "software-factory",
+            "box": {
+              "x": 816,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "kivilcim",
+            "box": {
+              "x": 840,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "jointledger",
+            "box": {
+              "x": 864,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "dropspot",
+            "box": {
+              "x": 888,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "tail",
+            "box": {
+              "x": 912,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "reorient",
+            "box": {
+              "x": 936,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "approach",
+            "box": {
+              "x": 960,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "handoff",
+            "box": {
+              "x": 984,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "selected-systems",
+            "box": {
+              "x": 1008,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "how-i-build",
+            "box": {
+              "x": 1032,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "field-notes",
+            "box": {
+              "x": 1056,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "about",
+            "box": {
+              "x": 1080,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          },
+          {
+            "id": "finale",
+            "box": {
+              "x": 1104,
+              "y": 46.1875,
+              "width": 24,
+              "height": 24
+            }
+          }
+        ],
+        "focused": null,
+        "clearance": {
+          "box": {
+            "x": 576,
+            "y": 0,
+            "width": 768,
+            "height": 128
+          },
+          "mask": "radial-gradient(62% 68% at 50% 32%, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 68%, rgba(0, 0, 0, 0) 100%)"
+        }
+      }
+    },
+    "transitionMax": 1,
+    "accessibility": "- list:\n  - listitem:\n    - button \"Surface\"\n  - listitem:\n    - button \"01, Software Factory\"\n  - listitem:\n    - button \"02, Kıvılcım\"\n  - listitem:\n    - button \"03, JointLedger\"\n  - listitem:\n    - button \"04, DropSpot\"\n  - listitem:\n    - button \"Systems\"\n  - listitem:\n    - button \"Underneath\"\n  - listitem:\n    - button \"Built in Layers\"\n  - listitem:\n    - button \"A larger map\"\n  - listitem:\n    - button \"05, Selected systems\"\n  - listitem:\n    - button \"06, How I build\"\n  - listitem:\n    - button \"07, Field notes\"\n  - listitem:\n    - button \"08, About\"\n  - listitem:\n    - button \"Get in touch\""
+  }
+]

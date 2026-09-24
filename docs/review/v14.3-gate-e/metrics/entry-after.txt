@@ -1,0 +1,17 @@
+geometry {"routeEnd":4561,"docMax":7755,"footer":7865,"selected-systems":{"top":5589,"height":643},"how-i-build":{"top":6413,"height":644},"field-notes":{"top":7150,"height":80},"about":{"top":7411,"height":358}}
+selected-systems  top@0.85vh {"reveal":"0.000","arms":["0.648","0.648","0.415"],"state":"0.649","name":"-"}
+selected-systems  top@0.65vh {"reveal":"0.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+selected-systems  top@0.5vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+selected-systems  top@0.3vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+how-i-build       top@0.85vh {"reveal":"0.000","arms":["0.646","0.646","0.414"],"state":"0.647","name":"-"}
+how-i-build       top@0.65vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+how-i-build       top@0.5vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+how-i-build       top@0.3vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+field-notes       top@0.85vh {"reveal":"0.000","arms":["0.788","0.788","0.509"],"state":"0.754","name":"-"}
+field-notes       top@0.65vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+field-notes       top@0.5vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+field-notes       top@0.3vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"-"}
+about             top@0.85vh {"reveal":"1.000","arms":["0.701","0.701","0.451"],"state":"0.688","name":"0.606"}
+about             top@0.65vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"1.000"}
+about             top@0.5vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"1.000"}
+about             top@0.3vh {"reveal":"1.000","arms":["0.850","0.850","0.550"],"state":"0.800","name":"1.000"}

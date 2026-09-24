@@ -1,0 +1,21 @@
+Entry states at b4921e1 (Gate D), 1440x900. Section top at a fraction of the viewport height;
+opacity of the section's reveal wrapper, its register marks (arm, arm, inset), the state word,
+and About's name. Probe: tests/tools/entry-state-probe.mjs.
+
+selected-systems top@0.85vh reveal 0    arms 0.378 0.378 0.231  state 0.528
+selected-systems top@0.65vh reveal 0    arms 0.506 0.506 0.310  state 0.656
+selected-systems top@0.5vh  reveal 1    arms 0.602 0.602 0.370  state 0.752
+selected-systems top@0.3vh  reveal 1    arms 0.650 0.650 0.400  state 0.800
+how-i-build      top@0.85vh reveal 0    arms 0.377 0.377 0.230  state 0.527
+how-i-build      top@0.65vh reveal 1    arms 0.503 0.503 0.309  state 0.653
+how-i-build      top@0.5vh  reveal 1    arms 0.598 0.598 0.367  state 0.748
+field-notes      top@0.85vh reveal 1    arms 0.430 0.430 0.263  state 0.580
+field-notes      top@0.65vh reveal 1    arms 0.629 0.629 0.387  state 0.779
+about            top@0.85vh reveal 1    arms 0.399 0.399 0.244  state 0.549  name 0.550
+about            top@0.65vh reveal 1    arms 0.553 0.553 0.340  state 0.703  name 0.714
+about            top@0.5vh  reveal 1    arms 0.650 0.650 0.400  state 0.800  name 0.855
+about            top@0.3vh  reveal 1    arms 0.650 0.650 0.400  state 0.800  name 1.000
+
+Gaps (Gate C record, 1440x900): surface return -> Selected Systems 80 px; Selected Systems ->
+How I Build 134; How I Build -> Field Notes 92; Field Notes -> About 134; About -> footer 64.
+Lower world 3000 px (docMax 7561).

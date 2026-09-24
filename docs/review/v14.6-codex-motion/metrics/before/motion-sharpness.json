@@ -1,0 +1,64 @@
+{
+  "viewports": {
+    "1440x900": {
+      "atRest": {
+        "top": 115.1519775390625,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 105.5689697265625,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 8.09,
+      "consoleErrors": []
+    },
+    "1920x1080": {
+      "atRest": {
+        "top": 151.68115234375,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "moving": {
+        "top": 140.7470703125,
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "exceptions": []
+        }
+      },
+      "movedPxAcross34ms": 9.21,
+      "consoleErrors": []
+    }
+  }
+}

@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import { AboutPreview } from "@/components/sections/AboutPreview";
-import { BuiltForRealLife } from "@/components/sections/BuiltForRealLife";
-import { FieldNotes } from "@/components/sections/FieldNotes";
-import { Hero } from "@/components/sections/Hero";
-import { HowIBuild } from "@/components/sections/HowIBuild";
-import { LayerExplorerIntro } from "@/components/sections/LayerExplorerIntro";
-import { PositioningStatement } from "@/components/sections/PositioningStatement";
 import { SelectedSystems } from "@/components/sections/SelectedSystems";
-import { Container } from "@/components/ui/Container";
+import { FieldNotes } from "@/components/sections/FieldNotes";
+import { HowIBuild } from "@/components/sections/HowIBuild";
+import { DriftBlock, EditorialDrift } from "@/components/spatial/EditorialDrift";
+import { RouteNavigator } from "@/components/spatial/RouteNavigator";
+import { SpatialExperience } from "@/components/spatial/SpatialExperience";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { notes } from "@/data/notes";
-import { getProjectLayers, getProjectsByTier } from "@/lib/content/work";
+import { getPublishedProjects } from "@/lib/content/work";
 import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 
 // TASK-003: the complete static homepage, all 10 PROJECT_SPEC §7 IA
@@ -19,36 +17,75 @@ import { buildMetadata, buildPersonJsonLd } from "@/lib/seo/metadata";
 // loaders, and passed down as props -- no project data is hard-coded in any
 // section component, and no disposable/temporary data module exists (D-011
 // rejected).
+//
+// Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
+// docs/DESIGN_SYSTEM.md §18): on this branch only, `<SpatialExperience>`
+// replaces Hero, PositioningStatement, LayerExplorerIntro, and
+// SelectedSystems as the homepage's top section. `Hero.tsx`,
+// `PositioningStatement.tsx`, `LayerExplorerIntro.tsx`, and
+// `SelectedSystems.tsx` are all intentionally left unmodified and still
+// present in the repository, simply unused from this file -- reverting this
+// branch's homepage change is a one-line swap back to those four
+// components. BuiltForRealLife, HowIBuild, FieldNotes, and AboutPreview are
+// untouched below, exactly as the brief requires.
+//
+// The spatial section sits OUTSIDE the shared `Container` (since V2): a camera
+// that travels between scenes which "temporarily own the viewport" has to
+// be measured against the viewport, not against a 1320px padded column.
+// V1 kept it inside the container while positioning the world in vw/vh,
+// so the world's units and its actual frame disagreed -- part of why
+// content read as tiny. The scenes carry their own inset, and every
+// ordinary section below still uses the normal container exactly as before.
 export const metadata: Metadata = buildMetadata({
   description: "Hakan Duyar — Frontend & Product Engineer.",
   path: "/",
 });
 
-export default async function Home() {
-  const featuredProjects = getProjectsByTier("featured");
-  const realLifeProjects = getProjectsByTier("real-life");
-
-  // TASK-007: the Built in Layers explorer previews a real, published
-  // project's layers rather than staying an abstract, content-free
-  // definition -- derived from the same loader-fed data as everything
-  // else on this page (the first featured project deep enough to have
-  // real Surface/Flow/System bodies), never a hard-coded slug.
-  const previewProject = featuredProjects.find(
-    (project) => project.depth === "full" || project.depth === "short",
-  );
-  const previewLayers = previewProject ? await getProjectLayers(previewProject.slug) : null;
+export default function Home() {
+  // V7: the Selected Systems index lists every published system, in the
+  // owner-ordered sequence the frontmatter's own `order` field records.
+  const publishedSystems = getPublishedProjects();
 
   return (
-    <Container className="py-16">
-      <JsonLd data={buildPersonJsonLd()} />
-      <Hero />
-      <PositioningStatement />
-      <LayerExplorerIntro previewProject={previewProject} previewLayers={previewLayers} />
-      <SelectedSystems projects={featuredProjects} />
-      <BuiltForRealLife projects={realLifeProjects} />
-      <HowIBuild />
-      <FieldNotes notes={notes} />
-      <AboutPreview />
-    </Container>
+    <>
+      {/* V14.9: the route navigator. Fixed, desktop-only, and mounted on the
+          homepage alone -- it addresses this page's journey, and there is no
+          journey to address anywhere else. It is given the real project titles
+          rather than retyping them (lib/spatial/routeNavigation.ts). */}
+      <RouteNavigator
+        projectTitles={Object.fromEntries(
+          publishedSystems.map((project) => [project.slug, project.title]),
+        )}
+      />
+      <SpatialExperience />
+      {/* Spatial V5 (docs/DESIGN_SYSTEM.md §19.9): the lower homepage keeps its exact semantic order
+          and its exact content, but is composed along a deterministic drift
+          track instead of a centred column, so the world's physics continue
+          past the end of the spatial route rather than stopping dead at it.
+          The shared `Container` is replaced by the drift track, which carries
+          its own responsive width and padding. */}
+      {/* V6.6 (JOB 3): `py-16` -> `pb-16 pt-8`. The top half of this padding sat
+          inside the measured hand-over dead run, between the spatial section's
+          closing surface-line and the first real section, and it was buying
+          nothing that the drift track's own approach interval (driftPlate.gapVh)
+          was not already buying more deliberately. The bottom is untouched. */}
+      <div className="pb-16">
+        <JsonLd data={buildPersonJsonLd()} />
+        <EditorialDrift>
+          <DriftBlock id="selected-systems">
+            <SelectedSystems projects={publishedSystems} />
+          </DriftBlock>
+          <DriftBlock id="how-i-build">
+            <HowIBuild />
+          </DriftBlock>
+          <DriftBlock id="field-notes">
+            <FieldNotes notes={notes} />
+          </DriftBlock>
+          <DriftBlock id="about">
+            <AboutPreview />
+          </DriftBlock>
+        </EditorialDrift>
+      </div>
+    </>
   );
 }

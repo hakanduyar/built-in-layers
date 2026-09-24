@@ -1,0 +1,90 @@
+# REVIEW ARTIFACT POLICY
+
+How visual review evidence is produced, where it lives, and what may enter Git.
+
+_Last updated: 2026-09-04 (V13 mobile gate, bounded final pass)_
+
+---
+
+## Why this exists
+
+The V8 responsive pass committed ~18MB of review binaries — 76 full-page PNGs and three `.webm`
+recordings — into a repository whose `.git` was 4MB before it. That was the right call for the
+brief that asked for them and the wrong default going forward: review evidence is a snapshot of one
+moment, it is superseded by the next pass, and it is permanent in Git history.
+
+**Nothing is being deleted.** The V8 bundle stays exactly where it is under
+`docs/review/v8-responsive/`; rewriting history is explicitly out of scope. This policy governs
+what happens from V9 onward.
+
+---
+
+## The rule
+
+| Artifact | Where it goes | In Git? |
+|---|---|---|
+| Measurements, metrics, JSON probe output | `docs/review/<pass>/metrics/` | **yes** — small, diffable, and the actual evidence |
+| Route/geometry dumps (`route-focus.json`) | `docs/review/<pass>/metrics/` | **yes** — probes read them, so they must be versioned with the route |
+| Written findings, comparison tables | `docs/review/<pass>/` or `docs/DESIGN_SYSTEM.md` | **yes** |
+| A handful of stills that a decision depends on | `docs/review/<pass>/` | **yes**, deliberately — only where a specific claim needs a picture |
+| Full still matrices (every scene × every viewport) | `C:\Users\hakan\portfolio-review\<pass>\` | **no** |
+| `.webm` / any video recording | `C:\Users\hakan\portfolio-review\<pass>\` | **never** |
+
+`.gitignore` enforces the last two rather than relying on discipline.
+
+## Why metrics are the evidence and stills are the illustration
+
+Every defect this project has actually fixed was found by a number, not by a picture: 145px of
+clipped scene, a 360px run at 0.2% content fill, a 9.0% frame-to-frame speed step, a travel-material
+fragment resolving to progress 0.137 against a scene focus of 0.141. The stills confirmed each one
+afterwards. So the numbers are what belongs in history, at a few KB each; the pictures are review
+material, and they belong on disk next to the person doing the reviewing.
+
+## Producing a review bundle
+
+The probes under `tests/tools/` are evidence tools, not test suites — they are never run by
+`pnpm test` and never gate a commit:
+
+| Tool | Answers |
+|---|---|
+| `world-fit-probe.mjs` | does every scene fit its frame, at every viewport |
+| `dead-scroll-probe.mjs` | where does the page stop saying anything (step-and-settle) |
+| `natural-fill-probe.mjs` | the same, under real wheel input at a human cadence |
+| `cta-endhold-probe.mjs` | is input buying movement, or has the route simply ended |
+| `still-capture.mjs` | the still matrix (writes outside the repo by default) |
+| `scroll-recording.mjs` | natural-scroll video (writes outside the repo by default) |
+| `mobile-zoom-probe.mjs` | mobile widths and browser-zoom CSS-viewport truth |
+| `fable-gate-probe.mjs` | the V13 desktop art-direction matrix (V13 Fable gate) |
+| `mobile-audit-probe.mjs` | measure, tap targets, overflow, headings and console at six device sizes (Phase 6) |
+| `mobile-route-probe.mjs` | how much of each frame carries ink, walking the mobile route in half-viewport steps (V13 mobile gate, M3) |
+| `touch-target-probe.mjs` | every hit box below `lg`, plus the strip-and-recapture proof that the layout did not move (V13 mobile gate, M4) |
+| `route-navigation-probe.mjs` | what the document does when a station is clicked -- frame-by-frame travel, arrival and whether free scroll resumes (V14.9 navigation gate) |
+| `desktop-parity-probe.mjs` | two builds walked side by side: is the desktop provably unchanged (V13 mobile gate, `docs/FROZEN_BOUNDARY.md` §5) |
+| `measure-768-probe.mjs` | per-element line length at a tablet width, and the cost of the 34rem measure alone — the page as built against the same page with the token re-declared (V13 mobile gate, M2 / ART-2) |
+| `figure-inspect-probe.mjs` | every INSPECT control's accessible name and asset per page, and the `/work` thumbnails' scale at every width (V13 mobile gate, A11Y-1 / ART-1) |
+| `phase7-runtime-probe.mjs` | console / runtime / hydration on every route, CLS, image integrity, overflow across nine widths — the widths below 1024 the e2e overflow suite does not reach (Phase 7). A later gate re-running it must pass `--out`: the default destination is the committed Phase 7 record, and a re-run without it overwrites the record being compared against |
+| `v14-baseline.mjs` | the journey as a reader gets it: forward, reverse and lower-world recordings under real wheel input with notch counts and seconds, plus 100 / 80 / 67 / 50 zoom stills — run once against the baseline and once against the candidate (V14, brief §24 / §30) |
+| `scene-fit-probe.mjs` | every composition's ink against its frame at five desktop viewports, and the fit it renders at — the measurement `WORLD_REFERENCE.height` is set from (V14, §20) |
+| `frame-time-probe.mjs` | mean rAF interval while the route is driven at a normal wheel — a fresh forward traverse, a second forward, a fresh reverse — run against the baseline on another port at the same load; frame time is route speed because the governor pays per frame (V14, D-040) |
+| `initial-paint-probe.mjs` | samples the world's fit and a real foreground box on every frame from before navigation until the page settles, cold and warm — a PASS is that the first painted composition already is the settled one, which is the owner's initial-load flash stated as a measurement (V14.1, D-041) |
+| `foreground-sharpness-probe.mjs` | edge acutance of the same foreground text cropped at rest and while the camera translates, with the device-pixel offset it was painted at — the numeric companion to `motion-sharpness-probe.mjs`, which proves the absence of causes but produces no number (V14.1, D-042) |
+| `discrete-scroll-probe.mjs` | what one isolated wheel impulse buys against sustained input — delivered fraction of the raw delta, coast, settle, world travel and focus boundaries crossed, at four positions (V14.1, §4) |
+| `transition-sheet.mjs` | the frames BETWEEN two route beats — the governed camera settled at N evenly spaced progress values and tiled into one contact sheet — because a transition is judged on its intermediate frames, not its endpoints; `--from`/`--to` take scene ids or raw progress, `--viewport`, `--frames` (V14.1 Fable gate, owner §26 "real motion review"). The black frames it shows at p≈0.70–0.73 are the `SceneBreak` ink field and rails, by design (D-046) |
+| `progress-stills.mjs` | full-size stills of the built page parked at arbitrary route progress values, settled on the camera as `transition-sheet.mjs` settles -- the native-resolution companion to the contact sheet, for judging a cover, a landing or a junction frame by frame (V14.2 Gate B, D-048) |
+| `lower-world-sheet.mjs` | the lower world as a reader meets it -- every frame from the surface return to the end of the document at half a viewport a step, forward or in reverse, tiled into one sheet with the scroll position under each frame, plus the page length and every lower section position and height as JSON beside it, so a candidate is diffed against the record it replaces (V14.2 Gate C, D-049) |
+| `entry-state-probe.mjs` | how present each lower-world section is as it ENTERS the viewport -- the computed opacity of its reveal, its register marks and About name with the section top parked at 85 / 65 / 50 / 30% of the viewport height, plus the lower world geometry (V14.3 Gate E, D-051) |
+| `tests/unit/route-focus-dump.test.ts` | the `route-focus.json` every probe reads, written from the route module itself (`ROUTE_FOCUS_OUT=...`), with each route's true arc length — the number the V14 page gearing derives from |
+
+Each takes `PROBE_BASE` (default `http://127.0.0.1:3000`) and most take `PROBE_W` / `PROBE_H`.
+`still-capture.mjs` and `scroll-recording.mjs` take `SHOT_OUT` / `OUT`, defaulting outside the
+repository. The V13 mobile-gate probes take `PROBE_OUT` and, where they compare two builds,
+`PROBE_BASE_A` / `PROBE_BASE_B`; each file's header block is its own usage note.
+
+**A number of record needs a tool in Git.** Any tool whose output a decision cites belongs under
+`tests/tools/`, not beside the reviewer. The rule was written when
+`docs/review/v13-mobile-gate/after/measure-768.txt` cited a `measure768.mjs` left in the gate's
+out-of-repo scratch directory, so that one table could not be regenerated from a clean clone. The
+bounded final pass after the independent QA (ARTIFACT-1) put the tool in Git as
+`measure-768-probe.mjs` and regenerated the file with it — every paragraph row identical — and
+the pass's own listings (`after/figure-inspect.txt`, `after/tablet-length-768.txt`) were produced
+by versioned tools from the start.

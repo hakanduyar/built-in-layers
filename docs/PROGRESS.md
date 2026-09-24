@@ -441,3 +441,1032 @@ Planning documents: **conditionally approved 2026-07-17; required revisions appl
 - **Final acceptance count unchanged at 6 of 8** — the same 2 criteria remain open (production domain; Lighthouse Performance), now backed by substantially more evidence: 21 Lighthouse runs across 3 batches (vs. 9 across 1 batch previously), a real CLS regression found and eliminated (not just re-confirmed absent), a real oversized-image defect found and fixed (Hakan-approved), and the OG-image criterion's evidentiary basis upgraded from "technically passes independent of domain" to "Hakan has explicitly seen and approved the actual rendered image."
 - Full final verification suite: `pnpm typecheck`/`lint`/`format:check` clean; `pnpm test` 388/388; `rm -rf .next && pnpm build` clean (14 routes, zero warnings); `pnpm exec playwright test` 334/334 (167 Chromium + 167 WebKit); `git diff --check` exit 0. `git status --short` after: 13 modified + 2 deleted + 9 new = 24 total working-tree paths (up from 21: `lib/utils/imageDimensions.ts` and `tests/unit/image-dimensions.test.ts` are new; `public/images/projects/dropspot/browse-drops.webp` moved from untouched to modified — binary, 338850→75132 bytes). `git diff --cached --stat` empty throughout — nothing staged.
 - Status: **RELEASE CANDIDATE — BLOCKED ON PRODUCTION DOMAIN AND LIGHTHOUSE PERFORMANCE. 6/8 TASK-008 acceptance criteria genuinely met. Two real defects (a CLS regression, an oversized image) were found and fixed with Hakan's approval where required; one candidate optimization (LazyMotion) was investigated and correctly not implemented per its own gate. The 2 open criteria have complete, honest, evidenced explanations, neither invented nor worked around. No commit made. Awaiting review.**
+
+### 2026-08-13 — Spatial Portfolio homepage prototype (independent experimental branch, vertical slice)
+
+**This entry exists only on `feature/spatial-portfolio`. It does not amend TASK-001–008's status above, and TASK-008 remains exactly as recorded: RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unaffected, unchanged since the `feature/layered-editorial-prototype` branch was cut from the same baseline (`16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`).
+
+- **Context**: a second, independent art-direction/experience hypothesis, explicitly commissioned to be compared against `feature/layered-editorial-prototype` without combining the two. Branched from clean, verified `main` (not from the Layered Editorial branch); confirmed via `git merge-base --is-ancestor` that none of that branch's three commits (`a802911`, `bcb7807`, `922f4e0`) exist in this branch's history.
+- **Scope**: a vertical slice only. `app/page.tsx` swaps `Hero`, `PositioningStatement`, `LayerExplorerIntro`, and `SelectedSystems` for a new `<SpatialExperience>` (`components/spatial/`); `BuiltForRealLife`, `HowIBuild`, `FieldNotes`, `AboutPreview`, the global header/footer, `/work`, all case-study routes, `/about`, `/notes`, `/lab`, and the 404 page are completely untouched. The four now-unused homepage section components (`Hero.tsx`, `PositioningStatement.tsx`, `LayerExplorerIntro.tsx`, `SelectedSystems.tsx`) were deliberately left in place, unmodified — reverting this branch's homepage swap is a one-line change back to them.
+- **Project-node choice (explained before implementation, per the brief)**: Kıvılcım and DropSpot — D-016's first two homepage projects, both published/verified, and carrying genuinely different registered asset types (`verified-diagram` vs. `real-screenshot`) — real, honest visual variety for the spatial-movement concept. JointLedger and Professional Systems are not individually staged; a real link at the tour's end continues to the unmodified `/work` index, which still lists all four in D-016 order.
+- **Dependency decision**: none added. The camera/route mechanics use Motion's already-installed `useScroll`/`useTransform`/`useReducedMotion`/`useMotionValueEvent` (a dependency since TASK-007), native CSS transforms, and a plain Canvas 2D element for the one atmospheric layer — no Three.js/WebGL.
+- **Architecture**: `lib/spatial/sceneRoute.ts` (pure route/camera math — world coordinates per node, per-viewport choreography, the collision/impact/reposition state machine — unit-tested in isolation, no JSX); `components/spatial/SpatialExperience.tsx` (Server Component, assembles real loader-fed project content, no hard-coded facts); `components/spatial/SpatialCamera.tsx` (the only component driving the scroll-linked camera — a pinned/sticky container, not literal wheel-event hijacking); `components/spatial/AtmosphereEmbers.tsx` (the one atmospheric prototype, Canvas 2D). Exactly 2 new Client Components, joining the existing 4 (`Reveal`, `PanelTransition`, `LayerExplorer`, `MobileNav`) for 6 total on this branch.
+- **Disclosed departure from DESIGN_SYSTEM §13**: recorded in full, with binding conditions, in the new `docs/DESIGN_SYSTEM.md` §18 (branch-only, does not amend §§1–17). The scroll-linked camera and the looping ember atmosphere are both real, deliberate violations of §13's binding "no scroll-linked animation"/"no looping/idle animation" rules, isolated to this branch and never merged — this is the explicit hypothesis under test, not an oversight.
+- **Accessibility, preserved inside that departure**: off-camera content stays attached to the DOM (never `display:none`/`aria-hidden`) so keyboard/AT users can always reach it; focusing an interactive element inside a not-yet-reached node re-centers the camera on it first, so focus is never left invisible — a real mitigation, verified by a dedicated Playwright test, not a disclosed gap. A real axe violation (`heading-order`: h1 → h3 with no h2, once the old `h2 "Selected systems"` heading was removed along with the section it belonged to) was found by the automated scan and fixed with a real (visually hidden, reusing main's own approved "Selected systems" copy) `h2` bridging the gap — not suppressed or worked around.
+- **Reduced motion / no-JS**: both fully disable the camera and the atmosphere rather than softening them — `SpatialCamera` renders the same real content nodes in plain linear document flow, mirroring `LayerExplorer`'s and `MobileNav`'s existing progressive-enhancement pattern in this codebase.
+- **Real bug found and fixed via visual QA (not assumed correct)**: mobile node spacing was initially far too tight (18–20vh between stops) relative to real card content height, causing severe visual overlap at 375px — caught by direct Playwright screenshot review, fixed by widening mobile world-coordinate gaps to ~110–150vh per stop; re-verified clean via fresh screenshots at every mobile route stop.
+- **Two real test-script bugs found and fixed while writing `tests/e2e/spatial.spec.ts`** (not product defects): (1) a closure-capture bug — a module-scope `const` referenced inside a `page.evaluate()` callback, which runs in the browser process and cannot see Node-side closures; fixed by passing it as an explicit `page.evaluate` argument. (2) a race condition — reading the spacer's scroll range immediately after `page.goto()` without waiting for client hydration/enhancement to complete could measure the no-JS fallback's dimensions instead of the enhanced camera's; fixed by waiting for `.sticky` to attach before measuring, and by polling until a scroll-driven transform read genuinely changes from its pre-scroll snapshot (not merely "is present") before trusting it.
+- **Full verification suite, final tree**: `pnpm typecheck` clean; `pnpm lint` clean; `pnpm format:check` clean; `pnpm test` **400/400** (388 baseline + 12 new `spatial-route.test.ts`); `rm -rf .next && pnpm build` clean, 14 routes; `pnpm exec playwright test` **346/346** on both Chromium and WebKit (336 baseline-equivalent + new `spatial.spec.ts` coverage, net of the genuinely obsolete homepage assertions removed from `home.spec.ts`/`motion.spec.ts` — see below), zero axe violations across all routes including `/`, zero horizontal overflow at 320/375/768/1024/1440px under both default and reduced motion.
+- **Existing-test regressions, explicitly disclosed, not silently rewritten**: `home.spec.ts`'s "Home: Built in Layers" (2 tests) and "Home: selected systems" (8 tests) describe blocks, and the no-JS test's heading-list assertion, were removed/updated because the sections they tested (the static Surface/Flow/System list, the homepage Layer Explorer preview, the 4-up Selected Systems card grid) no longer exist on this branch's homepage — replaced by `SpatialExperience`. `motion.spec.ts`'s "Selected Systems cards..." test, the entire "Motion: homepage Layer Explorer preview" describe block, the no-JS "homepage Layer Explorer preview"/"project cards and navigation" tests, and the reduced-motion "homepage content..." test were removed or rewritten for the same reason. The real, unmodified `LayerExplorer` component and its case-study-page (`/work/kivilcim`) test coverage are completely unaffected. Replacement coverage for the new homepage contract lives entirely in the new `tests/e2e/spatial.spec.ts`.
+- **New tests** (`tests/e2e/spatial.spec.ts`, `tests/unit/spatial-route.test.ts`) cover: homepage identity (h1 unchanged), real project content/links, no-inaccessible-transformed-content + keyboard re-centering, reduced-motion static fallback, no-JS fallback, keyboard access, mobile-vs-desktop choreography (measured via real computed `transform` matrices, not assumed), collision-reads-as-a-break (a measured discontinuity, not a claim), existing project routes unaffected, and responsive overflow at 5 widths. `sceneRoute.ts`'s pure camera math is unit-tested directly (interpolation, the discontinuous jump, the impact band, mobile's x≡0 invariant).
+- **Performance, measured, not claimed**: a scripted 2.5s full-route scroll (Chromium, CDP) recorded 143 frames, average frame interval 17.6ms (~57fps average), max single frame 33.4ms, only 3 of 143 frames slower than ~30fps. JS heap grew modestly during the scroll (5.65MB → 6.28MB) — not investigated further, not alarming at this scale. Three navigate-away-and-back cycles left exactly one `.sticky` camera element and one `canvas` each time — no listener/element accumulation from missed cleanup. The camera movement itself is `transform`-only (Motion's `style={{x, y}}` MotionValues, composited, no layout-triggering properties animated); the one scroll listener is Motion's own internal `useScroll` subscription, not a hand-rolled one; `AtmosphereEmbers`' single `requestAnimationFrame` loop pauses on `visibilitychange` and is cancelled on unmount, and its `ResizeObserver`/`matchMedia` listeners are explicitly cleaned up.
+- **Known remaining weaknesses**: recorded in full in `docs/DESIGN_SYSTEM.md` §18.5 — the vertical slice covers only 2 of 4 D-016 projects individually (explicit scope boundary, not an oversight); the keyboard focus re-center's own motion hasn't been independently evaluated beyond "reduced motion disables it entirely"; `SPACER_VH` was tuned once at 1440×900 and not independently re-validated for pacing at every intermediate size.
+- **Scope audit before commit**: `git status --short` showed exactly 3 modified (`app/page.tsx`, `tests/e2e/home.spec.ts`, `tests/e2e/motion.spec.ts`) + 4 new paths (`components/spatial/`, `lib/spatial/`, `tests/e2e/spatial.spec.ts`, `tests/unit/spatial-route.test.ts`) + this documentation pass — no `content/` change, no case-study factual change, no publication-status change, no Layered Editorial file touched.
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio`. Vertical slice implemented, verified, and documented; exists specifically for independent comparison against `feature/layered-editorial-prototype`. `main`/`origin/main` unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`; TASK-008 remains RELEASE CANDIDATE — 6/8, unaffected by this branch.**
+
+### 2026-08-13 — Spatial Portfolio V2 (scene-composition reset, independent experimental branch)
+
+**This entry exists only on `feature/spatial-portfolio-v2`. It does not amend TASK-001–008's status above; TASK-008 remains RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`. V1 (`feature/spatial-portfolio`) is preserved untouched at `673c3ef9b07dd182dca6ec2aa3d950bdbe8dc372`; `feature/layered-editorial-prototype` is untouched at `922f4e03452804dcdce27f66cc609129b56756b4`.
+
+- **Why V2 exists**: Hakan reviewed V1 in a real browser and a 51-second screen recording. Verdict: the technical proof is useful, the visual experience is rejected. The camera travelled across a huge empty world containing tiny webpage components, instead of travelling between fully composed scenes that temporarily own the viewport. V2 is a scene-composition reset on the proven camera infrastructure — explicitly not a polish or spacing pass on V1.
+- **Branch discipline**: created from V1's verified HEAD after confirming a clean tree and `HEAD == origin/feature/spatial-portfolio`. V1 was never reset, amended, or force-pushed.
+- **Engine preserved (deliberately not rewritten for novelty)**: normalized 0..1 progress; real-scroll `useScroll` over a pinned/sticky spacer (never wheel interception); desktop/mobile coordinate separation; the mount-gated progressive-enhancement branch; the reduced-motion static fallback; focus-driven camera re-centering; and the binding collision semantics (accelerate in, stop dead, hold, jump discontinuously — never ease past, never reverse).
+- **Presentation rebuilt**: new `lib/spatial/scenes.ts` (the scene layer V1 lacked entirely — anchor, focal progress, dwell window, framing geometry); new `components/spatial/SpatialProjectScene.tsx` (viewport-scale editorial composition; **`ProjectCard` no longer appears anywhere in the spatial world**, enforced by an e2e assertion that the tour contains zero `<li>`); new `components/spatial/ErosionWord.tsx`; `SpatialCamera.tsx` and `SpatialExperience.tsx` recomposed; `AtmosphereEmbers.tsx` deleted.
+- **Scale fix (the core of the rejection)**: scene blocks are now `min(84vw,1180px)` / `92vw` mobile with a `72vh` floor. At 1440×900 a focal scene occupies ~82% of viewport width and its evidence plate ~56% — roughly 2× V1's linear card size. The section also moved **outside** the shared `Container`: V1 positioned the world in vw/vh while framing it in a 1320px padded column, so its units and its actual frame disagreed.
+- **Scroll length**: 600vh → **360vh** (40% shorter), derived from what the scenes and the break need rather than a flat blind spacer. The camera now dwells at each scene (so it can be read) and eases in/out of travel.
+- **Collision rebuilt as perception**: the route-level discontinuity is unchanged and still unit-tested, but it is now bridged by an ink scene-break wipe that fully covers the viewport at the exact cut — the jump is never witnessed. Impact is a single ≤7px, 140ms impulse (inside the 80–180ms budget); no spring, no elastic settle, no flash-bang.
+- **Orientation cue**: the post-reposition scene leads with a giant expressive word derived from the approved primary line's second clause, so the visitor immediately understands the world changed. Both giant words (transition + orientation) are `aria-hidden` decorative duplicates of copy already present as real semantic text.
+- **Atmosphere replaced**: V1's continuous random ember canvas is gone (deleted, not disabled). Its replacement is an erosion-wind treatment acting only on expressive typography, 17 fragments across 3 depth layers on one shared wind vector, sized in `em`, with a real start→peak→decay tied to exactly one transition and absent everywhere else. Plain DOM transforms — no canvas, no particle system, no WebGL, no dependency.
+- **Content honesty preserved**: every fact still comes from the real content loader. The lead asset per scene is selected from the asset's own registered metadata (real screenshot > system-layer diagram > first registered) — no slug→asset or slug→copy map exists. `Figure` is reused so D-019 captions and TASK-008's intrinsic-dimension CLS fix are inherited unchanged. The "beyond this tour" copy names the remaining projects from loader data, so it self-corrects if publication status changes.
+- **Real defects found and fixed during QA (none by guesswork; all measured)**:
+  1. *Erosion invisible* — fragments were fixed 3–6px pixel specks against ~180px letterforms. Re-expressed in `em` and biased to the word's trailing edge. Caught by direct screenshot review.
+  2. *Turkish orthography destroyed* — `text-transform: uppercase` rendered "Kıvılcım" as "KIVILCIM", contradicting D-017's primary display name. Uppercase removed from project titles; display scale carries the emphasis instead.
+  3. *Hero under-scaled* — the shared `display-xl` token caps at 6.5rem, leaving the name under half the frame (the exact failure V2 exists to fix). One scene-scoped clamp override, documented, not promoted into the token system.
+  4. *320px horizontal overflow (14px)* — giant single words cannot wrap, so rem-based clamp floors overflowed narrow viewports in the linear fallback. Both giant words now use viewport-driven floors. Caught by the responsive e2e check, not by eye.
+  5. *Focus re-centering silently broken* — an `overflow: hidden` box is still programmatically scrollable, so focusing a link the camera had not reached made the browser scroll the sticky container internally (measured: `scrollLeft` 2475px, link left at x=-1178). Changed to `overflow: clip`, which creates no scroll container at all.
+  6. *WebKit-only focus regression* — WebKit runs its native "scroll focused element into view" pass **after** the focus handler and overrode the camera (measured: route jumped to ~0.78 progress). The re-centering scroll is now re-asserted on the next animation frame, making the camera authoritative in both engines. Chromium never showed this because it runs its pass first.
+  7. *Approved content dropped* — V2's tail replaced V1's positioning-statement beat with the eroding word, silently removing PROJECT_SPEC §7 IA item 3 / CLAUDE.md §4's approved supporting statement from the homepage. Restored into the post-reposition scene rather than deleting the regression test that caught it.
+- **Two self-inflicted process errors worth recording**: `rm -rf .next` was run while a QA server was still serving that build, producing a wave of misleading test failures (diagnosed from the server log, not guessed); and an early QA script measured scroll positions without accounting for the section's offset, producing a mobile screenshot that looked like a framing bug but was a script bug. Both were verified before any code was changed in response.
+- **Known remaining weaknesses**: recorded in `docs/DESIGN_SYSTEM.md` §18.7 — only 2 of 4 D-016 projects are staged; the hero is deliberately conventional and is the least distinctive frame; travel space is tighter but still largely empty with no orientation structure; the ink wipe works but is the most conventional device in the prototype.
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v2`. Scene-composition reset implemented, measured, and documented. Exists for independent comparison against V1 and against `feature/layered-editorial-prototype`. Not merged.**
+
+### 2026-08-14 — Spatial Portfolio V3 (route choreography + world grammar, independent experimental branch)
+
+**This entry exists only on `feature/spatial-portfolio-v3`. It does not amend TASK-001–008's status above; TASK-008 remains RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`. V1 (`feature/spatial-portfolio`) is preserved untouched at `673c3ef9b07dd182dca6ec2aa3d950bdbe8dc372`, V2 (`feature/spatial-portfolio-v2`) at `4643d11482d1ee5a339ae5314365dc05a5acd57d`, and `feature/layered-editorial-prototype` at `922f4e03452804dcdce27f66cc609129b56756b4`.
+
+- **Why V3 exists**: Hakan reviewed the real V2 screen recording. Verdict: dramatically better than V1, the scene-first reset was correct — but still not the intended experience. The named problem was route choreography, above all **after the collision**: V2 repositioned and then simply parked, so the spatial world effectively ended at the break and the page dropped into ordinary vertical flow. V3 is a choreography pass on V2's scene system, explicitly not another engine rewrite.
+- **Branch discipline**: created from V2's verified HEAD after confirming a clean tree and `HEAD == origin/feature/spatial-portfolio-v2`. V1 and V2 were never reset, amended, or force-pushed.
+- **The world now has two routes.** Route one (`hero → kivilcim → dropspot → tail → wall`) descends left-to-right through the evidence region. The break cuts to route two (`reorient → approach → handoff`), which starts at the world's lowest and left-most point and **climbs back up and to the right**. Every route-two slope is negative where every route-one slope is positive, no two legs anywhere share an angle, and both axes move on both routes. Measured in the browser at 1440×900: route one runs the world from x 0 to −5270px; the cut moves it +5472px sideways and 1494px deeper; route two then travels 4004px across while climbing 936px back up.
+- **The direction change carries meaning, not just geometry.** Route one is what was actually built and can be shown; the collision is the end of that evidence; route two is how the work is thought about. That is why the reposition lands at the depth the approved primary line already calls *"underneath"* — and why the second-scene teaser is the site's own **Surface / Flow / System** framework from `data/copy.ts`, which was rendered nowhere on this branch's homepage after V2 dropped `LayerExplorerIntro`. Nothing is duplicated and no copy was invented.
+- **`UNDERNEATH` is now structural, not decorative.** It stands at the foot of a depth rail that descends from above the frame, registered by the three layer names — so it labels a coordinate in the world instead of floating as isolated typography, and the rail's Surface→Flow→System order is the same stack the next scene expands.
+- **World grammar added to the travel space** (V2's own stated weakness): leg rails drawn from the route's real leg list, route residue (a rail brightens once travelled), one registration tick per scene anchor, and a wall boundary with three coordinate rules that converge on it as approach tension rises. Sparse hairlines only — no grid, no particles, no permanent progress label, all `aria-hidden`.
+- **Collision rebuilt from a wipe into the world's own grammar.** V2's single solid ink panel is now seven horizontal rails closing from **alternating sides** on **different arrival curves**, with the solid field demoted to a linear backstop that closes last and only guarantees opacity at the cut. Unit-tested: every rail's offset is exactly zero at the cut (no gap can expose the jump), rails close from both directions, adjacent rails never share a rate, and every rail leads the solid field. `collision != bounce` is unchanged and still binding. The expressive word also compresses (`scaleX` 1 → 0.92, origin on its trailing edge) as it runs out of room.
+- **Hero reworked to earn the journey** without adding motion: the name owns one region, the thesis a second region offset down and to the right, and a single structural rule runs between them at **the first travel leg's own angle**, computed from the route so it cannot drift. The first leg also uses a gentler easing than the rest, so the hero stays readable well into the movement and is discovered to be part of a world rather than snatched out of frame.
+- **Pacing tuned per scene rather than by one constant**: dwells are 0.115 / 0.110 / 0.135 / 0.030 on route one (DropSpot holds longest — a real product screenshot is the strongest evidence on the route), and route length went 360vh → **420vh**, with the entire increase spent after the break. Still 30% shorter than V1.
+- **Atmosphere: same concept, derived direction.** The erosion wind vector is no longer hand-picked — it is computed as the exact opposite of the camera's screen-space travel on the collision-approach leg, so fragments trail the word along the vector the camera is dragging it against (unit-tested as "opposes the camera's screen travel"). Fragment count reduced 17 → 13. Still no canvas, no particle system, no WebGL, no dependency, and still absent outside that one transition.
+- **Real defects found and fixed during QA (all measured, none guessed)**:
+  1. *Collision frame read as a debug screen* — with the wall 44vw/42vh past the tail, the giant word had slid almost entirely off the left edge by the impact and the frame was ~80% empty paper. The wall was moved closer (30vw/24vh), the boundary marker brought inside the frame, and the converging rules stopped just short of collapsing into one line so the impact has a tight rule bundle to land against. Caught by screenshot review, not by a test.
+  2. *Boundary read as an object, not an edge* — the wall rule ended inside the frame. Extended past both edges.
+  3. *Handoff under-scaled* — the last beat inside the world was set at `heading-l` and read as a caption in a large frame. Raised to `display-l`, still without `uppercase` because the line interpolates "Kıvılcım".
+  4. *e2e helper settled on a stale/zero reading* — the scroll helper waited for the world transform to *change*, which never happens when a sample lands inside a dwell window, and (on WebKit) could settle on `none` before Motion had written any transform, silently reporting the camera at the origin. Replaced with a causal wait on the browser's own scroll event plus two frames, then a settle loop that never accepts `none`. **This was a defect in the test harness I wrote, not in the product** — the choreography it was measuring was correct throughout.
+  5. *Hydration race in a focus test* — focusing a project link immediately after `goto` could focus the fallback's link, which is then detached when the camera tree replaces it. Surfaced only under full-suite parallel load; fixed with the same `.sticky` wait its sibling test already used.
+- **Performance, measured, not claimed** (production build, Chromium, CDP): a 26s scripted route pass recorded 1356 frames, average frame interval **16.96ms (59fps)**, max single frame 50.1ms, and only **4 of 1356 frames slower than 33.34ms** — down from 69 of 1381 in V2, despite the added grammar layer. With forced GC, three navigate-away-and-back cycles moved the JS heap 4741KB → 4813KB, and left exactly one `.sticky`, zero `canvas`, three erosion layers, seven break rails and seven route rails — no element or listener accumulation. Camera, rails, break and erosion are all `transform`-only MotionValues; exactly one boolean (`impact`) reaches React state for the whole journey.
+- **Accessibility unchanged and re-verified**: zero axe violations across all routes and interactive states in both engines; off-camera content stays in the DOM and Tab order; focus re-centers the camera; heading order is `h1 → h2 (sr-only) → h3 → h3 → h2`; every world mark is `aria-hidden`. The layer teaser uses a `<dl>` — semantically correct for term/definition pairs, and it keeps the "no `<li>` in the spatial world" contract that locks V1's rejected `ProjectCard` nodes out.
+- **Known remaining weaknesses**: recorded in `docs/DESIGN_SYSTEM.md` §18.10 — only 2 of 4 D-016 projects are staged; route two's beats are each shorter than route one's and the handoff is near the minimum that still reads as a scene; the world grammar is sparse and derived but still made only of hairlines, so whether the travel space now has enough *material* (as opposed to enough *information*) is the most open question; the two route-two scenes carry only an incoming rail in their upper third; `VW_PER_VH` is a single nominal aspect ratio.
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v3`. Route choreography and world grammar implemented, measured, and documented. Exists for independent comparison against V1, V2, and `feature/layered-editorial-prototype`. Not merged.**
+
+### 2026-08-14 — Spatial Portfolio V4 (continuous camera + depth and material, independent experimental branch)
+
+**This entry exists only on `feature/spatial-portfolio-v4`. It does not amend TASK-001–008's status above; TASK-008 remains RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`. V1 (`feature/spatial-portfolio`) is preserved at `673c3ef9b07dd182dca6ec2aa3d950bdbe8dc372`, V2 at `4643d11482d1ee5a339ae5314365dc05a5acd57d`, V3 at `628494eb983050b64933baf55d4c7dd94d18d39a`, and `feature/layered-editorial-prototype` at `922f4e03452804dcdce27f66cc609129b56756b4`.
+
+- **Why V4 exists**: Hakan reviewed the real V3 production recording. Verdict: dramatically better and the spatial direction is worth continuing, but not final quality. Two named problems — (1) *"while scrolling it often feels like nothing moves for a while, then suddenly too much movement happens"*, explicitly not a frame-rate issue; (2) scenes still read as large flat rectangles moving around a plane.
+- **Branch discipline**: created from V3's verified HEAD after confirming a clean tree and `HEAD == origin/feature/spatial-portfolio-v3`. No earlier branch was reset, amended, or force-pushed.
+- **The complaint was measured before anything was changed.** A natural-wheel motion trace against the V3 production build showed the camera resolving to **29 distinct positions across 900 frames**, a **median response of 0.00 camera px per scroll px**, **406px / 1133ms of scrolling with the camera moving under 8px**, and a burst **23.7× the local rate**. Scene focus was a literal zero-velocity plateau, so more than half of all scrolling moved nothing.
+- **Root cause and fix**: focus was implemented as parking. V4 makes it a velocity minimum. Three linked changes: one Catmull-Rom spline per route (interpolating, so anchors are still hit exactly); scroll allocated per segment by `distance + reading allowance` rather than by authored dwell windows; and a cubic Hermite easing with **independent end derivatives** solved so each segment's speed at both ends equals one shared constant. Independent ends are required, not stylistic — camera speed is `|dP/dt| · e'(t) / width` and Catmull-Rom's tangent magnitude differs between a segment's two ends, so a symmetric easing cannot match both (an earlier pass used one; the tail join measured 0.187 of average where every other join measured 0.267).
+- **Measured result, same harness**: distinct camera positions 29 → **436**; longest dead scroll 406px/1133ms → **58px/17ms**; response p05 0.00 → **1.27**, median 0.03 → **3.64**, p95 13.04 → **4.89**; largest spike 23.7× → **1.91×**. Speed scan over the whole route: minimum 0.265 of average, maximum 1.51, dynamic range **5.7×** desktop / 6.1× mobile, with every anchor landing at 0.264–0.267.
+- **Scroll smoothing**: an **overdamped** spring (ratio ≈1.07, ~70ms) between raw scroll and visual progress. Overdamping is the explicit collision-boundary strategy: the cut is a threshold on this value, and an overdamped spring provably cannot cross a threshold twice, so the reposition cannot flicker and needs no special-casing. Every visual reads from the smoothed value, so the panel and the jump can never disagree about when the cut happened.
+- **Depth**: three planes — distant 0.62 (material), world 1.0, near 1.13 (structural rules that sweep past). The world plane is pinned at exactly 1.0, a deliberate departure from the brief's suggested 0.82, because the rails and ticks are derived from the camera path and parallaxing them would make the world's orientation system point where the camera never goes. Plus per-scene arrival resolution (`--depth-resolve`, 0→1) and a ≤3% scale. Mobile renders the world plane only.
+- **Composition**: each project scene's evidence plate breaks the text column's alignment edge via a `--scene-overhang` property the camera sets — a spatial device that only exists where the camera frame can clip it. The hero was rebuilt: mono eyebrow, the approved wordmark split across two lines with the second indented into the route's direction, an oversized cropped `SURFACE` on the distant plane, a structural rule running at the first travel leg's own angle, and the thesis in a second offset region.
+- **Total scroll**: 420vh → **340vh**. With dwell removed, reading time no longer costs distance.
+- **Real defects found and fixed during QA (all measured, none guessed)**:
+  1. *Mobile parked for 0.05 of progress* — the route-one/route-two split was derived per viewport mode while the break constants came from desktop, so between the shared cut and mobile's own route-two start the camera sat still. Exactly the dead zone V4 exists to remove, reintroduced by accident; found by a speed scan, fixed by sharing the split.
+  2. *Travel material placed backwards* — fragments were positioned relative to their scene's world anchor, but on a 0.62-rate plane that framed Kıvılcım's fragment inside the **hero** and moved it off-screen by the time the camera reached Kıvılcım. It read as broken text. Placement is now derived from `rate × cameraPosition(atProgress)`.
+  3. *Depth rail clipped at the reposition* — the break's reveal takes ~10vw of camera travel, so a rail at the scene block's left edge was already off-frame when the scene became visible. The composition is now indented into the block.
+  4. *125px document overflow under reduced motion* — the hero's oversized `SURFACE` fragment had no clipping ancestor in the linear fallback.
+  5. *31px document overflow at 1024px* — the plate's deliberate overhang likewise had nothing to clip it outside the camera tree.
+- **Performance, measured on the same method as V3** (production build, Chromium, scripted pass, no video): **59.7 FPS** avg (16.76ms), max frame **33.4ms**, **3 long frames of 1372** — versus V3's 59.0 FPS, 50.1ms max, 4 of 1356. V4 is marginally *better* despite the added planes. The separate natural-wheel recording run measured 53.8 FPS / 91 long frames, which is the video encoder's cost, not the page's. Forced-GC heap across three navigate-away-and-back cycles: 4759KB → 4845KB, with 1 sticky, 1 world plane, 7 break rails, 3 erosion layers and 6 route polylines — no accumulation.
+- **Accessibility**: zero axe violations across all routes and interactive states in both engines. The depth planes add no screen-reader content — asserted with role queries (which respect `aria-hidden`) rather than text queries (which do not), plus a direct check that every child of a non-world plane is `aria-hidden`.
+- **Known remaining weaknesses**: recorded in `docs/DESIGN_SYSTEM.md` §18.10 — only 2 of 4 D-016 projects are staged; at a deliberately fast wheel profile the trace is too coarse (260 frames for the whole route) for the spike metric to be meaningful; the material's in-frame offsets are hand-tuned at 1440×900 even though their progress is derived; `VW_PER_VH` remains a single nominal aspect; the spline parameter is not arc-length normalised.
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v4`. Continuous camera and depth/material implemented, measured, and documented. Exists for independent comparison against V1–V3 and `feature/layered-editorial-prototype`. Not merged.**
+
+### 2026-08-16 — Spatial Portfolio V5 (system intelligence layer + Editorial Drift): checkpoint recovery, audit, and partial stabilization
+
+**This entry exists only on `feature/spatial-portfolio-v5`. It does not amend TASK-001–008's status above; TASK-008 remains RELEASE CANDIDATE — 6/8, blocked on production domain and Lighthouse Performance, both still genuinely open.** `main`/`origin/main` are unchanged at `16d3ec0d8c7022d5b2b7b05198f8c752ef1308a6`. V1 is preserved at `673c3ef9b07dd182dca6ec2aa3d950bdbe8dc372`, V2 at `4643d11482d1ee5a339ae5314365dc05a5acd57d`, V3 at `628494eb983050b64933baf55d4c7dd94d18d39a`, V4 at `3d4834683dc03510569d747fa1739e6475094345`, and `feature/layered-editorial-prototype` at `922f4e03452804dcdce27f66cc609129b56756b4`. No earlier branch was reset, amended, force-pushed, or merged.
+
+#### Why this entry covers two passes
+
+V5 was implemented on a different machine and had to be abandoned mid-flight; the work was preserved as an emergency WIP checkpoint (`36d5da5`, "wip: checkpoint spatial portfolio v5") rather than lost. This entry records (a) the recovery audit of that checkpoint and (b) the stabilization pass that followed. **V5 is not finished and is not approved.**
+
+#### What V5 adds over V4
+
+- **Arc-length route normalisation** (`lib/spatial/sceneRoute.ts`) — closes V4's own §18.10 known weakness *on this branch only*. V4 itself is unchanged and still carries that weakness.
+- **Cascaded velocity-aware camera filter** (`lib/spatial/cameraFilter.ts`, new) — replaces V4's single overdamped spring with two cascaded first-order lags whose time constant tightens as input speed rises.
+- **System POV** (`components/spatial/SystemPOV.tsx`, `lib/spatial/systemPov.ts`, both new) — the acquisition annotation layer.
+- **Collision intelligence + post-collision state** (`components/spatial/WorldGrammar.tsx`) — the boundary loses registration as tension rises; registration ticks tighten after the cut.
+- **Layered erosion** (`components/spatial/ErosionWord.tsx`, rebuilt) — ink shell → graphite substrate → system trace, with a closed six-archetype debris vocabulary.
+- **Directional architecture** (`components/spatial/DirectionalField.tsx`, new).
+- **Editorial Drift** (`components/spatial/EditorialDrift.tsx`, `lib/spatial/editorialDrift.ts`, both new) — the lower homepage no longer drops into ordinary straight-down scrolling.
+
+Full design rationale, anti-patterns, deferred ideas and per-claim verification status are recorded in `docs/DESIGN_SYSTEM.md §19`.
+
+#### Recovery audit findings (checkpoint `36d5da5`)
+
+- Branch, HEAD and clean-tree assumptions all verified before anything was touched. `feature/spatial-portfolio-v4` exists locally only as a remote-tracking ref; the baseline commit resolves correctly.
+- **`tests/unit/zz-scratch-dump.test.ts` inspected and deleted.** It was a single `it("dump")` writing JSON to a temp path with zero assertions — genuinely the temporary diagnostic file it was described as, not deliverable code. Nothing else was removed.
+- **No fabricated content found.** Verified by grep across the whole V5 diff: no `Math.random`, no `Date.now`/`new Date`, no invented percentages, coordinates, confidence values, statuses or timestamps. Every telemetry-vocabulary hit was in a code comment explaining why such a thing is forbidden, never in rendered output. `lib/spatial/systemPov.ts` reads exclusively from validated project frontmatter.
+- **No new dependencies.** `git diff 3d48346..HEAD -- package.json pnpm-lock.yaml` is empty.
+- The erosion trace tile's two hard-coded hex values were checked against the token set and match exactly (`#161616` = `--color-ink`, `#ff4f1f` = `--color-signal`); they are hard-coded only because an SVG data URI cannot read CSS custom properties.
+- **Two source comments referenced unit-test files that did not exist** (`spatial-filter.test.ts`, `spatial-drift.test.ts`), and all nine V5 source files pointed readers at `DESIGN_SYSTEM.md §18` — which documents V4. Both corrected in the stabilization pass.
+
+#### Stabilization pass — what was actually done
+
+- **Three unit-test suites written for the previously untested V5 modules**: `tests/unit/spatial-filter.test.ts`, `tests/unit/spatial-drift.test.ts`, `tests/unit/spatial-system-pov.test.ts` — **60 tests, all passing**. They lock contracts, not tuning constants: the filter's no-overshoot property for any `dt`/`tau` (including a per-frame-varying `tau`), the single-crossing guarantee at `BREAK_CUT`, drift determinism and in-range geometry, and System POV's honesty rules (absent field ⇒ no row; two projects differing only in slug annotate identically). The drift suite reads `app/page.tsx` directly to prove rendered section order matches the drift table, so the two cannot silently diverge.
+- **Reduced-motion contract change recorded as approved** — `docs/DESIGN_SYSTEM.md §19.10` now supersedes §18.9 for this branch: *reduced motion disables motion, not design*. Static System POV brackets, editorial composition and real metadata may remain; all camera travel, parallax, erosion animation, moving debris, directional-field movement and drift movement must not. This was an owner decision, not an implementation choice.
+- **Source-comment accuracy repaired**: the two aspirational test references are now true, a third was added for `systemPov.ts`, the nine V5 files now cite `§19`, and `app/page.tsx` no longer cites a brief section that does not exist in this repository.
+- **Documentation written**: `docs/DESIGN_SYSTEM.md §19` (14 subsections), and V4's §18.10 amended to point at §19 *without* rewriting V4 history — V4 still has the arc-length weakness; V5 experimentally addresses it.
+
+#### Gate results — and an important caveat about the toolchain
+
+All gates below passed, **but not on the repository-pinned package manager**. This machine runs **Node v22.12.0**, and the pinned `pnpm@11.17.0` requires **Node ≥ 22.13**, so `pnpm` refuses to start at all. Dependencies were installed with a temporary pnpm 10.20.0 under `--frozen-lockfile`; `package.json` and `pnpm-lock.yaml` are byte-unchanged, confirmed by `git status`. Two consequences are recorded honestly rather than hidden: pnpm 10 does not recognise pnpm 11's `allowBuilds` key, so `sharp` and `unrs-resolver` build scripts were skipped; and these results are therefore **provisional, not authoritative**.
+
+| Gate | Result |
+|---|---|
+| `typecheck` | pass |
+| `lint` | pass |
+| `git diff --check` | clean |
+| unit tests | **484 passed / 484**, 20 files (424 pre-existing + 60 new) |
+| production build | pass — 14/14 pages generated |
+
+#### What is still NOT verified
+
+Browser validation was **not** run and was deliberately not faked. Per the owner's instruction, authoritative validation must happen on the repository's own pinned toolchain, which this machine cannot currently run. Outstanding:
+
+- Playwright browser engines are not installed on this machine; no Chromium or WebKit E2E run.
+- **Editorial Drift's runtime behaviour is unproven — the single highest risk.** Its motion is expressed as interpolation between two CSS `calc()` strings; that typechecks, lints and builds, but no current gate can detect it snapping between endpoints instead of drifting.
+- No visual QA, no arc-length runtime measurement, no camera-filter wheel-profile measurement, no axe pass on the V5 surfaces, no mobile verification.
+- The newly approved reduced-motion contract is documented but not yet asserted by an E2E test.
+
+#### Environment recommendation (not applied — awaiting owner review)
+
+`package.json` currently declares `engines.node: ">=22.0.0"` alongside `packageManager: "pnpm@11.17.0"`. These are mutually inconsistent: the pinned pnpm cannot run on large parts of the declared-compatible Node range. Recommended install is **Node v22.23.2** (current v22 LTS "Jod"), which also restores the version line this project was originally developed and tested on (PROGRESS records Node 22.23.1). `engines.node` was deliberately **not** modified in this pass.
+
+- Status: **EXPERIMENTAL BRANCH — `feature/spatial-portfolio-v5`. Recovered, audited, unit-tested and documented; runtime/browser proof still outstanding and blocked on the Node runtime. NOT merged, NOT approved, NOT finished.**
+
+### 2026-08-17 — Spatial Portfolio V5: authoritative runtime proof (Node 22.23.2 / pnpm 11.17.0)
+
+**Branch-only, still `feature/spatial-portfolio-v5`, still NOT merged and NOT approved.** `main` unchanged at `16d3ec0`. V1–V4 and `feature/layered-editorial-prototype` untouched.
+
+The environment blocker from the previous pass is resolved: Node is now v22.23.2 and the repository-pinned `pnpm@11.17.0` runs. `pnpm install --frozen-lockfile` reported "Already up to date"; `pnpm rebuild` then ran the two `allowBuilds` native scripts (`sharp`, `unrs-resolver`) that the temporary pnpm 10 had skipped, so this is the first fully authoritative environment for the branch. `package.json` and `pnpm-lock.yaml` were not modified.
+
+#### The headline result: Editorial Drift works
+
+This was the single largest open risk — the drift is Motion interpolation between two CSS `calc()` strings, and nothing short of a real browser could prove it interpolates rather than snapping between endpoints. Measured in Chromium at 1440×900, all four sections sweep continuously: 41/41 distinct positions for three of them, 34/41 for the deliberately quietest one, with the largest single step at **2.5–3.2% of total travel** (a snap would be ~100%). Horizontal overflow is 0px, values are byte-identical across reloads, semantic DOM order is unchanged, and the track settles at exactly 180px — the arithmetic centre at that width. **No implementation change was required**; the numeric-MotionValue fallback was not needed and was not adopted. Full table in `docs/DESIGN_SYSTEM.md §19.9`.
+
+#### Other runtime findings
+
+- **Reduced motion (D-020) behaves exactly as approved.** Under `prefers-reduced-motion`: camera planes 0, erosion fragments 0, debris archetypes 0, break rails 0, drift movement 0.00px — while System POV stays present with its 4 real metadata rows and all four drift blocks remain readable. Under normal motion the same page reports 1 camera plane, 3 fragment layers, 12 archetypes, 7 break rails and 107.65px of drift travel. Motion disabled, design retained.
+- **Arc-length reparameterisation is real and measurable.** Sampling `routeLegs()` from V4's and V5's own code at equal geometry-progress increments, the worst within-segment step-distance ratio falls from **2.7253 → 1.0247** on desktop (mean coefficient of variation **9.650% → 0.148%**) and **1.4328 → 1.0106** on mobile (3.936% → 0.066%). Segment endpoints are bit-identical between the two versions (max delta 0.000), so anchors did not move. Pooled whole-route figures barely change, and that is expected: they include the deliberate between-segment allocation, which is the velocity profile, not geometry.
+- **The camera does not chase the reader.** Under real incremental `mouse.wheel()` input at three profiles, the settle lag after input stops measured **0ms** in every case, and the longest near-stationary interval while scroll was still increasing was 60px/42ms (slow), 140px/19ms (normal), 400px/18ms (fast) — against V3's measured 406px/1133ms.
+- **Erosion is genuinely layered, not a fade.** Sampling the live mask geometry through the transition, substrate zones open before trace zones and both grow: 0 → 0 → 4 → 7 substrate and 0 → 0 → 1 → 3 trace, with shell opacity pinned at 1 throughout (the coating is always painted; what changes is what is exposed beneath it) and debris opacity rising then thinning (0 → 0 → 0.80 → 0.55).
+- **System POV is a lifecycle, not a HUD.** Bracket counts move 4 (approaching) → 8 (focused) → 0 (departed), with at most 2 metadata rows per scene and one signal accent per scene throughout.
+
+#### One real test defect found and fixed
+
+`spatial.spec.ts` "the second route runs at a visibly different slope from the first" was asserting on a sample window that **straddled the collision**: it ended its "route one" span at progress 0.64, which is past `BREAK_CUT` (0.6214), so it measured the reposition rather than route one and reported a slope of −3.0 for a route whose real slope is +0.76. Verified by running both versions' own code: V4 and V5 produce identical values at those sample points, so the test measured the same wrong thing on V4 and had been passing on transient timing rather than on the property it names. The sample windows now sit entirely on one side of the cut (0.16→0.50 and 0.70→0.99), which yields +0.78 and −0.35 — genuinely opposite, on both versions. **The assertion itself is unchanged**; only the window moved. It passed 3/3 consecutive runs after the fix.
+
+#### New browser coverage
+
+`tests/e2e/spatial-v5.spec.ts` (16 tests) covers what unit tests structurally cannot: drift continuity and determinism from computed transforms, drift overflow at four widths, System POV honesty (approved labels only, no fabricated telemetry, ≤2 rows, brackets `aria-hidden`), the three erosion layers in stacking order, the closed debris archetype vocabulary, and all four halves of the D-020 reduced-motion contract. Three defects in this new suite were found and fixed during development — the top-level `reducedMotion` key is silently ignored in Playwright 1.62.0 (it must be nested under `contextOptions`, as `motion.spec.ts` already documented), `$$eval` does not retry so it read the pre-hydration tree, and drift geometry must be measured after the spatial spacer reaches its final height or the last block samples only a fraction of its passage.
+
+#### Gates
+
+| Gate | Result |
+|---|---|
+| `typecheck` | pass |
+| `lint` | pass |
+| `git diff --check` | clean |
+| unit tests | **484 passed / 484**, 20 files |
+| production build | pass — 14/14 pages |
+| Chromium E2E | **205 passed / 205** |
+| WebKit E2E | **202 passed / 205** — 3 failed |
+
+`format:check` reports 146 files, but that is entirely a local `core.autocrlf=true` artifact: the committed content is correct LF, `git status` sees no change, and `prettier --check . --end-of-line crlf` passes repo-wide. Not a repository defect and deliberately not "fixed" by rewriting every file.
+
+Of the three WebKit failures, one (`spatial-v5.spec.ts` reduced-motion drift) passes in isolation and was contention flake. The other two are in specs that predate V5, fail on WebKit only, and reproduce in isolation: `shell.spec.ts`'s skip-link Tab-focus assertion, and `spatial.spec.ts`'s break-rail gap (163px against an 80px bound). Neither has been traced to a V5 change. **Neither was weakened, skipped, or retried into passing** — both are recorded as open in `docs/DESIGN_SYSTEM.md §19.13`.
+
+#### Visual verification
+
+19 states captured at 1440×900 plus a 375×812 mobile frame (0px horizontal overflow), and a natural-scroll production recording driven by real incremental wheel input with reading pauses — not a scripted `scrollTo` sweep. Both are saved **outside the repository**, under `C:\Users\hakan\spatial-v5-review\`. These are for the owner's next art-direction review and are explicitly not part of this pass.
+
+- Status: **EXPERIMENTAL BRANCH — runtime-proven, still not approved and not merged. Editorial Drift's open risk is closed; two pre-existing WebKit failures remain open.**
+
+### 2026-08-17 — Spatial Portfolio V6: motion and art-direction refinement pass
+
+**Branch-only, still `feature/spatial-portfolio-v5`, still NOT merged and NOT approved.** `main` unchanged at `16d3ec0`. V1–V4 and `feature/layered-editorial-prototype` untouched. Started from `d7013f8` with a clean tree, in sync with origin.
+
+A **refinement of the V5 direction, not a new one.** The owner's review confirmed the direction and named five remaining weaknesses; this pass addresses each. Full rationale in `docs/DESIGN_SYSTEM.md §20`.
+
+#### The scroll unevenness was the velocity profile, not the filter
+
+The residual "nothing happens, then too much" was traceable to a single number. Under arc-length parameterisation the journey's dynamic range is `(1.5 − 0.5r) / r` where `r` is `FOCUS_SPEED_RATIO`: **5.3× at V5's 0.26, 3.1× at V6's 0.42.** Raising it flattens travel without abolishing the focus zones (0.42 against a 1.29 peak is still a 3× arrival contrast). `ROUTE_LENGTH_VH` went 340 → 380 to give back the reading time the faster focus crossing would otherwise have cost, and the filter cascade tightened (tau 62 → 48ms per stage, threshold 0.10 → 0.06).
+
+The structural fix matters more than the tuning: every other moving thing is camera-driven, and the camera is *deliberately* slowest at a scene, so a focus zone had almost nothing answering the wheel. `components/spatial/SystemField.tsx` is driven by raw progress — linear, monotone, no easing — and therefore cannot have a dead zone. Measured across a window straddling Kıvılcım's focus: camera 123.5px, field 7.67px, field samples strictly monotonic (−52.42 → −54.94 → −57.58 → −60.09).
+
+#### The lower page is now genuinely oblique
+
+Route two was always a real diagonal; the lower page was the problem. At V5's fractions the largest block travelled 107px across a full viewport of scrolling — about 6° of lean. Widened fractions (0.04–0.78, from 0.08–0.64) plus a narrower block (72vw/1020px, from 78vw/1080px) roughly doubled real travel:
+
+| section | V5 travel | V6 travel | distinct positions | largest step |
+|---|---|---|---|---|
+| Built for Real Life | 68.5px | **109.7px** | 21/21 | 5.0% |
+| How I Build | 107.6px | **182.9px** | 21/21 | 5.0% |
+| Field Notes | 78.3px | **127.9px** | 21/21 | 5.0% |
+| About | 15.7px | **39.2px** | 21/21 | 5.0% |
+
+And the route is now *drawn*: `driftRoute()` generates two stops per section from the same table that positions the blocks, rendered as an oblique zigzag with a registration mark at each stop, measured 305 × 2109px at 1440×900. Its container is exactly the track's free width, so a stop at fraction `f` lands on the left edge of a block at `f` at any viewport width. Recorded honestly in §20.2: the spine's *vertical* stop positions are a deterministic approximation, not a measurement of block position — lateral agreement is exact, vertical is approximate.
+
+#### Erosion: the missing cue was an edge
+
+V5's three layers were structurally right and still read as decoration. Added a fourth, `data-erosion-layer="peel"` — a light `--line` annulus at each zone boundary, the lifted lip of the coating. Drawn topmost, which is both physically correct and keeps the committed shell/substrate/trace ordering contract exactly true. Substrate became a cross-grain (58° lamination + −32° counter-hatch) so it reads as a cut section rather than a texture on a letter. Debris is now **sourced from real zones**: each fragment starts at an actual zone centre and its opacity is gated on that zone's own `start`, so nothing detaches before the coating it came from has lifted. The six archetype names were deliberately kept — `spatial-v5.spec.ts` enforces that closure — but every drawing was redrawn with operational detail.
+
+#### One regression, found and fixed
+
+`SystemField`'s 29 marks relied on inheriting `aria-hidden` from the layer, which broke `spatial.spec.ts`'s rule that every direct child of a non-world camera plane must carry it explicitly (29 exposed children). Not an actual a11y defect — the parent hides the subtree — but the rule exists so a later child cannot silently reach the a11y tree. The layer was changed to follow the convention. **The test was not touched.**
+
+#### Gates
+
+| Gate | Result |
+|---|---|
+| `typecheck` | pass |
+| `lint` | pass |
+| unit tests | **484 / 484**, 20 files |
+| production build | pass — 14/14 pages |
+| `spatial-v5.spec.ts` (Chromium) | **16 / 16** |
+| `spatial.spec.ts` (Chromium) | **37 / 37** |
+| `a11y.spec.ts` (Chromium) | **14 / 14**, zero axe violations |
+| reduced motion | 0 planes / 0 field / 0 debris / 0 rails, drift 0.00px; POV + 4 metadata rows retained |
+| mobile 375×812 | camera x ≡ 0; field and spine absent; 4 compact brackets |
+| overflow | 0px at 320 / 375 / 768 / 1024 / 1440 |
+
+**Not run in this pass, and not claimed:** WebKit (Chromium only), and any performance re-measurement. Both recorded as open in §20.7.
+
+- Status: **EXPERIMENTAL BRANCH — V6 refinement pass complete and validated on Chromium; not committed, not approved, not merged. Awaiting owner art-direction review.**
+
+## 2026-08-17 — Spatial Portfolio V6.1 (collision, material, perception, finale)
+
+Branch `feature/spatial-portfolio-v5`, uncommitted, on top of the uncommitted V6 pass. Design record: `docs/DESIGN_SYSTEM.md` §21. A recovery snapshot of the pre-V6.1 (V6) working tree was taken out of repo at `/home/hakan/spatial-v6-pre-v61/` and verified reversible before any edit.
+
+**Five priorities, all implemented:**
+
+1. **Collision 2.0** — the rails' arrival curve was inverted (`(1-t)**k` → `1 - t**k`), a `BREAK_DWELL` of 0.007 gives the covered state a real 0.014-wide window, bands went 7 → 11, and the impact became a two-axis recoil. Measured ink coverage at the cover ramp's midpoint fell from ~61% of frame width to **4.4%**.
+2. **Decompression interval** — route two now starts at a derived lead-in coordinate, so UNDERNEATH is framed **27.3vh of scrolling** after the cover has left instead of underneath it. `ROUTE_LENGTH_VH` 380 → 410 to hold route one's reading time (218.1vh vs 219vh).
+3. **SYSTEMS peel flaps** — displaced, hinged, lipped chips of coating replace the annulus edge; substrate offset 0.012em for depth; debris 12 → 5, each starting at zero displacement on its own zone. Two masked text layers where V6 had three.
+4. **Perception** — `focusProximity()` makes `SystemField` recede at focus and registration marks resolve per scene; V6's pseudo-information annotation cluster was **deleted** (§17).
+5. **Lower world + finale** — per-section planes (measured 970/1002/1020/1059px), a two-depth spine, a closing route terminus, and a footer CTA restaged as a `min-h-[76vh]` final scene.
+
+**Validation**
+
+| Gate | Result |
+|---|---|
+| typecheck / lint / prettier | pass |
+| unit tests | **484 / 484**, 20 files |
+| production build | pass — 14/14 pages |
+| `spatial-v5` + `spatial` + `a11y`, **Chromium** | **67 / 67** |
+| `spatial-v5` + `spatial` + `a11y`, **WebKit** | **67 / 67** |
+| reduced motion | 0 planes / 0 field / 0 debris / 0 rails, drift 0.00px; POV + 4 real metadata rows retained |
+| mobile 375×812 | camera x ≡ 0; field and spine absent; 4 compact brackets |
+| overflow | 0px at 320 / 375 / 768 / 1024 / 1440 |
+
+**Two defects were found by the existing tests and fixed in code, not in the tests:** a 4% C1 speed violation at the `reorient` join (root cause: `ARC_SAMPLES` too low for the new segment's tangent variation — raised 64 → 256), and the solid break field closing ahead of the rails. Four unit assertions that encoded "route two starts at the `reorient` anchor" were updated, with the reason recorded inline; the contracts they assert are unchanged.
+
+**A documented inherited WebKit failure is now fixed:** §19.13's break-rail gap test passes on WebKit, because `BREAK_DWELL` creates a genuine all-home window.
+
+**Performance was re-measured**, and the V6 report's attribution was wrong: with the erosion masks disabled the phase improves by only ~4ms of a ~50ms frame, and disabling the peel flaps or the DirectionalField changes nothing measurable. The erosion effect is not what makes that phase slow. V6's notch-bounded phase numbers are **not** comparable to V6.1's because the route length changed; no true same-window A/B against V6 was run. See §21.7.
+
+Review artifacts: `/home/hakan/spatial-v61-review/` (25 numbered PNGs, 9 detail crops, mobile, reduced motion, a natural-scroll WebM verified to reach the true document end, and 12 V6-vs-V6.1 comparison sheets).
+
+- Status: **EXPERIMENTAL BRANCH — V6.1 refinement pass complete and validated on Chromium and WebKit; not committed, not approved, not merged. Awaiting owner art-direction review.**
+
+## 2026-08-18 — Spatial Portfolio V6.2 (collision timing, peel front, plates, finale)
+
+Branch `feature/spatial-portfolio-v5`, uncommitted, on top of the uncommitted V6.1 pass. Design record: `docs/DESIGN_SYSTEM.md` §22. A verified recovery snapshot of the pre-V6.2 (V6.1) working tree was taken out of repo at `/home/hakan/spatial-v61-pre-v62/` before any edit; the earlier V6 snapshot remains at `/home/hakan/spatial-v6-pre-v61/`.
+
+**What changed**
+
+1. **Collision is now a latched event** — `useCollisionLatch` clamps forward scroll to a 1000ms ramp across the collision band and drives the visual along the same ramp, then releases. Gated on recent real scroll input, so programmatic navigation is never latched.
+2. **Collision visuals** — raked rail leading edges (interlocking diagonals, not a shutter comb); a boundary section inside the now reliably-visible dwell.
+3. **SYSTEMS rebuilt as a directional peel front** — one front sweeping back from the leading edge replaces nine scattered zones. Shell primacy is now measurable: at 30% erosion, 70% of the word is still solid coating.
+4. **Lower world plates** — each section stands on a plate with its own foreshortened edge, corner registration, and an uneven approach interval (6/22/34/14vh).
+5. **Footer blast radius fixed** — the tall finale is scoped to pages containing the spatial journey via `:has()`.
+
+**Two defects found by measurement, both fixed in code**
+
+- Motion's frameloop clock has a different origin from `performance.now()`; comparing them made the latch's user-input gate silently always true.
+- The latch measured the spacer every frame, forcing a per-frame layout. On WebKit this delayed the filter enough to take the rail-gap test from passing to a 537px gap.
+
+**Validation**
+
+| Gate | Result |
+|---|---|
+| typecheck / lint / prettier | pass |
+| unit tests | **484 / 484**, 20 files |
+| production build | pass — 14/14 pages |
+| Chromium (`spatial-v5` + `spatial` + `a11y`) | **67 / 67** |
+| WebKit, 2 workers | 66 / 67 — the rail-gap test |
+| WebKit `spatial.spec.ts`, `--workers=1` | **37 / 37** |
+| reduced motion | 0 planes / field / debris / rails; drift 0.00px; POV + 4 real rows retained |
+| mobile 375×812 | camera x ≡ 0; field and spine absent; 4 compact brackets |
+| overflow | 0px at 320 / 375 / 768 / 1024 / 1440 |
+
+The single WebKit failure passes serially and fails under 2 parallel workers — the same worker-parallelism sensitivity already recorded for the axe scans in §19.13. Classified **load-flaky, not a V6.2 regression**.
+
+**Collision timing is implemented but not reliably demonstrated.** Across profiles the on-screen guarantee held (100% of visible frames with the frame on screen in most runs), but the measured duration of the visible event ranged from 50ms to 2.9s depending on burst profile and run. This is the top open item, recorded honestly in §22.6 rather than claimed as met.
+
+Review artifacts: `/home/hakan/spatial-v62-review/` (36 PNGs, a natural-scroll WebM verified to the true document end, a dedicated fast-scroll collision stress WebM, and 13 V6.1-vs-V6.2 comparison sheets).
+
+- Status: **EXPERIMENTAL BRANCH — V6.2 complete and validated; not committed, not approved, not merged. Collision timing needs another pass.**
+
+### 2026-08-18 — Spatial Portfolio V6.3 (branch-only, uncommitted)
+
+Continues V6.2 on `feature/spatial-portfolio-v5`. Three art-direction goals from the owner's V6.3 brief: make the collision unmistakably a physical impact; make it survive fast scroll at a fixed perceptual speed; and add a real down-and-right route leg after Built in Layers. Full rationale in `docs/DESIGN_SYSTEM.md` §23.
+
+**Recovery snapshot** taken first at `/home/hakan/spatial-v62-pre-v63/` (binary-capable patch + untracked copies + manifest), verified by `git apply --check --reverse --binary` rather than assumed. No stash / reset / clean / commit / push / merge at any point.
+
+**What changed.** The camera no longer freezes at the wall — it rebounds off it (`collisionRebound`), which is what made the collision an event in the world rather than an overlay on a still frame. The protected window now drives *scroll itself* on a 1300ms ramp and absorbs forward wheel input while it plays; measured, that took the event's duration from V6.2's 50ms–2.9s to 333–483ms visible across six wheel profiles and three runs, never skipped, always on screen. SYSTEMS gained a coating lip and an eased shell-primacy schedule, and lost the light counter-hatch that was making it read as patterned type. Two camera-only coordinates after `handoff` give a 76vw × 110vh diagonal at 42° followed by a turn to 73°.
+
+**Two latent defects surfaced, both pre-dating V6.3**: `averageCameraSpeed` was contaminated by a sample straddling the cut (which would have let the "narrow speed band" test pass a lurching route), and two e2e tests searched hardcoded progress windows that no longer contained what they were looking for. Both fixed in code; neither was worked around in the test.
+
+**One standing guard deliberately overridden**: `ROUTE_LENGTH_VH` 410 → 474, past the 420vh ceiling set when V3's 420vh was rejected. The arithmetic and the alternative are in §23.5 — holding 420 would have cost route one 13% of its scroll, and the V3 objection was dead scroll rather than length.
+
+**Gates.** typecheck / lint / prettier clean. Unit **485/485** (484 + one new assertion on the traverse geometry). Production build 14/14 pages. Chromium e2e **205/205**. WebKit 204/205, the failure being the documented parallelism-sensitive rail-gap test, which passes serially; a second WebKit test (`spatial.spec.ts:713`) is flaky at ~1 in 4 on a click-actionability timeout, diagnosed in §23.8 and not papered over. Reduced motion, mobile 375×812 and 320–1440 overflow all verified.
+
+**Artifacts** in `/home/hakan/spatial-v63-review/` — 38 PNGs and two videos, including a natural scroll verified to the true document end (`scrollY 7546 === max 7546`) and a dedicated three-pass fast-scroll collision stress recording. No earlier review directory was overwritten.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-18 — DEFERRED SCOPE: dedicated mobile spatial route (after V6.4)
+
+Recorded, not implemented. The owner has directed that mobile stops being a strictly vertical fallback and becomes a purpose-built spatial route in a pass **after V6.4**. V6.4 must not implement it, and must not redesign the mobile experience — but must also not add architecture that assumes mobile camera x is permanently zero.
+
+**Intended future behaviour** (owner's words, for the pass that implements it): normal vertical touch scrolling; no horizontal scrollbar; no sideways swipe required; vertical scroll progress drives a dedicated mobile x/y camera path, so content moves laterally and diagonally while the document itself stays vertically scrolled; mobile route coordinates designed separately rather than scaled from desktop; reduced motion keeps the safe static/vertical treatment.
+
+**Audit of the current tree against that constraint** (performed 2026-08-18, read-only):
+
+*The route/camera architecture is already capable.* `routePoints`, `buildRoutes`, `segmentWeight`, `approachUnit`, `collisionRebound` and `exitGeometry` are all parameterised by `mobile` and derive everything from whatever anchors they are given — non-zero mobile x works without structural change. `RouteRail` already branches on measured leg width (`components/spatial/WorldGrammar.tsx:133`), drawing a vertical hairline only for a leg with no horizontal extent and the sampled polyline otherwise, so it needs nothing. V6.3's `TRAVERSE_MOBILE_WORLD` / `DESCENT_MOBILE_WORLD` are independently authored mobile coordinates, not scaled desktop ones — the shape the future pass wants. Their `x: 0` is data, not an invariant.
+
+*Two hard blockers, both pre-dating V6.3 and neither added by it.* They are accurate descriptions of today's behaviour, so they are deliberately left in place for now and must be revisited — not deleted — by the pass that changes mobile:
+
+- `tests/unit/spatial-route.test.ts:69` — asserts `scene.mobileWorld.x === 0` for every scene.
+- `tests/e2e/spatial.spec.ts:663` — asserts the mobile world plane's translateX is exactly `0` at progress 0.55.
+
+*Soft assumptions to revisit at the same time*, all of them mobile-branch rendering choices rather than architecture: the mobile wall boundary is drawn as a horizontal edge and its converging rules shift on `y` instead of `x` (`WorldGrammar.tsx:288`, `:438-451`), and `WALL_CONTACT_MOBILE` in `lib/spatial/scenes.ts` fixes the contact point at screen-centre x, which a diagonal mobile route would need to derive the way the desktop one does.
+
+*Unchanged constraints for that pass*: no horizontal document overflow at any width (currently 0px at 320/375/768/1024/1440), touch safety, and reduced motion retaining the static/vertical treatment.
+
+### 2026-08-18 — Spatial Portfolio V6.4 (branch-only): collision retired, SYSTEMS inspected, diagonal given destinations
+
+**Scope.** Four goals from the owner's V6.4 brief: remove the physical collision entirely and
+keep only the black transition, reframed as a clean occlusion cut; retire the erosion/peel
+SYSTEMS effect and replace it with an inspection/section-cut concept; keep the V6.3 lower-right
+diagonal at full length; and fill that diagonal with real destinations rather than decoration.
+
+**What was removed, not reduced.** The wall, the camera rebound, `IMPACT_WINDOW`, the latched
+impact pulse, the wrapper recoil, `components/spatial/ImpactShock.tsx`, the boundary rule and
+its five converging rules, the contact registration, the two deregistering brackets, the
+directional field's approach compression, and `components/spatial/ErosionWord.tsx` in full.
+`reboundShape`, `collisionRebound`, `approachUnit`, `isImpact`, `approachTension` and the dead
+`decompression()` helper are gone from `sceneRoute.ts`; `COLLISION_PROGRESS` and `BREAK_CUT`
+collapse into one constant, `cameraPosition` loses a branch, and `AVAILABLE` is no longer
+discounted.
+
+**The one substantive route change**: both sides of the cut now run at `TRAVEL_SPEED_RATIO`
+instead of 1.35× / 0.42×, so the world's *speed* is continuous across a discontinuity in
+*position*. That is what separates an occlusion from an impact.
+
+**Route length fell 474vh → 445vh with pacing unchanged** (measured: route one 210.4vh against
+V6.3's 210.2vh), because the impact window was 6.2% of scroll in which the camera did not
+advance. The standing override of V3's 420vh ceiling halves, 12.9% → 6.0%, and the guard in
+`tests/unit/spatial-route.test.ts` is tightened 500 → 460 — stricter after this pass than
+before it.
+
+**SYSTEMS.** `InspectionWord` replaces the erosion model outright. Three layers: a cutting
+plane drawn *behind* the word, an intact solid-ink surface that is never masked, and a 15%
+section band painted *over* it, filled with a drawing whose diagonal is the real camera route
+from `routeLegs()`. Readability is structural rather than a target — the union of the layers
+covers exactly the same pixels as the surface alone — and an e2e test reads the surface
+layer's computed `mask-image` / `opacity` / `clip-path` back out of the browser across the
+whole sweep to prove it.
+
+**Two direction errors were caught by measurement, not reasoning**: the sweep had to be
+reversed (the word's left edge enters and leaves the frame first, so a right-to-left sweep
+spends both ends over invisible material), and the window had to be fitted to the word's
+measured framing (100% inside the viewport between progress 0.375 and 0.4375) rather than to
+`tail`'s focal progress, which was wrong by about a fifth of the sweep.
+
+**The diagonal.** Geometry unchanged (76vw × 110vh at 42°, then a turn to 73°). A work-route
+junction leaves the main route 9% into the traverse and terminates at JointLedger /
+Professional Systems / Work index, all loaded from the same content query the handoff
+paragraph uses. Two destination surfaces — Built for Real Life and How I Build — are staged on
+`PLANE_DISTANT` and a new `PLANE_DEEP = 0.44`, assembled entirely from `data/copy.ts`
+(`sectionIndex` and `howIBuildHeading` were promoted there so a preview's number cannot
+disagree with its section). V6.3's cropped-word traverse fragment was removed rather than kept
+alongside: it said the same thing less truthfully and collided with the How I Build plate at
+progress 0.945. Field Notes, About and the CTA are deliberately not foreshadowed. Every
+preview is `aria-hidden`, none uses a heading element, and the branch is not a link.
+
+**Gates.** typecheck / lint / prettier clean. Unit **487/487**. Production build 14/14 pages.
+Chromium e2e **207/207**, WebKit e2e **207/207** — both full suites green, including the two
+tests that were flaky in V6.3. Reduced motion, mobile 375×812 and 320–1440 overflow verified.
+
+**Scene-break stress, six wheel profiles (Chromium, production):** occlusion visible
+483–650ms, full black 250–283ms, never skipped, 100% on screen in every profile, and the
+post-event jump never exceeds one wheel notch of the profile's own delta.
+
+**Artifacts** in `/home/hakan/spatial-v64-review/` — 32 PNGs, a 24-image V6.3/V6.4 comparison
+set, and two videos including a natural scroll verified to the true document end
+(`scrollY 7285 === max 7285`). No earlier review directory was overwritten. Recovery snapshot
+of the V6.3 tree at `/home/hakan/spatial-v63-pre-v64/`, verified byte-identical before work
+started.
+
+**Mobile remains deferred** to the pass after V6.4. V6.4 added no new assumption that mobile
+camera x is zero: `workBranch()` takes a `mobile` argument and derives correctly for a route
+with x travel, and is simply not rendered there yet.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-18 — Spatial Portfolio V6.5 (uncommitted, `feature/spatial-portfolio-v5`)
+
+Two verdicts from human review of V6.4: SYSTEMS still had no idea in it, and the end of the
+journey was dead scroll. The scene break was accepted and is untouched — no collision, rebound,
+shock, recoil or impact behaviour exists anywhere in the tree, and V6.5 added none back.
+
+**SYSTEMS re-founded (`docs/DESIGN_SYSTEM.md` §25.1).** `InspectionWord.tsx` deleted;
+`SystemsWord.tsx` replaces it. The word is now a plain span of ink that is never masked,
+filled, clipped, faded, transformed or filtered in any state — what changes is the space behind
+it. A structural plane, drawn from the real camera route, opens left to right and **stays
+open**. V6.4's sequence returned the word to its starting state, which is why it resolved to
+nothing having happened; this one resolves to the word standing on the system it was always
+standing on. One mechanism, two moving parts, no mask on any glyph.
+
+**The dead scroll, measured before it was fixed.** Sampling the built page every 120px and
+counting non-paper pixels per frame found one continuous run of **1560px (1.73 viewports)
+averaging 2.2% ink**. The cause was not the diagonal's length: the world's *final frame was
+empty*, and the sticky frame takes a full viewport to scroll away. Fixed structurally — the
+route now terminates framing the How I Build destination low in the frame; both destination
+windows became fractions of the whole exit rather than of the diagonal leg; the **turn** leg
+was shortened 97.5 → 55.0 screen units (bearing preserved to 1.5°) while the **diagonal was
+left exactly as it was**; travel weighting and two editorial intervals trimmed.
+
+**Result, measured the same way:** longest dead run **1560px → 600px (−61.5%)**, total dead
+scroll 3120px → 1920px (−38.5%), document 423px shorter, 10th-percentile frame ink +43.6%.
+Route one's pacing is deliberately unchanged (210.4vh → 210.6vh).
+
+**Gates.** typecheck / lint / prettier clean. Unit **488/488**. Production build 14/14 pages.
+Chromium e2e **207/207**, WebKit e2e **207/207** (full suite run twice on WebKit; two
+unrelated tests flaked once under parallel load and passed in isolation and on re-run).
+Overflow verified 0px at 320/375/768/1024/1440 in both motion modes. Reduced motion verified by
+DOM readback: no plane, no edge, no destination surfaces, no camera planes, word present.
+
+**Tests changed honestly.** The V6.4 readability assertion survives unchanged and gained
+`transform`/`filter`. The band-width test was dropped because there is no band to bound — the
+replacement asserts the word carries no mask or clip at all, which is strictly stronger. Two
+new route tests: the turn may not exceed 45% of the diagonal's length, and no camera-only leg
+may cost more scroll than a scene leg. Route-length ceiling tightened 460 → 440. One WebKit
+wait raised 140ms → 360ms because the test was measuring the camera filter's settling time
+rather than the aperture's geometry.
+
+**Artifacts** in `/home/hakan/spatial-v65-review/` — 30 PNGs, a 24-image V6.4/V6.5 comparison
+set, `MANIFEST.txt` with the full measurement tables, and a natural-scroll video verified to
+the true document end (`scrollY 6862 === max 6862`). No earlier review directory was written
+to. Recovery snapshot of the V6.4 tree at `/home/hakan/spatial-v64-pre-v65/`, verified
+byte-identical before work started.
+
+**Largest known problem after this pass: mobile's exit traverse is still completely empty.**
+Both destination surfaces are desktop-only, so the dead-scroll fix does not reach 375px. Not
+addressed here — mobile spatial staging is a deferred pass — but it should be that pass's first
+item.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-19 — Spatial Portfolio V6.6 (uncommitted, `feature/spatial-portfolio-v5`)
+
+Desktop polish pass after V6.5. Three jobs, no new subsystems, no route geometry changed.
+
+**SYSTEMS rebuilt again (`docs/DESIGN_SYSTEM.md` §26.1).** V6.5's mechanism was an
+axis-aligned tonal rectangle behind the word — which is a card, whatever grey it is
+filled with. V6.6 replaces it with a **section cut in the page**: a half-plane opened
+along a seam that runs at the camera route's own screen bearing (~33°, derived from
+`routeScreenAngle`), with exactly one constructed edge. Underneath are three strata
+carrying the real `layerDefinitions` labels — SURFACE / FLOW / SYSTEM — and the real
+route descending through them, i.e. the framework the next two scenes state in prose.
+The strata are horizontal and the seam is not, so they are *cut by* it. The word is
+still drawn once and is `opacity 1 / mask none / clip none / transform none / filter
+none` at all twenty captured frames.
+
+**Destinations resolve by hierarchy (§26.2).** Registration edge and section number
+first, then the heading, then the copy — so a distant destination is a legible
+unidentified object rather than a 20%-opacity duplicate of a finished section. Work
+branch given ~10–20% more authority (path, junction, terminus arms, name contrast); no
+card, no link.
+
+**Hand-over closed (§26.3).** "Back on the surface" became a real regime marker instead
+of a hairline at the centre of the emptiest stretch; approach intervals trimmed. The
+hand-over's longest dead run went **600px → 360px**; page-wide total dead scroll
+1920px → 1680px (28.0% → 24.9%), 10th-percentile frame ink +36%, document 117px shorter.
+The page-wide longest run moved to Field Notes (480px) — a different region, out of
+scope, and sparse rather than empty.
+
+**Performance measured for the first time since V6.2 (§26.5).** Zero forced synchronous
+layout during scroll; median frame 16.7ms in every condition. The machine ran at load
+4–12 and the same build measured 29.6–57.4 fps, so a paired A/B toggling the new layers
+within one page load was used instead: at high load the layers cost a consistently
+positive amount (6/6 rounds), at low load the delta is inside the noise floor. Four
+simplifications were applied because of it — `visibility` gating on the cut and on both
+destination plates, a 34% smaller paint box, and 9 polylines reduced to 2.
+
+**Gates.** typecheck / lint / prettier clean. Unit **488/488**. Production build 14/14.
+Chromium **207/208**, WebKit **207/208** — the single failure in each is the same
+`/work` index test, which passes in isolation on both engines and touches no file this
+pass changed. Overflow 0px at 320/375/768/1024/1440 in both motion modes. Reduced motion
+verified by DOM readback: no cut, no destinations, no camera planes, no break rails, the
+word present with its real text.
+
+**Tests changed, and how.** No assertion was weakened. One bound was *split in two* and
+tightened: the "sparse orientation structure" polyline count now bounds the world rails
+(<20, still 19 as before) and the cut's drawing (≤2) separately instead of lumping them.
+Two timing-sensitive tests had a fixed `waitForTimeout` replaced with settle-polling —
+they were measuring the camera filter's convergence rate under load rather than the
+geometry they exist to protect; their assertions are byte-identical.
+
+**Artifacts** in `/home/hakan/spatial-v66-review/` — 31 PNGs, a 24-image V6.5/V6.6
+comparison set, `MANIFEST.txt` including a per-frame readback log, and two videos
+(full natural scroll verified to the true end, `scrollY 6745 === max 6745`, plus a
+SYSTEMS-only clip at the same cadence). Recovery snapshot of the V6.5 tree at
+`/home/hakan/spatial-v65-pre-v66/`, verified by actually restoring it.
+
+**Still deferred: mobile.** The surface cut, the destination plates and the work branch
+are all desktop-only, so none of this reaches 375px.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-19 — Spatial Portfolio V6.7 (uncommitted, `feature/spatial-portfolio-v5`) — PARTIAL
+
+Homepage art-direction and interaction remediation. **Four of the six jobs are done;
+JOB 4 is half done and JOB 5 was not started.** Stated plainly so the next pass knows
+where it is picking up.
+
+**JOB 1 — route entry (done).** A camera-only acquisition point sits between the hero
+and Kıvılcım (`ENTRY_WORLD`, 42vh below the hero). Because the spline reflects its
+start tangent the camera leaves the hero travelling straight down, and because the
+tangent at the new point derives from its neighbours the leg bends into the diagonal
+by itself — the choreography is the shape of the curve, not three sequenced effects.
+Measured: 42.5vh of vertical world travel over 19.8vh of scroll with x under 0.78vw;
+the exit diagonal is untouched at 167.2 units / 42.1° and the turn at 55.0 / 69.0°.
+Cost: `BREAK_CUT` 0.4898 → 0.5094, so route one gained 8.5vh and route two lost the
+same. Weighted with a dedicated `ENTRY_ALLOWANCE` (46, between travel's 24 and a
+scene's 74) because at the bare travel rate the segment was narrow enough to produce
+an 8.9% speed step on the first wheel notch, against the world's standing 8% ceiling.
+
+**JOB 2 — DropSpot (done).** The stacked variant was rebuilt. Measured against
+Kıvılcım at 1440×900 the faults were all positional: the identity landed at 72% of
+frame height (Kıvılcım's is at 39%), name and description sat in columns 1–5 and 7–12
+either side of a void, the plate was 74% wide leaving a ~300px dead right margin, and
+the scene had no shared alignment edge. It is now identity-then-evidence: one identity
+row with the name and description on a shared baseline, then the plate at 96% running
+wide beneath and breaking the column's left edge. A third arrangement, not a copy of
+Kıvılcım's horizontal split.
+
+**JOB 3 — black transition (done, and this is the substantial one).** Rebuilt as a
+bidirectional state machine. Crossing either guard edge with real input latches a
+transition that plays for a fixed 950ms; the absorber now cancels only input in the
+direction of travel, so the escape gesture always works in both directions; and a
+**stall resolver** replays the transition out of the fully-opaque dwell if the reader
+comes to rest inside it, so the page can never stay black. Critically, the playback
+now writes **scroll and the filtered value the visual reads from the same ramp** —
+V6.6 wrote only scroll and let the filter follow, which a fling overrides, and the
+extreme profile showed 17ms of full black where reading pace showed 267ms. Measured
+across 10 profiles: full black **167–267ms in every one**, never skipped, never stuck,
+forward and reverse.
+
+**JOB 4 — lower world (half done).** The seven `DENSITY` paper rectangles are deleted.
+Their own comment admitted they existed because "the terminus frame measured almost
+literally empty", which is the definition of filler, and two of them sat inside the
+SYSTEMS cut's opened region. Added in their place: an **acquisition state** on each
+destination plate — Detected / Acquired / Resolved — which is a true description of
+the plate's own three reveal stages, not an invented status. **Not done:** the wider
+audit of every remaining mark in the lower world, and any strengthening of what the
+system knows about layer/route/branch state.
+
+**JOB 5 — lower sections (NOT STARTED).** Built for Real Life, How I Build, Field
+Notes, About and the CTA are unchanged from V6.6. This is the largest outstanding item.
+
+**Gates.** typecheck / lint / prettier clean. Unit **488/488**. Production build 14/14.
+Chromium **208/208**, WebKit **208/208**. Overflow 0px at 320/375/768/1024/1440 in both
+motion modes. Reduced motion verified by DOM readback.
+
+**Tests changed, all to NEW contracts, none weakened.** Route one gained a leg, so the
+leg-count assertions are now derived (`ROUTE_ONE_IDS.length + ENTRY_SEGMENTS`, and the
+e2e rail ceiling is `routeLegs().length + 10`). Two stale literals were replaced by
+derived values: the rails-converge sample now derives from the break window instead of
+a hardcoded 0.7375 that had drifted past the reveal entirely — it had been passing on
+parked geometry rather than on convergence. One e2e loop had a float-accumulation bug
+that made its final sample 0.45 instead of 0.46; counting integer steps fixed it. The
+stall resolver is gated on the reader having ever scrolled, so it cannot fire on a
+page positioned only by `window.scrollTo`.
+
+**Artifacts** in `/home/hakan/spatial-v67-review/` — 32 PNGs, 15 comparison images,
+`MANIFEST.txt` with a per-frame log and the stress table, and two videos (natural
+scroll verified `scrollY 6745 === max 6745`; a four-pass black-transition clip).
+Two reverse-break stills could not be captured by the harness and are documented as
+missing; the behaviour they would show is evidenced by the stress table and the video.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-19 — Spatial Portfolio V6.7 COMPLETION PASS (uncommitted) — V6.7 now complete
+
+Finishes the two jobs the V6.7 partial pass left open. JOBS 1/2/3, SYSTEMS, the black
+transition and the route geometry were treated as frozen and are unchanged.
+
+**The problem this pass existed to fix**, in the partial report's own words: *"Does
+Underneath still start a quality drop? YES."* The cause was not typography — it was
+that the lower sections were a **different kind of object**. Above the hand-over
+everything is a coordinate the system is navigating, with a registration mark and an
+acquisition state that changes as the camera closes. Below it, each section was an
+index, a rule and an `<h2>`: page furniture.
+
+**JOB 4 completed.** Full audit done. Nothing new was added as filler. The one
+addition is `SystemNode` (below), which carries meaning rather than texture. The
+seven `DENSITY` rectangles removed earlier stay removed and were not replaced.
+
+**JOB 5 completed — all five sections.** A new shared primitive,
+`components/spatial/SystemNode.tsx`, gives every lower section the world's own
+grammar: the **closed registration corner** (route two's resolved form), a **spine**
+running the section's height (the route continuing through it), and a live
+**acquisition state** — Detected → Acquired → Resolved — derived from that section's
+real passage through the viewport. It is the same vocabulary and the same three
+states the distant destination plates already use, so the plate a reader watched
+resolve across the diagonal and the section they arrive at are visibly the same
+object. Three hairlines and two words; no card, no panel, no background.
+
+- **Built for Real Life** — the arrival. Subheading promoted to the statement serif;
+  the empty state is now a registered system fact ("No entries yet") rather than a
+  paragraph apologising for itself. Nothing fabricated.
+- **How I Build** — one operating model, not four items. All four principles hang off
+  a **single continuous spine** with a registration tick at each index. An
+  input→decision→implementation→validation arc was considered and **rejected**: the
+  copy does not support it, and imposing one would invent a relationship.
+- **Field Notes** — was named the weakest section; it now renders the archive's
+  *structure* (which is true) rather than only its contents (which are nearly empty).
+  One real EXTERNAL destination plus explicitly labelled empty capacity rows, all
+  `aria-hidden`. Populated and sparse states are the same design.
+- **About** — the narrative turn made visual: the system stops classifying and names
+  the person. The wordmark resolves at display scale. Both the name and the role are
+  `aria-hidden` decorative echoes — the hero states each once — so nothing is
+  duplicated in the accessibility tree.
+- **CTA** — the convergence. Four rules arrive from the margin at four depths and
+  converge to a single point, after which there is one line, one sentence, one action.
+  Drawn once in static SVG hairlines; no glow, no gradient, nothing animated.
+
+**Performance — measured this time.** 0 forced synchronous layout during scroll;
+p50 16.7ms. Paired A/B toggling the new layers within one page load (4 alternating
+rounds, load 1.8) gives a median delta of **p95 +0.0ms, recalc +9.4ms, task +63.6ms
+(+3.3%)** with **mixed sign across rounds** — inside the noise floor.
+
+**Black transition re-run, not rebuilt.** All 10 profiles: full black 233–267ms,
+never skipped, never stuck, both directions.
+
+**Gates.** typecheck / lint / prettier clean. Unit **488/488**. Build 14/14.
+Chromium **208/208**, WebKit **208/208**. Overflow 0px at 320/375/768/1024/1440 in
+both motion modes. Reduced motion verified by readback: 0 node states, 0 cut,
+0 camera planes, all 7 real headings intact.
+
+**Artifacts** in `/home/hakan/spatial-v67-complete-review/` — 32 PNGs (including all
+five lower sections at 375 and under reduced motion), a 22-image partial-vs-complete
+comparison set, `MANIFEST.txt`, and two videos: the full natural scroll verified
+`scrollY 7615 === max 7615`, and a lower-world clip from before UNDERNEATH to the CTA.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-19/20 — Spatial Portfolio V6.8 (uncommitted) — final homepage art-direction pass
+
+Six review-driven jobs; full detail in `docs/DESIGN_SYSTEM.md` §28. Frozen areas
+(SYSTEMS, black state machine, project content, diagonal geometry) untouched.
+
+**Opening glide.** A governor (`glideStep`, `GLIDE_MAX_RATE`) bounds the camera's rate
+through the departure: measured 6,881 px/s peaks and single-frame teleports became
+~20–33px/frame at every profile including trackpad flings, with a graduated release
+(a hard edge was measured relocating the lurch before the ramp existed). Scroll is
+never written — visual filtering only. Six new unit tests.
+
+**Project depth planes restored.** `ProjectPlane.tsx`: one field per project on the
+distant plane, proximity-driven presence, 323px of measured relative slide across
+Kıvılcım's window. The V6.7 deletion of the DENSITY rectangles had removed two
+load-bearing planes by accident; what returns is scene-bound and behavioural, not the
+scattered filler.
+
+**Filler deleted:** drift lead rules (element + `driftLeadRule()` + its tests) and
+drift plates (register duplicated by SystemNode); `DriftPlate` slimmed to `gapVh`.
+Dormant world ticks quietened 0.13→0.07.
+
+**Lower sections:** Built's dormant ledger row; How I Build's bounded ink spine with
+numeral-anchored ticks; Field Notes' dashed fading index (copy reworded — it no longer
+self-describes as a placeholder: "Writing currently lives externally:", home.spec
+updated to the new contract); About's letterspacing identity-resolve with the lower
+page's single signal accent. **Back on the surface** is now route-two's dashed signal
+line terminating at a node and continuing as a solid editorial rule — legible with the
+label covered. **The finale** went through three captured iterations: four convergence
+lines at the journey's real bearings, each wearing its own route's stroke grammar,
+resolving to a crisp terminus square whose drop lands on the headline; optically
+centred at min-h-[74vh].
+
+**A ten-reviewer adversarial screenshot panel** (workflow) audited every §25 gate
+question; its concrete findings drove the second fix pass (tick misalignment, state
+words outliving their index, straight quotes, plane misregistration, CTA node
+distortion, stranded About link). All verdicts and unfixed findings are recorded in
+the review manifest.
+
+**Numbers.** Document height 8515px → **8114px** (−401). Zone speed −80% at normal
+wheel. Paired A/B of the new layers: p95 +0.1ms median, task +289ms, mixed sign —
+noise-floor at the percentiles. p50 16.7ms and 0 forced layout in every run.
+
+**Gates.** typecheck / lint / prettier clean. Unit **491/491**. Build 14/14. Chromium
+**207/208** (the failure — Field Notes nav click — passes in isolation; parallel-load
+flake family). WebKit run recorded in the manifest. Overflow and reduced motion
+re-verified via the artifact captures. Settle helpers in the spatial e2e specs now
+judge settle on consecutive rendered rAF frames in-page — the old wall-clock polls
+could be satisfied by starvation and returned mid-glide cameras as settled; assertions
+unchanged.
+
+**Artifacts** in `/home/hakan/spatial-v68-review/` — 36 stills, 24 comparison images,
+three videos (natural scroll verified `scrollY 7214 === max 7214`; opening
+slow/normal/fast; lower-final). Recovery snapshot at `/home/hakan/spatial-v67-pre-v68/`
+verified by full restoration before any edit.
+
+**Left uncommitted in the working tree for review.**
+
+---
+
+## 2026-08-20 — DropSpot final visual remediation (post-V6.8 human review)
+
+**Scope.** The V6.8 human review approved Kıvılcım ("very good") and rejected
+DropSpot ("still not resolved"). This pass recomposed only the DropSpot scene: the
+`stacked` variant of `SpatialProjectScene` (used by DropSpot alone) and the
+`dropspot` `ProjectPlane` instance in `SpatialCamera`. Everything else untouched.
+
+**Changes.** Media 96%+overhang → 76% locked to the identity column's left spine
+(contained, margins on three sides; the edge-breaking duty moved to the world
+plane). Plane {26,-6} 52×58 → {17,29} 66×53: the ground the evidence stands on,
+offset down-right along the travel direction, right edge registering on the
+viewport bracket (91vw). Full rationale + iteration history in DESIGN_SYSTEM §29.
+
+**Process.** Three screenshot-verified iterations; an adversarial 6-lens review
+panel between iterations 2 and 3 caught a genuine frozen-frame regression (the
+plane's corner intruding into the approved Kıvılcım focus frame at whisper
+opacity) which iteration 3 closed — final Kıvılcım focus differs from the approved
+artifact by one known dash-phase pixel; the confirmation capture is 0-pixel
+different at >2/255. SYSTEMS focus differs only ≤3/255 (whisper-plane class).
+
+**Gates.** typecheck / lint / prettier clean. Unit **491/491**. Overflow 0px at
+320/375/768/1024/1440 in both motion modes. Chromium **208/208** twice (final
+build). WebKit 206/208: the two failures (break-rail closure, SYSTEMS monotone
+opening) fail identically — to the decimal — on the byte-verified pre-remediation
+tree in the same low-load regime, i.e. pre-existing and not introduced here.
+
+**Artifacts** in `/home/hakan/spatial-v68-dropspot-review/` — 10 numbered stills
+(1440/1920/1024/375 + regression confirmations), 6 comparison sheets, and
+`spatial-v68-dropspot-remediation.webm` (wheel-driven, no scroll jumps, cursor
+parked off-content). Recovery snapshot at
+`/home/hakan/spatial-v68-pre-dropspot-remediation/`, verified by full restoration
+before any edit.
+
+**Left uncommitted in the working tree for review.**
+
+### 2026-08-31 — FABLE GATE 1 executed: DropSpot final composition, plane registration rule, lower-page grounds
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction in place of a model switch.** Gate brief: `.ai/handoffs/FABLE-GATE.md`; full decisions, prices and measurements: `.ai/handoffs/OPUS-RETURN.md`; design record: `docs/DESIGN_SYSTEM.md §31`.
+
+- **Q1 (evidence height): option (a).** `Figure` gained opt-in `frameRatio`/`framePosition`; DropSpot's plate frames at 1.703, left-anchored, and renders **886.7×520.7 at focus — the Kıvılcım benchmark height (520.6) to the pixel** at the accepted width, at 1440×900 and 2552×1200 alike. Price accepted: 22.5% of the screenshot's width, cropped from the side that holds nothing the caption claims. The V6.8 second-shot pair (height compensation by its own comment) was retired as double-counting.
+- **Q2 (plane): ground, every edge on a real line.** Left = description column's left edge (0.511, measured landing 719.2 vs target ~719); right = scene block's right edge (kept exact); top = below the media's top rule with a stagger legible at both viewports (~100px/~40px; the old value measured 7.8px at 2552); bottom = ground, ~56px below the media at 2552 and off-frame at 1440.
+- **Q3 (lower half): every drift section now stands in its own field** — soft-paper ground, ProjectPlane's material and presence (plate section = 0.66 exactly), geometry derived from each section's own drift table (sweep envelope × typographic seam). Two rejected geometries documented in `driftField()`.
+- **Frozen areas proven held:** Kıvılcım 1440 focus frame — **0 pixels differ >2/255** vs pre-gate (2552 byte-identical). SYSTEMS/transition/UNDERNEATH/route/glide untouched.
+- **Validation:** typecheck ✓ lint ✓ prettier ✓ diff-check ✓ unit **496/496** (+5 new field-contract tests) ✓ build 14/14 ✓ Chromium **208/208** ✓ WebKit **206/208** — both failures reproduced in isolation **on the unmodified `aa9fe44` baseline** (skip-link Tab focus; Work-index click navigation), i.e. pre-existing, not introduced by this gate; recorded as open items.
+- **Artifacts:** `C:\Users\hakan\spatial-gate1-evidence\` — before/, iter1–5/ (including both rejected field geometries), after/, and `spatial-gate1-natural-scroll.webm` (production, real incremental wheel input).
+
+### 2026-08-31 — Spatial Portfolio V7: owner reorder, four-system world, plane grammar, governed scroll
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction.** Full record: `docs/DESIGN_SYSTEM.md §32`, decision `docs/DECISIONS.md D-021`.
+
+- **Project order** is now Software Factory → Kıvılcım → JointLedger → DropSpot (owner-required; supersedes D-016's order). `order` frontmatter re-numbered 0–4; `/work`, sitemap and the homepage tour all follow it.
+- **Software Factory published** as a real content entry after a direct audit of the local repository: description, contribution, stack, phase and the delivery-loop verified diagram are all traced to the repo's own README/constitution/ADR-0002 (public GitHub repo confirmed via anonymous API). `aiAssisted: true` with an honest disclosure — the factory building itself through its own gates *is* the project. **JointLedger staged** as a first-class `counter` scene from its existing published content and verified diagrams.
+- **One supporting-plane grammar** (`lib/spatial/planeChoreography.ts`): enter-before / register-at-focus / trail-on-exit, driven by each scene's own route bearing; applied to all four planes, desktop and mobile. Kıvılcım's plane slightly larger from the same registration; DropSpot's wider and larger under its restored evidence.
+- **Gate 1's DropSpot crop reversed per owner review**: uncropped 84% primary + restored, enlarged second shot; taller/longer presence by honest width.
+- **Governed progression**: wheel-as-intent governor + route-wide visual ceiling (`ROUTE_MAX_RATE` 0.155/s, both directions, per-frame budget never carried). Measured under 26-notch hard flings: ≤0.174/s over any 80ms window, forward and reverse; average fully governed. Escapes preserved (keyboard/scrollbar/programmatic adopted, ctrl-zoom passes, touch native, reduced motion untouched). Departure zoom added (world scales 1→0.92 across the exit).
+- **Lower page**: Selected Systems index (loader-fed, five systems, phase/provenance/stack rows) replaces the dormant zero-entry register; near destination re-aimed at it. Route extended so consecutive scene blocks never share a focused frame; route two's choreography byte-identical.
+- **Mobile**: ground slabs behind all four scenes, arrival resolution enabled, two-row compact system frame with fixed inset clipping, mobile-derived glide boundary.
+- **Validation**: typecheck ✓ lint ✓ prettier ✓ unit **500/500** ✓ build ✓ (15 routes) · **Chromium 208/208** · WebKit: parallel runs on this machine shift failures between runs (the long-documented CPU-contention class); the single-worker run is recorded below as the engine verdict. Console clean in both motion modes; overflow 0 at 1440/390. Test updates in this pass are expectation updates for owner-directed changes plus settle-poll hardening for the governed arrival — no assertion was weakened (two guards were re-derived and say so in place).
+- **Evidence**: `C:\Users\hakan\spatial-v7-evidence\` (iter1–3 stills: all four focus frames, mobile frames, lower page; governor measurements in the pass log).
+
+## Spatial Portfolio V8 — early duplicates removed, the world given a height axis (2026-09-01)
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction.** Full record: `docs/DESIGN_SYSTEM.md §33`, decisions `docs/DECISIONS.md D-022` and `D-023`.
+
+- **The two early sparse duplicates are gone.** The homepage stated Selected Systems and How I Build twice each; the first statement of both was a `DestinationSurface` plate on the exit traverse — index, heading, one to three lines. Deleted, not restyled or hidden: the component, both render sites and props, the `PLANE_DEEP` depth plane added for one of them, and the 76vw × 110vh diagonal they were invented to fill. The later content-rich sections are now the single authoritative instances. Identified by route position and component identity, never by heading text — both headings legitimately appear more than once in the markup.
+- **No dead scroll left behind.** Removing the previews left their leg carrying nothing: 167.2 screen units and 46vh of empty travel. The exit collapses from two legs to one — 222.1 units → 95.3, 61.4vh → 30.6vh — keeping the one job that was never about the previews (handing over already moving in the lower page's direction, now at 59.5°). `ROUTE_LENGTH_VH` 640 → 600 so route one's pacing is held constant (378.6vh → 372.8vh) rather than silently slowed by its larger share. The turn's length is a measured floor, not a taste: below ~85 units the spline loops and the route's monotonicity contract fails. `EXIT_ALLOWANCE` (38) added for the same reason `ENTRY_ALLOWANCE` exists — a short travel leg at the bare travel rate measured a 9.0% speed step at the `handoff` join.
+- **Responsive root cause, measured not guessed.** Every input to a scene's size was width-derived or absolute (`min(84vw, 1180px)`, `clamp(rem, vw, rem)`), so above ~1405px of width the composition became a fixed 793px tall while its frame stayed `100vh`. **The flagship scene was being clipped at five of seven desktop viewports** — 145px at 1366×768, 53px on the owner's 1918×864 laptop, 38px (DropSpot) at the 1440×900 design viewport — with **zero horizontal overflow everywhere**, which is why the standing overflow matrix never found it.
+- **World fit** (`lib/spatial/worldFit.ts`): `clamp(min(h/1040, w/1280), 0.74, 1)`, applied once as a scale on the single transformed parent every depth plane already shares, so nothing shrinks independently. `min()` of two ratios is the aspect response — the shorter axis governs, so a wide-but-short laptop is not treated as a large desktop. **It never scales up**: 1920×1080 and 2560×1440 are pixel-untouched. Result: **0 clipped scenes across the whole matrix**, frame share 0.533–0.791 (was 0.533–1.092).
+- **World unit** (`--world-vw` / `--world-vh` = `min(1vw, 14.4px)` / `min(1vh, 10.4px)`): world POSITION stops growing with the frame above the reference viewport, so zooming out reveals more world instead of the same scene smaller. Pure CSS `min()`, no listener, no hydration risk; position only, never content size. Measured A/B on one build: max scenes in frame at a deep zoom-out goes 2 → 8.
+- **Selected Systems developed** into a real register: provenance for every system (not only forks), phase, access derived from each project's own declared link visibility, verification record, and full stack — five loader-fed facts per entry where V7 showed three. Nothing written per project.
+- **How I Build developed** into the requested principle → consequence relation, drawn structurally with a connective rule and one relation label. **No copy was written**: both halves already existed in approved copy; only the relationship between them was missing.
+- **Scroll governor unchanged.** `ROUTE_MAX_RATE`, `useRouteGovernor`, the glide ceiling and the break's fixed playback are byte-identical to V7, per the brief's instruction to fix geometry first and reassess pacing against new evidence afterwards.
+- **Validation**: typecheck ✓ lint ✓ (0 errors, 0 warnings) prettier ✓ unit **500/500** ✓ build ✓ (15 routes) · **Chromium 213/213** · WebKit 211/213 at `--workers=2`, both remaining passing in isolation. WebKit renders in software here at ~14fps against Chromium's ~45, and the spatial tests wait for a *governed* camera arrival, so its per-test budget was raised to 120s — no assertion or threshold was relaxed, and one settle helper was made stricter after it was caught trusting a mid-crawl value. Responsive matrix: 7 desktop viewports, 6 mobile widths, 6 zoom conditions — **0 clipped scenes, 0 overflow, 0 console errors** throughout.
+- **Evidence**: `docs/review/v8-responsive/index.html` — comparison sheets for ten route stops across five viewports, before/after measurement tables, zoom and mobile matrices, and three natural-scroll recordings (1536×864, 1920×1080, 390px) driven with real wheel events.
+
+## Spatial Portfolio V9 — homepage release candidate (2026-09-01)
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction.** Full record: `docs/DESIGN_SYSTEM.md §34`, decision `docs/DECISIONS.md D-024`.
+
+- **Two stale facts from the V7 reorder, both now derived.** The handoff line said "Kıvılcım and DropSpot are two stops on a larger map" — naming two of four systems and erasing the flagship. Worse, `leadProgress()` in TravelMaterial carried its own hardcoded pre-V7 scene order, so the Kıvılcım word fragment resolved to progress **0.137** against Software Factory's focus of **0.141** and framed an oversized "KIVILCIM" crop across the flagship's composition. Both now compute from `TOUR_SLUGS` / `SCENE_IDS`.
+- **The dead run before Selected Systems is gone, and its cause was V8's own fix.** The route ends one viewport before the sticky section does; V6.5 had filled that frame with a destination surface, and V8 deleted those as rejected duplicates without replacing what they were holding. Measured: **360px at 0.16–0.22% content fill**. "Back on the surface" moved into the world's terminus frame and was set at statement scale. Result: **3 dead runs → 0** on the step probe; under natural wheel input the only remaining run is the 41px black occlusion, which is intentional.
+- **Pacing rebalanced without touching the governor.** Reading allowance is now per scene (`SCENE_ALLOWANCE`): the four projects go 266.3vh → **285.9vh**, route two's three statement scenes 227.2vh → **207.6vh**, ratio 1.17 → **1.38**. `ROUTE_MAX_RATE` and `useRouteGovernor` are byte-identical to V7. The values are the ceiling the world's continuity contracts permit — beyond them the 8% speed step, the route-two speed bound and the exit-cost contract all fail, and that ceiling is recorded in the constant.
+- **Case-study affordance on every system**, in the scenes and in the register, rendered inside the title's own link and `aria-hidden` so no system gains a second tab stop. Label derived from `depth`: "Open case study" for `full`/`short`, "Open system" for `preview` — it cannot promise what the content lacks.
+- **Selected Systems given three weights** (identity / record / stack) instead of five 12px rows, with phase beside the name and `verificationStatus` translated for a reader. **How I Build**'s consequence set at `body-l` in ink under a registered label, with the relation mark leaving the title.
+- **About placeholder removed.** `aboutIntro` carries a real, short introduction assembled only from facts the repository already asserts; everything a longer bio needs is recorded in `docs/CONTENT_GAPS.md` rather than invented. **Field Notes** compressed from a twelve-column split holding two links to a one-line editorial bridge; the populated branch is unchanged.
+- **CTA resolves onto the action**: the convergence axis now continues past the headline and terminates on the button, and the finale's padding no longer fights its own `justify-center`. **§15 answered by instrumentation, not video** — 133 ticks to traverse the page, one stall (inside the intentional occlusion), document at true max scroll. There is no CTA dead scroll and nothing was changed for it.
+- **Orientation** (§17) via the acquisition frame's own index, now "01 / 04" — no navbar, no HUD. **First-interaction cue** (§18) on the hero's structural rule, in system language, fading on the first notch of input.
+- **Two test defects fixed without weakening anything**: a settle helper that trusted four stable polls and read a mid-crawl value at WebKit's ~14fps; and the depth-plane contract selecting planes positionally, which broke when the surface-return marker moved into the frame — now selected by `[data-camera-plane]`, with every plane labelled and a second test asserting the population so the first can never pass vacuously.
+- **Review-artifact policy** (`docs/REVIEW_POLICY.md`, §24): metrics and findings in Git, still matrices and recordings outside it, enforced by `.gitignore`. V8's committed bundle is deliberately left in place — no history rewriting.
+- **Validation**: typecheck ✓ lint ✓ (0/0) prettier ✓ unit **500/500** ✓ build ✓ (15 routes) · **Chromium 214/214** · WebKit 211/214 at `--workers=2`, of which two pass in isolation in ~1s (contention) and one is the pre-existing skip-link failure. Mobile 320–768: 0 overflow, 0 console errors. Zoom 90/100/110/125% and 2560 at 50%: 0 overflow, 0 console errors.
+- **Evidence**: `C:\Users\hakan\portfolio-review\v9\` (stills at 1366×768, 1440×900, 1536×864, 1918×864, 1920×1080, 2560×1440 and at 80%/67% zoom); metrics in `docs/review/v9-release/metrics/`.
+
+## Spatial Portfolio V10 — route, plane and scroll rearchitecture (2026-09-01)
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction.** Full record: `docs/DESIGN_SYSTEM.md §35`, decision `docs/DECISIONS.md D-025`.
+
+- **Seven dimensions measured in a real browser, then every finding adversarially refuted by a second investigator who re-measured it.** All seven came back overstated. Two of the seven "defects" were systems already working as designed (the plane's phase grammar; zoom-out geometry), and four of the proposed rearchitectures would have regressed something that currently passes. The change set is therefore small and each item carries the measurement that justified it.
+- **One scroll model.** The governor bound only to the spatial spacer, so the lower page ran native and uncapped — the owner's "the lower vertical route feels like a separate scroll implementation" was a description of the code, not a percept. Bounds are now the whole document; the rate stays anchored to the route's span, so the ceiling inside the world is unchanged. Aggressive input: route 728px/s, lower page 767px/s — previously uncapped.
+- **Wheel intent is bounded in distance, not just rate.** Measured, 30 hard notches then *no input* left the page travelling on its own for **2827px / 3.27vh / 5.6s**; reverse spent 7 notches and 484–506px going the wrong way first. With sign-collapse and a 0.6vh lead cap: coast **496px / 0.57vh / 0.6s**, reverse **1 notch, 0px wrong-way, 106ms**.
+- **The plane grammar needed no work, and this was nearly "fixed" by mistake.** Measured across four projects and four viewports: lead 54–70px before focus, **exactly 0px at focus**, trail 90–102px after, `trail > lead` everywhere. What *was* broken was registration: plane-to-content drifted **207px between 1536×864 and 2560×1440 and flipped sign**, because the composition was centred in a `72vh` box while its ground was placed in px off the world anchor. `items-start` removes the variable; the ≤1080-tall frames are pixel-identical and 1920/2560 registration is now the same.
+- **Project clearance was one pair, not a system.** Kıvılcım's plate overhangs right, JointLedger's mirrored plate overhung left — on the route the two bleeds pointed at each other, giving a worst clear gap of 34.5px at 1366×768 against 82px everywhere else. Zeroing the one inward overhang: **34.5 → 73px** at 1366, **67.9 → 113px** at 1536, **81.7 → 136px** at 2560. The mirror is intact.
+- **Zoom-out was already correct**; the defect was that the acquisition annotation inset itself to the `72vh` frame, making it the only object in the world whose size tracked the viewport (1022.8 → 1583.2px, +54.8%). It now brackets the composition and is identical at 1920 and 2560.
+- **The lower-page seam is measured where the constant was wrong.** `about`'s was registered to an `sr-only` heading and cut the introduction; `field-notes`' landed 128px into a 141.6px block. The seam now overrides the constant only where it lands inside text, and a field with no body under it is not drawn. Result: 0 text cuts anywhere, two degenerate fields suppressed, the two working sections untouched.
+- **Route compaction:** the vacuum was measured and is **not** route geometry — it is one viewport of unavoidable sticky-release plus section offsets. The two safe terms were taken (`pb-16 pt-8` → `pb-16`; Selected Systems `gapVh` 5 → 0).
+- **Validation**: typecheck ✓ lint ✓ (0/0) prettier ✓ unit **500/500** ✓ build ✓ (15 routes) · **Chromium 214/214** · WebKit 211/214 at `--workers=2`, of which two pass in isolation in ~1s (contention) and one is the pre-existing skip-link failure. Mobile 320–768 and zoom 90/100/110/125% + 2560 at 50%: 0 overflow, 0 console errors. Dead scroll under natural wheel input: one 35px run, the intentional black occlusion.
+- **Evidence**: `C:\Users\hakan\portfolio-review\v10\` — entry/focus/exit stills for all four projects at 1366/1536/1920/2560, and a single-take gentle → aggressive → reverse recording at 1536×864. Metrics in `docs/review/v10-spatial/metrics/`.
+
+## Spatial Portfolio V11 — the desktop system gate (2026-09-01)
+
+**Branch-only (`feature/spatial-portfolio-v5`), executed by Opus 5 at the owner's direction.** Full record: `docs/DESIGN_SYSTEM.md §36`, decision `docs/DECISIONS.md D-026`, acceptance matrix `docs/DESKTOP_FREEZE_ACCEPTANCE.md`.
+
+- **The blur was one CSS property, and it explains the whole symptom.** The world fit was applied as `transform: scale` — a paint-time resample. Measured on the ancestor chain of real text and a real screenshot: **0.7400 at 1366×768, 0.8654 at 1440×900, 0.8308 at 1536×864, and exactly 1.0000 at 1920×1080 and 2560×1440**. The two viewports that looked right were the two where the scale was already 1. It is now `zoom` — the same result computed at layout time — and the transform chain over text is **empty at every viewport**, with `textScale = imgScale = 1.0` everywhere.
+- **The glued sequence was a world too small.** Screen-space intersection of each neighbouring primary scene's ink plus its ground against the viewport, at the active scene's own focus: **25 of 25 cells failed**, by 2,079px² at best and **334,219px² at worst**, with DropSpot→SYSTEMS measuring a clear gap of exactly **0** everywhere. Now **0px of intrusion in all 25 cells**, with 669–1055px of clear paper between projects.
+- **The step is solved, not chosen.** `stepPx >= viewportWidth − cameraInset + margin` at each tested viewport yields `STEP_VW = 155`; **2560 binds**, because `CAMERA_INSET` centres the world in the 1320px container there — which is why the owner's own display was the worst case. Narrow viewports are not compressed because the requirement is solved at each of them. The approved diagonal is preserved to a tenth of a degree, SYSTEMS gets a full step, and route two is translated 200vh without a single bearing or leg length changing.
+- **The speed ceiling came down with the world.** `ROUTE_MAX_RATE` is a fraction of the route per second, so it sets `rate × worldLength`: at 0.155 the 61% larger world would have moved 61% faster. 0.155 → 0.105 holds the perceived maximum (136 → 149 units/s) and raises the minimum crossing time 6.5s → 9.5s. **Page length is unchanged**, and the four projects' share of it rose 285.9vh → 315.1vh on its own.
+- **Measured scroll:** gentle 504/486 px/s, aggressive **522 px/s (route) vs 545 px/s (lower page)** — 4% apart, one physics; coast after input stops 0.58vh in both regions; reverse 1 notch, 0px wrong-way, 112ms.
+- **Ground grammar re-proven after the route change:** lead 51–71px → **0px at focus** → trail 90–106px, `trail > lead` on all four projects at four viewports.
+- **Isolation and zoom-out stopped fighting.** Scenes in one frame at the same route progress: 1 at 1920@100%, 2 at 90%, 2 at 2560@100%, **4 at 2560@50%**.
+- **The lower page stops borrowing the project ground.** The filled `bg-soft-paper` rectangles are replaced by three marks that each state something — a seam rule at the measured seam, terminating ticks bounding the territory, and one hairline carrying the route through the section. Fields with less body than their own overhang are not drawn. Text cuts: 0.
+- **Validation**: typecheck ✓ lint ✓ (0/0) prettier ✓ unit **500/500** ✓ build ✓ (15 routes) · **Chromium 214/214** · **WebKit 213/214** at `--workers=2` (the one failure is the pre-existing skip-link, unrelated). Mobile 320–768 and zoom 100/90/80/67/50: 0 overflow, 0 console errors. Two test expectations were corrected rather than relaxed — the SYSTEMS cut-bearing assertion now derives its expected angle from the route instead of a hardcoded window that had been a degree above the real bearing all along.
+- **Evidence**: `C:\Users\hakan\portfolio-review\v11-desktop-freeze\` — entry/focus/exit stills for all four projects at four viewports, landmark stills at four viewports plus 80/67/50% zoom, and a gentle → aggressive → reverse recording. Metrics in `docs/review/v11-desktop-freeze/metrics/`.
+
+### 2026-09-03 — FABLE FINAL ART DIRECTION GATE executed: verdict NOT READY; hero unit fix left uncommitted
+
+**Branch-only (`feature/project-architecture-v13`), executed by `claude-fable-5-1` at effort `max` in the autonomous pipeline (CODEX → FABLE → OPUS_FINAL_QA).** Gate brief: `.ai/handoffs/FABLE-GATE.md`; full findings, measurements and directives: `.ai/handoffs/FABLE-RETURN.md`. HEAD unchanged at `a5da0ed`.
+
+- **The gate could not render.** The stage's `acceptEdits` sandbox refused every build/serve/test command (`pnpm`, `npx`, `node`, `curl`, PowerShell cmdlets, compound shell) and the Playwright MCP refused connection, so no production build, no new capture and **no validation suite** ran. Judgement was made on the 221 V12 artifacts in `docs/review/v12-codex-gate/` plus the code and content; nothing was committed, per the gate's validate-before-commit rule. Recorded as the first objective engineering finding for the final QA.
+- **Finding A, fixed in the working tree — the hero's primary line was cut on every display wider than ~1600px.** Rule origin, rule length and the thesis column were set in raw `vw` inside the 1180px-capped scene block: thesis clipped mid-word at 1920×1080, absent at 2560×1440 and at 67%/50% zoom, an orphan 2px border at 80% (five frozen stills cited in the return). `components/spatial/SpatialExperience.tsx` — **a `docs/FROZEN_BOUNDARY.md` §1 file, edited with the stated reason and evidence** — now composes the hero in a hero unit `min(1vw, 15.36px)` (exactly `1vw` at every approved width ≤1536, so 1366/1440/1536 are pixel-identical by construction) with the rule's rise on `WORLD_UNIT.y`; the thesis x is derived from the rule's end. Arithmetic places the thesis inside the block at 1920/2560/80/67/50% and in the reduced-motion tree. **Unvalidated and uncommitted**: needs typecheck/lint/test/build, a pixel diff at the three approved viewports (expect 0) and new stills above them.
+- **Findings left as measured directives, not blind edits** (all in the return): Kıvılcım/JointLedger grounds carry 182–215px of empty ground below their evidence and trail as blank beige on exit (bottom-anchor the ground to the evidence union; re-derive `tests/unit/project-ground.test.ts` from measurements); Software Factory's plate sits 3–20px off the frame bottom at 1440/1536/1920; the five case-study pages have never been designed or captured — `h1` at `text-heading-l` (40px) under a homepage that sets the same title at 64–104px, no evidence in the hero, no record row, `contribution`/`aiDisclosure` required by schema but rendered nowhere on the site, `/work/software-factory` showing no diagram, `/work/professional-systems` reading as a failed load, a 42rem column in a 1320px container; SELECTED SYSTEMS column label misaligned with its column at 1920; HOW I BUILD's consequence mark reading as a link across a ~340px gap.
+- **Preserved and confirmed on the frames:** hero identity at approved widths, Kıvılcım's foreground, SYSTEMS typography and surface-opening, UNDERNEATH, the geometric transition, the warm off-white language; none of the rejected devices has returned; text optically sharp while moving (1920 frame). Motion feel not judged — no recording could be made.
+- **Frozen boundary:** 29/30 blobs held; `SpatialExperience.tsx` moved in the working tree only, declared. `main`, `feature/spatial-portfolio-v5` and the V12 bundle untouched. No fact, asset, metric or URL invented.
+- **Verdict: NOT READY.** FREEZE requires a rendering-capable stage, validation and pixel proof of the hero fix, the ground and flagship compositions resolved with before/after frames, the case-study pages designed and captured, and the production-build matrix re-shot (the current 2560/zoom stills carry the dev badge).
+
+### 2026-09-03 — FABLE ART DIRECTION GATE, pass 2: rendered, measured, fixed; verdict FREEZE
+
+**Branch-only (`feature/project-architecture-v13`), executed by `claude-fable-5-1` at effort `max` from HEAD `76c5660` (the hero fix, committed and pushed at the start of the pass).** Pass-2 record with every before/after table, the interference log and the residual findings: `.ai/handoffs/FABLE-RETURN.md` §11. Decisions: `docs/DECISIONS.md` D-028, D-029.
+
+- **This pass could render.** Production build (`pnpm build`, 15 routes) served with `next start` on a port this session controlled; the gate probe `tests/tools/fable-gate-probe.mjs` (new, in git) captured the responsive matrix at 1366/1440/1536/1920/2560, zoom at 80/67/50 %, entry → exit phases for all four project scenes at 1536 and 1920, and the five `/work/*` routes at 375/768/1024/1280/1366/1440/1920 — **0 console errors in 230 stills**, no dev badge. BEFORE = HEAD `76c5660` on the same probe; FINAL = build `VAodX66DmpweO6L6gBPZk` of the committed tree. DOM measurements are the numbers of record; pixel diffs of the stills corroborate them (at a channel-sum threshold of 6, which sees the ground tint: hero stills identical before/after at all five widths; DropSpot's composition unchanged).
+- **A — hero unit, build-proven.** Thesis and lead rule end inside the hero block at 1366/1440/1536/1920/2560 and at 80/67/50 % (`metrics/final/hero-unit.txt`); the 1366/1440/1536 hero stills are pixel-identical to the frozen set.
+- **B — grounds bottom-anchored (D-028).** `lib/spatial/projectGround.ts` (frozen; reason and evidence in the return): ground below the evidence at focus, Kıvılcım **153/184/177/213/213 → 42/51/49/59/59 px**, JointLedger **153/184/176/212/212 → 43/51/49/59/59**, DropSpot **33/42/41/50/50 unchanged**; Kıvılcım early-exit trail **260 → 133 px** at 1536 (exit 369 → 242, within 5 px of DropSpot's untouched 237). Evidence boxes of all three scenes: Δ0.
+- **C — Software Factory plate off the frame edge.** `components/spatial/SpatialProjectScene.tsx` (frozen): the foundation composition moves to a one-line identity above a 9 + 3 column row; plate-bottom clearance at focus **23/0/4/16/243 → 62/44/46/67/376 px** (zoom 166/392/863 → 299/525/996); title bottom **−109…−147 px**; media width **561/675/648/781 → 622/748/718/865** at 1366–1920 and **887 → 865** at the 1180 px cap. Nine columns, not eight, because the frozen contract `tests/e2e/spatial.spec.ts:193` requires the first tour image to exceed 648 px at 1440/30 % (eight gave 642).
+- **D — case-study destinations designed (D-029).** `CaseStudyHero` (new), `DecisionList`, `ProjectNeighbours` + `DestinationLink`, `Figure priority`, `app/work/[slug]/page.tsx`: `h1` **40 → 64 px** desktop (51 at 1024, 38 tablet, 36 mobile); first image top **3168 → 367 px** (Kıvılcım) and in the first viewport on all five routes at all seven widths; `contribution` and `aiDisclosure` rendered (were nowhere); record row Provenance · Phase · Record · Stack · Access with Selected Systems' vocabulary; Professional Systems exits to `/work` instead of ending after its tech line. No horizontal overflow at 375/768/1024/1280.
+- **E — lower world.** `HowIBuild.tsx` (frozen): the consequence rule **40 → 331/347 px** so the mark ends **31 px** before the column it points to (was 322–338 px short; before numbers read off the frozen stills' pixels). `SelectedSystems.tsx` (frozen): the register label sits on the Record column, **77–80 → 0 px** off, register right edge unchanged at all eight sizes.
+- **Contracts moved, stated:** `project-ground.test.ts` visuals re-measured and the floor `kivilcim.height > 0.49 → > 0.44` (bottom-anchored height 0.442 = 0.472 + 0.05 − 0.08; the old rule gave 0.572) plus a new anchoring assertion; `jointledger-content.test.tsx` `text-heading-l → text-display-l`; `work.spec.ts` image locators scoped to the tabpanel because the hero now also renders the representative asset, plus two new tests; `case-study-hero.test.tsx` new. Nothing relaxed.
+- **Interference, recorded not hidden.** Between 01:31 Z and 02:06 Z a concurrent session (`software-factory-0b`, "Opus QA of this gate") formatted, rebuilt and re-captured under this session's servers and edited `SpatialProjectScene.tsx` (nine-column plate, adopted here after measurement); at 06:16:42 local it reverted `Figure.tsx`, `ProjectNeighbours.tsx`, `app/work/[slug]/page.tsx` and part of `SpatialProjectScene.tsx` to HEAD. All four were restored by replaying this session's own transcript edits (blob-for-blob equal to the recorded diffs; `SpatialProjectScene.tsx` = `34b48d5`), every capture taken while another writer was active was classified invalid or superseded and moved out of the repo, and the FINAL set was re-shot from a clean build with no other writer.
+- **Validation (final tree, single writer)**: typecheck ✓ lint ✓ (0 errors) prettier ✓ on every changed file · unit **527/527** (24 files) · build ✓ (15 routes) · **Chromium 216/216** · **WebKit 211/216** — the five failures (field-notes navigation, skip-link focus, camera focus re-centre, surface-open, break rails) fail **identically, value for value, against a separate build of HEAD `76c5660`** and touch no file of this pass: pre-existing WebKit-under-software-rendering failures, carried forward as an engineering item. Frozen loop: the five declared moves (`HowIBuild`, `SelectedSystems`, `SpatialExperience` = HEAD, `SpatialProjectScene`, `projectGround`), nothing else.
+- **Evidence**: curated before/after pairs in `docs/review/v13-fable-gate/stills/` (A–E, 28 stills), metrics in `docs/review/v13-fable-gate/metrics/{before,final}/`; full matrices, phases and route captures in `C:\Users\hakan\portfolio-review\v13-fable-gate\{before-HEAD-76c5660,final-build-VAodX66DmpweO6L6gBPZk}` with the invalid/superseded sets kept beside them under their origin.
+- **Verdict: FREEZE** for the desktop art direction of this branch; owner review of D-028/D-029 pending on `main`.
+
+### 2026-09-03 — PHASE 6 MOBILE AUDIT: the five case-study destinations measured below 1024px for the first time
+
+**Branch-only (`feature/project-architecture-v13`), audited at `7d622c1`, committed as `180c07c`.**
+Full findings: `docs/MOBILE_AUDIT.md`. Probe: `tests/tools/mobile-audit-probe.mjs`; measurements in
+`docs/review/phase6-mobile-audit/metrics/`.
+
+- **The gap that motivated the phase.** V13's five case-study destinations had never been rendered
+  below 1024px. 8 routes × 6 real device sizes = 48 measured states, `deviceScaleFactor: 2`,
+  `isMobile`, `hasTouch`.
+- **Passed, verified:** 0px horizontal overflow at all 48 states; 0 console and 0 page errors;
+  touch-drag scrolling works with no wheel dependency; `ProjectNeighbours` stacks at ≤430 and
+  returns to two columns at 768; `H1 → H2 → H3` with no skipped levels; landmarks correct.
+- **Four P1 findings, all compositional** — M1 diagram evidence unreadable on every phone
+  (labels at 5–6 CSS px), M2 tablet measure 82–95ch at 768, M3 homepage route vertically
+  expensive on mobile, M4 6–20 sub-44px tap targets per route. **0 P0, 0 objective mechanical
+  defects**, which is precisely why the phase stopped: every remaining item was a composition
+  decision, and fixing them in engineering would have been art direction under another name.
+- **Verdict: Fable Gate 4 REQUIRED**, with a bounded scope and the frozen boundary restated.
+
+### 2026-09-04 — FABLE GATE 4 (mobile art direction) checkpointed, then independently verified: verdict PASS
+
+**Branch-only (`feature/project-architecture-v13`).** Implementation by `claude-fable-5-1`
+(effort max, session `888a4bb7`) resolving all four P1 findings; decisions `docs/DECISIONS.md`
+D-030–D-033; the account is `docs/DESIGN_SYSTEM.md` §37. Committed as `b23284e` **by the
+orchestrator**, because Fable reached its session limit before it could commit — so
+`.ai/handoffs/FABLE-MOBILE-RETURN.md` does not exist and is still owed. There was therefore no
+self-report to check the work against, and the independent QA below is the only signal on this
+checkpoint: `.ai/handoffs/OPUS-MOBILE-QA-RETURN.md`.
+
+- **M1 (D-031) — the figure is not redrawn; it opens.** `components/ui/FigureInspect.tsx`: below
+  `lg` every case-study figure carries an INSPECT control opening the same asset in a native modal
+  `<dialog>` at `INSPECT_PLATE_WIDTH = 1400`. Verified independently: all 13 verified diagrams are
+  `width="1600"` with a smallest `font-size="14"` (`jointledger/book-data-model-diagram.svg`), so
+  that label renders at **12.25px**, clearing the 12px `mono-meta` floor — measured at 1400px plate
+  width at 320/360/375/390/430/768. Nothing redrawn, cropped or summarised.
+- **M2 (D-032) — the measure is a token.** `--container-measure` (`max-w-measure`), 42rem,
+  re-declared 34rem under `@media (width < 64rem)`. Verified in the compiled CSS that the utility
+  resolves to `var(--container-measure)` rather than an inlined literal, and measured per element
+  at 768: **every leaf prose block ≤ 544px on all 8 routes, zero over the cap**, median 60–67 real
+  characters per line. The `/work` "88ch" the audit probe reports is an averaging artefact over
+  `<li>` card containers and 12px mono meta, not a line of prose.
+- **M3 (D-030) — the mobile world has its own unit.** `WORLD_UNIT_MOBILE.y = max(0.78vh, min(1vh,
+  7px))`, plus mobile legs for route two. Confirmed live in the DOM at 320/430/768; near-empty
+  route frames **1 → 0** at 390×844 and 430×932 by independent DOM ink measurement (mean ink
+  38→44% and 36→42%), page height **byte-identical** (10021 / 10541).
+- **M4 (D-033) — targets grow, layout does not.** 193 measured boxes across 8 routes × 3 widths:
+  **181 at 45.00px, 12 at 44.98px, none under 44**; **0 standalone sub-44 targets on 8 routes × 6
+  widths**, only inline-sentence links remain (WCAG 2.5.8 exempt); strip-and-recapture **0px** on
+  every route.
+- **Frozen boundary: seven files moved, all sanctioned and all proved.** The §4 loop prints exactly
+  ten `MOVED:` lines and every blob matches the `docs/FROZEN_BOUNDARY.md` §5 ledger. Desktop
+  parity re-run independently against a separate build of the baseline `180c07c`:
+  **44 route × viewport walks (11 routes × 1280×800 / 1440×900 / 1536×864 / 1920×1080), every one
+  at parity** — this extended the gate's own run to all five case studies, which were pixel-identical
+  with exactly `+1` element each (D-031's caption `<span>`). Two homepage steps were flagged by the
+  cell test and re-examined as raster jitter, the same-build floor equalling the cross-build maximum
+  in both.
+- **Also verified:** 0 horizontal overflow and 0 console errors at all 48 mobile states; heading
+  order and single `h1` clean at all 48; touch-drag advances the route with no wheel dependency;
+  no new scale transform on mobile, so no new text resampling; with JavaScript disabled the INSPECT
+  triggers are present but **0 visible** and the figures still render; the reduced-motion homepage
+  is **+6px below `lg` and 0px at 1280**, exactly the consequence §37.4 discloses.
+- **Validation (independent re-run on a clean build)**: typecheck ✓ lint ✓ (0/0) prettier ✓ on every
+  changed file · unit **553/553** (+26) · build ✓ (15 routes) · **Chromium 219/219** (+3 inspector
+  tests). Tests are **purely additive — zero deleted lines across `tests/`** — so no assertion was
+  weakened; the 8% frame-to-frame speed ceiling is untouched and the route was cut to fit it.
+- **Not re-run in this QA:** the WebKit suite (its documented five-failure software-rendering
+  baseline is unchanged by this phase's Chromium-verified work, but the +3 inspector tests are
+  unmeasured there) and the reduced-motion desktop-parity walk. Both are recorded as open in the
+  QA return.
+- **Verdict: PASS with documented non-blockers.** D-030–D-033 remain accepted under the gate's
+  delegated authority on this branch only; owner review is pending and they are **not** in force
+  on `main`.
+
+### 2026-09-04 — FABLE GATE 4, bounded final pass: the return written, A11Y-1 / ART-1 closed, ART-2 accepted
+
+**Branch-only (`feature/project-architecture-v13`), from `4c788b4`.** `claude-fable-5-1` (effort
+max, the same session `888a4bb7`, resumed after its second session-limit pause) on an owner brief
+that named exactly four items — the return, and the three findings the QA left for the gate to
+rule on — and nothing else. Nothing frozen moved: the §4 loop prints the same ten `MOVED:` lines
+and no file under `lib/spatial/`, `components/spatial/` or `components/sections/` is in the diff.
+The account is `docs/DESIGN_SYSTEM.md` §37.8; the return is `.ai/handoffs/FABLE-MOBILE-RETURN.md`.
+
+- **A11Y-1 (D-031 addendum 2) — each INSPECT control is named for its figure.**
+  `components/ui/FigureInspect.tsx`: `aria-label="Inspect: {alt}"` — the visible label first
+  (WCAG 2.5.3), then the figure's own description, the one string that is distinct for every
+  distinct figure (captions repeat). A figure shown twice is named twice — DropSpot's hero lead is
+  its default Surface tab, so that page reads 4 controls / 3 names / 3 assets. Name only: geometry
+  and pixels unchanged (`after/figure-inspect.txt`, before and after on every case study).
+- **ART-1 (D-031 addendum 1) — the `/work` thumbnail opts into the inspector below `lg`.** The
+  reason for leaving it out — "itself a link" — was false (the card's title is the link), and the
+  index showed 1600-unit diagrams at 0.17–0.22 under a caption calling them verified evidence.
+  `components/project/ProjectCard.tsx` sets `inspect`; the card's caption row carries the control,
+  opening the same 1400px plate; at `lg` and above nothing renders and the index is what it was.
+  Five new 44px targets, no sub-44 ones (`after/tap-targets-work-final-pass.txt`); stills
+  `stills/ART-1--*`.
+- **ART-2 (D-032 addendum) — the tablet's length under the 34rem measure, measured alone and
+  accepted.** `tests/tools/measure-768-probe.mjs` (`length` mode) re-declares the token to 42rem
+  below `lg` on the built page and reads the difference: Kıvılcım **+821px (9.3%)**, DropSpot
+  +580 (7.3%), JointLedger +614 (8.1%), Software Factory +112 (3.6%), `/about` +106 (6.2%),
+  `/work` +52 (1.5%) — for a mean body line of 64 characters instead of 74–76 and a longest line
+  of 74–78 instead of 90–94 (`after/tablet-length-768.txt`). Not adjusted; the reasons are in
+  D-032.
+- **ARTIFACT-1 — every number of record has a tool in Git.** `after/measure-768.txt` regenerated
+  by the versioned `measure-768-probe.mjs` (`measure` mode): every paragraph row identical to the
+  checkpoint's; the five `/work` `<li>` container rows differ because the caption row now carries
+  the control (never numbers of record). `figure-inspect-probe.mjs` produced the A11Y-1/ART-1
+  listing. `docs/REVIEW_POLICY.md` lists both tools and records the rule as kept.
+- **Desktop parity, re-proved for the pass** against a separate build of the QA-verified `4c788b4`
+  (`after/desktop-parity-final-pass.txt`): **44 route × viewport walks, every one at parity** —
+  `/work` pixel-identical with exactly `+5` elements (the caption `<span>`s), every case study and
+  static route identical in geometry and pixels, three homepage steps flagged by the cell test and
+  re-examined as raster jitter at the same-build ceiling.
+- **Validation on the final build (`u_zSwFNQs6qbWPiQGfEeQ`)**: typecheck ✓ lint ✓ (0/0) · Prettier ✓
+  on every changed code file (checked on the LF content Git commits — ENV-1's CRLF checkout is
+  unchanged and pre-existing) · unit **556/556** (+3) · build ✓ (15 routes) · **Chromium 224/224**
+  (+5: three A11Y-1 name contracts, two ART-1 index contracts) on the gate's own `:3100` server.
+  Tests are additive: the seven removed lines in `tests/unit/` are an import widened and a
+  caption regex replaced by a helper that asserts the same strings on the same caption. WebKit
+  not run (as at the checkpoint).
+- **Docs**: `DECISIONS.md` D-031/D-032 addenda; `DESIGN_SYSTEM.md` §37.7 (index thumbnails on the
+  desktop, left as found) and §37.8; `MOBILE_AUDIT.md` and `FROZEN_BOUNDARY.md` §5 now point at
+  the return instead of saying it is owed; `REVIEW_POLICY.md` tool table and ARTIFACT-1.
+- **Verdict: FREEZE** — the gate's own, recorded in the return with what remains (§37.7 items,
+  the WebKit run, the reduced-motion parity walk not re-run this pass).

@@ -1,0 +1,67 @@
+{
+  "baseline": "e37e77b",
+  "files": [
+    {
+      "file": "lib/spatial/sceneRoute.ts",
+      "unchanged": true,
+      "sha256": "897c7808b6e2490b8c8b82251b44c7a0e0fc7c997fd2e8b22426d0379557e0eb"
+    },
+    {
+      "file": "lib/spatial/scenes.ts",
+      "unchanged": true,
+      "sha256": "94bee8693b932b884f7d425fad7d1ce9370b8e3c03a9a5fe4c9bc1a9c3849e18"
+    },
+    {
+      "file": "lib/spatial/systemPov.ts",
+      "unchanged": true,
+      "sha256": "409a5593a70e3fcea3a25a1687930f6df490852b59bf19e10abe69f99458fc91"
+    },
+    {
+      "file": "lib/spatial/routeBoundary.ts",
+      "unchanged": true,
+      "sha256": "cb22c265ee4a2fdd7f67d2655a69b2053fb709eaa9a6a3d9a04dca51b32abcab"
+    },
+    {
+      "file": "lib/spatial/routeNavigation.ts",
+      "unchanged": true,
+      "sha256": "621f834fbdc1ab1478772f2758271d5e12200935d4d3859c3799e830fe56dfef"
+    },
+    {
+      "file": "components/spatial/SceneBreak.tsx",
+      "unchanged": true,
+      "sha256": "3756e9493ab9535a79a526f2ac4fd9cf596709eda94e646b89eeb3309abf9f58"
+    },
+    {
+      "file": "components/spatial/SystemsWord.tsx",
+      "unchanged": true,
+      "sha256": "c5ffd1cc9ae7520a9d1a36a401806379a044022b8613067b9a9701d41d711831"
+    },
+    {
+      "file": "components/spatial/SystemPOV.tsx",
+      "unchanged": true,
+      "sha256": "bf83cac2bf90e089a979bbdc283fbac9b3156476fefe32853028064f166529f0"
+    },
+    {
+      "file": "components/spatial/RouteNavigator.tsx",
+      "unchanged": true,
+      "sha256": "d796162b43f776d08694f4b289f9acb03c2b3fc0a3a6488f1e489bf82438ddac"
+    },
+    {
+      "file": "components/spatial/EditorialDrift.tsx",
+      "unchanged": true,
+      "sha256": "d58cc9f0d8a059f015b524adb02f9a2c4af82f9cc87417e76406f3e7aee9bcce"
+    },
+    {
+      "file": "components/ui/motion/Reveal.tsx",
+      "unchanged": true,
+      "sha256": "8eff2a98e312e85463eee1aa250e86039fb7c424150910c207bb578f00efc93f"
+    },
+    {
+      "file": "styles/globals.css",
+      "unchanged": true,
+      "sha256": "8008eba0180cd85ae87edc7bdac67fbe4dd60ba2c3166bbe436fc823ebc4cddc"
+    }
+  ],
+  "wheelGovernorByteIdentical": true,
+  "pacingAndBreakConstantsByteIdentical": true
+}

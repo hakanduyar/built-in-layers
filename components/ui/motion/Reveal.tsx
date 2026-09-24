@@ -3,6 +3,7 @@
 import { useRef, type ReactNode } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
+import { useIsDesktop } from "@/lib/utils/useIsDesktop";
 
 type RevealProps = {
   children: ReactNode;
@@ -21,6 +22,15 @@ type RevealProps = {
    * be most noticeable (the very first thing a visitor sees).
    */
   onLoad?: boolean;
+  /**
+   * V14.3 Gate E (owner: sections fully clear only near the middle of the
+   * viewport): fire as soon as the element's top edge is a short distance
+   * inside the viewport (10% of its height), rather than when a fifth of the
+   * element is visible -- for a tall block that fifth put the trigger at
+   * mid-screen. The lower world's sections opt in; the case studies and the
+   * Work index keep the §13 threshold.
+   */
+  early?: boolean;
 };
 
 // DESIGN_SYSTEM §13 "Scroll-triggered reveals" + "Hero intro": opacity fade
@@ -59,13 +69,28 @@ type RevealProps = {
 // case is the only one DESIGN_SYSTEM §13 actually asks to look like a
 // "reveal" (either the genuine scroll-into-view case, or `onLoad` content
 // whose `inView` was true from the very first animated render).
-export function Reveal({ children, className, delayMs = 0, onLoad = false }: RevealProps) {
+export function Reveal({
+  children,
+  className,
+  delayMs = 0,
+  onLoad = false,
+  early = false,
+}: RevealProps) {
   const mounted = useHasMounted();
   const ref = useRef<HTMLDivElement>(null);
   // Always called (Rules of Hooks) even for onLoad reveals -- its result is
   // simply unused there. The observer overhead is negligible at this scale
   // (a handful of Reveal instances per page).
-  const asyncInView = useInView(ref, { once: true, amount: 0.2 });
+  // Early is a desktop behaviour: below `lg` the V13 composition keeps the
+  // §13 threshold exactly. The option object changes once, after mount, and
+  // useInView re-observes on it.
+  const desktop = useIsDesktop();
+  const asyncInView = useInView(
+    ref,
+    early && desktop
+      ? { once: true, amount: 0, margin: "0px 0px -10% 0px" }
+      : { once: true, amount: 0.2 },
+  );
   const reduceMotion = useReducedMotion();
 
   const inView = onLoad || asyncInView;

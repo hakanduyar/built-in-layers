@@ -94,7 +94,6 @@ decisions:
     alternatives:
       ["Extending the existing `habits`/`habitLogs` tables to also drive daily task generation"]
     tradeoff: "The original `habits`/`habitLogs` tables are still in the schema (and still exported in JSON backups) but have no user-facing screen today — they're honestly unused. Routines cost a fourth Dexie migration and a small future-generation helper, but reuse every existing task action instead of duplicating them for a separate habit-completion UI."
-nextSlug: "dropspot"
 ---
 
 ## One-minute summary

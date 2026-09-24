@@ -1,0 +1,598 @@
+{
+  "tag": "before",
+  "viewports": {
+    "1366x768": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 870,
+            "h": 732,
+            "L": 248,
+            "T": 118
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 36203,
+            "gap": 113
+          },
+          "clippedBelow": 81
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 909,
+            "h": 537,
+            "L": 249,
+            "T": 118
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 63926,
+            "gap": 113
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 36115,
+            "gap": 73
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 870,
+            "h": 529,
+            "L": 248,
+            "T": 118
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 35430,
+            "gap": 74
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 35850,
+            "gap": 113
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 870,
+            "h": 680,
+            "L": 249,
+            "T": 118
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 23585,
+            "gap": 113
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 37111,
+            "gap": 2
+          },
+          "clippedBelow": 30
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 1771,
+            "h": 1411,
+            "L": -369,
+            "T": -240
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 107580,
+            "gap": 0
+          },
+          "next": null,
+          "clippedBelow": 403
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 0.74,
+          "scaleY": 0.74,
+          "chain": [
+            "div=0.7400"
+          ]
+        },
+        "body": {
+          "scaleX": 0.74,
+          "scaleY": 0.74,
+          "chain": [
+            "div=0.7400"
+          ]
+        },
+        "image": {
+          "scaleX": 0.74,
+          "scaleY": 0.74,
+          "chain": [
+            "div=0.7400"
+          ],
+          "natural": "1600x1000",
+          "rendered": "599x374"
+        }
+      }
+    },
+    "1440x900": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1045,
+            "h": 931,
+            "L": 185,
+            "T": 104
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 12052,
+            "gap": 166
+          },
+          "clippedBelow": 135
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1093,
+            "h": 644,
+            "L": 185,
+            "T": 104
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 10100,
+            "gap": 166
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 11947,
+            "gap": 117
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1045,
+            "h": 634,
+            "L": 185,
+            "T": 104
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 9400,
+            "gap": 119
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 11995,
+            "gap": 166
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1045,
+            "h": 809,
+            "L": 185,
+            "T": 104
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 2079,
+            "gap": 166
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 33814,
+            "gap": 28
+          },
+          "clippedBelow": 14
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2183,
+            "h": 1739,
+            "L": -577,
+            "T": -340
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 66712,
+            "gap": 0
+          },
+          "next": null,
+          "clippedBelow": 499
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 0.8654,
+          "scaleY": 0.8654,
+          "chain": [
+            "div=0.8654"
+          ]
+        },
+        "body": {
+          "scaleX": 0.8654,
+          "scaleY": 0.8654,
+          "chain": [
+            "div=0.8654"
+          ]
+        },
+        "image": {
+          "scaleX": 0.8654,
+          "scaleY": 0.8654,
+          "chain": [
+            "div=0.8654"
+          ],
+          "natural": "1600x1000",
+          "rendered": "721x450"
+        }
+      }
+    },
+    "1536x864": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1004,
+            "h": 894,
+            "L": 221,
+            "T": 109
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 41525,
+            "gap": 159
+          },
+          "clippedBelow": 139
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1050,
+            "h": 618,
+            "L": 221,
+            "T": 109
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 32541,
+            "gap": 159
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 41499,
+            "gap": 113
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1004,
+            "h": 609,
+            "L": 221,
+            "T": 109
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 17688,
+            "gap": 114
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 41168,
+            "gap": 159
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1004,
+            "h": 777,
+            "L": 221,
+            "T": 109
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 8041,
+            "gap": 159
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 53055,
+            "gap": 27
+          },
+          "clippedBelow": 22
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2183,
+            "h": 1740,
+            "L": -542,
+            "T": -337
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 83901,
+            "gap": 0
+          },
+          "next": null,
+          "clippedBelow": 538
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 0.8308,
+          "scaleY": 0.8308,
+          "chain": [
+            "div=0.8308"
+          ]
+        },
+        "body": {
+          "scaleX": 0.8308,
+          "scaleY": 0.8308,
+          "chain": [
+            "div=0.8308"
+          ]
+        },
+        "image": {
+          "scaleX": 0.8308,
+          "scaleY": 0.8308,
+          "chain": [
+            "div=0.8308"
+          ],
+          "natural": "1600x1000",
+          "rendered": "692x432"
+        }
+      }
+    },
+    "1920x1080": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1208,
+            "h": 1076,
+            "L": 287,
+            "T": 84
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 69306,
+            "gap": 191
+          },
+          "clippedBelow": 80
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1264,
+            "h": 744,
+            "L": 287,
+            "T": 84
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 44609,
+            "gap": 191
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 69355,
+            "gap": 136
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1208,
+            "h": 732,
+            "L": 287,
+            "T": 84
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 5736,
+            "gap": 137
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 69122,
+            "gap": 191
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1208,
+            "h": 935,
+            "L": 287,
+            "T": 84
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 0,
+            "gap": 191
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 88056,
+            "gap": 32
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2628,
+            "h": 2094,
+            "L": -632,
+            "T": -453
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 87982,
+            "gap": 0
+          },
+          "next": null,
+          "clippedBelow": 561
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "833x521"
+        }
+      }
+    },
+    "2560x1440": {
+      "stops": [
+        {
+          "id": "software-factory",
+          "selfBox": {
+            "w": 1208,
+            "h": 1076,
+            "L": 606,
+            "T": 134
+          },
+          "prev": null,
+          "next": {
+            "id": "kivilcim",
+            "overlapPx": 334219,
+            "gap": 191
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "kivilcim",
+          "selfBox": {
+            "w": 1264,
+            "h": 744,
+            "L": 606,
+            "T": 134
+          },
+          "prev": {
+            "id": "software-factory",
+            "overlapPx": 214837,
+            "gap": 191
+          },
+          "next": {
+            "id": "jointledger",
+            "overlapPx": 324709,
+            "gap": 136
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "jointledger",
+          "selfBox": {
+            "w": 1208,
+            "h": 732,
+            "L": 607,
+            "T": 135
+          },
+          "prev": {
+            "id": "kivilcim",
+            "overlapPx": 43383,
+            "gap": 137
+          },
+          "next": {
+            "id": "dropspot",
+            "overlapPx": 333747,
+            "gap": 191
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "dropspot",
+          "selfBox": {
+            "w": 1208,
+            "h": 935,
+            "L": 607,
+            "T": 135
+          },
+          "prev": {
+            "id": "jointledger",
+            "overlapPx": 20824,
+            "gap": 191
+          },
+          "next": {
+            "id": "tail",
+            "overlapPx": 159717,
+            "gap": 32
+          },
+          "clippedBelow": 0
+        },
+        {
+          "id": "tail",
+          "selfBox": {
+            "w": 2628,
+            "h": 2095,
+            "L": -312,
+            "T": -403
+          },
+          "prev": {
+            "id": "dropspot",
+            "overlapPx": 224391,
+            "gap": 0
+          },
+          "next": null,
+          "clippedBelow": 252
+        }
+      ],
+      "sharpness": {
+        "heading": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "body": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": []
+        },
+        "image": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "chain": [],
+          "natural": "1600x1000",
+          "rendered": "833x521"
+        }
+      }
+    }
+  }
+}

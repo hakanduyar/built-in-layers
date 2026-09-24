@@ -1,0 +1,99 @@
+{
+  "label": "after",
+  "base": "http://127.0.0.1:3200",
+  "viewport": "1440x900",
+  "devicePixelRatio": 1,
+  "element": "section[aria-label='Spatial system tour'] [data-scene=\"software-factory\"] h3",
+  "rest": {
+    "pixels": 118305,
+    "meanGradient": 16.738,
+    "p99Gradient": 216.9,
+    "maxGradient": 216.9,
+    "geometry": {
+      "x": 105.408,
+      "y": 160.313,
+      "w": 703.02,
+      "h": 151.62,
+      "devicePixelOffsetX": 0.4084,
+      "devicePixelOffsetY": 0.3134
+    }
+  },
+  "moving": {
+    "pixels": 118305,
+    "meanGradient": 17.13,
+    "p99Gradient": 216.9,
+    "maxGradient": 216.9,
+    "geometry": {
+      "x": 104.314,
+      "y": 160.001,
+      "w": 703.02,
+      "h": 151.63,
+      "devicePixelOffsetX": 0.3143,
+      "devicePixelOffsetY": 0.0007
+    },
+    "movedDuringCaptureCssPx": 5.69
+  },
+  "acutanceRetainedWhileMoving": 1.0234,
+  "phaseSweep": [
+    {
+      "phase": 0,
+      "geometry": {
+        "x": 105.81,
+        "y": 160.386,
+        "w": 703.02,
+        "h": 151.62,
+        "devicePixelOffsetX": 0.1902,
+        "devicePixelOffsetY": 0.3861
+      },
+      "pixels": 118305,
+      "meanGradient": 16.741,
+      "p99Gradient": 216.9,
+      "maxGradient": 216.9
+    },
+    {
+      "phase": 0.25,
+      "geometry": {
+        "x": 106.06,
+        "y": 160.636,
+        "w": 703.02,
+        "h": 151.62,
+        "devicePixelOffsetX": 0.0598,
+        "devicePixelOffsetY": 0.3639
+      },
+      "pixels": 118305,
+      "meanGradient": 16.729,
+      "p99Gradient": 216.9,
+      "maxGradient": 216.9
+    },
+    {
+      "phase": 0.5,
+      "geometry": {
+        "x": 106.31,
+        "y": 160.886,
+        "w": 703.02,
+        "h": 151.62,
+        "devicePixelOffsetX": 0.3098,
+        "devicePixelOffsetY": 0.1139
+      },
+      "pixels": 118305,
+      "meanGradient": 16.742,
+      "p99Gradient": 216.9,
+      "maxGradient": 216.9
+    },
+    {
+      "phase": 0.75,
+      "geometry": {
+        "x": 106.56,
+        "y": 161.136,
+        "w": 703.02,
+        "h": 151.62,
+        "devicePixelOffsetX": 0.4402,
+        "devicePixelOffsetY": 0.1361
+      },
+      "pixels": 118305,
+      "meanGradient": 16.743,
+      "p99Gradient": 216.9,
+      "maxGradient": 216.9
+    }
+  ]
+}

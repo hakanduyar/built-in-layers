@@ -1,0 +1,38 @@
+TABLET LENGTH AT 768 — the cost of the 34rem measure alone (ART-2, V13 mobile QA), final-pass candidate build (BUILD_ID ylJ7vp5r0If_WQBLNsV0P, served on :3210)
+Tool: tests/tools/measure-768-probe.mjs, PROBE_MODE=length (Playwright Chromium, 768x1024, reducedMotion: reduce; fonts ready; page walked before each measurement).
+"as built" is the page with styles/globals.css as shipped (--container-measure: 34rem below lg). The second line re-declares the token to 42rem
+below lg from an injected stylesheet -- the desktop value -- and measures again. The difference is the measure's own cost, separated from the rest of the
+checkpoint (the inspector rows, the hero <dl>); QA's +8.5% on Kıvılcım (8865 -> 9618 px) was the whole checkpoint against 180c07c. The override is verified by
+the widest max-w-measure box (544 -> 672 px). "body" rows are p/li over 40 characters at >=14px; "ch/line" is real characters per rendered line.
+
+== 768 /work  LENGTH  as built: 3573px, 5 measure boxes, widest 544px, body mean 44 / longest 65 ch/line (n=10)
+   with --container-measure: 42rem below lg: 3521px, widest 672px, body mean 53 / longest 86 ch/line (n=10)  override applied
+   cost of the built measure alone: +52px (1.5%)
+
+== 768 /work/kivilcim  LENGTH  as built: 9618px, 26 measure boxes, widest 544px, body mean 64 / longest 78 ch/line (n=44)
+   with --container-measure: 42rem below lg: 8797px, widest 672px, body mean 76 / longest 94 ch/line (n=44)  override applied
+   cost of the built measure alone: +821px (9.3%)
+
+== 768 /work/dropspot  LENGTH  as built: 8491px, 19 measure boxes, widest 544px, body mean 64 / longest 75 ch/line (n=29)
+   with --container-measure: 42rem below lg: 7911px, widest 672px, body mean 74 / longest 91 ch/line (n=29)  override applied
+   cost of the built measure alone: +580px (7.3%)
+
+== 768 /work/software-factory  LENGTH  as built: 3196px, 6 measure boxes, widest 544px, body mean 60 / longest 68 ch/line (n=6)
+   with --container-measure: 42rem below lg: 3084px, widest 672px, body mean 69 / longest 80 ch/line (n=6)  override applied
+   cost of the built measure alone: +112px (3.6%)
+
+== 768 /work/jointledger  LENGTH  as built: 8211px, 18 measure boxes, widest 544px, body mean 64 / longest 74 ch/line (n=28)
+   with --container-measure: 42rem below lg: 7597px, widest 672px, body mean 74 / longest 90 ch/line (n=28)  override applied
+   cost of the built measure alone: +614px (8.1%)
+
+== 768 /work/professional-systems  LENGTH  as built: 2387px, 3 measure boxes, widest 544px, body mean 52 / longest 58 ch/line (n=3)
+   with --container-measure: 42rem below lg: 2358px, widest 672px, body mean 66 / longest 84 ch/line (n=3)  override applied
+   cost of the built measure alone: +29px (1.2%)
+
+== 768 /about  LENGTH  as built: 1807px, 5 measure boxes, widest 544px, body mean 56 / longest 65 ch/line (n=5)
+   with --container-measure: 42rem below lg: 1701px, widest 672px, body mean 72 / longest 90 ch/line (n=5)  override applied
+   cost of the built measure alone: +106px (6.2%)
+
+== 768 /  LENGTH  as built: 9924px, 0 measure boxes, widest 0px, body mean 36 / longest 67 ch/line (n=24)
+   with --container-measure: 42rem below lg: 9924px, widest 0px, body mean 36 / longest 67 ch/line (n=24)  no measure boxes here
+   cost of the built measure alone: +0px (0.0%)

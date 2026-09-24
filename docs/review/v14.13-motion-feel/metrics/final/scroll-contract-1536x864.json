@@ -1,0 +1,37 @@
+{
+  "viewport": "1536x864",
+  "geom": {
+    "routeTop": 61,
+    "routeEnd": 4381,
+    "docMax": 8368
+  },
+  "routeGentle": {
+    "peakPxPerSec": 474,
+    "coastPx": 44,
+    "coastVh": 0.05,
+    "coastMs": 200
+  },
+  "routeAggressive": {
+    "peakPxPerSec": 1259,
+    "coastPx": 288,
+    "coastVh": 0.33,
+    "coastMs": 700
+  },
+  "lowerGentle": {
+    "peakPxPerSec": 508,
+    "coastPx": 0,
+    "coastVh": 0,
+    "coastMs": 0
+  },
+  "lowerAggressive": {
+    "peakPxPerSec": 6838,
+    "coastPx": 0,
+    "coastVh": 0,
+    "coastMs": 0
+  },
+  "reverse": {
+    "notches": 1,
+    "wrongWayPx": 0,
+    "ms": 109
+  }
+}

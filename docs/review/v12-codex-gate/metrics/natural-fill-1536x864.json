@@ -1,0 +1,1414 @@
+{
+  "W": 1536,
+  "H": 864,
+  "samples": [
+    {
+      "y": 32,
+      "fill": 0.159,
+      "labels": [
+        "Hakan Duyar",
+        "Home"
+      ]
+    },
+    {
+      "y": 72,
+      "fill": 0.1565,
+      "labels": [
+        "Frontend & Product Engineer",
+        "Hakan"
+      ]
+    },
+    {
+      "y": 112,
+      "fill": 0.1556,
+      "labels": [
+        "Frontend & Product Engineer",
+        "Hakan"
+      ]
+    },
+    {
+      "y": 159,
+      "fill": 0.1451,
+      "labels": [
+        "Hakan",
+        "Duyar"
+      ]
+    },
+    {
+      "y": 207,
+      "fill": 0.0837,
+      "labels": [
+        "Duyar",
+        "Interfaces on the surface. Sys"
+      ]
+    },
+    {
+      "y": 247,
+      "fill": 0.0364,
+      "labels": [
+        "Interfaces on the surface. Sys"
+      ]
+    },
+    {
+      "y": 303,
+      "fill": 0.0192,
+      "labels": [
+        "Interfaces on the surface. Sys"
+      ]
+    },
+    {
+      "y": 343,
+      "fill": 0.0102,
+      "labels": [
+        "Interfaces on the surface. Sys"
+      ]
+    },
+    {
+      "y": 391,
+      "fill": 0.003,
+      "labels": [
+        "Interfaces on the surface. Sys"
+      ]
+    },
+    {
+      "y": 439,
+      "fill": 0.0411,
+      "labels": [
+        "Verified diagram",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 503,
+      "fill": 0.1763,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 551,
+      "fill": 0.2731,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 599,
+      "fill": 0.3422,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 647,
+      "fill": 0.3713,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 703,
+      "fill": 0.4007,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 751,
+      "fill": 0.4252,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 799,
+      "fill": 0.4434,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 847,
+      "fill": 0.4565,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 895,
+      "fill": 0.458,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 943,
+      "fill": 0.4336,
+      "labels": [
+        "Verified diagram",
+        "AUTONOMOUS DELIVERY SYSTEM"
+      ]
+    },
+    {
+      "y": 999,
+      "fill": 0.3084,
+      "labels": [
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Software Factory"
+      ]
+    },
+    {
+      "y": 1047,
+      "fill": 0.1881,
+      "labels": [
+        "Software Factory",
+        "An orchestration core that rou"
+      ]
+    },
+    {
+      "y": 1095,
+      "fill": 0.0797,
+      "labels": [
+        "An orchestration core that rou",
+        "TypeScript · Node.js · SQLite"
+      ]
+    },
+    {
+      "y": 1143,
+      "fill": 0.0589,
+      "labels": [
+        "An orchestration core that rou",
+        "TypeScript · Node.js · SQLite"
+      ]
+    },
+    {
+      "y": 1189,
+      "fill": 0.1751,
+      "labels": [
+        "TypeScript · Node.js · SQLite",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1237,
+      "fill": 0.3249,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1285,
+      "fill": 0.4469,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1333,
+      "fill": 0.4921,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1381,
+      "fill": 0.4952,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1437,
+      "fill": 0.4981,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1485,
+      "fill": 0.4983,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1533,
+      "fill": 0.4922,
+      "labels": [
+        "Verified diagram",
+        "PERSONAL OPERATING SYSTEM"
+      ]
+    },
+    {
+      "y": 1581,
+      "fill": 0.4687,
+      "labels": [
+        "PERSONAL OPERATING SYSTEM",
+        "Kıvılcım"
+      ]
+    },
+    {
+      "y": 1629,
+      "fill": 0.3911,
+      "labels": [
+        "Verified architecture diagram.",
+        "Verified architecture diagram,"
+      ]
+    },
+    {
+      "y": 1669,
+      "fill": 0.3111,
+      "labels": [
+        "Verified architecture diagram.",
+        "Verified architecture diagram,"
+      ]
+    },
+    {
+      "y": 1725,
+      "fill": 0.2911,
+      "labels": [
+        "Verified architecture diagram.",
+        "Verified architecture diagram,"
+      ]
+    },
+    {
+      "y": 1773,
+      "fill": 0.3751,
+      "labels": [
+        "Verified architecture diagram.",
+        "Verified architecture diagram,"
+      ]
+    },
+    {
+      "y": 1821,
+      "fill": 0.399,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1869,
+      "fill": 0.4203,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1909,
+      "fill": 0.4227,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 1965,
+      "fill": 0.4257,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2005,
+      "fill": 0.4276,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2061,
+      "fill": 0.4284,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2101,
+      "fill": 0.4243,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2157,
+      "fill": 0.3242,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2197,
+      "fill": 0.2136,
+      "labels": [
+        "Verified architecture diagram,",
+        "Verified diagram"
+      ]
+    },
+    {
+      "y": 2253,
+      "fill": 0.0966,
+      "labels": [
+        "Verified architecture diagram,",
+        "JointLedger"
+      ]
+    },
+    {
+      "y": 2301,
+      "fill": 0.1046,
+      "labels": [
+        "Personal accounts. Shared fina",
+        "Fork of ezBookkeeping"
+      ]
+    },
+    {
+      "y": 2349,
+      "fill": 0.2036,
+      "labels": [
+        "Fork of ezBookkeeping",
+        "Go · Vue · TypeScript · Postgr"
+      ]
+    },
+    {
+      "y": 2397,
+      "fill": 0.4008,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2445,
+      "fill": 0.6216,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2509,
+      "fill": 0.6924,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2557,
+      "fill": 0.7035,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2597,
+      "fill": 0.7063,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2645,
+      "fill": 0.704,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2693,
+      "fill": 0.6485,
+      "labels": [
+        "Real screenshot",
+        "FAIR DISTRIBUTION SYSTEM"
+      ]
+    },
+    {
+      "y": 2733,
+      "fill": 0.5649,
+      "labels": [
+        "FAIR DISTRIBUTION SYSTEM",
+        "DropSpot"
+      ]
+    },
+    {
+      "y": 2789,
+      "fill": 0.4444,
+      "labels": [
+        "A fair claim and waitlist syst",
+        "React · Vite · Tailwind CSS · "
+      ]
+    },
+    {
+      "y": 2845,
+      "fill": 0.2441,
+      "labels": [
+        "Home page, signed in — browsin",
+        "Drop detail page before joinin"
+      ]
+    },
+    {
+      "y": 2893,
+      "fill": 0.0573,
+      "labels": [
+        "Drop detail page before joinin"
+      ]
+    },
+    {
+      "y": 2941,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 2973,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 3014,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 3049,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 3091,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 3126,
+      "fill": 0,
+      "labels": []
+    },
+    {
+      "y": 3164,
+      "fill": 0.0291,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3204,
+      "fill": 0.0295,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3246,
+      "fill": 0.0299,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3295,
+      "fill": 0.0303,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3299,
+      "fill": 0.0304,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3323,
+      "fill": 0.0304,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3387,
+      "fill": 0.0306,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3451,
+      "fill": 0.0301,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3511,
+      "fill": 0.0266,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3571,
+      "fill": 0.0117,
+      "labels": [
+        "I design clear interfaces and "
+      ]
+    },
+    {
+      "y": 3631,
+      "fill": 0.0145,
+      "labels": [
+        "Surface",
+        "interface and interaction"
+      ]
+    },
+    {
+      "y": 3679,
+      "fill": 0.0375,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3735,
+      "fill": 0.0643,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3775,
+      "fill": 0.0646,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3830,
+      "fill": 0.0651,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3878,
+      "fill": 0.0653,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3926,
+      "fill": 0.0638,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 3974,
+      "fill": 0.0581,
+      "labels": [
+        "Built in Layers",
+        "Surface"
+      ]
+    },
+    {
+      "y": 4022,
+      "fill": 0.0609,
+      "labels": [
+        "Built in Layers",
+        "Flow"
+      ]
+    },
+    {
+      "y": 4078,
+      "fill": 0.0779,
+      "labels": [
+        "Built in Layers",
+        "Flow"
+      ]
+    },
+    {
+      "y": 4126,
+      "fill": 0.0638,
+      "labels": [
+        "Built in Layers",
+        "System"
+      ]
+    },
+    {
+      "y": 4174,
+      "fill": 0.0563,
+      "labels": [
+        "These are four stops on a larg",
+        "Professional Systems continues"
+      ]
+    },
+    {
+      "y": 4222,
+      "fill": 0.0571,
+      "labels": [
+        "These are four stops on a larg",
+        "Professional Systems continues"
+      ]
+    },
+    {
+      "y": 4270,
+      "fill": 0.058,
+      "labels": [
+        "These are four stops on a larg",
+        "Professional Systems continues"
+      ]
+    },
+    {
+      "y": 4318,
+      "fill": 0.0585,
+      "labels": [
+        "These are four stops on a larg",
+        "Professional Systems continues"
+      ]
+    },
+    {
+      "y": 4358,
+      "fill": 0.0654,
+      "labels": [
+        "These are four stops on a larg",
+        "Professional Systems continues"
+      ]
+    },
+    {
+      "y": 4414,
+      "fill": 0.0446,
+      "labels": [
+        "Professional Systems continues",
+        "See every system"
+      ]
+    },
+    {
+      "y": 4461,
+      "fill": 0.0587,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4509,
+      "fill": 0.0587,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4549,
+      "fill": 0.0587,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4605,
+      "fill": 0.0765,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4653,
+      "fill": 0.0968,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4701,
+      "fill": 0.1127,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4749,
+      "fill": 0.1293,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4797,
+      "fill": 0.1293,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4844,
+      "fill": 0.1293,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4892,
+      "fill": 0.1293,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4939,
+      "fill": 0.1516,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 4987,
+      "fill": 0.1635,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 5035,
+      "fill": 0.1687,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 5083,
+      "fill": 0.1547,
+      "labels": [
+        "Back on the surface",
+        "The systems, indexed"
+      ]
+    },
+    {
+      "y": 5131,
+      "fill": 0.1255,
+      "labels": [
+        "The systems, indexed",
+        "Selected systems"
+      ]
+    },
+    {
+      "y": 5179,
+      "fill": 0.1279,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5227,
+      "fill": 0.1353,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5275,
+      "fill": 0.1353,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5323,
+      "fill": 0.1353,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5371,
+      "fill": 0.1353,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5419,
+      "fill": 0.1353,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5459,
+      "fill": 0.1216,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5507,
+      "fill": 0.1014,
+      "labels": [
+        "Selected systems",
+        "Not just what they look like —"
+      ]
+    },
+    {
+      "y": 5563,
+      "fill": 0.0813,
+      "labels": [
+        "Not just what they look like —",
+        "Resolved by layer and record"
+      ]
+    },
+    {
+      "y": 5611,
+      "fill": 0.0726,
+      "labels": [
+        "System",
+        "Surface"
+      ]
+    },
+    {
+      "y": 5651,
+      "fill": 0.1008,
+      "labels": [
+        "System",
+        "Surface"
+      ]
+    },
+    {
+      "y": 5707,
+      "fill": 0.0976,
+      "labels": [
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Personal"
+      ]
+    },
+    {
+      "y": 5747,
+      "fill": 0.0898,
+      "labels": [
+        "AUTONOMOUS DELIVERY SYSTEM",
+        "Verified against source · Acti"
+      ]
+    },
+    {
+      "y": 5795,
+      "fill": 0.0857,
+      "labels": [
+        "PERSONAL OPERATING SYSTEM",
+        "Personal"
+      ]
+    },
+    {
+      "y": 5843,
+      "fill": 0.0771,
+      "labels": [
+        "SHARED FINANCE SYSTEM",
+        "Fork of ezBookkeeping"
+      ]
+    },
+    {
+      "y": 5891,
+      "fill": 0.0901,
+      "labels": [
+        "SHARED FINANCE SYSTEM",
+        "Verified against source · Acti"
+      ]
+    },
+    {
+      "y": 5931,
+      "fill": 0.1018,
+      "labels": [
+        "FAIR DISTRIBUTION SYSTEM",
+        "Personal"
+      ]
+    },
+    {
+      "y": 5979,
+      "fill": 0.1126,
+      "labels": [
+        "FAIR DISTRIBUTION SYSTEM",
+        "Verified against source · Paus"
+      ]
+    },
+    {
+      "y": 6019,
+      "fill": 0.1062,
+      "labels": [
+        "PROFESSIONAL SYSTEMS",
+        "Professional"
+      ]
+    },
+    {
+      "y": 6075,
+      "fill": 0.1036,
+      "labels": [
+        "PROFESSIONAL SYSTEMS",
+        "How I build"
+      ]
+    },
+    {
+      "y": 6123,
+      "fill": 0.116,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6162,
+      "fill": 0.1227,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6218,
+      "fill": 0.1242,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6266,
+      "fill": 0.1372,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6314,
+      "fill": 0.1481,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6362,
+      "fill": 0.1481,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6410,
+      "fill": 0.1481,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6458,
+      "fill": 0.1481,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6506,
+      "fill": 0.1174,
+      "labels": [
+        "How I build",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6562,
+      "fill": 0.1013,
+      "labels": [
+        "Consequence",
+        "What's visible is only half th"
+      ]
+    },
+    {
+      "y": 6602,
+      "fill": 0.0948,
+      "labels": [
+        "What's visible is only half th",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6650,
+      "fill": 0.0791,
+      "labels": [
+        "What's visible is only half th",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6706,
+      "fill": 0.0801,
+      "labels": [
+        "Consequence",
+        "Permissions, offline behavior,"
+      ]
+    },
+    {
+      "y": 6754,
+      "fill": 0.088,
+      "labels": [
+        "Consequence",
+        "Permissions, offline behavior,"
+      ]
+    },
+    {
+      "y": 6802,
+      "fill": 0.0762,
+      "labels": [
+        "Permissions, offline behavior,",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 6842,
+      "fill": 0.0659,
+      "labels": [
+        "Consequence",
+        "Unfinished work says so, plain"
+      ]
+    },
+    {
+      "y": 6898,
+      "fill": 0.0659,
+      "labels": [
+        "Consequence",
+        "Unfinished work says so, plain"
+      ]
+    },
+    {
+      "y": 6946,
+      "fill": 0.0599,
+      "labels": [
+        "Unfinished work says so, plain",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 7002,
+      "fill": 0.0424,
+      "labels": [
+        "Unfinished work says so, plain",
+        "Consequence"
+      ]
+    },
+    {
+      "y": 7050,
+      "fill": 0.0405,
+      "labels": [
+        "Consequence",
+        "Nothing on the page is there j"
+      ]
+    },
+    {
+      "y": 7098,
+      "fill": 0.0446,
+      "labels": [
+        "Nothing on the page is there j",
+        "Field notes"
+      ]
+    },
+    {
+      "y": 7138,
+      "fill": 0.0456,
+      "labels": [
+        "Nothing on the page is there j",
+        "Field notes"
+      ]
+    },
+    {
+      "y": 7186,
+      "fill": 0.0514,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7234,
+      "fill": 0.0618,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7282,
+      "fill": 0.0764,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7330,
+      "fill": 0.0836,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7377,
+      "fill": 0.0869,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7417,
+      "fill": 0.0869,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7465,
+      "fill": 0.0869,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7513,
+      "fill": 0.0869,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7561,
+      "fill": 0.0763,
+      "labels": [
+        "Field notes",
+        "See all notes"
+      ]
+    },
+    {
+      "y": 7609,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7665,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7713,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7761,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7809,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7849,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7905,
+      "fill": 0.0717,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 7945,
+      "fill": 0.0879,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 8000,
+      "fill": 0.119,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 8048,
+      "fill": 0.1462,
+      "labels": [
+        "I build product interfaces and",
+        "Every system here states its o"
+      ]
+    },
+    {
+      "y": 8096,
+      "fill": 0.1761,
+      "labels": [
+        "Every system here states its o",
+        "Read the full introduction"
+      ]
+    },
+    {
+      "y": 8144,
+      "fill": 0.1708,
+      "labels": [
+        "Every system here states its o",
+        "Read the full introduction"
+      ]
+    },
+    {
+      "y": 8192,
+      "fill": 0.1783,
+      "labels": [
+        "Read the full introduction",
+        "Have a complex product?"
+      ]
+    },
+    {
+      "y": 8240,
+      "fill": 0.175,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    },
+    {
+      "y": 8288,
+      "fill": 0.175,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    },
+    {
+      "y": 8328,
+      "fill": 0.175,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    },
+    {
+      "y": 8384,
+      "fill": 0.175,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    },
+    {
+      "y": 8432,
+      "fill": 0.1788,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    },
+    {
+      "y": 8467,
+      "fill": 0.1788,
+      "labels": [
+        "Have a complex product?",
+        "Let's make it feel simple."
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "from": 303,
+      "to": 391,
+      "minFill": 0.003
+    },
+    {
+      "from": 2941,
+      "to": 3126,
+      "minFill": 0
+    },
+    {
+      "from": 3571,
+      "to": 3631,
+      "minFill": 0.0117
+    }
+  ]
+}

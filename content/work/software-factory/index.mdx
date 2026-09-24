@@ -1,0 +1,35 @@
+---
+slug: "software-factory"
+title: "Software Factory"
+categoryLabel: "AUTONOMOUS DELIVERY SYSTEM"
+description: "An orchestration core that routes work through test, review, and human-approval gates."
+tier: "featured"
+depth: "preview"
+order: 0
+provenance: "personal"
+contribution: "I designed and built the factory core from scratch: the domain model, the orchestration control plane, the gated delivery loop (plan → ticket → implementation → automated test → independent review → human approval → merge → evidence), durable SQLite persistence on Node's built-in driver, and a trusted local AI worker runner. The system's constitution and its integration mandate — the conditions under which autonomous completion is permitted at all — are my design."
+verificationStatus: "verified"
+status: "published"
+phase: "active-development"
+factsCheckedAgainstRepo: true
+aiAssisted: true
+aiDisclosure: "The factory builds itself through its own loop: AI workers implement approved tasks inside the gates described here, with independent review and human-only release decisions. That process is the project."
+tech: ["TypeScript", "Node.js", "SQLite"]
+links:
+  - label: "Repository"
+    url: "https://github.com/hakanduyar/software-factory"
+    kind: "repo"
+    visibility: "public"
+images:
+  - src: "/images/projects/software-factory/factory-loop-diagram.svg"
+    alt: "Diagram of the Software Factory's delivery loop — plan, ticket, implementation, automated test, independent review, human approval, merge/release, evidence — above a summary of the repository's integration mandate: autonomy is permitted only while every condition holds, including frozen acceptance criteria, deterministic verification, an independent reviewer pass, an unchanged repository fingerprint, and human-only production release."
+    caption: "Verified system diagram, traced to the repository's own constitution and ADR-0002."
+    layer: "system"
+    assetType: "verified-diagram"
+---
+
+A personal software factory: one orchestration core that routes work to the right worker and walks every change through the same gated loop — plan, ticket, implementation, automated test, independent review, human approval, merge, evidence.
+
+The core is deliberately small and verifiable: a TypeScript control plane with zero runtime dependencies, durable persistence on Node's built-in SQLite, deterministic mock workers for testing, and a trusted local runner for real AI workers. Its constitution fixes what autonomy may never touch — production deployment and public release remain human decisions — and its integration mandate spells out the full set of conditions under which the loop may complete work on its own.
+
+The factory's first project is itself: it develops its own repository through the same gates it will apply to everything else.

@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { FigureInspect } from "@/components/ui/FigureInspect";
 import { readIntrinsicDimensions } from "@/lib/utils/imageDimensions";
 
 type FigureProps = {
@@ -5,28 +7,146 @@ type FigureProps = {
   alt: string;
   caption?: string;
   index?: number;
+  /**
+   * FABLE GATE 1 (Q1a): opt-in frame ratio. When set, the media is presented in
+   * a fixed-aspect frame and `object-fit: cover` crops the overflow -- the
+   * mechanism the gate chose to give a wide, shallow screenshot real vertical
+   * presence without distortion and without widening past the accepted width.
+   *
+   * Strictly additive: when absent (every existing call site, including the
+   * frozen Kıvılcım figure), the rendered markup and behaviour are byte-for-byte
+   * what they were before this prop existed. The frame reserves its box via
+   * `aspect-ratio`, so the TASK-008 CLS guarantee holds in this branch too.
+   */
+  frameRatio?: number;
+  /**
+   * Which part of the media the frame keeps, as a CSS object-position value.
+   * Only read when `frameRatio` is set. The choice of window is an editorial
+   * decision made per call site -- it decides what the caption's claim shows.
+   */
+  framePosition?: string;
+  /**
+   * V13 (Fable gate, finding D): the case-study hero now leads with the
+   * project's representative asset, which makes that one Figure the page's
+   * largest above-the-fold paint. The TASK-008 `fetchPriority="low"` below was
+   * measured for Figures that all sat BELOW the LCP candidate; a lead plate is
+   * the LCP candidate, so it opts into a high fetch priority instead. Every
+   * other call site is unchanged.
+   */
+  priority?: boolean;
+  /**
+   * V13 (mobile gate, M1): opt-in inspector. Below `lg` the caption row gains
+   * an INSPECT control that opens the same asset in a full-screen plate at a
+   * width it can be read at (components/ui/FigureInspect.tsx). The case-study
+   * figures -- the MDX layer figures and the hero lead -- opt in, and so does
+   * the `/work` index's ProjectCard thumbnail (ART-1, D-031 addendum; the
+   * earlier note here that the thumbnail "is itself a link" was wrong -- the
+   * card's title is the link, the figure never was). The homepage's scenes do
+   * not opt in, so the frozen tour's markup is untouched. Strictly additive:
+   * when absent, the rendered markup is what it was before this prop existed,
+   * and at `lg` and above the control does not render at all.
+   */
+  inspect?: boolean | "desktop";
+  /**
+   * V14.1 (owner §9, evidence legibility): an ACQUIRED DETAIL. When set, the
+   * figure frames this window of the asset -- given in the asset's own
+   * intrinsic units -- at the scale the window earns inside the figure's
+   * width, instead of the whole drawing at a thumbnail's scale. The caption
+   * states that a detail is shown and names the region in the diagram's own
+   * words; the inspector still opens the whole asset. Static geometry: no
+   * transform, no object-fit, nothing animates. Strictly additive -- absent,
+   * the markup is byte-identical to before.
+   */
+  detail?: { x: number; y: number; width: number; height: number; label: string };
 };
 
 // DESIGN_SYSTEM §9: soft-paper mat, 1px line border, corner ticks (§8 item
 // 3, aria-hidden, decorative only), radius-1, mono-meta "FIG NN — caption".
-export function Figure({ src, alt, caption, index }: FigureProps) {
+export function Figure({
+  src,
+  alt,
+  caption,
+  index,
+  frameRatio,
+  framePosition,
+  priority = false,
+  inspect = false,
+  detail,
+}: FigureProps) {
   const dimensions = readIntrinsicDimensions(src);
+  const baseCaption = caption
+    ? index
+      ? `FIG ${String(index).padStart(2, "0")} — ${caption}`
+      : caption
+    : undefined;
+  // The detail is stated in the caption so the plate never claims to be the
+  // whole drawing: "Detail: <the diagram's own heading>. <caption>". Desktop
+  // only, like the window itself: below lg the whole drawing is shown, as the
+  // frozen mobile composition (V13) shows it, so the prefix is lg-only markup
+  // and the string every other consumer sees is the registered caption.
+  const captionText = baseCaption;
+  const captionNode = detail ? (
+    <>
+      <span className="hidden lg:inline">{`Detail: ${detail.label}. `}</span>
+      {baseCaption}
+    </>
+  ) : (
+    baseCaption
+  );
+  // The window: at lg and above the asset is laid out at (intrinsic width /
+  // window width) of the frame and offset so the window's top-left sits at the
+  // frame's -- left a fraction of the frame's width, top a fraction of its
+  // height -- through custom properties the lg: utilities read. Below lg the
+  // same markup is the plain responsive image.
+  const detailVars =
+    detail && dimensions
+      ? ({
+          "--detail-ar": `${detail.width} / ${detail.height}`,
+          "--detail-w": `${((dimensions.width / detail.width) * 100).toFixed(4)}%`,
+          "--detail-x": `${(-(detail.x / detail.width) * 100).toFixed(4)}%`,
+          "--detail-y": `${(-(detail.y / detail.height) * 100).toFixed(4)}%`,
+        } as CSSProperties)
+      : undefined;
+  const image = (
+    /* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */
+    <img
+      src={src}
+      alt={alt}
+      fetchPriority={priority ? "high" : "low"}
+      decoding="async"
+      className={
+        detailVars
+          ? "block h-auto w-full lg:absolute lg:left-[var(--detail-x)] lg:top-[var(--detail-y)] lg:w-[var(--detail-w)] lg:max-w-none"
+          : frameRatio
+            ? "block h-full w-full object-cover"
+            : "block h-auto w-full"
+      }
+      style={
+        !detailVars && frameRatio && framePosition ? { objectPosition: framePosition } : undefined
+      }
+      {...dimensions}
+    />
+  );
   return (
     <figure className="relative border border-line bg-soft-paper p-1 rounded-1">
       <span
         aria-hidden="true"
+        data-figure-tick="tl"
         className="absolute left-0 top-0 h-2 w-2 border-l border-t border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="tr"
         className="absolute right-0 top-0 h-2 w-2 border-r border-t border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="bl"
         className="absolute bottom-0 left-0 h-2 w-2 border-b border-l border-ink"
       />
       <span
         aria-hidden="true"
+        data-figure-tick="br"
         className="absolute bottom-0 right-0 h-2 w-2 border-b border-r border-ink"
       />
       {/* TASK-008 (Lighthouse-measured, 2026-08-11): every Figure usage
@@ -52,19 +172,55 @@ export function Figure({ src, alt, caption, index }: FigureProps) {
           aspect ratio; dimensions is null (attributes omitted) only for a
           format readIntrinsicDimensions doesn't recognize -- unchanged
           prior behavior, not a regression. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- static asset paths only, next/image not needed for this primitive */}
-      <img
-        src={src}
-        alt={alt}
-        fetchPriority="low"
-        decoding="async"
-        className="block h-auto w-full"
-        {...dimensions}
-      />
-      {caption && (
-        <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
-          {index ? `FIG ${String(index).padStart(2, "0")} — ${caption}` : caption}
-        </figcaption>
+      {detailVars ? (
+        <div
+          className="relative w-full lg:overflow-hidden lg:[aspect-ratio:var(--detail-ar)]"
+          style={detailVars}
+        >
+          {image}
+        </div>
+      ) : frameRatio ? (
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: `${frameRatio}` }}>
+          {image}
+        </div>
+      ) : (
+        image
+      )}
+      {inspect ? (
+        // The caption row doubles as the plate's footer strip: the caption
+        // at the left, the control at the right, 44px tall where the control
+        // renders. Without a caption the control still needs a row, but not
+        // a <figcaption> -- "Inspect" is not the figure's caption.
+        captionText ? (
+          <figcaption className="mt-2 flex items-center justify-between gap-4 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+            <span className="min-w-0">{captionNode}</span>
+            <FigureInspect
+              src={src}
+              alt={alt}
+              title={captionText}
+              width={dimensions?.width}
+              height={dimensions?.height}
+              where={inspect === "desktop" ? "desktop" : "below-lg"}
+            />
+          </figcaption>
+        ) : (
+          <div className="mt-2 flex justify-end">
+            <FigureInspect
+              src={src}
+              alt={alt}
+              title={alt}
+              width={dimensions?.width}
+              height={dimensions?.height}
+              where={inspect === "desktop" ? "desktop" : "below-lg"}
+            />
+          </div>
+        )
+      ) : (
+        captionText && (
+          <figcaption className="mt-2 font-mono text-mono-meta tracking-mono-meta text-ink-muted">
+            {captionNode}
+          </figcaption>
+        )
       )}
     </figure>
   );

@@ -1,0 +1,60 @@
+{
+  "tag": "safety-v14-scroll-baseline",
+  "commit": "35c2c58",
+  "note": "The scroll configuration the owner accepted. Generated from the modules named in `source`; no V14.1 change touches any of them.",
+  "source": [
+    "lib/spatial/cameraFilter.ts",
+    "lib/spatial/sceneRoute.ts",
+    "lib/spatial/scenes.ts",
+    "lib/spatial/worldFit.ts"
+  ],
+  "constants": {
+    "ROUTE_MAX_RATE": 0.105,
+    "INTENT_LEAD_VH": 0.6,
+    "GLIDE_MAX_RATE": 0.09,
+    "GLIDE_RELEASE_SPAN": 1.5,
+    "GLIDE_RELEASE_GAIN": 8,
+    "TAU_SETTLED_MS": 48,
+    "TAU_TIGHT_MS": 22,
+    "SPEED_SETTLED": 0.06,
+    "SPEED_TIGHT": 0.55,
+    "SPEED_RELEASE_MS": 250,
+    "BREAK_PLAYBACK_MS": 950,
+    "BREAK_ABORT_PX": 90,
+    "ROUTE_LENGTH_VH": 600,
+    "WORLD_REFERENCE": { "width": 1440, "height": 990 },
+    "WORLD_FIT_MIN": 0.74,
+    "WORLD_FIT_MAX": 1,
+    "WORLD_FIT_WIDTH_REFERENCE": 1280,
+    "VW_PER_VH": 1.6,
+    "BREAK_CUT": 0.7166468990695347
+  },
+  "routeWorldLength": { "one": 1494.82, "two": 606.84, "total": 2101.66 },
+  "averageCameraSpeed": { "desktop": 2100.14, "mobile": 943.6 },
+  "budgets": {
+    "formula": {
+      "gearing": "routeWorldLength * worldUnitPx * fit / routeSpan",
+      "routeBudgetPxPerSec": "ROUTE_MAX_RATE * routeSpan",
+      "pageBudgetPxPerSec": "routeBudget * gearing",
+      "leadCapPx": "INTENT_LEAD_VH * innerHeight"
+    },
+    "1440x900": {
+      "routeSpanPx": 4500,
+      "worldUnitPx": 9,
+      "fit": 0.9090909090909091,
+      "gearing": 3.8212,
+      "routeBudgetPxPerSec": 472.5,
+      "pageBudgetPxPerSec": 1805.5,
+      "leadCapPx": 540
+    },
+    "1920x1080": {
+      "routeSpanPx": 5400,
+      "worldUnitPx": 9.9,
+      "fit": 1,
+      "gearing": 3.853,
+      "routeBudgetPxPerSec": 567.0,
+      "pageBudgetPxPerSec": 2184.7,
+      "leadCapPx": 648
+    }
+  }
+}

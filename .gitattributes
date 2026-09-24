@@ -1,0 +1,24 @@
+# ENV-1 (Phase 7). `core.autocrlf=true` on this machine checked every text file
+# out with CRLF while Git stored LF, so `pnpm format:check` reported 98 files as
+# unformatted when the only difference was the line ending. Prettier defaults to
+# `endOfLine: "lf"`, so the honest fix is to check the worktree out the way the
+# repository already stores it rather than to relax the formatter.
+#
+# No stored blob changes: every tracked text file was already LF in Git.
+* text=auto eol=lf
+
+# Binary, so Git never inspects or converts them.
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.gif    binary
+*.ico    binary
+*.webm   binary
+*.mp4    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.pdf    binary
+*.bundle binary

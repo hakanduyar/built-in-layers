@@ -1,18 +1,19 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Work: listing", () => {
-  test("lists exactly the published previews under their tier heading, in D-016 order", async ({
+  test("lists exactly the published previews under their tier heading, in owner order (D-021)", async ({
     page,
   }) => {
     await page.goto("/work");
     await expect(page.getByText("Featured systems")).toBeVisible();
 
     const links = page.locator("main a[href^='/work/']");
-    await expect(links).toHaveCount(4);
-    await expect(links.nth(0)).toHaveAttribute("href", "/work/kivilcim");
-    await expect(links.nth(1)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links).toHaveCount(5);
+    await expect(links.nth(0)).toHaveAttribute("href", "/work/software-factory");
+    await expect(links.nth(1)).toHaveAttribute("href", "/work/kivilcim");
     await expect(links.nth(2)).toHaveAttribute("href", "/work/jointledger");
-    await expect(links.nth(3)).toHaveAttribute("href", "/work/professional-systems");
+    await expect(links.nth(3)).toHaveAttribute("href", "/work/dropspot");
+    await expect(links.nth(4)).toHaveAttribute("href", "/work/professional-systems");
   });
 
   test("omits empty tier headings", async ({ page }) => {
@@ -75,6 +76,25 @@ test.describe("Work: project routes", () => {
     );
   });
 
+  // V13 (Fable gate, finding D): a preview-depth project has no layers,
+  // decisions or neighbours. It used to end after a tech line, reading as a
+  // page that had failed to load; it now carries its plate, its (placeholder)
+  // contribution statement and one honest onward route -- the work index.
+  test("/work/professional-systems states its contribution and routes back to the work index", async ({
+    page,
+  }) => {
+    await page.goto("/work/professional-systems");
+    await expect(
+      page.locator('main header img[src*="professional-systems-overview.svg"]'),
+    ).toBeVisible();
+    const bodyText = await page.locator("main").innerText();
+    expect(bodyText).toContain("I will share my specific role and contributions here");
+    expect(bodyText).toContain("Not yet verified");
+    const nav = page.getByRole("navigation", { name: "Work index" });
+    await expect(nav.locator("a[href='/work']")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Case study navigation" })).toHaveCount(0);
+  });
+
   test("an unknown slug 404s", async ({ page }) => {
     const response = await page.goto("/work/this-project-does-not-exist");
     expect(response?.status()).toBe(404);
@@ -119,28 +139,52 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
     page,
   }) => {
     await page.goto("/work/kivilcim");
+    // V13: the case-study hero now opens with the project's representative
+    // asset (the same one the System tab carries), so each tab's assets are
+    // asserted inside the active tab panel, not anywhere in main.
+    const panel = page.getByRole("tabpanel");
 
     // Surface: the illustrative product map.
-    await expect(page.locator('main img[src*="product-areas-map.svg"]')).toBeVisible();
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="product-areas-map.svg"]')).toBeVisible();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Illustrative product map based on the audited repository");
 
     // Flow: the core flow diagram + the focus lifecycle state diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
-    await expect(page.locator('main img[src*="focus-lifecycle.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="focus-lifecycle.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
     expect(bodyText).toContain("Verified state diagram");
 
     // System: the local-first architecture diagram.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="local-first-architecture.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="local-first-architecture.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram");
 
     const fullText = (await page.locator("main").innerText()).toLowerCase();
     expect(fullText).not.toContain("screenshot of");
+  });
+
+  // V13 (Fable gate, finding D): `contribution` is required of every featured
+  // project and `aiDisclosure` whenever `aiAssisted` is true, yet neither
+  // rendered anywhere on the site. The hero now carries both, and opens with
+  // the representative asset the spatial scene chose for the project.
+  test("the hero states the contribution and the AI disclosure and opens with the representative asset", async ({
+    page,
+  }) => {
+    await page.goto("/work/kivilcim");
+    const hero = page.locator("main header");
+    await expect(hero.locator('img[src*="local-first-architecture.svg"]')).toBeVisible();
+    // The block labels are mono labels, CSS-uppercased, so `innerText` reports
+    // them as CONTRIBUTION / AI ASSISTANCE; the statements themselves are not.
+    await expect(hero.getByRole("heading", { name: /^contribution$/i })).toBeVisible();
+    await expect(hero.getByRole("heading", { name: /^ai assistance$/i })).toBeVisible();
+    const heroText = await hero.innerText();
+    expect(heroText).toContain("I defined Kıvılcım's product idea");
+    expect(heroText).toContain("AI tools assisted parts of the planning");
+    expect(heroText).toContain("Verified against source");
   });
 
   test("no generic placeholder asset remains for Kıvılcım", async ({ page }) => {
@@ -161,14 +205,17 @@ test.describe("Work: Kıvılcım case study (published under D-019)", () => {
     expect(bodyText).not.toContain("/home/");
   });
 
-  test("Next project link points at the now-published DropSpot, not at a draft or 404 route", async ({
-    page,
-  }) => {
+  // D-027: navigation is derived from the global `order` sequence.
+  // Kivilcim is the first case-study destination, so it has a next and no
+  // previous.
+  test("derived navigation offers JointLedger next and no previous", async ({ page }) => {
     await page.goto("/work/kivilcim");
-    const nextLink = page.locator("a[href='/work/dropspot']");
-    await expect(nextLink).toBeVisible();
-    await expect(page.getByText("Next project")).toBeVisible();
-    const response = await page.goto("/work/dropspot");
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByText("Next project")).toBeVisible();
+    await expect(nav.getByText("Previous project")).toHaveCount(0);
+    await expect(nav.locator("a[href='/work/jointledger']")).toBeVisible();
+    const response = await page.goto("/work/jointledger");
     expect(response?.status()).toBe(200);
   });
 
@@ -215,29 +262,32 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     page,
   }) => {
     await page.goto("/work/dropspot");
+    // V13: the hero opens with browse-drops.webp (DropSpot's representative
+    // asset), so the Surface tab's copy of it is asserted inside the panel.
+    const panel = page.getByRole("tabpanel");
 
     // Surface (default tab): the three real screenshots.
     for (const filename of ["browse-drops.webp", "drop-detail.webp", "admin-panel.webp"]) {
-      await expect(page.locator(`main img[src*="${filename}"]`)).toBeVisible();
+      await expect(panel.locator(`img[src*="${filename}"]`)).toBeVisible();
     }
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Home page, signed in — browsing drops with waitlist status");
     expect(bodyText).toContain("Drop detail page before joining the waitlist.");
     expect(bodyText).toContain("Admin panel — drop management table");
 
     // Flow: the 4th real screenshot + the flow diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="waitlist-joined.webp"]')).toBeVisible();
-    await expect(page.locator('main img[src*="core-flow-diagram.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="waitlist-joined.webp"]')).toBeVisible();
+    await expect(panel.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Drop detail page after joining the waitlist.");
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
 
     // System: the two remaining architecture diagrams.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="claim-transaction-diagram.svg"]')).toBeVisible();
-    await expect(page.locator('main img[src*="priority-score-diagram.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="claim-transaction-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="priority-score-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
 
     // The removed provisional screens-map must not linger anywhere.
@@ -260,8 +310,9 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
       "drop-detail.webp": 1731 / 837,
       "admin-panel.webp": 1878 / 808,
     };
+    const panel = page.getByRole("tabpanel");
     for (const [filename, intrinsicRatio] of Object.entries(surfaceExpected)) {
-      const img = page.locator(`main img[src*="${filename}"]`);
+      const img = panel.locator(`img[src*="${filename}"]`);
       // `boundingBox()` is a raw, non-retrying layout read -- it can catch
       // the image before its real bytes have finished decoding (no explicit
       // width/height on Figure's <img>, so pre-decode layout can be
@@ -280,7 +331,7 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     }
 
     await page.getByRole("tab", { name: "Flow" }).click();
-    const waitlistImg = page.locator('main img[src*="waitlist-joined.webp"]');
+    const waitlistImg = panel.locator('img[src*="waitlist-joined.webp"]');
     await expect
       .poll(async () => await waitlistImg.boundingBox(), { timeout: 10_000 })
       .not.toBeNull();
@@ -310,13 +361,15 @@ test.describe("Work: DropSpot case study (published under D-019, TASK-006)", () 
     expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]?admin123|user123/);
   });
 
-  test("Next project link points at the published JointLedger, never at a 404 route", async ({
-    page,
-  }) => {
+  // DropSpot is the last case-study destination: previous, but no next, and
+  // never a wrap-around back to the first.
+  test("derived navigation offers JointLedger previous and no next", async ({ page }) => {
     await page.goto("/work/dropspot");
-    await expect(page.getByText("Next project")).toBeVisible();
-    const nextLink = page.locator("a[href='/work/jointledger']");
-    await expect(nextLink).toBeVisible();
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByText("Previous project")).toBeVisible();
+    await expect(nav.getByText("Next project")).toHaveCount(0);
+    await expect(nav.locator("a[href='/work/jointledger']")).toBeVisible();
     const response = await page.request.get("/work/jointledger");
     expect(response.status()).toBe(200);
   });
@@ -376,25 +429,26 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
     page,
   }) => {
     await page.goto("/work/jointledger");
+    // V13: the hero opens with book-data-model-diagram.svg (JointLedger's
+    // representative asset), so the System tab's copy is asserted in the panel.
+    const panel = page.getByRole("tabpanel");
 
     // Surface (default tab): the upstream extension map.
-    await expect(page.locator('main img[src*="upstream-extension-map.svg"]')).toBeVisible();
-    let bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="upstream-extension-map.svg"]')).toBeVisible();
+    let bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified extension diagram, not a product screenshot");
 
     // Flow: the personal-book backfill flow diagram.
     await page.getByRole("tab", { name: "Flow" }).click();
-    await expect(page.locator('main img[src*="personal-book-backfill-flow.svg"]')).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="personal-book-backfill-flow.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified flow diagram, not a product screenshot");
 
     // System: the two remaining architecture diagrams.
     await page.getByRole("tab", { name: "System" }).click();
-    await expect(page.locator('main img[src*="book-data-model-diagram.svg"]')).toBeVisible();
-    await expect(
-      page.locator('main img[src*="book-scoped-authorization-diagram.svg"]'),
-    ).toBeVisible();
-    bodyText = await page.getByRole("tabpanel").innerText();
+    await expect(panel.locator('img[src*="book-data-model-diagram.svg"]')).toBeVisible();
+    await expect(panel.locator('img[src*="book-scoped-authorization-diagram.svg"]')).toBeVisible();
+    bodyText = await panel.innerText();
     expect(bodyText).toContain("Verified architecture diagram, not a product screenshot");
 
     const fullText = (await page.locator("main").innerText()).toLowerCase();
@@ -430,15 +484,20 @@ test.describe("Work: JointLedger case study (published, JointLedger publication 
     expect(bodyText.toLowerCase()).not.toMatch(/password\s*[:=]\s*['"]/);
   });
 
-  test("Next project link points at the published Professional Systems, never at a 404 route", async ({
+  // JointLedger sits between two destinations, so both directions render.
+  // Professional Systems is a preview index with no case study, so it must
+  // NOT appear in this navigation even though it is published and ordered
+  // immediately after DropSpot.
+  test("derived navigation offers both directions and excludes the preview index", async ({
     page,
   }) => {
     await page.goto("/work/jointledger");
-    await expect(page.getByText("Next project")).toBeVisible();
-    const nextLink = page.locator("a[href='/work/professional-systems']");
-    await expect(nextLink).toBeVisible();
-    const response = await page.request.get("/work/professional-systems");
-    expect(response.status()).toBe(200);
+    const nav = page.getByRole("navigation", { name: "Case study navigation" });
+    await expect(nav.getByText("Previous project")).toBeVisible();
+    await expect(nav.getByText("Next project")).toBeVisible();
+    await expect(nav.locator("a[href='/work/kivilcim']")).toBeVisible();
+    await expect(nav.locator("a[href='/work/dropspot']")).toBeVisible();
+    await expect(nav.locator("a[href='/work/professional-systems']")).toHaveCount(0);
   });
 
   for (const width of [375, 768, 1024, 1440]) {
@@ -464,4 +523,174 @@ test.describe("Work: responsive", () => {
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+});
+
+// V13 mobile gate (M1): below `lg` a case-study figure renders a 1600-unit
+// diagram at 0.17-0.46 of its size, so every case-study figure carries an
+// INSPECT control that opens the same asset at a readable width in a native
+// modal dialog. The desktop column never shows the control.
+test.describe("Work: figure inspector (V13 mobile gate, M1)", () => {
+  test("a phone can open the hero plate at a readable width, pan it and close it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/work/kivilcim");
+    const hero = page.locator("main header");
+    const figure = hero.locator("figure").first();
+    const trigger = figure.getByRole("button", { name: /inspect/i });
+    await expect(trigger).toBeVisible();
+    const triggerBox = await trigger.boundingBox();
+    expect(triggerBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    // The page carries exactly one copy of the plate while the inspector is
+    // closed: the dialog's <img> is mounted only while it is open.
+    await expect(page.locator('img[src*="local-first-architecture.svg"]')).toHaveCount(1);
+
+    await trigger.click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    const plate = dialog.locator('img[src*="local-first-architecture.svg"]');
+    await expect(plate).toBeVisible();
+    // 1400px lays the smallest verified label (14 of 1600 units) out at the
+    // 12px mono-meta floor; the frame is 375px wide, so the plate pans.
+    const plateBox = await plate.boundingBox();
+    expect(plateBox?.width ?? 0).toBeGreaterThanOrEqual(1000);
+    const scroller = dialog.locator(".overflow-auto");
+    const pan = await scroller.evaluate((el) => ({
+      x: el.scrollWidth - el.clientWidth,
+      y: el.scrollHeight - el.clientHeight,
+    }));
+    expect(pan.x).toBeGreaterThan(375);
+    expect(pan.y).toBeGreaterThan(0);
+
+    await expect(dialog.getByRole("button", { name: /close/i })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(page.locator('img[src*="local-first-architecture.svg"]')).toHaveCount(1);
+  });
+
+  test("the layer figures opt in too, and every trigger meets the 44px target", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.goto("/work/kivilcim");
+    await page.getByRole("tab", { name: "Flow" }).click();
+    const panel = page.getByRole("tabpanel");
+    const triggers = panel.getByRole("button", { name: /inspect/i });
+    await expect(triggers).toHaveCount(2);
+    for (const trigger of await triggers.all()) {
+      await trigger.scrollIntoViewIfNeeded();
+      const box = await trigger.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+    await triggers.first().click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('img[src*="core-flow-diagram.svg"]')).toBeVisible();
+    await expect(dialog).toContainText("Verified flow diagram, not a product screenshot.");
+    await dialog.getByRole("button", { name: /close/i }).click();
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
+
+  test("the desktop column shows no inspector control", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/work/kivilcim");
+    await expect(page.getByRole("button", { name: /inspect/i })).toHaveCount(0);
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
+
+  // A11Y-1 (V13 mobile QA): a case study renders up to five INSPECT controls
+  // whose visible text is the same word. Each one's accessible name starts
+  // with that word (WCAG 2.5.3) and continues with its own figure's
+  // description, so a buttons list reads as a list of figures. A figure shown
+  // twice -- the hero lead repeats one layer figure, and on DropSpot that
+  // layer is the default Surface tab -- is named the same twice: both
+  // controls open the same plate.
+  for (const slug of ["kivilcim", "jointledger", "dropspot"] as const) {
+    test(`/work/${slug} at 375: every INSPECT control is named for its own figure`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto(`/work/${slug}`);
+      // The explorer ships server-rendered STACKED -- every layer's figures at
+      // once -- and mounts only the active tab once it enhances. Both are
+      // correct states of the documented progressive enhancement, so counting
+      // before hydration commits reads DropSpot's 8 controls instead of its 4.
+      // Chromium won that race; WebKit, rendering in software here, did not.
+      // The tablist exists only after `enhanced`, so it is the gate. No count
+      // below is relaxed -- this only waits for the state they describe.
+      await expect(page.getByRole("tablist")).toBeVisible();
+      const triggers = page.locator("[data-figure-inspect]");
+      expect(await triggers.count()).toBeGreaterThanOrEqual(2);
+      const controls = await triggers.evaluateAll((buttons) =>
+        buttons.map((button) => {
+          const image = button.closest("figure")?.querySelector("img");
+          return {
+            name: button.getAttribute("aria-label") ?? "",
+            text: button.textContent?.trim() ?? "",
+            alt: image?.getAttribute("alt") ?? "",
+            src: image?.getAttribute("src") ?? "",
+          };
+        }),
+      );
+      for (const { name, text, alt } of controls) {
+        expect(text).toBe("Inspect");
+        expect(alt.length).toBeGreaterThan(10);
+        expect(name).toBe(`Inspect: ${alt}`);
+      }
+      // Distinct figures, distinct names; the same figure, the same name.
+      const names = new Set(controls.map((c) => c.name));
+      const assets = new Set(controls.map((c) => c.src));
+      expect(names.size).toBe(assets.size);
+      if (slug === "dropspot") {
+        expect(controls.length).toBe(4);
+        expect(assets.size).toBe(3);
+      }
+    });
+  }
+});
+
+// ART-1 (V13 mobile QA, D-031 addendum): the /work index thumbnail shows a
+// 1600-unit diagram at 0.19-0.22 of its size under a caption that calls it
+// verified evidence, and it is not a link (the title is). It now carries the
+// same INSPECT control the case studies do, below `lg` only.
+test.describe("Work: index thumbnails opt into the inspector (ART-1)", () => {
+  test("a phone can open any card's thumbnail at the reading width", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/work");
+    const cards = page.locator("main li", { has: page.locator("a[href^='/work/']") });
+    await expect(cards).toHaveCount(5);
+    const triggers = page.locator("main [data-figure-inspect]");
+    await expect(triggers).toHaveCount(5);
+    for (const trigger of await triggers.all()) {
+      await trigger.scrollIntoViewIfNeeded();
+      const box = await trigger.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    const card = cards.filter({ has: page.locator("a[href='/work/kivilcim']") });
+    await expect(card.locator("img")).toHaveCount(1);
+    const trigger = card.locator("[data-figure-inspect]");
+    await expect(trigger).toHaveAttribute("aria-label", /^Inspect: /);
+    await trigger.click();
+    const dialog = page.locator("dialog[open]");
+    await expect(dialog).toBeVisible();
+    const plate = dialog.locator('img[src*="product-areas-map.svg"]');
+    await expect(plate).toBeVisible();
+    const plateBox = await plate.boundingBox();
+    expect(plateBox?.width ?? 0).toBeGreaterThanOrEqual(1000);
+    await expect(dialog).toContainText("not a product screenshot");
+    await page.keyboard.press("Escape");
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(card.locator("img")).toHaveCount(1);
+  });
+
+  test("the desktop index shows no inspector control", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/work");
+    await expect(page.getByRole("button", { name: /inspect/i })).toHaveCount(0);
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+  });
 });

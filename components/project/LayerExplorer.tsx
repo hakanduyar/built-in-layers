@@ -147,7 +147,7 @@ export function LayerExplorer({ layers }: LayerExplorerProps) {
                   : "border-transparent text-ink-muted hover:border-line hover:text-ink")
               }
             >
-              {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 bg-signal-ui" />}
+              {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 bg-ink" />}
               {item.label}
             </button>
           );
