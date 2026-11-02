@@ -13,7 +13,7 @@ const copy = {
   en: {
     exhibition: "A study in motion",
     title: ["The opening", "move."],
-    deck: "One player makes a move. The other waits. Two cuts of the same moment, seen from opposite sides of the board.",
+    deck: "A teacher shows the opening move, then gives the learner time. In one cut we see the reply. In the other, we stay with the wait.",
     film: "Chess film",
 
     back: "Portfolio home",
@@ -31,7 +31,7 @@ const copy = {
   tr: {
     exhibition: "Hareket üzerine bir çalışma",
     title: ["Açılış", "hamlesi."],
-    deck: "Biri hamlesini yapıyor, diğeri bekliyor. Aynı anın iki kurgusunu tahtanın iki tarafından izle.",
+    deck: "Öğreten ilk hamleyi gösteriyor ve geri çekiliyor. Bir kurguda öğrencinin cevabını görüyoruz. Diğerinde o bekleyişte kalıyoruz.",
     film: "Satranç filmi",
 
     back: "Portföy ana sayfası",
