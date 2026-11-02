@@ -21,8 +21,13 @@
 }
 .margin {
   color: #d1c5a7;
+  flex-wrap: wrap;
   padding-block: 0.2rem;
   border-bottom: 1px solid #605e50;
+}
+.margin > span,
+.margin nav a {
+  white-space: nowrap;
 }
 .field {
   position: relative;
