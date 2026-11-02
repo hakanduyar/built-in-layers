@@ -1,5 +1,12 @@
 # ACTIVE TASK
 
+## Cinematic study branch
+
+The owner's November 2 assignment for this experimental branch is tracked in
+[`CINEMATIC_QUEUE.md`](orchestrator/CINEMATIC_QUEUE.md). The accepted main
+baseline is `77ea5e1`; the older V14 acceptance record below remains historical
+context. The experiment does not authorize merging this branch into main.
+
 One assignment. Replace it when it completes, or set `TASK: NONE`.
 
 **TASK:** V14 — owner visual acceptance recovery. **Stage: OWNER REVIEW of V14.15 (navigator micro-fix), V14.14 (navigator refinement), V14.13 (motion feel gate), V14.12 (motion gate), V14.11 (engineering gate), V14.10 (navigation refinement), V14.9 (navigation gate), V14.8 (visual gate), V14.7 (Codex timing), V14.6 (motion) and the V14.5 visual gate
