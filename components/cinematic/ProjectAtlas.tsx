@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { flushSync } from "react-dom";
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, type MouseEvent } from "react";
+import cover from "./cover.module.css";
 import styles from "./atlas.module.css";
 
 type Language = "en" | "tr";
@@ -82,6 +84,107 @@ function subscribe(notify: () => void) {
 }
 const firstPlate = () => 0;
 
+async function enterPlate(event: MouseEvent<HTMLAnchorElement>, slug: string) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+    return;
+  const target = document.getElementById("atlas-" + slug);
+  const origin = event.currentTarget.querySelector("img");
+  const destination = document.querySelector<HTMLElement>('[data-plate-image="' + slug + '"]');
+  if (
+    !target ||
+    !origin ||
+    !destination ||
+    !document.startViewTransition ||
+    matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    document.documentElement.hasAttribute("data-atlas-jump")
+  )
+    return;
+  event.preventDefault();
+  document.documentElement.setAttribute("data-atlas-jump", "");
+  origin.style.viewTransitionName = "atlas-plate";
+  try {
+    const transition = document.startViewTransition(() => {
+      origin.style.viewTransitionName = "";
+      destination.style.viewTransitionName = "atlas-plate";
+      flushSync(() => {
+        window.location.hash = fragment(slug);
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      });
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+    await transition.finished;
+  } finally {
+    origin.style.viewTransitionName = "";
+    destination.style.viewTransitionName = "";
+    document.documentElement.removeAttribute("data-atlas-jump");
+  }
+}
+
+export function AtlasCover({ lang }: { lang: Language }) {
+  const tr = lang === "tr";
+  return (
+    <section className={cover.cover} aria-labelledby="cover-title">
+      <div className={cover.margin}>
+        <span>{tr ? "Seçilmiş işler" : "Selected works"} · 01—05</span>
+        <nav aria-label={tr ? "Filme git" : "Jump to film"}>
+          {(["a", "b"] as const).map((cut) => (
+            <Link key={cut} href={"/cinematic?cut=" + cut + "&lang=" + lang + "#film"}>
+              {tr ? "Filmi izle" : "Watch film"} {cut.toUpperCase()} ↓
+            </Link>
+          ))}
+        </nav>
+      </div>
+      <div className={cover.field}>
+        <svg
+          className={cover.traces}
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M8 20 H40 L49 10 H79 L86 17 V40 L70 53 H39 L27 67 V87 H49 L65 71 H94" />
+          <path d="M16 38 V12 H61 L69 20 V85 H81" />
+        </svg>
+        <header className={cover.title}>
+          <p>{tr ? "Portföy atlası" : "Portfolio atlas"}</p>
+          <h1 id="cover-title">
+            {tr ? "Katman" : "Built in"}
+            <br />
+            <em>{tr ? "katman." : "layers."}</em>
+          </h1>
+          <span>
+            {tr
+              ? "Beş projenin arayüzlerini ve altında çalışan sistemleri inceleyin."
+              : "Explore the interfaces and the systems beneath them, across five projects."}
+          </span>
+        </header>
+        {plates.map((plate, index) => (
+          <a
+            key={plate.slug}
+            href={fragment(plate.slug)}
+            className={cover.sheet}
+            data-order={index}
+            aria-label={(tr ? "Projeye yaklaş: " : "Enter plate: ") + plate.title}
+            onClick={(event) => void enterPlate(event, plate.slug)}
+          >
+            <div className={cover.matte}>
+              <Image unoptimized src={imagePath(plate)} width={640} height={400} alt="" />
+            </div>
+            <div className={cover.caption}>
+              <small>{plateNumber(index)}</small>
+              <span>{plate.title}</span>
+              <b aria-hidden="true">↗︎</b>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div className={cover.foot}>
+        <span>{tr ? "Bir proje seçin" : "Select a project"} ↗</span>
+        <span>Hakan Duyar / Portfolio</span>
+      </div>
+    </section>
+  );
+}
 export default function ProjectAtlas({ lang }: { lang: Language }) {
   const index = useSyncExternalStore(subscribe, selectedPlate, firstPlate);
   const local = lang === "tr" ? 1 : 0;
@@ -121,7 +224,7 @@ export default function ProjectAtlas({ lang }: { lang: Language }) {
                 />
                 <small>{plateNumber(i)}</small>
                 <span>{plate.title}</span>
-                <b aria-hidden="true">↗</b>
+                <b aria-hidden="true">↗︎</b>
               </a>
             ))}
           </nav>
@@ -134,6 +237,7 @@ export default function ProjectAtlas({ lang }: { lang: Language }) {
                 {plates.map((plate, i) => (
                   <div key={plate.slug} className={styles.frame} aria-hidden={index !== i}>
                     <Image
+                      data-plate-image={plate.slug}
                       unoptimized
                       src={imagePath(plate)}
                       width={1600}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import ProjectAtlas from "./ProjectAtlas";
+import ProjectAtlas, { AtlasCover } from "./ProjectAtlas";
 import styles from "./study.module.css";
 
 type Cut = "a" | "b";
@@ -217,17 +217,21 @@ export function CinematicStudy({ cut, lang }: Props) {
           ))}
         </nav>
       </div>
+      <AtlasCover lang={lang} />
+      <div id="atlas" className={styles.atlas}>
+        <ProjectAtlas lang={lang} />
+      </div>
       <div className={styles.spread}>
         <header className={styles.story}>
           <p className={styles.folio}>
             <i aria-hidden="true" />
             {words.exhibition}
           </p>
-          <h1>
+          <h2>
             {words.title[0]}
             <br />
             <em>{words.title[1]}</em>
-          </h1>
+          </h2>
           <p className={styles.deck}>{words.deck}</p>
           <a className={styles.atlasLink} href="#atlas">
             {words.works} <span aria-hidden="true">↓</span>
@@ -257,9 +261,6 @@ export function CinematicStudy({ cut, lang }: Props) {
             setSound={setSound}
           />
         </div>
-      </div>
-      <div id="atlas" className={styles.atlas}>
-        <ProjectAtlas lang={lang} />
       </div>
     </article>
   );

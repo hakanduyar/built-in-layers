@@ -198,3 +198,7 @@
     transition: none;
   }
 }
+
+:global(html[data-atlas-jump]) .track {
+  transition: none;
+}

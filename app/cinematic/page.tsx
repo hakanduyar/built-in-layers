@@ -3,8 +3,9 @@ import { CinematicStudy } from "@/components/cinematic/CinematicStudy";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
-  title: "The opening move",
-  description: "A chess film and a project atlas from Hakan Duyar’s Built in Layers portfolio.",
+  title: "Built in Layers — Project atlas",
+  description:
+    "Explore five projects from the Built in Layers portfolio and watch The Opening Move, a chess film in two cuts.",
   path: "/cinematic",
 });
 

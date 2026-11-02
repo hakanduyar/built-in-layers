@@ -60,9 +60,9 @@ export default function Home() {
         )}
       />
       <Link className={cinematicStyles.invitation} href="/cinematic">
-        <span>Built in Layers / Film study</span>
+        <span>Project atlas / Film study</span>
         <strong>
-          The opening move <span aria-hidden="true">↗</span>
+          Enter the atlas <span aria-hidden="true">↗</span>
         </strong>
       </Link>
       <SpatialExperience />

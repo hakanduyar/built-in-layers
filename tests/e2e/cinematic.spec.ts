@@ -60,3 +60,23 @@ test("a reduced-motion visit starts with a poster and offers the project atlas",
   await expect(page).toHaveURL(/cut=b&lang=en/);
   await expect(page.getByRole("heading", { name: "The opening move." })).toBeVisible();
 });
+
+test("the atlas cover opens the selected plate and links straight to the film", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/cinematic");
+  await expect(page.getByRole("heading", { name: "Built in layers." })).toBeInViewport();
+  const sheet = page.getByRole("link", { name: "Enter plate: Kıvılcım" });
+  await sheet.focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#atlas-kivilcim$/);
+  await expect(page.getByRole("link", { name: "Open project" })).toHaveAttribute(
+    "href",
+    "/work/kivilcim",
+  );
+  await page.goBack();
+  await page.getByRole("link", { name: "Watch film B" }).click();
+  await expect(page).toHaveURL(/cut=b&lang=en#film$/);
+  await expect(page.locator("video")).toBeInViewport();
+});
