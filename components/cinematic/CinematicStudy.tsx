@@ -13,7 +13,7 @@ const copy = {
   en: {
     exhibition: "A study in motion",
     title: ["The opening", "move."],
-    deck: "A move changes the board. An interface decision changes the system beneath it.",
+    deck: "One player makes a move. The other waits. Two cuts of the same moment, seen from opposite sides of the board.",
     film: "Chess film",
 
     back: "Portfolio home",
@@ -31,7 +31,7 @@ const copy = {
   tr: {
     exhibition: "Hareket üzerine bir çalışma",
     title: ["Açılış", "hamlesi."],
-    deck: "Bir hamle tahtayı değiştirir. Arayüzde verdiğim bir karar da onun altında çalışan sistemi değiştirir.",
+    deck: "Biri hamlesini yapıyor, diğeri bekliyor. Aynı anın iki kurgusunu tahtanın iki tarafından izle.",
     film: "Satranç filmi",
 
     back: "Portföy ana sayfası",
@@ -100,9 +100,24 @@ function Film({ cut, lang }: Props) {
 
   useEffect(() => {
     const track = audio.current;
-    if (!track) return;
+    const picture = video.current;
+    if (!track || !picture) return;
     if (sound && playing && active) {
+      const synchronize = () => {
+        if (Number.isFinite(track.duration) && track.duration > 0) {
+          const position = picture.currentTime % track.duration;
+          if (Math.abs(track.currentTime - position) > 0.2) track.currentTime = position;
+        }
+      };
+      synchronize();
+      track.addEventListener("loadedmetadata", synchronize);
+      picture.addEventListener("timeupdate", synchronize);
       void track.play().catch(() => setSound(false));
+      return () => {
+        track.removeEventListener("loadedmetadata", synchronize);
+        picture.removeEventListener("timeupdate", synchronize);
+        track.pause();
+      };
     } else {
       track.pause();
     }
@@ -115,7 +130,6 @@ function Film({ cut, lang }: Props) {
           ref={video}
           aria-label={words.still}
           poster={base + ".webp"}
-
           muted
           loop
           playsInline
