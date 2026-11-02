@@ -102,6 +102,7 @@ export function SelectedSystems({ projects }: SelectedSystemsProps) {
             slug,
             title,
             plate: images[0]?.src,
+            alt: images[0]?.alt,
           }))}
         >
           <div className="border-y border-ink lg:border-b-0">

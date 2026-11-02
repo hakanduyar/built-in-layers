@@ -162,3 +162,62 @@
     animation: none;
   }
 }
+.enlarge {
+  margin-left: auto;
+  padding-inline: 0.6rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+.screen {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  overscroll-behavior: contain;
+  background: #242723;
+  color: #eceee4;
+}
+.screenBody {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+.screenBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.08em;
+}
+.screenBar button,
+.screenBar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: 0.5rem;
+  cursor: pointer;
+}
+.steps {
+  display: flex;
+  gap: 0.5rem;
+}
+.screenPlate {
+  position: relative;
+  min-height: 0;
+  border-block: 1px solid #72766b;
+}
+.screenPlate img {
+  object-fit: contain;
+}
+.screen :focus-visible {
+  outline: 2px solid #eceee4;
+  outline-offset: -2px;
+}

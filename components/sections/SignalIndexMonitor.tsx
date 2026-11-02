@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 import styles from "./SignalIndexMonitor.module.css";
 
-type RecordPlate = { slug: string; title: string; plate?: string };
+type RecordPlate = { slug: string; title: string; plate?: string; alt?: string };
 
 export function SignalIndexMonitor({
   records,
@@ -16,6 +17,15 @@ export function SignalIndexMonitor({
   const [selection, select] = useState<string | null>(null);
   const focus = records.findIndex((record) => record.slug === selection);
   const active = records[focus];
+
+  const [expanded, setExpanded] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const enlarge = useRef<HTMLButtonElement>(null);
+
+  function step(offset: number) {
+    const next = records[(focus + offset + records.length) % records.length];
+    if (next) select(next.slug);
+  }
 
   // The register stays server-rendered. Follow its existing rows without
   // adding another focus stop or altering how their case links navigate.
@@ -81,6 +91,7 @@ export function SignalIndexMonitor({
                 };
                 const next = destinations[event.key];
                 if (typeof next !== "number") return;
+                event.stopPropagation();
                 event.preventDefault();
                 event.currentTarget.parentElement?.querySelectorAll("button")[next]?.focus();
               }}
@@ -104,7 +115,79 @@ export function SignalIndexMonitor({
           ) : (
             <span>Project contact sheet</span>
           )}
+          {records.length > 0 && (
+            <button
+              type="button"
+              ref={enlarge}
+              aria-haspopup="dialog"
+              aria-expanded={expanded}
+              className={styles.enlarge}
+              onClick={() => {
+                if (!active && records[0]) select(records[0].slug);
+                setExpanded(true);
+                dialog.current?.showModal();
+              }}
+            >
+              Enlarge <span aria-hidden="true">⛶</span>
+            </button>
+          )}
         </div>
+        <dialog
+          ref={dialog}
+          className={styles.screen}
+          aria-label="Project plate viewer"
+          onClose={() => {
+            setExpanded(false);
+            select(null);
+            enlarge.current?.focus({ preventScroll: true });
+          }}
+          onKeyDown={(event) => {
+            if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+            event.preventDefault();
+            event.stopPropagation();
+            step(event.key === "ArrowRight" ? 1 : -1);
+          }}
+        >
+          <div className={styles.screenBody}>
+            <header className={styles.screenBar}>
+              <span aria-live="polite">
+                {active ? String(focus + 1).padStart(2, "0") + " / " + active.title : ""}
+              </span>
+              <button type="button" autoFocus onClick={() => dialog.current?.close()}>
+                Close ×
+              </button>
+            </header>
+            <div className={styles.screenPlate}>
+              {expanded && active?.plate && (
+                <Image
+                  src={active.plate}
+                  alt={active.alt ?? active.title}
+                  fill
+                  sizes="100vw"
+                  unoptimized
+                />
+              )}
+            </div>
+            <div className={styles.screenBar}>
+              <div className={styles.steps}>
+                <button type="button" onClick={() => step(-1)}>
+                  ← Previous
+                </button>
+                <button type="button" onClick={() => step(1)}>
+                  Next →
+                </button>
+              </div>
+              {active && (
+                <Link
+                  href={`/work/${active.slug}`}
+                  className="max-lg:inline-block max-lg:touch-link"
+                >
+                  Open case ↗
+                </Link>
+              )}
+            </div>
+          </div>
+        </dialog>
       </div>
       <div className={styles.register}>{children}</div>
     </div>
