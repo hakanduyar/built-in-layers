@@ -52,6 +52,11 @@
 .strip[data-locked="true"] .plate {
   filter: grayscale(0.88) sepia(0.12) contrast(0.96) brightness(0.94);
 }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .strip[data-locked="true"] .plate {
+    transform: scale(1.035);
+  }
+}
 .aperture::after {
   content: "";
   pointer-events: none;
