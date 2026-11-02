@@ -48,15 +48,20 @@ const copy = {
   },
 };
 
-function Film({ cut, lang }: Props) {
+type PlaybackPreferences = {
+  intent: boolean | null;
+  setIntent: (value: boolean) => void;
+  sound: boolean;
+  setSound: (value: boolean) => void;
+};
+
+function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & PlaybackPreferences) {
   const words = copy[lang];
   const viewport = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const audio = useRef<HTMLAudioElement>(null);
-  const [intent, setIntent] = useState<boolean | null>(null);
   const [visible, setVisible] = useState(false);
   const [reduce, setReduce] = useState(true);
-  const [sound, setSound] = useState(false);
   const [error, setError] = useState(false);
   const [playing, setPlaying] = useState(false);
   const base = "/cinematic/chess-" + cut;
@@ -71,7 +76,7 @@ function Film({ cut, lang }: Props) {
     const update = () => setVisible(inFrame && !document.hidden);
     const observer = new IntersectionObserver(
       ([entry]) => {
-        inFrame = entry.isIntersecting;
+        inFrame = entry?.isIntersecting ?? false;
         update();
       },
       { threshold: 0.05 },
@@ -121,7 +126,7 @@ function Film({ cut, lang }: Props) {
     } else {
       track.pause();
     }
-  }, [active, sound, playing]);
+  }, [active, sound, playing, setSound]);
 
   return (
     <figure id="film" className={styles.figure}>
@@ -174,6 +179,8 @@ function Film({ cut, lang }: Props) {
 }
 
 export function CinematicStudy({ cut, lang }: Props) {
+  const [intent, setIntent] = useState<boolean | null>(null);
+  const [sound, setSound] = useState(false);
   const words = copy[lang];
   const href = (nextCut: Cut, nextLang: Language) =>
     "/cinematic?cut=" + nextCut + "&lang=" + nextLang;
@@ -227,7 +234,15 @@ export function CinematicStudy({ cut, lang }: Props) {
               </Link>
             ))}
           </nav>
-          <Film key={cut} cut={cut} lang={lang} />
+          <Film
+            key={cut}
+            cut={cut}
+            lang={lang}
+            intent={intent}
+            setIntent={setIntent}
+            sound={sound}
+            setSound={setSound}
+          />
         </div>
       </div>
       <div id="atlas" className={styles.atlas}>

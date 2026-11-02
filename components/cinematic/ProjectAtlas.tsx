@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useSyncExternalStore, type MouseEvent } from "react";
+import { useSyncExternalStore } from "react";
 import styles from "./atlas.module.css";
 
 type Language = "en" | "tr";
@@ -82,12 +82,6 @@ function subscribe(notify: () => void) {
 }
 const firstPlate = () => 0;
 
-function choosePlate(event: MouseEvent<HTMLAnchorElement>, slug: string) {
-  if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  event.preventDefault();
-  window.location.hash = fragment(slug);
-}
-
 export default function ProjectAtlas({ lang }: { lang: Language }) {
   const index = useSyncExternalStore(subscribe, selectedPlate, firstPlate);
   const local = lang === "tr" ? 1 : 0;
@@ -113,8 +107,8 @@ export default function ProjectAtlas({ lang }: { lang: Language }) {
             {plates.map((plate, i) => (
               <a
                 key={plate.slug}
-                href={"/work/" + plate.slug}
-                onClick={(event) => choosePlate(event, plate.slug)}
+                id={"atlas-" + plate.slug}
+                href={fragment(plate.slug)}
                 aria-label={(lang === "tr" ? "Önizle: " : "Preview: ") + plate.title}
                 aria-current={i === index ? "true" : undefined}
               >

@@ -1,5 +1,31 @@
 import { expect, test } from "@playwright/test";
 
+test("a shared atlas selection survives a visit to its actual project", async ({ page }) => {
+  await page.goto("/cinematic#atlas-dropspot");
+  const plate = page.getByRole("link", { name: "Preview: DropSpot" });
+  await expect(plate).toHaveAttribute("aria-current", "true");
+  await expect(plate).toBeInViewport();
+  await page.getByRole("link", { name: "Open project" }).click();
+  await expect(page).toHaveURL(/\/work\/dropspot$/);
+  await page.goBack();
+  await expect(plate).toHaveAttribute("aria-current", "true");
+});
+
+test("a viewer can play, pause, change cuts and retain playback preferences", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/cinematic");
+  await page.getByRole("button", { name: "Play film" }).click();
+  await expect(page.getByRole("button", { name: "Pause film" })).toBeVisible();
+  await page.getByRole("button", { name: "Sound off" }).click();
+  await page.getByRole("button", { name: "Pause film" }).click();
+  await page.getByRole("link", { name: "B · The absence" }).click();
+  await expect(page.getByRole("button", { name: "Play film" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sound on" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+});
+
 test("the homepage opens the study and both edits are addressable by keyboard", async ({
   page,
 }) => {

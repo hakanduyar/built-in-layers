@@ -53,6 +53,7 @@
   display: grid;
 }
 .index a {
+  scroll-margin-block-start: 6rem;
   display: grid;
   grid-template-columns: 1.6rem 1fr auto;
   gap: 0.4rem;
