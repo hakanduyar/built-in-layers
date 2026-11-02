@@ -17,3 +17,7 @@ Baseline: `77ea5e1b05ed43ac5a34fa28204b0b2fc92e2f56`. Integration branch: `codex
 Production choices: Blender for staging and lighting, HTML/SVG/CSS and the existing Next.js/Motion stack for the atlas. Use Three.js only if real depth demonstrably improves understanding. No Unity runtime or paid services. Capture authentic timing in the inexpensive proof before committing resources to a heavier render. If real-world hand footage is unavailable, use original animated staging without representing it as a live-action shoot.
 
 Provider budget: Claude Code on a useful bounded source slice, subject to included session capacity, weekly limit and PaidOFF; independent OpenAI planning/review, with OpenAI production fallback explicitly allowed. Do not repeat unchanged checks across lanes. No new provider infrastructure for this experiment.
+
+## Delivery
+
+P01–P08 are delivered on the experiment branch. P09 uses the existing GitHub/Vercel branch preview and keeps the production branch untouched. The two cuts remain available for artistic comparison; live-action capture was not used. The actual verification and baseline exceptions are in [CINEMATIC_ACCEPTANCE.md](CINEMATIC_ACCEPTANCE.md). The native author route supported existing-file edits, so the atlas's new files were implemented with the authorized OpenAI fallback and Claude Code handled the contextual Work index entry. No duplicate authors owned a path.
