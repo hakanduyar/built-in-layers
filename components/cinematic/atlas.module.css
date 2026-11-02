@@ -55,9 +55,9 @@
 .index a {
   scroll-margin-block-start: 6rem;
   display: grid;
-  grid-template-columns: 1.6rem 1fr auto;
+  grid-template-columns: 3rem 1.6rem 1fr auto;
   gap: 0.4rem;
-  align-items: baseline;
+  align-items: center;
   padding: 1.1rem 0.7rem;
   border-bottom: 1px solid var(--rule);
   color: #40483e;
@@ -71,6 +71,17 @@
   font:
     450 clamp(1rem, 1.45vw, 1.6rem)/1.15 var(--font-display),
     sans-serif;
+}
+.thumb {
+  width: 3rem;
+  height: 2rem;
+  object-fit: cover;
+  border: 1px solid currentColor;
+  opacity: 0.68;
+}
+.index a[aria-current] .thumb,
+.index a:focus-visible .thumb {
+  opacity: 1;
 }
 .index a b {
   opacity: 0;
@@ -154,15 +165,23 @@
     gap: 1.25rem;
   }
   .index {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.3rem 0.6rem;
   }
   .index a {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
     align-items: center;
     padding: 0.55rem 0.65rem;
     min-height: 44px;
+  }
+  .index a small {
+    display: none;
+  }
+  .thumb {
+    width: 1.8rem;
+    height: 1.5rem;
   }
   .index a b {
     display: none;

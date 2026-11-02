@@ -112,6 +112,13 @@ export default function ProjectAtlas({ lang }: { lang: Language }) {
                 aria-label={(lang === "tr" ? "Önizle: " : "Preview: ") + plate.title}
                 aria-current={i === index ? "true" : undefined}
               >
+                <Image
+                  className={styles.thumb}
+                  src={imagePath(plate)}
+                  width={72}
+                  height={44}
+                  alt=""
+                />
                 <small>{plateNumber(i)}</small>
                 <span>{plate.title}</span>
                 <b aria-hidden="true">↗</b>

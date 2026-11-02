@@ -108,6 +108,7 @@ function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & Playbac
     const picture = video.current;
     if (!track || !picture) return;
     if (sound && playing && active) {
+      let listening = true;
       const synchronize = () => {
         if (Number.isFinite(track.duration) && track.duration > 0) {
           const position = picture.currentTime % track.duration;
@@ -117,8 +118,11 @@ function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & Playbac
       synchronize();
       track.addEventListener("loadedmetadata", synchronize);
       picture.addEventListener("timeupdate", synchronize);
-      void track.play().catch(() => setSound(false));
+      void track.play().catch(() => {
+        if (listening) setSound(false);
+      });
       return () => {
+        listening = false;
         track.removeEventListener("loadedmetadata", synchronize);
         picture.removeEventListener("timeupdate", synchronize);
         track.pause();
