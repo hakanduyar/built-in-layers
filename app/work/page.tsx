@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TextLink } from "@/components/ui/TextLink";
 import { pendingCopy } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
 import type { Tier } from "@/lib/content/schemas";
@@ -33,6 +34,9 @@ export default function WorkPage() {
     <Container className="py-16">
       <SectionHeading label="WORK" />
       <h1 className="mt-4 font-display text-heading-l text-ink">Selected systems</h1>
+      <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
+        <TextLink href="/cinematic#atlas">Explore these systems in the atlas</TextLink>
+      </p>
 
       {groups.length === 0 ? (
         <p className="mt-4 max-w-measure font-display text-body text-ink-muted">
