@@ -64,6 +64,7 @@ function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & Playbac
   const [reduce, setReduce] = useState(true);
   const [error, setError] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
   const base = "/cinematic/chess-" + cut;
   const active = visible && !error && (intent ?? !reduce);
 
@@ -83,6 +84,7 @@ function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & Playbac
     );
     observer.observe(el);
     motion();
+    setReady(true);
     preference.addEventListener("change", motion);
     document.addEventListener("visibilitychange", update);
     return () => {
@@ -157,11 +159,18 @@ function Film({ cut, lang, intent, setIntent, sound, setSound }: Props & Playbac
         </span>
         <div>
           <button
-            disabled={error}
+            disabled={!ready || error}
             onClick={() => {
-              if (!playing && active && video.current)
-                void video.current.play().catch(() => setPlaying(false));
-              setIntent(!playing);
+              const player = video.current;
+              if (!player) return;
+              if (playing) {
+                setIntent(false);
+                player.pause();
+              } else {
+                setIntent(true);
+                if (!player.hasAttribute("src")) player.src = base + ".mp4";
+                void player.play().catch(() => setPlaying(false));
+              }
             }}
           >
             {playing ? words.pause : words.play}
