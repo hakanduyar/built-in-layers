@@ -1,5 +1,17 @@
 import { expect, test } from "@playwright/test";
 
+test("the existing work index offers a keyboard route into the project atlas", async ({ page }) => {
+  await page.goto("/work");
+  const entry = page.getByRole("link", { name: "Explore these systems in the atlas" });
+  await entry.focus();
+  await expect(entry).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/cinematic#atlas$/);
+  await expect(
+    page.locator("#atlas").getByRole("heading", { name: "Project atlas." }),
+  ).toBeInViewport();
+});
+
 test("a shared atlas selection survives a visit to its actual project", async ({ page }) => {
   await page.goto("/cinematic#atlas-dropspot");
   const plate = page.getByRole("link", { name: "Preview: DropSpot" });
