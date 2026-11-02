@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { MotionValue } from "motion/react";
-import { ramp, signalPhase } from "@/lib/spatial/signalPhase";
+import { projectTour, ramp, signalPhase, type TourProject } from "@/lib/spatial/signalPhase";
 import styles from "./SignalPassage.module.css";
 
 export type SignalFrame = { title: string; src: string; details: string[] };
@@ -17,7 +17,7 @@ const planes = [
 ];
 
 // Vertical registration spines, each with a deliberately different run of
-// exposures. The incoming project's screenshots sit deepest in the field.
+// exposures. The incoming project's evidence sits deepest in the field.
 const contactTracks = [
   [4, 31, 6, 2],
   [15, 64, 8, 3],
@@ -30,32 +30,55 @@ const contactTracks = [
   [94, 8, 6, 3],
 ] as const;
 
-export function SignalPassage({
+type PassageProps = { progress: MotionValue<number>; frames: SignalFrame[]; mobile: boolean };
+
+export function SignalPassage({ progress, frames, mobile }: PassageProps) {
+  const [leg, setLeg] = useState(-1);
+  useEffect(() => {
+    const select = (value: number) => {
+      const index = projectTour.findIndex((from, i) => {
+        const to = projectTour[i + 1];
+        if (!to) return false;
+        const t = signalPhase(value, mobile, from, to);
+        return t > -0.08 && t < 1.04;
+      });
+      setLeg(index);
+    };
+    select(progress.get());
+    return progress.on("change", select);
+  }, [mobile, progress]);
+  const from = projectTour[leg];
+  const to = projectTour[leg + 1];
+  const destination = frames[leg + 1];
+  if (!from || !to || !destination) return null;
+  return <Exposure key={from} {...{ progress, frames, mobile, leg, from, to, destination }} />;
+}
+
+function Exposure({
   progress,
   frames,
   mobile,
-}: {
-  progress: MotionValue<number>;
-  frames: SignalFrame[];
-  mobile: boolean;
-}) {
+  leg,
+  from,
+  to,
+  destination,
+}: PassageProps & { leg: number; from: TourProject; to: TourProject; destination: SignalFrame }) {
   const stage = useRef<HTMLDivElement>(null);
   const landing = useRef<HTMLImageElement>(null);
-  const destination = frames.at(-1);
 
   useEffect(() => {
     const field = stage.current;
     const lock = landing.current;
     if (!field || !lock || !destination) return;
     const target = document.querySelector<HTMLImageElement>(
-      `[data-scene="dropspot"] [data-project-ground-source] img[src="${destination.src}"]`,
+      `[data-scene="${to}"] [data-project-ground-source] img[src="${destination.src}"]`,
     );
     if (!target) return;
     let raf = 0;
     function paint() {
       raf = 0;
       if (!field || !lock || !target) return;
-      const t = signalPhase(progress.get(), mobile);
+      const t = signalPhase(progress.get(), mobile, from, to);
       field.hidden = t <= 0 || t >= 1;
       if (field.hidden) {
         target.style.removeProperty("opacity");
@@ -70,13 +93,26 @@ export function SignalPassage({
       const reveal = ramp(0.33, 0.7, t);
       const rect = t >= 0.68 ? target.getBoundingClientRect() : null;
       const mix = (a: number, b: number) => a + (b - a) * settle;
-      const width = w * (0.34 + 0.54 * reveal);
-      const height = h * (0.32 + 0.48 * reveal);
-      const x = w * (1.24 - 0.74 * reveal) - width / 2;
+      const width = w * (0.34 + (leg === 2 ? 0.54 : 0.36) * reveal);
+      const height = h * (0.32 + (leg === 2 ? 0.48 : 0.31) * reveal);
+      const center = 1.24 - 0.74 * reveal;
+      const x = w * (leg === 1 ? 1 - center : center) - width / 2;
       const y = h * (0.49 - 0.04 * reveal) - height / 2;
       lock.style.transform = `translate3d(${mix(x, rect?.left ?? x)}px,${mix(y, rect?.top ?? y)}px,0)`;
       lock.style.width = `${mix(width, rect?.width ?? width)}px`;
       lock.style.height = `${mix(height, rect?.height ?? height)}px`;
+      if (rect && target.parentElement?.style.getPropertyValue("--detail-ar")) {
+        const mask = target.parentElement.getBoundingClientRect();
+        const inset = [
+          mask.top - rect.top,
+          rect.right - mask.right,
+          rect.bottom - mask.bottom,
+          mask.left - rect.left,
+        ];
+        lock.style.clipPath = `inset(${inset.map((edge) => Math.max(0, edge) * settle + "px").join(" ")})`;
+      } else {
+        lock.style.clipPath = "";
+      }
       field.style.setProperty("--travel", String(t));
       field.style.setProperty("--enter", String(ramp(0, 0.17, t) * (1 - ramp(0.95, 1, t))));
       field.style.setProperty("--paper", String(1 - ramp(0.79, 0.97, t)));
@@ -96,16 +132,27 @@ export function SignalPassage({
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", schedule);
     };
-  }, [destination, mobile, progress]);
+  }, [destination, from, leg, mobile, progress, to]);
 
-  if (!destination) return null;
-  const contacts = [destination.src, ...destination.details];
+  const contacts = [destination.src, ...destination.details.slice(0, 3)];
+  const neighboring = frames.slice(Math.max(0, leg - 2), leg + 1);
+  const firstDetail = destination.details[0];
+  const traveling = firstDetail
+    ? [
+        ...neighboring,
+        {
+          ...destination,
+          src: firstDetail,
+          details: contacts.filter((src) => src !== firstDetail),
+        },
+      ]
+    : neighboring;
   return (
-    <div ref={stage} data-signal-passage="" className={styles.stage} aria-hidden="true" hidden>
+    <div ref={stage} data-signal-passage={to} className={styles.stage} aria-hidden="true" hidden>
       <div className={styles.paper} />
       <div className={styles.field}>
         {contactTracks.map(([left, top, width, count], i) => {
-          if (mobile && i % 2 === 1) return null;
+          if ((mobile && i % 2 === 1) || (leg < 2 && i % 3 === 1)) return null;
           return (
             <div
               key={left}
@@ -135,19 +182,20 @@ export function SignalPassage({
         })}
       </div>
       <div className={styles.field}>
-        {frames.slice(0, -1).map((frame, i) => {
-          const plane = planes[i];
+        {traveling.map((frame, i) => {
+          const plane = planes[i === traveling.length - 1 ? 3 : i];
           if (!plane) return null;
           return (
             <div
               key={frame.src}
+              data-foreground={i === traveling.length - 1 || undefined}
               className={styles.column}
               style={
                 {
                   "--x": plane.x,
                   "--y": plane.y,
                   "--width": plane.width,
-                  "--speed": plane.travel,
+                  "--speed": plane.travel * (leg === 1 ? -0.8 : 1),
                 } as CSSProperties
               }
             >
@@ -156,7 +204,7 @@ export function SignalPassage({
                 <img src={frame.src} alt="" draggable={false} />
                 {frame.details.length > 0 && (
                   <div className={styles.details}>
-                    {frame.details.map((src) => (
+                    {frame.details.slice(0, 2).map((src) => (
                       // eslint-disable-next-line @next/next/no-img-element -- registered project detail
                       <img key={src} src={src} alt="" draggable={false} />
                     ))}
@@ -177,8 +225,8 @@ export function SignalPassage({
         draggable={false}
       />
       <div className={styles.register}>
-        <i />
-        03—04<span>{destination.title}</span>
+        <i />0{leg + 1}—0{leg + 2}
+        <span>{destination.title}</span>
         <i />
       </div>
       <div className={styles.slip} />

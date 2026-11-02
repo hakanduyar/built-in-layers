@@ -106,10 +106,10 @@
   }
 }
 @media (max-width: 1023px) {
-  .column:nth-child(2) {
+  .column:nth-child(2):not([data-foreground]) {
     display: none;
   }
-  .column:nth-child(4) {
+  .column[data-foreground] {
     width: 67%;
   }
   .register {
@@ -136,7 +136,7 @@
   top: calc(100% + 0.5rem);
   width: 60%;
 }
-.column:nth-child(4) .details {
+.column[data-foreground] .details {
   width: 30%;
 }
 @media (max-width: 1023px) {

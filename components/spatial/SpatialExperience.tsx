@@ -13,6 +13,7 @@ import {
   workIndexLabel,
 } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
+import { projectTour } from "@/lib/spatial/signalPhase";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
 import { representativeAsset, systemAnnotation } from "@/lib/spatial/systemPov";
 import { WORLD_UNIT } from "@/lib/spatial/worldFit";
@@ -42,7 +43,7 @@ import { WORLD_UNIT } from "@/lib/spatial/worldFit";
 /** V7 (OWNER REORDER): the four projects the tour stages as full scenes, in
  *  the owner-required sequence — Software Factory first as the foundational
  *  system layer, then Kıvılcım, JointLedger, DropSpot. */
-const TOUR_SLUGS = ["software-factory", "kivilcim", "jointledger", "dropspot"] as const;
+const TOUR_SLUGS = projectTour;
 
 /** The tour's own size, in words, for the handoff sentence. Derived rather than
  *  written, because the sentence it feeds went stale the moment the tour grew
@@ -154,39 +155,26 @@ export function SpatialExperience() {
     );
   }
 
-  const destination = representativeAsset(dropspot);
-  const detail = dropspot.images.find(
-    (image) => image.assetType === "real-screenshot" && image.src !== destination?.src,
-  );
-  const exposures = [
-    [softwareFactory, representativeAsset(softwareFactory)],
-    [kivilcim, representativeAsset(kivilcim)],
-    [jointledger, representativeAsset(jointledger)],
-    [dropspot, detail],
-    [dropspot, destination],
-  ] as const;
-  const signalFrames = exposures.flatMap(([project, image]) =>
-    image && image.assetType !== "provisional-illustration"
-      ? [
-          {
-            title: project.title,
-            src: image.src,
-            details: project.images
-              .filter(
-                (candidate) =>
-                  candidate.src !== image.src && candidate.assetType !== "provisional-illustration",
-              )
-              .slice(0, 2)
-              .map((candidate) => candidate.src),
-          },
-        ]
-      : [],
-  );
+  const signalFrames = [softwareFactory, kivilcim, jointledger, dropspot].flatMap((project) => {
+    const lead = representativeAsset(project);
+    if (!lead || lead.assetType === "provisional-illustration") return [];
+    return [
+      {
+        title: project.title,
+        src: lead.src,
+        details: project.images
+          .filter(
+            (image) => image.src !== lead.src && image.assetType !== "provisional-illustration",
+          )
+          .map((image) => image.src),
+      },
+    ];
+  });
   return (
     <section aria-label="Spatial system tour">
       <SpatialCamera
         systemsWord={transitionWord}
-        signalFrames={signalFrames.length === exposures.length ? signalFrames : []}
+        signalFrames={signalFrames.length === TOUR_SLUGS.length ? signalFrames : []}
         // V14 (owner findings A, §8) REMOVED THE TRAVEL MATERIAL. The distant
         // plane carried five oversized crops of real project titles, placed
         // 55% along the leg into each scene, and the near plane seven
