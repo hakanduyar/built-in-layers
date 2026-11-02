@@ -94,7 +94,7 @@
   inset: 41% 0 auto;
   height: 2px;
   background: var(--color-paper);
-  opacity: var(--slip);
+  opacity: 0;
 }
 @media (hover: hover) and (pointer: fine) {
   .cell img {
@@ -177,4 +177,32 @@
 }
 .paper {
   background: linear-gradient(115deg, #e7e8e4, var(--color-paper) 60%, #e1e3df);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-signal-pulse] .register span {
+    animation: signal-drop 130ms linear;
+  }
+  .stage[data-signal-pulse] .slip {
+    animation: signal-line 120ms linear;
+  }
+}
+@keyframes signal-drop {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  32%,
+  62% {
+    opacity: 0.19;
+  }
+}
+@keyframes signal-line {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.22;
+  }
 }

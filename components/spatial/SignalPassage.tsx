@@ -75,10 +75,13 @@ function Exposure({
     );
     if (!target) return;
     let raf = 0;
+    let previousPhase: number | null = null;
     function paint() {
       raf = 0;
       if (!field || !lock || !target) return;
       const t = signalPhase(progress.get(), mobile, from, to);
+      const crossed = previousPhase !== null && previousPhase < 0.44 !== t < 0.44;
+      previousPhase = t;
       field.hidden = t <= 0 || t >= 1;
       if (field.hidden) {
         target.style.removeProperty("opacity");
@@ -118,7 +121,7 @@ function Exposure({
       field.style.setProperty("--paper", String(1 - ramp(0.79, 0.97, t)));
       field.style.setProperty("--ink", String(1 - ramp(0.46, 0.72, t)));
       field.style.setProperty("--color", String(1 - reveal));
-      field.style.setProperty("--slip", t > 0.43 && t < 0.47 ? "0.22" : "0");
+      if (crossed && t > 0.26 && t < 0.59) field.dataset.signalPulse = "";
     }
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(paint);
@@ -224,7 +227,12 @@ function Exposure({
         alt=""
         draggable={false}
       />
-      <div className={styles.register}>
+      <div
+        className={styles.register}
+        onAnimationEnd={() => {
+          if (stage.current) delete stage.current.dataset.signalPulse;
+        }}
+      >
         <i />0{leg + 1}—0{leg + 2}
         <span>{destination.title}</span>
         <i />
