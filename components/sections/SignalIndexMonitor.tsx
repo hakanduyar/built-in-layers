@@ -149,14 +149,14 @@ export function SignalIndexMonitor({
           }}
         >
           <div className={styles.screenBody}>
-            <header className={styles.screenBar}>
+            <div className={styles.screenBar}>
               <span aria-live="polite">
                 {active ? String(focus + 1).padStart(2, "0") + " / " + active.title : ""}
               </span>
               <button type="button" autoFocus onClick={() => dialog.current?.close()}>
                 Close ×
               </button>
-            </header>
+            </div>
             <div className={styles.screenPlate}>
               {expanded && active?.plate && (
                 <Image
