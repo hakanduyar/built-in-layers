@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import cinematicStyles from "@/components/cinematic/study.module.css";
 import { AboutPreview } from "@/components/sections/AboutPreview";
 import { SelectedSystems } from "@/components/sections/SelectedSystems";
 import { FieldNotes } from "@/components/sections/FieldNotes";
@@ -57,6 +59,12 @@ export default function Home() {
           publishedSystems.map((project) => [project.slug, project.title]),
         )}
       />
+      <Link className={cinematicStyles.invitation} href="/cinematic">
+        <span>Project atlas / Film study</span>
+        <strong>
+          Enter the atlas <span aria-hidden="true">↗</span>
+        </strong>
+      </Link>
       <SpatialExperience />
       {/* Spatial V5 (docs/DESIGN_SYSTEM.md §19.9): the lower homepage keeps its exact semantic order
           and its exact content, but is composed along a deterministic drift

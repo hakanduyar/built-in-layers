@@ -1,0 +1,249 @@
+.cover {
+  --gold: #a78c50;
+  --paper: #f2efe0;
+  color: var(--paper);
+  background: #212522;
+  padding: 0 clamp(1rem, 3.4vw, 4rem);
+}
+.margin,
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 112rem;
+  margin: auto;
+  font:
+    0.68rem/1.4 var(--font-mono),
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.095em;
+}
+.margin {
+  color: #d1c5a7;
+  flex-wrap: wrap;
+  padding-block: 0.2rem;
+  border-bottom: 1px solid #605e50;
+}
+.margin > span,
+.margin nav a {
+  white-space: nowrap;
+}
+.field {
+  position: relative;
+  isolation: isolate;
+  max-width: 112rem;
+  margin: auto;
+  height: clamp(37rem, 49vw, 55rem);
+  background-image: radial-gradient(circle, #bba56844 0.7px, transparent 1px);
+  background-size: 18px 18px;
+}
+.traces {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+.traces path {
+  vector-effect: non-scaling-stroke;
+  fill: none;
+  stroke: #99845a;
+  stroke-width: 1;
+  opacity: 0.65;
+}
+.traces path + path {
+  stroke-dasharray: 3 8;
+  opacity: 0.4;
+}
+.title {
+  position: absolute;
+  left: 1.2%;
+  top: 20%;
+  width: 35%;
+}
+.title p {
+  color: #d6bd82;
+  font:
+    0.72rem var(--font-mono),
+    monospace;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.title h1 {
+  margin: 0.9rem 0;
+  font:
+    520 clamp(4.3rem, 7.5vw, 8.8rem)/0.88 var(--font-display),
+    sans-serif;
+  letter-spacing: -0.065em;
+  word-spacing: 0.03em;
+}
+.title em {
+  color: #e1c58b;
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+}
+.title > span {
+  display: block;
+  max-width: 30ch;
+  color: #d7d9c9;
+  line-height: 1.45;
+  font-size: clamp(0.92rem, 1.1vw, 1.18rem);
+}
+.sheet {
+  position: absolute;
+  display: block;
+  background: var(--paper);
+  color: #232721;
+  padding: clamp(0.3rem, 0.45vw, 0.65rem);
+  border: 1px solid #e2decf;
+  box-shadow:
+    0.35rem 0.5rem 0 #10141088,
+    0 1rem 2rem #0d120e38;
+  rotate: var(--tilt);
+  text-decoration: none;
+  transition:
+    translate 0.23s ease,
+    rotate 0.23s ease;
+}
+.sheet[data-order="0"] {
+  left: 36.5%;
+  top: 7%;
+  width: 32%;
+  --tilt: -3deg;
+}
+.sheet[data-order="1"] {
+  left: 74%;
+  top: 4%;
+  width: 19%;
+  --tilt: 4deg;
+}
+.sheet[data-order="2"] {
+  left: 73%;
+  top: 44%;
+  width: 22%;
+  --tilt: -2deg;
+}
+.sheet[data-order="3"] {
+  left: 44%;
+  top: 64%;
+  width: 22%;
+  --tilt: 2deg;
+}
+.sheet[data-order="4"] {
+  left: 10%;
+  top: 71%;
+  width: 18%;
+  --tilt: -4deg;
+}
+.matte {
+  overflow: hidden;
+  border: 1px solid #b6b4a8;
+}
+.matte img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.95;
+  object-fit: cover;
+  object-position: top;
+}
+.sheet[data-order="0"] .matte img {
+  aspect-ratio: 1.7;
+}
+.caption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.45rem 0.1rem 0.08rem;
+}
+.caption small {
+  color: #69532a;
+  font:
+    0.64rem var(--font-mono),
+    monospace;
+}
+.caption span {
+  font-size: clamp(0.72rem, 0.99vw, 1.12rem);
+  font-weight: 600;
+}
+.caption b {
+  margin-left: auto;
+  color: #66542b;
+}
+.sheet:hover,
+.sheet:focus-visible {
+  translate: 0 -0.35rem;
+  rotate: 0deg;
+  z-index: 1;
+}
+.cover :is(a, button):focus-visible {
+  outline: 3px solid #ead68f;
+  outline-offset: 4px;
+}
+.foot {
+  border-top: 1px solid #605e50;
+  padding-block: 0.45rem;
+  color: #d8c594;
+}
+.margin nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.margin a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.margin a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 760px) {
+  .field {
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+    padding: 2.5rem 0.5rem 2rem;
+    align-items: center;
+  }
+  .title,
+  .sheet {
+    position: static;
+  }
+  .title {
+    width: auto;
+    grid-column: 1 / -1;
+  }
+  .title h1 {
+    font-size: clamp(4rem, 12vw, 6rem);
+  }
+  .title > span {
+    max-width: 39ch;
+  }
+  .sheet[data-order] {
+    width: auto;
+  }
+  .sheet[data-order="0"] {
+    grid-column: 1 / -1;
+    width: 80%;
+    justify-self: center;
+    margin: 0.6rem 0;
+  }
+  .sheet[data-order="0"] .matte img {
+    aspect-ratio: 2.3;
+  }
+  .caption {
+    gap: 0.28rem;
+  }
+  .caption span {
+    font-size: 0.83rem;
+  }
+  .foot {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    transition: none;
+  }
+}
