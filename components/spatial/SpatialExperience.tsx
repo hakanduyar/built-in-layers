@@ -14,7 +14,7 @@ import {
 } from "@/data/copy";
 import { getProjectsByTier } from "@/lib/content/work";
 import { heroLeadRule } from "@/lib/spatial/sceneRoute";
-import { systemAnnotation } from "@/lib/spatial/systemPov";
+import { representativeAsset, systemAnnotation } from "@/lib/spatial/systemPov";
 import { WORLD_UNIT } from "@/lib/spatial/worldFit";
 
 // Spatial Portfolio V4 (feature/spatial-portfolio-v4, not merged to main --
@@ -154,10 +154,39 @@ export function SpatialExperience() {
     );
   }
 
+  const destination = representativeAsset(dropspot);
+  const detail = dropspot.images.find(
+    (image) => image.assetType === "real-screenshot" && image.src !== destination?.src,
+  );
+  const exposures = [
+    [softwareFactory, representativeAsset(softwareFactory)],
+    [kivilcim, representativeAsset(kivilcim)],
+    [jointledger, representativeAsset(jointledger)],
+    [dropspot, detail],
+    [dropspot, destination],
+  ] as const;
+  const signalFrames = exposures.flatMap(([project, image]) =>
+    image && image.assetType !== "provisional-illustration"
+      ? [
+          {
+            title: project.title,
+            src: image.src,
+            details: project.images
+              .filter(
+                (candidate) =>
+                  candidate.src !== image.src && candidate.assetType !== "provisional-illustration",
+              )
+              .slice(0, 2)
+              .map((candidate) => candidate.src),
+          },
+        ]
+      : [],
+  );
   return (
     <section aria-label="Spatial system tour">
       <SpatialCamera
         systemsWord={transitionWord}
+        signalFrames={signalFrames.length === exposures.length ? signalFrames : []}
         // V14 (owner findings A, §8) REMOVED THE TRAVEL MATERIAL. The distant
         // plane carried five oversized crops of real project titles, placed
         // 55% along the leg into each scene, and the near plane seven

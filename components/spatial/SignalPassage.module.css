@@ -1,0 +1,180 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  opacity: var(--enter, 0);
+  color: var(--color-ink);
+}
+.stage[hidden] {
+  display: none;
+}
+.paper,
+.field,
+.slip {
+  position: absolute;
+  inset: 0;
+}
+.paper {
+  background: var(--color-paper);
+  opacity: var(--paper);
+}
+.field,
+.register {
+  opacity: var(--ink);
+}
+.column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--x) * 100%);
+  width: calc(var(--width) * 100%);
+  transform: translate3d(calc((0.23 - var(--travel)) * var(--speed) * 100vw), 0, 0);
+  border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+.cell {
+  position: absolute;
+  top: calc(var(--y) * 100%);
+  width: 100%;
+  translate: 0 -50%;
+  color: var(--color-ink-muted);
+}
+.cell img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.1;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--color-line);
+  filter: grayscale(0.93) contrast(1.06) brightness(0.88);
+}
+.cell span,
+.register {
+  font:
+    10px/1.5 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cell span {
+  display: block;
+  padding: 0.4rem 0.15rem;
+}
+.landing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(var(--color));
+}
+.register {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+  padding: 0.35rem 0.8rem;
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+.register i {
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+}
+.register span {
+  letter-spacing: 0.03em;
+}
+.slip {
+  inset: 41% 0 auto;
+  height: 2px;
+  background: var(--color-paper);
+  opacity: var(--slip);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cell img {
+    pointer-events: auto;
+    transition: filter 180ms ease;
+  }
+  .cell img:hover {
+    filter: grayscale(0.35) contrast(1.04);
+  }
+}
+@media (max-width: 1023px) {
+  .column:nth-child(2) {
+    display: none;
+  }
+  .column:nth-child(4) {
+    width: 67%;
+  }
+  .register {
+    font-size: 9px;
+    gap: 0.4rem;
+  }
+  .register i {
+    width: 8px;
+  }
+}
+.details {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 0.65rem);
+  width: 45%;
+  display: grid;
+  gap: 0.4rem;
+}
+.details img {
+  aspect-ratio: 2.8;
+}
+.column:nth-child(2n) .details {
+  bottom: auto;
+  top: calc(100% + 0.5rem);
+  width: 60%;
+}
+.column:nth-child(4) .details {
+  width: 30%;
+}
+@media (max-width: 1023px) {
+  .details img:nth-child(2) {
+    display: none;
+  }
+}
+.contact {
+  position: absolute;
+  inset-block: 0;
+  transform: translate3d(calc((0.32 - var(--travel)) * var(--speed) * 100vw), 0, 0);
+  border-left: 1px solid rgb(58 70 75 / 18%);
+}
+.contact > div {
+  position: absolute;
+  top: var(--top);
+  width: 100%;
+  display: grid;
+  gap: 3px;
+}
+.contact i {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.95;
+  background-color: #849197;
+  background-size: 220% auto;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;
+  filter: grayscale(0.78) contrast(0.92) blur(0.35px);
+  opacity: 0.82;
+}
+.contact i:nth-child(2) {
+  aspect-ratio: 3.3;
+}
+.contact i:nth-child(3) {
+  width: 76%;
+  margin-top: 0.45rem;
+}
+.paper {
+  background: linear-gradient(115deg, #e7e8e4, var(--color-paper) 60%, #e1e3df);
+}

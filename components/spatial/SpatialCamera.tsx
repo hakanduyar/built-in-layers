@@ -20,6 +20,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import { ProjectPlane } from "@/components/spatial/ProjectPlane";
+import { SignalPassage, type SignalFrame } from "@/components/spatial/SignalPassage";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
 import { SystemsWord } from "@/components/spatial/SystemsWord";
 import { SystemPOV } from "@/components/spatial/SystemPOV";
@@ -94,6 +95,7 @@ type ComposedSceneId = Exclude<SceneId, "tail">;
 type SpatialCameraProps = Record<ComposedSceneId, ReactNode> & {
   /** The giant expressive word the structural plane opens behind. */
   systemsWord: string;
+  signalFrames: SignalFrame[];
   /** Distant/near travel material, rendered on their own depth planes. */
   distantMaterial?: ReactNode;
   nearMaterial?: ReactNode;
@@ -892,6 +894,7 @@ function useRouteGovernor(
 
 export function SpatialCamera({
   systemsWord,
+  signalFrames,
   distantMaterial,
   nearMaterial,
   surfaceReturn,
@@ -1380,6 +1383,7 @@ export function SpatialCamera({
           </motion.div>
         )}
 
+        <SignalPassage progress={progress} frames={signalFrames} mobile={mobile} />
         <SceneBreak progress={progress} />
       </div>
     </div>
