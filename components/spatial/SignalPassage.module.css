@@ -235,3 +235,54 @@
   background-color: #c6cecd;
   border-top: 2px solid rgb(48 73 83 / 52%);
 }
+.field {
+  perspective-origin: calc(50% + var(--look-x, 0) * 30%) calc(46% + var(--look-y, 0) * 28%);
+}
+.contact,
+.column {
+  translate: calc(var(--look-x, 0) * var(--stride) * -0.54px)
+    calc(var(--look-y, 0) * var(--stride) * -0.42px) calc(var(--look-z, 0) * var(--stride) * 0.85px);
+}
+.cameraControl {
+  position: absolute;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  z-index: 2;
+  font:
+    11px/1.3 var(--font-mono),
+    monospace;
+  color: var(--color-ink);
+}
+.stage[hidden] + .cameraControl {
+  display: none;
+}
+.cameraModes,
+.cameraTools {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+.cameraControl button {
+  padding: 0 12px;
+  min-width: 44px;
+  height: 44px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cameraControl button[aria-pressed="true"] {
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+.cameraControl .pad {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.cameraControl .pad:active {
+  cursor: grabbing;
+}

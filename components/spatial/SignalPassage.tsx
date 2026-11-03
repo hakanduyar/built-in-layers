@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { MotionValue } from "motion/react";
 import { projectTour, ramp, signalPhase, type TourProject } from "@/lib/spatial/signalPhase";
+import { scrollAtComposition } from "@/lib/spatial/passageScroll";
+import { sceneFocusProgress } from "@/lib/spatial/sceneRoute";
+import { CameraComparison, type CameraMode } from "./CameraComparison";
 import styles from "./SignalPassage.module.css";
 
 export type SignalFrame = { title: string; src: string; details: string[] };
@@ -37,6 +40,33 @@ type PassageProps = { progress: MotionValue<number>; frames: SignalFrame[]; mobi
 
 export function SignalPassage({ progress, frames, mobile }: PassageProps) {
   const [leg, setLeg] = useState(-1);
+  const [mode, setMode] = useState<CameraMode | null>(null);
+  const positioned = useRef(false);
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("camera");
+    if (requested !== "guided" && requested !== "look") return;
+    const spacer = document.querySelector<HTMLElement>("[data-route-spacer]");
+    if (!spacer || positioned.current) return;
+    const id = requestAnimationFrame(() => {
+      setMode(requested);
+      const start = sceneFocusProgress("software-factory", mobile);
+      const end = sceneFocusProgress("kivilcim", mobile);
+      const at = scrollAtComposition(start + (end - start) * 0.46, mobile);
+      window.scrollTo({
+        top:
+          spacer.getBoundingClientRect().top + scrollY + (spacer.clientHeight - innerHeight) * at,
+        behavior: "instant",
+      });
+      positioned.current = true;
+    });
+    return () => cancelAnimationFrame(id);
+  }, [mobile]);
+  function switchMode(next: CameraMode) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("camera", next);
+    window.history.replaceState(window.history.state, "", url);
+    setMode(next);
+  }
   useEffect(() => {
     const select = (value: number) => {
       const index = projectTour.findIndex((from, i) => {
@@ -54,7 +84,12 @@ export function SignalPassage({ progress, frames, mobile }: PassageProps) {
   const to = projectTour[leg + 1];
   const destination = frames[leg + 1];
   if (!from || !to || !destination) return null;
-  return <Exposure key={from} {...{ progress, frames, mobile, leg, from, to, destination }} />;
+  return (
+    <Exposure
+      key={from}
+      {...{ progress, frames, mobile, leg, from, to, destination, mode, switchMode }}
+    />
+  );
 }
 
 function Exposure({
@@ -65,7 +100,16 @@ function Exposure({
   from,
   to,
   destination,
-}: PassageProps & { leg: number; from: TourProject; to: TourProject; destination: SignalFrame }) {
+  mode,
+  switchMode,
+}: PassageProps & {
+  leg: number;
+  from: TourProject;
+  to: TourProject;
+  destination: SignalFrame;
+  mode: CameraMode | null;
+  switchMode: (mode: CameraMode) => void;
+}) {
   const stage = useRef<HTMLDivElement>(null);
   const landing = useRef<HTMLImageElement>(null);
 
@@ -160,101 +204,104 @@ function Exposure({
       ]
     : neighboring;
   return (
-    <div ref={stage} data-signal-passage={to} className={styles.stage} aria-hidden="true" hidden>
-      <div className={styles.paper} />
-      <div className={styles.field}>
-        {contactTracks.map(([left, top, width, count], i) => {
-          if (mobile && i % 3 === 2) return null;
-          return (
-            <div
-              key={left}
-              className={styles.contact}
-              style={
-                {
-                  left: `${left}%`,
-                  width: `${mobile ? width * 1.5 : width}%`,
-                  "--top": `${top}%`,
-                  "--speed": (i % 2 ? 0.58 : 0.12) * (leg === 1 ? -1 : 1),
-                  "--lift": i % 2 ? 28 : -14,
-                  "--depth": i % 2 ? 85 : -240,
-                  "--stride": i % 2 ? 145 : 60,
-                  "--drift-x": (i % 3 === 0 ? -1 : 1) * (mobile ? 5 : 12),
-                  "--drift-y": (i % 2 ? -1 : 1) * (mobile ? 12 : 24),
-                  "--delay": `-${i * 1.9}s`,
-                } as CSSProperties
-              }
-            >
-              <div>
-                {Array.from({ length: mobile ? 3 : count }, (_, n) => (
-                  <i
-                    key={n}
-                    style={{
-                      backgroundImage: `url("${archive[(leg * 5 + i * 3 + n) % archive.length]}")`,
-                      backgroundPosition: `${(i * 19 + n * 31) % 100}% ${(29 + n * 27) % 100}%`,
-                    }}
-                  />
-                ))}
+    <>
+      <div ref={stage} data-signal-passage={to} className={styles.stage} aria-hidden="true" hidden>
+        <div className={styles.paper} />
+        <div className={styles.field}>
+          {contactTracks.map(([left, top, width, count], i) => {
+            if (mobile && i % 3 === 2) return null;
+            return (
+              <div
+                key={left}
+                className={styles.contact}
+                style={
+                  {
+                    left: `${left}%`,
+                    width: `${mobile ? width * 1.5 : width}%`,
+                    "--top": `${top}%`,
+                    "--speed": (i % 2 ? 0.58 : 0.12) * (leg === 1 ? -1 : 1),
+                    "--lift": i % 2 ? 28 : -14,
+                    "--depth": i % 2 ? 85 : -240,
+                    "--stride": i % 2 ? 145 : 60,
+                    "--drift-x": (i % 3 === 0 ? -1 : 1) * (mobile ? 5 : 12),
+                    "--drift-y": (i % 2 ? -1 : 1) * (mobile ? 12 : 24),
+                    "--delay": `-${i * 1.9}s`,
+                  } as CSSProperties
+                }
+              >
+                <div>
+                  {Array.from({ length: mobile ? 3 : count }, (_, n) => (
+                    <i
+                      key={n}
+                      style={{
+                        backgroundImage: `url("${archive[(leg * 5 + i * 3 + n) % archive.length]}")`,
+                        backgroundPosition: `${(i * 19 + n * 31) % 100}% ${(29 + n * 27) % 100}%`,
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className={styles.field}>
-        {traveling.map((frame, i) => {
-          const plane = planes[i === traveling.length - 1 ? 3 : i];
-          if (!plane) return null;
-          return (
-            <div
-              key={frame.src}
-              data-foreground={i === traveling.length - 1 || undefined}
-              className={styles.column}
-              style={
-                {
-                  "--x": plane.x,
-                  "--y": plane.y,
-                  "--width": plane.width,
-                  "--depth": i === traveling.length - 1 ? 35 : -85,
-                  "--stride": i === traveling.length - 1 ? 200 : 110,
-                  "--speed": plane.travel * (leg === 1 ? -0.8 : 1),
-                } as CSSProperties
-              }
-            >
-              <div className={styles.cell}>
-                {/* eslint-disable-next-line @next/next/no-img-element -- original evidence plate */}
-                <img src={frame.src} alt="" draggable={false} />
-                {frame.details.length > 0 && (
-                  <div className={styles.details}>
-                    {frame.details.slice(0, 2).map((src) => (
-                      // eslint-disable-next-line @next/next/no-img-element -- registered project detail
-                      <img key={src} src={src} alt="" draggable={false} />
-                    ))}
-                  </div>
-                )}
-                <span>{frame.title}</span>
+            );
+          })}
+        </div>
+        <div className={styles.field}>
+          {traveling.map((frame, i) => {
+            const plane = planes[i === traveling.length - 1 ? 3 : i];
+            if (!plane) return null;
+            return (
+              <div
+                key={frame.src}
+                data-foreground={i === traveling.length - 1 || undefined}
+                className={styles.column}
+                style={
+                  {
+                    "--x": plane.x,
+                    "--y": plane.y,
+                    "--width": plane.width,
+                    "--depth": i === traveling.length - 1 ? 35 : -85,
+                    "--stride": i === traveling.length - 1 ? 200 : 110,
+                    "--speed": plane.travel * (leg === 1 ? -0.8 : 1),
+                  } as CSSProperties
+                }
+              >
+                <div className={styles.cell}>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- original evidence plate */}
+                  <img src={frame.src} alt="" draggable={false} />
+                  {frame.details.length > 0 && (
+                    <div className={styles.details}>
+                      {frame.details.slice(0, 2).map((src) => (
+                        // eslint-disable-next-line @next/next/no-img-element -- registered project detail
+                        <img key={src} src={src} alt="" draggable={false} />
+                      ))}
+                    </div>
+                  )}
+                  <span>{frame.title}</span>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- match the incoming scene's original image */}
+        <img
+          ref={landing}
+          className={styles.landing}
+          src={destination.src}
+          alt=""
+          draggable={false}
+        />
+        <div
+          className={styles.register}
+          onAnimationEnd={() => {
+            if (stage.current) delete stage.current.dataset.signalPulse;
+          }}
+        >
+          <i />0{leg + 1}—0{leg + 2}
+          <span>{destination.title}</span>
+          <i />
+        </div>
+        <div className={styles.slip} />
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element -- match the incoming scene's original image */}
-      <img
-        ref={landing}
-        className={styles.landing}
-        src={destination.src}
-        alt=""
-        draggable={false}
-      />
-      <div
-        className={styles.register}
-        onAnimationEnd={() => {
-          if (stage.current) delete stage.current.dataset.signalPulse;
-        }}
-      >
-        <i />0{leg + 1}—0{leg + 2}
-        <span>{destination.title}</span>
-        <i />
-      </div>
-      <div className={styles.slip} />
-    </div>
+      {mode && <CameraComparison key={mode} stage={stage} mode={mode} switchMode={switchMode} />}
+    </>
   );
 }
