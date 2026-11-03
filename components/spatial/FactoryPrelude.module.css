@@ -1,0 +1,28 @@
+.field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: clip;
+  mix-blend-mode: multiply;
+}
+.field[hidden] {
+  display: none;
+}
+.field i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  background-size: 1600px 1000px;
+  background-repeat: no-repeat;
+}
+@media (max-width: 1023px) {
+  .field i:nth-child(2) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field {
+    display: none;
+  }
+}

@@ -155,6 +155,11 @@ describe("camera presentation", () => {
       }
     }
   });
+  it("recovers a cold seek between projects even if no acquisition was sampled", () => {
+    const progress = (sceneFocusProgress("jointledger") + sceneFocusProgress("dropspot")) / 2;
+    expect(presentedStationIndex(progress, 0)).toBe(3);
+    expect(presentedStationIndex(progress, 8)).toBe(4);
+  });
   it("does not name Kivilcim while Software Factory is still acquired", () => {
     expect(presentedStationIndex(sceneFocusProgress("software-factory"), 1)).toBe(1);
   });

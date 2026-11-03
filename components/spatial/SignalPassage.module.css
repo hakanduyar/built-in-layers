@@ -1,0 +1,288 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  opacity: var(--enter, 0);
+  color: var(--color-ink);
+}
+.stage[hidden] {
+  display: none;
+}
+.paper,
+.field,
+.slip {
+  position: absolute;
+  inset: 0;
+}
+.paper {
+  background: var(--color-paper);
+  opacity: var(--paper);
+}
+.field,
+.register {
+  opacity: var(--ink);
+}
+.field {
+  perspective: 960px;
+  perspective-origin: 50% 46%;
+}
+.column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--x) * 100%);
+  width: calc(var(--width) * 100%);
+  transform: translate3d(
+    calc((0.23 - var(--travel)) * var(--speed) * 100vw),
+    calc(var(--rise) * var(--speed) * 9vh),
+    calc((var(--depth) + var(--dolly) * var(--stride)) * 1px)
+  );
+  border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+.cell {
+  position: absolute;
+  top: calc(var(--y) * 100%);
+  width: 100%;
+  translate: 0 -50%;
+  color: var(--color-ink-muted);
+}
+.cell img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.1;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--color-line);
+  filter: grayscale(0.93) contrast(1.06) brightness(0.88);
+}
+.cell span,
+.register {
+  font:
+    10px/1.5 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cell span {
+  display: block;
+  padding: 0.4rem 0.15rem;
+}
+.landing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(var(--color));
+}
+.register {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+  padding: 0.35rem 0.8rem;
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+.register i {
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+}
+.register span {
+  letter-spacing: 0.03em;
+}
+.slip {
+  inset: 41% 0 auto;
+  height: 2px;
+  background: var(--color-paper);
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cell img {
+    pointer-events: auto;
+    transition: filter 180ms ease;
+  }
+  .cell img:hover {
+    filter: grayscale(0.35) contrast(1.04);
+  }
+}
+@media (max-width: 1023px) {
+  .column:nth-child(2):not([data-foreground]) {
+    display: none;
+  }
+  .column[data-foreground] {
+    width: 67%;
+  }
+  .register {
+    font-size: 9px;
+    gap: 0.4rem;
+  }
+  .register i {
+    width: 8px;
+  }
+}
+.details {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 0.65rem);
+  width: 45%;
+  display: grid;
+  gap: 0.4rem;
+}
+.details img {
+  aspect-ratio: 2.8;
+}
+.column:nth-child(2n) .details {
+  bottom: auto;
+  top: calc(100% + 0.5rem);
+  width: 60%;
+}
+.column[data-foreground] .details {
+  width: 30%;
+}
+@media (max-width: 1023px) {
+  .details img:nth-child(2) {
+    display: none;
+  }
+}
+.contact {
+  position: absolute;
+  inset-block: 0;
+  transform: translate3d(
+    calc((0.42 - var(--travel)) * var(--speed) * 100vw),
+    calc(((var(--travel) - 0.42) + var(--rise) * 0.65) * var(--lift) * 1vh),
+    calc((var(--depth) + var(--dolly) * var(--stride)) * 1px)
+  );
+  border-left: 1px solid rgb(58 70 75 / 18%);
+}
+.contact > div {
+  position: absolute;
+  top: var(--top);
+  width: 100%;
+  display: grid;
+  gap: 3px;
+}
+.contact i {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.95;
+  box-shadow: inset 0 0 0 1px rgb(32 48 56 / 28%);
+  background-color: #adb7bb;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;
+  filter: grayscale(0.82) contrast(1.06);
+  opacity: 0.82;
+}
+.contact i:nth-child(2) {
+  aspect-ratio: 3.3;
+}
+.contact i:nth-child(3) {
+  width: 76%;
+  margin-top: 0.45rem;
+}
+.paper {
+  background: var(--color-paper);
+}
+
+@keyframes drift-contact {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(calc(var(--drift-x) * 1px), calc(var(--drift-y) * 1px));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .contact > div {
+    animation: drift-contact 6s ease-in-out var(--delay) infinite alternate;
+  }
+  .stage[data-signal-pulse] .register span {
+    animation: signal-drop 130ms linear;
+  }
+  .stage[data-signal-pulse] .slip {
+    animation: signal-line 120ms linear;
+  }
+}
+@keyframes signal-drop {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  32%,
+  62% {
+    opacity: 0.19;
+  }
+}
+@keyframes signal-line {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.22;
+  }
+}
+
+.contact:nth-child(2n) i {
+  background-color: #c6cecd;
+  border-top: 2px solid rgb(48 73 83 / 52%);
+}
+.field {
+  perspective-origin: calc(50% + var(--look-x, 0) * 30%) calc(46% + var(--look-y, 0) * 28%);
+}
+.contact,
+.column {
+  translate: calc(var(--look-x, 0) * var(--stride) * -0.54px)
+    calc(var(--look-y, 0) * var(--stride) * -0.42px) calc(var(--look-z, 0) * var(--stride) * 0.85px);
+}
+.cameraControl {
+  position: absolute;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  z-index: 2;
+  font:
+    11px/1.3 var(--font-mono),
+    monospace;
+  color: var(--color-ink);
+}
+.stage[hidden] + .cameraControl {
+  display: none;
+}
+.cameraModes,
+.cameraTools {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+.cameraControl button {
+  padding: 0 12px;
+  min-width: 44px;
+  height: 44px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cameraControl button[aria-pressed="true"] {
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+.cameraControl .pad {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.cameraControl .pad:active {
+  cursor: grabbing;
+}

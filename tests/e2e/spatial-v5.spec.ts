@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { scrollAtComposition } from "@/lib/spatial/passageScroll";
 import { BREAK_COVER_START, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 
 // Spatial Portfolio V5 browser contracts (docs/DESIGN_SYSTEM.md §19).
@@ -374,7 +375,10 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
     // checked: the word does not move either, so it cannot be slid, lifted or
     // separated from anything.
     for (let p = 0.3; p <= 0.52; p += 0.02) {
-      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      await page.evaluate(
+        (y) => window.scrollTo(0, Math.round(y)),
+        start + (end - start) * scrollAtComposition(p),
+      );
       await page.waitForTimeout(120);
       const state = await page.$eval('[data-systems-layer="surface"]', (el) => {
         const style = getComputedStyle(el);
@@ -436,7 +440,10 @@ test.describe("Spatial V6.6: SYSTEMS is a surface cut open along the route", () 
     const sweepTo = BREAK_COVER_START - 0.016;
     for (let i = 0; i <= 12; i += 1) {
       const p = sweepFrom + (i / 12) * (sweepTo - sweepFrom);
-      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      await page.evaluate(
+        (y) => window.scrollTo(0, Math.round(y)),
+        start + (end - start) * scrollAtComposition(p),
+      );
       // POLL UNTIL THE VALUE SETTLES, rather than waiting a fixed time. The opening
       // is a function of FILTERED progress, and the two-stage camera filter settles
       // at a rate that depends on the engine and on machine load: a fixed 360ms was

@@ -1,0 +1,228 @@
+.layout {
+  display: grid;
+  gap: 1.25rem;
+}
+.instrument {
+  min-width: 0;
+  align-self: start;
+  font:
+    0.67rem/1.25 var(--font-mono),
+    monospace;
+  letter-spacing: 0.075em;
+}
+.aperture {
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: clamp(8rem, 25vw, 16rem);
+  background: #242723;
+  border: 1px solid #3e4239;
+}
+.strip {
+  position: relative;
+  flex-basis: 0;
+  min-width: 0;
+  overflow: hidden;
+  transition: flex-grow var(--settle) cubic-bezier(0.24, 0.78, 0.18, 1);
+}
+.plate {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-color: #383e36;
+  background-position: center;
+  background-size: auto 150%;
+  background-repeat: no-repeat;
+  filter: grayscale(1) sepia(0.16) contrast(0.88) brightness(0.77);
+  transition:
+    transform var(--settle) cubic-bezier(0.2, 0.8, 0.22, 1),
+    filter 460ms;
+}
+.strip + .strip::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: #242723;
+}
+.plate[data-travel="true"] {
+  transform: translateX(var(--travel));
+}
+.strip[data-locked="true"] .plate {
+  filter: grayscale(0.88) sepia(0.12) contrast(0.96) brightness(0.94);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .strip[data-locked="true"] .plate {
+    transform: scale(1.035);
+  }
+}
+.aperture::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #282d253b;
+}
+.caption {
+  position: absolute;
+  z-index: 1;
+  left: 0.55rem;
+  bottom: 0.55rem;
+  padding: 0.32rem 0.5rem;
+  color: #eceee4;
+  background: #242723;
+  animation: resolve 750ms both;
+}
+.slip {
+  pointer-events: none;
+  position: absolute;
+  top: 42%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #282d25;
+  opacity: 0;
+  animation: slip 410ms ease-out both;
+}
+@keyframes slip {
+  38% {
+    opacity: 0.18;
+    transform: translateY(2px);
+  }
+  58% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@keyframes resolve {
+  0%,
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.targets {
+  display: flex;
+  border-bottom: 1px solid var(--color-line);
+}
+.targets button {
+  position: relative;
+  flex: 1;
+  min-height: 44px;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+}
+.targets button[aria-pressed="true"] {
+  color: var(--color-ink);
+  box-shadow: 0 -2px 0 currentColor inset;
+}
+.targets button:focus-visible {
+  z-index: 1;
+  outline: 2px solid currentColor;
+  outline-offset: -3px;
+}
+.foot {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--color-ink-muted);
+}
+.foot a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.register {
+  min-width: 0;
+}
+@media (min-width: 80rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 28%);
+    gap: clamp(1.5rem, 3vw, 4rem);
+  }
+  .register {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .instrument {
+    position: sticky;
+    top: 5rem;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .register [data-system-entry] > ul {
+    gap: 0.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .plate {
+    transition: none;
+  }
+  .caption,
+  .slip {
+    animation: none;
+  }
+}
+.enlarge {
+  margin-left: auto;
+  padding-inline: 0.6rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+.screen {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  overscroll-behavior: contain;
+  background: #242723;
+  color: #eceee4;
+}
+.screenBody {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+.screenBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.08em;
+}
+.screenBar button,
+.screenBar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: 0.5rem;
+  cursor: pointer;
+}
+.steps {
+  display: flex;
+  gap: 0.5rem;
+}
+.screenPlate {
+  position: relative;
+  min-height: 0;
+  border-block: 1px solid #72766b;
+}
+.screenPlate img {
+  object-fit: contain;
+}
+.screen :focus-visible {
+  outline: 2px solid #eceee4;
+  outline-offset: -2px;
+}

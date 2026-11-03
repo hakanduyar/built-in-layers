@@ -10,6 +10,7 @@ import {
   type RouteStation,
 } from "@/lib/spatial/routeNavigation";
 import { readRoutePresentation, subscribeRoutePresentation } from "@/lib/spatial/routePresentation";
+import { scrollAtComposition } from "@/lib/spatial/passageScroll";
 import { sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 import { useHasMounted } from "@/lib/utils/useHasMounted";
 import { useIsDesktop } from "@/lib/utils/useIsDesktop";
@@ -122,7 +123,7 @@ function measureTargets(): number[] | null {
 
   return ROUTE_STATIONS.map((station) => {
     if (station.scene) {
-      return clamp(tourStart + sceneFocusProgress(station.scene) * tourSpan);
+      return clamp(tourStart + scrollAtComposition(sceneFocusProgress(station.scene)) * tourSpan);
     }
     if (station.section) {
       const block = document.querySelector<HTMLElement>(`[data-drift-block="${station.section}"]`);
@@ -249,14 +250,28 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
 
   const step = useCallback(
     (direction: -1 | 1) => {
-      const next = active + direction;
+      // During a passage the readout can already name its incoming project.
+      // Arrows still land on the first actual anchor ahead or behind the reader.
+      const y = window.scrollY;
+      const projectTargets = ROUTE_STATIONS.flatMap((station, index) => {
+        const position = targetsRef.current[index];
+        return station.projectSlug && position !== undefined ? [{ index, position }] : [];
+      });
+      const traveling =
+        y >= (projectTargets[0]?.position ?? Infinity) - 2 &&
+        y <= (projectTargets.at(-1)?.position ?? -Infinity) + 2;
+      const ordered = direction > 0 ? projectTargets : [...projectTargets].reverse();
+      const anchor = traveling
+        ? ordered.find(({ position }) => (position - y) * direction > 2)
+        : undefined;
+      const next = anchor?.index ?? active + direction;
       if (next < 0 || next >= ROUTE_STATIONS.length) return;
       const target = targetsRef.current[next];
       if (target === undefined) return;
       stepAnimation.current?.stop();
       window.scrollTo({ top: window.scrollY, behavior: "instant" });
       stepAnimation.current = animate(window.scrollY, target, {
-        duration: 0.75,
+        duration: anchor ? 2.25 : 0.75,
         ease: [0.25, 0.1, 0.25, 1],
         onUpdate: (top) => window.scrollTo({ top, behavior: "instant" }),
       });
@@ -266,9 +281,19 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
 
   useEffect(() => {
     if (!enabled) return;
-    const cancel = () => stepAnimation.current?.stop();
+    const cancel = (event?: Event) => {
+      if (
+        event instanceof KeyboardEvent &&
+        event.repeat &&
+        ["ArrowLeft", "ArrowRight"].includes(event.key)
+      )
+        return;
+      stepAnimation.current?.stop();
+    };
     const events = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
-    events.forEach((event) => window.addEventListener(event, cancel, { passive: true, capture: true }));
+    events.forEach((event) =>
+      window.addEventListener(event, cancel, { passive: true, capture: true }),
+    );
     return () => {
       cancel();
       events.forEach((event) => window.removeEventListener(event, cancel, true));
@@ -326,6 +351,7 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
         return;
       }
       event.preventDefault();
+      if (event.repeat) return;
       step(event.key === "ArrowRight" ? 1 : -1);
     };
     window.addEventListener("keydown", onKeyDown);
@@ -368,10 +394,10 @@ export function RouteNavigator({ projectTitles }: RouteNavigatorProps) {
           className="pointer-events-none fixed inset-x-0 top-0 z-30 hidden lg:block"
         >
           <div
-            className="mx-auto h-32 w-[48rem] bg-paper"
+            className="mx-auto h-[4.5rem] w-[26rem] bg-paper"
             style={{
               maskImage:
-                "radial-gradient(62% 68% at 50% 32%, #000 0%, #000 68%, rgba(0,0,0,0) 100%)",
+                "radial-gradient(66% 80% at 50% 42%, #000 0%, #000 68%, rgba(0,0,0,0) 100%)",
               WebkitMaskImage:
                 "radial-gradient(62% 68% at 50% 32%, #000 0%, #000 68%, rgba(0,0,0,0) 100%)",
             }}
