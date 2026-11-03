@@ -119,9 +119,14 @@ function Exposure({
       } else {
         lock.style.clipPath = "";
       }
+      // The eye moves into the archive, then eases back onto the incoming plate.
+      // All three axes are derived from position, so reversing scroll retraces the shot.
+      const arc = Math.sin(t * Math.PI);
+      field.style.setProperty("--dolly", String(arc * arc));
+      field.style.setProperty("--rise", String(Math.sin(t * Math.PI * 2) * arc));
       field.style.setProperty("--travel", String(t));
-      field.style.setProperty("--enter", String(ramp(0, 0.17, t) * (1 - ramp(0.95, 1, t))));
-      field.style.setProperty("--paper", String(1 - ramp(0.79, 0.97, t)));
+      field.style.setProperty("--enter", String(ramp(0, 0.21, t) * (1 - ramp(0.97, 1, t))));
+      field.style.setProperty("--paper", String(ramp(0.02, 0.29, t) * (1 - ramp(0.69, 0.97, t))));
       field.style.setProperty("--ink", String(1 - ramp(0.62, 0.81, t)));
       field.style.setProperty("--color", String(1 - reveal));
       if (crossed && t > 0.26 && t < 0.59) field.dataset.signalPulse = "";
@@ -170,7 +175,12 @@ function Exposure({
                   width: `${mobile ? width * 1.5 : width}%`,
                   "--top": `${top}%`,
                   "--speed": (i % 2 ? 0.58 : 0.12) * (leg === 1 ? -1 : 1),
-                  "--lift": i % 2 ? 15 : -3,
+                  "--lift": i % 2 ? 28 : -14,
+                  "--depth": i % 2 ? 85 : -240,
+                  "--stride": i % 2 ? 145 : 60,
+                  "--drift-x": (i % 3 === 0 ? -1 : 1) * (mobile ? 5 : 12),
+                  "--drift-y": (i % 2 ? -1 : 1) * (mobile ? 12 : 24),
+                  "--delay": `-${i * 1.9}s`,
                 } as CSSProperties
               }
             >
@@ -203,6 +213,8 @@ function Exposure({
                   "--x": plane.x,
                   "--y": plane.y,
                   "--width": plane.width,
+                  "--depth": i === traveling.length - 1 ? 35 : -85,
+                  "--stride": i === traveling.length - 1 ? 200 : 110,
                   "--speed": plane.travel * (leg === 1 ? -0.8 : 1),
                 } as CSSProperties
               }

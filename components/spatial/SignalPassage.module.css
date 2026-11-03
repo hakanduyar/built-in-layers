@@ -23,13 +23,21 @@
 .register {
   opacity: var(--ink);
 }
+.field {
+  perspective: 960px;
+  perspective-origin: 50% 46%;
+}
 .column {
   position: absolute;
   top: 0;
   bottom: 0;
   left: calc(var(--x) * 100%);
   width: calc(var(--width) * 100%);
-  transform: translate3d(calc((0.23 - var(--travel)) * var(--speed) * 100vw), 0, 0);
+  transform: translate3d(
+    calc((0.23 - var(--travel)) * var(--speed) * 100vw),
+    calc(var(--rise) * var(--speed) * 9vh),
+    calc((var(--depth) + var(--dolly) * var(--stride)) * 1px)
+  );
   border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 }
 .cell {
@@ -149,8 +157,8 @@
   inset-block: 0;
   transform: translate3d(
     calc((0.42 - var(--travel)) * var(--speed) * 100vw),
-    calc((var(--travel) - 0.42) * var(--lift) * 1vh),
-    0
+    calc(((var(--travel) - 0.42) + var(--rise) * 0.65) * var(--lift) * 1vh),
+    calc((var(--depth) + var(--dolly) * var(--stride)) * 1px)
   );
   border-left: 1px solid rgb(58 70 75 / 18%);
 }
@@ -181,10 +189,21 @@
   margin-top: 0.45rem;
 }
 .paper {
-  background: linear-gradient(115deg, #e7e8e4, var(--color-paper) 60%, #e1e3df);
+  background: var(--color-paper);
 }
 
+@keyframes drift-contact {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(calc(var(--drift-x) * 1px), calc(var(--drift-y) * 1px));
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
+  .contact > div {
+    animation: drift-contact 6s ease-in-out var(--delay) infinite alternate;
+  }
   .stage[data-signal-pulse] .register span {
     animation: signal-drop 130ms linear;
   }
