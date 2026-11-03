@@ -25,6 +25,7 @@ import {
   routeSpacerVh,
   scrollAtComposition,
 } from "@/lib/spatial/passageScroll";
+import { FactoryPrelude } from "@/components/spatial/FactoryPrelude";
 import { SignalPassage, type SignalFrame } from "@/components/spatial/SignalPassage";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
 import { SystemsWord } from "@/components/spatial/SystemsWord";
@@ -1396,6 +1397,9 @@ export function SpatialCamera({
           </motion.div>
         )}
 
+        {signalFrames[0]?.src === "/images/projects/software-factory/factory-loop-diagram.svg" && (
+          <FactoryPrelude progress={progress} src={signalFrames[0].src} mobile={mobile} />
+        )}
         <SignalPassage progress={progress} frames={signalFrames} mobile={mobile} />
         <SceneBreak progress={progress} />
       </div>
