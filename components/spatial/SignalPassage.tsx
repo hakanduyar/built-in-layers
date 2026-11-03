@@ -19,15 +19,18 @@ const planes = [
 // Vertical registration spines, each with a deliberately different run of
 // exposures. The incoming project's evidence sits deepest in the field.
 const contactTracks = [
-  [4, 31, 6, 2],
-  [15, 64, 8, 3],
-  [29, 9, 5, 2],
-  [40, 36, 6, 3],
-  [51, 17, 8, 2],
-  [60, 56, 5, 3],
-  [72, 25, 7, 3],
-  [85, 69, 8, 2],
-  [94, 8, 6, 3],
+  [2, 19, 6, 5],
+  [10, 59, 8, 4],
+  [18, 8, 6, 5],
+  [26, 39, 8, 5],
+  [34, 5, 6, 4],
+  [43, 65, 8, 4],
+  [52, 16, 7, 5],
+  [61, 52, 9, 4],
+  [70, 8, 6, 5],
+  [79, 39, 8, 5],
+  [88, 63, 7, 4],
+  [97, 13, 6, 5],
 ] as const;
 
 type PassageProps = { progress: MotionValue<number>; frames: SignalFrame[]; mobile: boolean };
@@ -93,7 +96,7 @@ function Exposure({
       const w = field.clientWidth;
       const h = field.clientHeight;
       const settle = ramp(0.68, 0.97, t);
-      const reveal = ramp(0.33, 0.7, t);
+      const reveal = ramp(0.51, 0.81, t);
       const rect = t >= 0.68 ? target.getBoundingClientRect() : null;
       const mix = (a: number, b: number) => a + (b - a) * settle;
       const width = w * (0.34 + (leg === 2 ? 0.54 : 0.36) * reveal);
@@ -119,7 +122,7 @@ function Exposure({
       field.style.setProperty("--travel", String(t));
       field.style.setProperty("--enter", String(ramp(0, 0.17, t) * (1 - ramp(0.95, 1, t))));
       field.style.setProperty("--paper", String(1 - ramp(0.79, 0.97, t)));
-      field.style.setProperty("--ink", String(1 - ramp(0.46, 0.72, t)));
+      field.style.setProperty("--ink", String(1 - ramp(0.62, 0.81, t)));
       field.style.setProperty("--color", String(1 - reveal));
       if (crossed && t > 0.26 && t < 0.59) field.dataset.signalPulse = "";
     }
@@ -138,6 +141,7 @@ function Exposure({
   }, [destination, from, leg, mobile, progress, to]);
 
   const contacts = [destination.src, ...destination.details.slice(0, 3)];
+  const archive = Array.from(new Set(frames.flatMap((frame) => [frame.src, ...frame.details])));
   const neighboring = frames.slice(Math.max(0, leg - 2), leg + 1);
   const firstDetail = destination.details[0];
   const traveling = firstDetail
@@ -155,7 +159,7 @@ function Exposure({
       <div className={styles.paper} />
       <div className={styles.field}>
         {contactTracks.map(([left, top, width, count], i) => {
-          if ((mobile && i % 2 === 1) || (leg < 2 && i % 3 === 1)) return null;
+          if (mobile && i % 3 === 2) return null;
           return (
             <div
               key={left}
@@ -163,18 +167,19 @@ function Exposure({
               style={
                 {
                   left: `${left}%`,
-                  width: `${width}%`,
+                  width: `${mobile ? width * 1.5 : width}%`,
                   "--top": `${top}%`,
-                  "--speed": 0.15 + (i % 3) * 0.11,
+                  "--speed": (i % 2 ? 0.58 : 0.12) * (leg === 1 ? -1 : 1),
+                  "--lift": i % 2 ? 15 : -3,
                 } as CSSProperties
               }
             >
               <div>
-                {Array.from({ length: mobile ? 2 : count }, (_, n) => (
+                {Array.from({ length: mobile ? 3 : count }, (_, n) => (
                   <i
                     key={n}
                     style={{
-                      backgroundImage: `url("${contacts[(i + n) % contacts.length]}")`,
+                      backgroundImage: `url("${archive[(leg * 5 + i * 3 + n) % archive.length]}")`,
                       backgroundPosition: `${(i * 19 + n * 31) % 100}% ${(29 + n * 27) % 100}%`,
                     }}
                   />

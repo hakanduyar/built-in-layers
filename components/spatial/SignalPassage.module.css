@@ -147,7 +147,11 @@
 .contact {
   position: absolute;
   inset-block: 0;
-  transform: translate3d(calc((0.32 - var(--travel)) * var(--speed) * 100vw), 0, 0);
+  transform: translate3d(
+    calc((0.42 - var(--travel)) * var(--speed) * 100vw),
+    calc((var(--travel) - 0.42) * var(--lift) * 1vh),
+    0
+  );
   border-left: 1px solid rgb(58 70 75 / 18%);
 }
 .contact > div {
@@ -161,11 +165,12 @@
   display: block;
   width: 100%;
   aspect-ratio: 1.95;
-  background-color: #849197;
-  background-size: 220% auto;
+  box-shadow: inset 0 0 0 1px rgb(32 48 56 / 28%);
+  background-color: #adb7bb;
+  background-size: cover;
   background-repeat: no-repeat;
   background-blend-mode: multiply;
-  filter: grayscale(0.78) contrast(0.92) blur(0.35px);
+  filter: grayscale(0.82) contrast(1.06);
   opacity: 0.82;
 }
 .contact i:nth-child(2) {
@@ -205,4 +210,9 @@
   45% {
     opacity: 0.22;
   }
+}
+
+.contact:nth-child(2n) i {
+  background-color: #c6cecd;
+  border-top: 2px solid rgb(48 73 83 / 52%);
 }
