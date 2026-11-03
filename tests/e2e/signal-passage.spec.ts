@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { scrollAtComposition } from "@/lib/spatial/passageScroll";
 import { sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 
 for (const [source, target] of [
@@ -25,7 +26,7 @@ for (const [source, target] of [
               el.getBoundingClientRect().top + scrollY + p * (el.clientHeight - innerHeight),
             );
           },
-          from + (to - from) * fraction,
+          scrollAtComposition(from + (to - from) * fraction, mobile),
         );
 
       await seek(0.48);

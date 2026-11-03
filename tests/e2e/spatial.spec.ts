@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { routeSpacerVh, scrollAtComposition } from "@/lib/spatial/passageScroll";
 import { legHasOpenTravel } from "@/lib/spatial/railTravel";
 // V6.3: two route constants are imported rather than restated, so the windows
 // these tests search inside cannot drift out of the region they are meant to
@@ -40,7 +41,10 @@ async function measureRoute(page: import("@playwright/test").Page, viewportHeigh
     const el = document.querySelector(selector);
     return el ? el.getBoundingClientRect().top + window.scrollY : 0;
   }, TOUR);
-  return { start: sectionTop, end: sectionTop + spacerHeight - viewportHeight, spacerHeight };
+  const mobile = (page.viewportSize()?.width ?? 1440) < 1024;
+  const position = (p: number) =>
+    sectionTop + (spacerHeight - viewportHeight) * scrollAtComposition(p, mobile);
+  return { position, end: position(1), spacerHeight };
 }
 
 /** Extracts tx/ty from a computed `matrix(a, b, c, d, tx, ty)`. Parsed in
@@ -196,10 +200,10 @@ test.describe("Spatial V4: scene framing owns real viewport territory", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
     // Kıvılcım's focal moment.
-    await worldTranslateXAt(page, start + (end - start) * 0.3);
+    await worldTranslateXAt(page, position(0.3));
 
     const plate = page.locator(`${TOUR} img`).first();
     const box = await plate.boundingBox();
@@ -218,22 +222,11 @@ test.describe("Spatial V4: scene framing owns real viewport territory", () => {
     expect(titleSize).toBeGreaterThan(36);
   });
 
-  test("total route length stays controlled -- no return to V1's 600vh blind spacer", async ({
-    page,
-  }) => {
+  test("the route pays exactly for the three extended passages", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const { spacerHeight } = await measureRoute(page, 900);
-    expect(spacerHeight).toBeGreaterThan(900);
-    // V6.3 raised the ceiling from 4.5 to 5.2 viewports, in step with
-    // ROUTE_LENGTH_VH going 410 -> 474 to pay for the exit traverse. The reasoning
-    // and the alternative are recorded in full on the matching unit test in
-    // tests/unit/spatial-route.test.ts and in the V6.3 report; it is called out
-    // rather than quietly widened. 5.2 still fails well before V1's 600vh spacer,
-    // which is the thing this bound exists to prevent returning.
-    // V7: four project scenes + SYSTEMS (was two projects). 640vh over ten
-    // segments is ~64vh/segment — still a third of V1's per-scene cost.
-    expect(spacerHeight).toBeLessThan(900 * 6.6);
+    expect(Math.abs(spacerHeight - 9 * routeSpacerVh(false))).toBeLessThan(1);
   });
 });
 
@@ -306,10 +299,10 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
-    const beforeCut = await worldTranslateXAt(page, start + (end - start) * 0.8);
-    const afterBreak = await worldTranslateXAt(page, start + (end - start) * 0.92);
+    const beforeCut = await worldTranslateXAt(page, position(0.8));
+    const afterBreak = await worldTranslateXAt(page, position(0.92));
     expect(beforeCut).not.toBeNull();
     expect(afterBreak).not.toBeNull();
     if (beforeCut !== null && afterBreak !== null) {
@@ -334,7 +327,7 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     test.setTimeout(120_000);
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
     // The break is built from converging rails, not one sweeping panel
     // (V2's most conventional device). Several rails, closing from
@@ -377,7 +370,7 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
 
     let best = Number.POSITIVE_INFINITY;
     for (let p = BREAK_CUT - 0.04; p <= BREAK_CUT + 0.04; p += 0.005) {
-      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * p);
+      await page.evaluate((y) => window.scrollTo(0, Math.round(y)), position(p));
       let worst = await readWorst();
       let stable = 0;
       for (let attempt = 0; attempt < 80; attempt += 1) {
@@ -401,7 +394,7 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
   test("rails converge from alternating sides rather than sweeping one way", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
     // V6.7: DERIVED from the break window instead of the literal 0.7375 it used to
     // be. That literal predates two route retunes and had drifted to a progress
@@ -411,7 +404,7 @@ test.describe("Spatial V4: the route change reads as an occlusion cut", () => {
     // closing measures the rails actually converging, which is strictly what this
     // contract is about, and it tracks any future retune.
     const closing = BREAK_COVER_START + (BREAK_CUT - BREAK_COVER_START) * 0.4;
-    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), start + (end - start) * closing);
+    await page.evaluate((y) => window.scrollTo(0, Math.round(y)), position(closing));
 
     // V6.7: settle-poll instead of a fixed 350ms, for the same reason the other two
     // break tests already do. The rails' transforms are written by Motion from a
@@ -447,9 +440,9 @@ test.describe("Spatial V4: the route continues after the collision", () => {
   test("post-collision camera moves on BOTH axes on desktop", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
-    const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
+    const at = (p: number) => worldTranslateAt(page, position(p));
     const landing = await at(0.79);
     const middle = await at(0.9);
     const final = await at(0.99);
@@ -472,7 +465,7 @@ test.describe("Spatial V4: the route continues after the collision", () => {
   test("the second route runs at a visibly different slope from the first", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
+    const { position } = await measureRoute(page, 900);
 
     // Sampled where the camera is genuinely travelling on each route, not
     // inside a dwell window at either end -- and, critically, ENTIRELY ON ONE
@@ -501,7 +494,7 @@ test.describe("Spatial V4: the route continues after the collision", () => {
     // leaves for the lower world. The traverse has its own assertions in the
     // unit suite.
     const handoffAt = sceneFocusProgress("handoff");
-    const at = (p: number) => worldTranslateAt(page, start + (end - start) * p);
+    const at = (p: number) => worldTranslateAt(page, position(p));
     const routeOneStart = await at(0.16);
     const routeOneEnd = await at(BREAK_COVER_START - 0.04);
     const routeTwoStart = await at(BREAK_REVEAL_END + 0.05);
@@ -598,8 +591,8 @@ test.describe("Spatial V4: the route continues after the collision", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 900);
-    await worldTranslateAt(page, start + (end - start) * 0.3);
+    const { position } = await measureRoute(page, 900);
+    await worldTranslateAt(page, position(0.3));
 
     const rates = await page.evaluate((selector) => {
       const read = (el: Element | null) => {
@@ -787,8 +780,8 @@ test.describe("Spatial V4: mobile choreography", () => {
     async function translateXAtFocalScene(width: number, height: number) {
       await page.setViewportSize({ width, height });
       await page.goto("/");
-      const { start, end } = await measureRoute(page, height);
-      return worldTranslateXAt(page, start + (end - start) * 0.55);
+      const { position } = await measureRoute(page, height);
+      return worldTranslateXAt(page, position(0.55));
     }
 
     const desktopX = await translateXAtFocalScene(1440, 900);
@@ -805,8 +798,8 @@ test.describe("Spatial V4: mobile choreography", () => {
   test("project scenes stay readable at 375px", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 812);
-    await worldTranslateXAt(page, start + (end - start) * 0.3);
+    const { position } = await measureRoute(page, 812);
+    await worldTranslateXAt(page, position(0.3));
 
     const titleSize = await page
       .locator(`${TOUR} h3`)
@@ -824,10 +817,10 @@ test.describe("Spatial V4: mobile choreography", () => {
   }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/");
-    const { start, end } = await measureRoute(page, 812);
+    const { position } = await measureRoute(page, 812);
 
-    const beforeBreak = await worldTranslateAt(page, start + (end - start) * 0.68);
-    const afterBreak = await worldTranslateAt(page, start + (end - start) * 0.79);
+    const beforeBreak = await worldTranslateAt(page, position(0.68));
+    const afterBreak = await worldTranslateAt(page, position(0.79));
     if (!beforeBreak || !afterBreak) throw new Error("expected mobile world transforms");
 
     // The reposition is a real discontinuity vertically, and x stays pinned

@@ -1,6 +1,6 @@
 import { DRIFT_SECTIONS, type DriftSectionId } from "@/lib/spatial/editorialDrift";
 import { SCENE_IDS, type SceneId } from "@/lib/spatial/scenes";
-import { sceneApproach } from "@/lib/spatial/sceneRoute";
+import { sceneApproach, sceneFocusProgress } from "@/lib/spatial/sceneRoute";
 import { footerCtaLabel, heroPrimaryLine, layerDefinitions, sectionIndex } from "@/data/copy";
 
 // V14.9 NAVIGATION GATE -- THE ONE LIST THE NAVIGATOR, THE PREV/NEXT CONTROLS
@@ -216,6 +216,10 @@ export function activeStationIndex(
 /** Keep the last presented subject between acquisitions. The same signed
  * approach that says ACQUIRED on the frame selects the instrument's subject.
  * This observes the camera; navigation commands never select a subject. */
+const projectAnchors = ROUTE_STATIONS.flatMap((station, index) =>
+  station.projectSlug && station.scene ? [{ index, focus: sceneFocusProgress(station.scene) }] : [],
+);
+
 export function presentedStationIndex(progress: number, previous: number): number {
   let active = previous;
   ROUTE_STATIONS.forEach((station, index) => {
@@ -223,6 +227,15 @@ export function presentedStationIndex(progress: number, previous: number): numbe
     const approach = sceneApproach(station.scene, progress);
     if (approach >= -0.35 && approach <= 0.2) active = index;
   });
+  // A restored scroll position may skip every acquisition window on the way
+  // here. Retain direction-dependent hysteresis only within the current pair.
+  for (let i = 1; i < projectAnchors.length; i++) {
+    const from = projectAnchors[i - 1]!,
+      to = projectAnchors[i]!;
+    if (progress > from.focus && progress < to.focus) {
+      return Math.min(to.index, Math.max(from.index, active));
+    }
+  }
   return active;
 }
 

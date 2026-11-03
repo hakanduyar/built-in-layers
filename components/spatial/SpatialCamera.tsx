@@ -20,6 +20,11 @@ import {
   type MotionValue,
 } from "motion/react";
 import { ProjectPlane } from "@/components/spatial/ProjectPlane";
+import {
+  compositionAtScroll,
+  routeSpacerVh,
+  scrollAtComposition,
+} from "@/lib/spatial/passageScroll";
 import { SignalPassage, type SignalFrame } from "@/components/spatial/SignalPassage";
 import { SceneBreak } from "@/components/spatial/SceneBreak";
 import { SystemsWord } from "@/components/spatial/SystemsWord";
@@ -182,6 +187,7 @@ type FilterResyncRef = React.RefObject<((value: number) => void) | null>;
 function useSceneBreakEvent(
   spacerRef: React.RefObject<HTMLDivElement | null>,
   enabled: boolean,
+  mobile: boolean,
   resyncRef: FilterResyncRef,
   // V7: the route governor yields while the occlusion owns scroll. This ref is
   // the only coordination between the two — the event sets it, the governor
@@ -346,13 +352,13 @@ function useSceneBreakEvent(
     const box = boxRef.current;
     if (!box || box.span <= 0) return;
 
-    const yStart = box.top + BREAK_GUARD_FROM * box.span;
-    const yEnd = box.top + BREAK_GUARD_TO * box.span;
+    const yStart = box.top + scrollAtComposition(BREAK_GUARD_FROM, mobile) * box.span;
+    const yEnd = box.top + scrollAtComposition(BREAK_GUARD_TO, mobile) * box.span;
     // The ONLY fully-opaque span. "Stuck in black" is not a feeling, it is resting
     // between these two scroll positions, so this is what the stall resolver below
     // actually tests against.
-    const yBlackFrom = box.top + BREAK_COVER_CLOSED * box.span;
-    const yBlackTo = box.top + BREAK_REVEAL_START * box.span;
+    const yBlackFrom = box.top + scrollAtComposition(BREAK_COVER_CLOSED, mobile) * box.span;
+    const yBlackTo = box.top + scrollAtComposition(BREAK_REVEAL_START, mobile) * box.span;
     const y = window.scrollY;
     const st = state.current;
     const previousY = st.lastY;
@@ -428,7 +434,7 @@ function useSceneBreakEvent(
       // the state machine alone. They cannot diverge, so there is still nothing to
       // reconcile when the window closes.
       if (Math.abs(y - target) > 0.5) window.scrollTo(0, Math.round(target));
-      resyncRef.current?.((target - box.top) / box.span);
+      resyncRef.current?.(compositionAtScroll((target - box.top) / box.span, mobile));
       return;
     }
 
@@ -685,12 +691,13 @@ function useRouteGovernor(
     const box = () => {
       const spacer = spacerRef.current;
       if (!spacer) return null;
-      const routeSpan = Math.max(spacer.offsetHeight - window.innerHeight, 1);
+      const pinnedSpan = Math.max(spacer.offsetHeight - window.innerHeight, 1);
+      const routeSpan = (window.innerHeight * (ROUTE_LENGTH_VH - 100)) / 100;
       const end = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
       // V14 (F): where the pinned route ends -- progress 1, the point from which
       // the sticky frame itself begins to scroll away and the page's own content
       // is what moves on screen. The page's gearing applies from here.
-      const pinnedEnd = spacer.getBoundingClientRect().top + window.scrollY + routeSpan;
+      const pinnedEnd = spacer.getBoundingClientRect().top + window.scrollY + pinnedSpan;
       const unitPx = Math.min(window.innerHeight / 100, WORLD_REFERENCE.height / 100);
       const gearing = pageGearing(routeWorldLength(false), unitPx, fit, routeSpan);
       return { top: 0, end, routeSpan, pinnedEnd, gearing };
@@ -936,9 +943,12 @@ export function SpatialCamera({
   // Raw scroll drives a filtered "visual progress"; EVERYTHING visual reads
   // from the filtered value -- camera, break, inspection, depth, system
   // annotations.
+  const compositionTarget = useTransform(scrollYProgress, (value) =>
+    compositionAtScroll(value, mobile),
+  );
   const filterResyncRef = useRef<((value: number) => void) | null>(null);
   const progress = useFilteredProgress(
-    scrollYProgress,
+    compositionTarget,
     !reduceMotion,
     filterResyncRef,
     entryGlideTo(mobile),
@@ -953,7 +963,7 @@ export function SpatialCamera({
   // event cannot be compressed or skipped by scroll velocity. See
   // useSceneBreakEvent.
   const breakPlayingRef = useRef(false);
-  useSceneBreakEvent(spacerRef, enhanced, filterResyncRef, breakPlayingRef);
+  useSceneBreakEvent(spacerRef, enhanced, mobile, filterResyncRef, breakPlayingRef);
   // V7 (owner §10): wheel becomes intent inside the route; progression is
   // capped at ROUTE_MAX_RATE in both directions. Desktop only — touch stays
   // native and the visual glide ceiling paces the camera there.
@@ -1058,7 +1068,7 @@ export function SpatialCamera({
   // asking. Driven by RAW progress rather than the filtered camera so it
   // responds to the very first notch of input, which is the only moment it is
   // about.
-  const entryCue = useTransform(scrollYProgress, [0, 0.012], [1, 0]);
+  const entryCue = useTransform(compositionTarget, [0, 0.012], [1, 0]);
 
   function scrollToProgress(target: number) {
     const spacer = spacerRef.current;
@@ -1066,7 +1076,10 @@ export function SpatialCamera({
     const rect = spacer.getBoundingClientRect();
     const start = window.scrollY + rect.top;
     const end = start + spacer.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: start + (end - start) * target, behavior: "smooth" });
+    window.scrollTo({
+      top: start + (end - start) * scrollAtComposition(target, mobile),
+      behavior: "smooth",
+    });
   }
 
   /**
@@ -1094,7 +1107,7 @@ export function SpatialCamera({
       // linear layout for mobile, reduced motion and no-JS visitors.
       <div
         className="world-preview-shell"
-        style={{ "--preview-route-height": `${ROUTE_LENGTH_VH}vh` } as CSSProperties}
+        style={{ "--preview-route-height": `${routeSpacerVh(false)}vh` } as CSSProperties}
       >
         <div
           className="world-fit-layer mx-auto flex w-full max-w-[var(--container-max)] flex-col gap-24 px-4 py-16 md:px-6 lg:gap-40 lg:px-8"
@@ -1166,7 +1179,7 @@ export function SpatialCamera({
     <div
       ref={spacerRef}
       data-route-spacer="true"
-      style={{ height: `${ROUTE_LENGTH_VH}vh` }}
+      style={{ height: `${routeSpacerVh(mobile)}vh` }}
       className="relative"
     >
       {/* `overflow-clip`, not `overflow-hidden`: an `overflow: hidden` box is
