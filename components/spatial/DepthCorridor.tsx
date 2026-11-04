@@ -88,7 +88,7 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
           left + (mobile ? 175 : 230) * scale > -300 &&
           top < viewportHeight + 300 &&
           top + (mobile ? 900 : 1100) * scale > -300;
-        column.dataset.active = String(visible);
+        column.dataset.active = String(visible || (z > 0 && fade >= 0.005));
       }
     }
     const schedule = () => {
