@@ -32,7 +32,7 @@ for (const [source, target] of [
       await seek(0.48);
       // A programmatic seek still travels through the original touch camera governor.
       await expect(field).toBeVisible({ timeout: 15000 });
-      const moving = field.locator(":scope > img");
+      const moving = field.locator("[data-signal-landing]");
       const original = page
         .locator(`[data-scene="${target}"] [data-project-ground-source] img`)
         .first();

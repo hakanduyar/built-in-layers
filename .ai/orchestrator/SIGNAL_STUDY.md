@@ -19,3 +19,17 @@ Start from the original Built in Layers homepage at `77ea5e1`, in its own worktr
 | 4 | Refine the lock state, pointer focus and restrained signal loss | A readable stable target, no constant noise or flicker; no camera or microphone access |
 | 5 | Touch, reduced motion and case links | Normal navigation, no trapped scroll, static alternate presentation |
 | 6 | Independent browser, visual and evidence review | Sample entrance, travel and rest at desktop and phone widths; compare baseline and publish a separate preview |
+
+## Continuous corridor revision — 2026-11-04
+
+Owner requests a bright Samaritan-inspired continuation of the original portfolio. Reading stops remain legible. The camera retreats from the current project, traverses the archive, then advances toward a distant project; later legs include vertical travel. Scroll position determines the reversible journey. Reel motion continues independently, advancing entire images with short holds. Pointer control is judged by coherent, comfortable results.
+
+| Task | Owner | Acceptance |
+| --- | --- | --- |
+| Outgoing and incoming project registration | root | Actual image retreats into the field, next image resolves to its original bounds; originals restored forward/reverse |
+| Deep image corridor | depth_corridor | Twelve depths, renewed distant screens, substantial staggered up/down reels, bright background, mobile near/far visible |
+| Controls and navigation verification | root | Wheel/touch progression, arrow travel, same-position A/B control, reduced-motion bypass |
+| Independent visual and code review | corridor_review | Verify the combined implementation on desktop/phone, report reproducible defects |
+| External preview | root | Successful production build and public tunnel, anonymous mobile-size access to correct portfolio |
+
+Verification is limited to affected route, registration, controls and focused visual checks. Preview branch only. Actual phone hardware remains owner acceptance.
