@@ -138,7 +138,6 @@ export function SignalIndexMonitor({
           aria-label="Project plate viewer"
           onClose={() => {
             setExpanded(false);
-            select(null);
             enlarge.current?.focus({ preventScroll: true });
           }}
           onKeyDown={(event) => {

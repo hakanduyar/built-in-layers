@@ -101,6 +101,9 @@ function Exposure({
     );
     const outgoing = departure.current;
     if (!target || !source || !outgoing) return;
+    const sourceAnnotation = source
+      .closest("[data-scene]")
+      ?.querySelector<HTMLElement>("[data-system-cluster]");
     let raf = 0;
     let previousPhase: number | null = null;
     function paint() {
@@ -113,6 +116,7 @@ function Exposure({
       if (field.hidden) {
         target.style.removeProperty("opacity");
         source.style.removeProperty("opacity");
+        sourceAnnotation?.style.removeProperty("opacity");
         return;
       }
       // Reveal the original plate only after the traveling copy registers
@@ -144,12 +148,23 @@ function Exposure({
         outgoing.style.clipPath = `inset(${edges.map((edge) => Math.max(0, edge) * shrink + "px").join(" ")})`;
       } else outgoing.style.clipPath = "";
 
-      source.style.opacity = String(1 - ramp(0, 0.21, t));
+      // The traveling plate owns the image from the first moving frame.
+      // Cross-fading differently positioned copies makes diagram text double.
+      source.style.opacity = "0";
+      // Scene metadata travels into the persistent top navigation otherwise.
+      // It is replaced by the passage's destination register while in transit.
+      if (sourceAnnotation) sourceAnnotation.style.opacity = String(1 - ramp(0, 0.035, t));
 
       const rect = t >= 0.68 ? target.getBoundingClientRect() : null;
       const mix = (a: number, b: number) => a + (b - a) * settle;
-      const width = w * (0.035 + (leg === 2 ? 0.845 : 0.665) * reveal);
-      const height = h * (0.025 + (leg === 2 ? 0.775 : 0.605) * reveal);
+      const aspect =
+        target.naturalWidth && target.naturalHeight
+          ? target.naturalWidth / target.naturalHeight
+          : 1.6;
+      // Keep landscape evidence recognizable on a tall phone viewport.
+      // Independent viewport width/height made this a portrait center crop.
+      const width = Math.min(w * (0.035 + (leg === 2 ? 0.845 : 0.665) * reveal), h * 0.72 * aspect);
+      const height = width / aspect;
       const center = 0.59 - 0.09 * reveal;
       const x = w * (leg === 1 ? 1 - center : center) - width / 2;
       lock.style.opacity = String(ramp(0.43, 0.58, t));
@@ -178,6 +193,7 @@ function Exposure({
       field.style.setProperty("--enter", String(ramp(0, 0.21, t) * (1 - ramp(0.97, 1, t))));
       field.style.setProperty("--paper", String(ramp(0.02, 0.29, t) * (1 - ramp(0.69, 0.97, t))));
       field.style.setProperty("--ink", String(1 - ramp(0.62, 0.81, t)));
+      field.style.setProperty("--register", String(ramp(0.28, 0.4, t) * (1 - ramp(0.62, 0.81, t))));
       field.style.setProperty("--color", String(1 - reveal));
       if (crossed && t > 0.26 && t < 0.59) field.dataset.signalPulse = "";
     }
@@ -187,12 +203,17 @@ function Exposure({
     paint();
     const stop = progress.on("change", schedule);
     window.addEventListener("resize", schedule);
+    target.addEventListener("load", schedule);
+    source.addEventListener("load", schedule);
     return () => {
       stop();
       target.style.removeProperty("opacity");
       source.style.removeProperty("opacity");
+      sourceAnnotation?.style.removeProperty("opacity");
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", schedule);
+      target.removeEventListener("load", schedule);
+      source.removeEventListener("load", schedule);
     };
   }, [destination, from, leg, mobile, progress, to]);
 
@@ -227,6 +248,7 @@ function Exposure({
           <i />0{leg + 1}—0{leg + 2}
           <span>{destination.title}</span>
           <i />
+          <small>SCROLL TO EXPLORE · IMAGE STUDY</small>
         </div>
         <div className={styles.slip} />
       </div>

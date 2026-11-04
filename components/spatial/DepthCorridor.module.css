@@ -4,8 +4,6 @@
   position: absolute;
   inset: 0;
   overflow: clip;
-  perspective: 920px;
-  perspective-origin: calc(50% + var(--look-x, 0) * 13%) calc(46% + var(--look-y, 0) * 11%);
   pointer-events: none;
 }
 .corridor[hidden] {
@@ -13,15 +11,12 @@
 }
 .rail {
   position: absolute;
-  left: 50%;
-  top: 46%;
+  left: 0;
+  top: 0;
   width: 200px;
   height: 1500px;
-  margin-top: -750px;
+  transform-origin: 0 0;
   border-left: 1px solid rgb(67 74 76 / 34%);
-  translate: calc(var(--look-x, 0) * -70px) calc(var(--look-y, 0) * -60px)
-    calc(var(--look-z, 0) * 60px);
-  transform-style: preserve-3d;
 }
 .window {
   position: absolute;
@@ -118,9 +113,6 @@
   }
 }
 @media (max-width: 1023px) {
-  .corridor {
-    perspective: 740px;
-  }
   .rail {
     width: 150px;
   }

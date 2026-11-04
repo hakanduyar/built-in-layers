@@ -124,6 +124,12 @@ above is read against a ledger rather than against silence.
 
 ## 5. Sanctioned moves since `243db393`
 
+**Signal-study audit repair (explicit owner new phase, 2026-11-04; experimental branch only):**
+
+| Files | Scope and authority | Evidence |
+|---|---|---|
+| `components/spatial/SystemPOV.tsx` | Add a nonvisual cluster marker so the experimental passage can fade departing metadata before it collides with navigation. Original resting scene markup/style remains identical apart from this attribute; static mode unchanged. | `.ai/orchestrator/SIGNAL_STUDY.md` audit queue; reviewer desktop early-retreat screenshot found acquisition label at y25–47 crossing ruler y44. Fixed screenshot confirms removal during transit; focused forward/reverse/static checks apply on desktop and phone. |
+
 **V14.13 motion feel gate (explicit owner instruction, 2026-09-14):**
 
 | Files | Scope and authority | Evidence |

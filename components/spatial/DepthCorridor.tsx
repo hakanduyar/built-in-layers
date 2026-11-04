@@ -36,6 +36,7 @@ export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps
     const field = root.current;
     if (!field) return;
     const columns = Array.from(field.children) as HTMLDivElement[];
+    const windows = columns.map((column) => column.firstElementChild as HTMLDivElement);
     let pending = 0;
     const leg = from === "software-factory" ? 0 : from === "kivilcim" ? 1 : 2;
     function paint() {
@@ -59,6 +60,14 @@ export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps
       const viewportWidth = field.clientWidth;
       const viewportHeight = field.clientHeight;
       const perspective = mobile ? 740 : 920;
+      const stageStyle = (field.closest("[data-signal-passage]") as HTMLElement | null)?.style;
+      const look = (axis: string) => Number(stageStyle?.getPropertyValue("--look-" + axis) || 0);
+      const lookX = look("x"),
+        lookY = look("y"),
+        lookZ = look("z");
+      const originX = viewportWidth * (0.5 + lookX * 0.13);
+      const originY = viewportHeight * (0.46 + lookY * 0.11);
+      const depths: { index: number; z: number; fade: number }[] = [];
       for (const rail of rails) {
         const column = columns[rail.index];
         if (!column) continue;
@@ -80,11 +89,15 @@ export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps
         column.style.setProperty("--wash", String(0.42 * (1 - ramp(-4200, -350, z))));
         // Clipping flattens this stage: explicitly keep the nearest reel on top.
         column.style.zIndex = String(Math.round(z + 4750));
-        column.style.transform = `translate3d(${x}px,${y}px,${z}px)`;
+        // Explicit projection avoids WebKit flattening ancestor perspective.
+        // The camera geometry is identical, but every engine receives a 2D plate.
+        const scale = perspective / (perspective - z - lookZ * 60);
+        const left = originX + (viewportWidth / 2 + x - lookX * 70 - originX) * scale;
+        const railTop = originY + (viewportHeight * 0.46 + y - 750 - lookY * 60 - originY) * scale;
+        column.style.transform = `translate3d(${left}px,${railTop}px,0) scale(${scale})`;
         column.style.visibility = fade < 0.005 ? "hidden" : "visible";
-        const scale = perspective / (perspective - z);
-        const left = viewportWidth / 2 + x * scale;
-        const top = viewportHeight * 0.46 + (y - 640) * scale;
+
+        const top = railTop + 110 * scale;
         const visible =
           fade >= 0.005 &&
           left < viewportWidth + 300 &&
@@ -92,6 +105,49 @@ export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps
           top < viewportHeight + 300 &&
           top + (mobile ? 900 : 1100) * scale > -300;
         column.dataset.active = String(visible || (z > 0 && fade >= 0.005));
+        depths.push({ index: rail.index, z, fade });
+      }
+      // Compose in projected space, after all transforms have been written.
+      // A reel's animation stays inside its window, so this clearance remains
+      // valid for every frame of its vertical cycle, not only a sampled image.
+      const viewport = field.getBoundingClientRect();
+      const selected: { left: number; right: number; top: number; bottom: number; fade: number }[] =
+        [];
+      const gutter = mobile ? 8 : 12;
+      for (const candidate of depths.sort((a, b) => b.z - a.z)) {
+        const aperture = windows[candidate.index]!;
+        const raw = aperture.getBoundingClientRect();
+        const box = {
+          left: Math.max(raw.left, viewport.left),
+          right: Math.min(raw.right, viewport.right),
+          top: Math.max(raw.top, viewport.top),
+          bottom: Math.min(raw.bottom, viewport.bottom),
+        };
+        let separation = 1;
+        for (const occupied of selected) {
+          const clearance = Math.max(
+            occupied.left - box.right,
+            box.left - occupied.right,
+            occupied.top - box.bottom,
+            box.top - occupied.bottom,
+          );
+          const fadeDistance = Math.max(16, Math.min(96, raw.width * 0.4));
+          separation *= 1 - occupied.fade * (1 - ramp(gutter, gutter + fadeDistance, clearance));
+        }
+        const edgeDistance = Math.max(12, Math.min(48, raw.width * 0.25));
+        const visibleArea =
+          ramp(0, edgeDistance, box.right - box.left) * ramp(0, edgeDistance, box.bottom - box.top);
+        const packing = visibleArea * separation;
+        aperture.style.opacity = String(packing);
+        aperture.style.visibility = packing > 0.001 ? "visible" : "hidden";
+        selected.push({
+          left: raw.left,
+          right: raw.right,
+          top: raw.top,
+          bottom: raw.bottom,
+          fade: ramp(0, 0.08, candidate.fade),
+        });
+        if (packing <= 0.001) columns[candidate.index]!.dataset.active = "false";
       }
     }
     const schedule = () => {
@@ -100,10 +156,24 @@ export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps
     paint();
     const stop = progress.on("change", schedule);
     window.addEventListener("resize", schedule);
+    const stage = field.closest("[data-signal-passage]");
+    let previousLook = "";
+    const observer = new MutationObserver(() => {
+      const style = (stage as HTMLElement | null)?.style;
+      const look = ["x", "y", "z"]
+        .map((axis) => style?.getPropertyValue("--look-" + axis))
+        .join(",");
+      if (look !== previousLook) {
+        previousLook = look;
+        schedule();
+      }
+    });
+    if (stage) observer.observe(stage, { attributes: true, attributeFilter: ["style"] });
     return () => {
       stop();
       cancelAnimationFrame(pending);
       window.removeEventListener("resize", schedule);
+      observer.disconnect();
     };
   }, [progress, mobile, from, to, rails]);
 

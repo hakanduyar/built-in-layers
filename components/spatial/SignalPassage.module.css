@@ -3,7 +3,7 @@
   inset: 0;
   overflow: clip;
   pointer-events: none;
-  opacity: var(--enter, 0);
+  isolation: isolate;
   color: var(--color-ink);
 }
 .stage[hidden] {
@@ -14,8 +14,10 @@
   inset: 0;
   background: var(--color-paper);
   opacity: var(--paper);
+  z-index: -1;
 }
 .landing {
+  z-index: 1;
   position: absolute;
   top: 0;
   left: 0;
@@ -26,7 +28,7 @@
 }
 .register {
   position: absolute;
-  top: 50%;
+  top: 16%;
   left: 50%;
   translate: -50% -50%;
   display: flex;
@@ -42,7 +44,19 @@
     monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: var(--ink);
+  opacity: var(--register, 0);
+  z-index: 2;
+}
+.register small {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  padding: 3px 6px;
 }
 .register i {
   width: 14px;

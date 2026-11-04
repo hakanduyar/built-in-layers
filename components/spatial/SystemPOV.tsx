@@ -266,6 +266,7 @@ function Cluster({
   // different position is what makes it a different agent's mark.
   return (
     <div
+      data-system-cluster=""
       className={
         compact
           ? "absolute -top-1 left-0 max-w-[22rem] -translate-y-full pl-1"

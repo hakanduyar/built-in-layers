@@ -30,33 +30,67 @@ export function CameraComparison({
   switchMode: (value: CameraMode) => void;
 }) {
   const point = useRef({ x: 0, y: 0, z: 0 });
+  const pendingLook = useRef<{ x: number; y: number } | null>(null);
   const drag = useRef<{ id: number; x: number; y: number; startX: number; startY: number } | null>(
     null,
   );
 
-  const aim = (x: number, y: number, z: number) => applyLook(stage.current, point, x, y, z);
+  const aim = (x: number, y: number, z: number) => {
+    pendingLook.current = null;
+    applyLook(stage.current, point, x, y, z);
+  };
   useEffect(() => {
     const el = stage.current;
     if (!el || mode !== "look") return;
+    let raf = 0;
+    let lastTime = 0;
+    let lastPointer: { x: number; y: number } | null = null;
+    const easeLook = (time: number) => {
+      raf = 0;
+      const target = pendingLook.current;
+      if (!target || el.hidden) {
+        lastTime = 0;
+        return;
+      }
+      const weight = 1 - Math.exp(-Math.min(lastTime ? time - lastTime : 16, 48) / 105);
+      lastTime = time;
+      const x = point.current.x + (target.x - point.current.x) * weight;
+      const y = point.current.y + (target.y - point.current.y) * weight;
+      applyLook(el, point, x, y, point.current.z);
+      if (Math.hypot(target.x - x, target.y - y) > 0.002) raf = requestAnimationFrame(easeLook);
+      else {
+        applyLook(el, point, target.x, target.y, point.current.z);
+        pendingLook.current = null;
+        lastTime = 0;
+      }
+    };
     const move = (e: PointerEvent) => {
+      const previous = lastPointer;
+      if (e.pointerType === "mouse") lastPointer = { x: e.clientX, y: e.clientY };
       if (
         e.pointerType !== "mouse" ||
+        !previous ||
         drag.current ||
         el.hidden ||
         (e.target instanceof Element && e.target.closest("[data-camera-control]"))
       )
         return;
-      applyLook(
-        el,
-        point,
-        (e.clientX / innerWidth - 0.5) * 2,
-        (e.clientY / innerHeight - 0.5) * 2,
-        point.current.z,
-      );
+      pendingLook.current = {
+        x: clamp(
+          (pendingLook.current?.x ?? point.current.x) + ((e.clientX - previous.x) / innerWidth) * 2,
+        ),
+        y: clamp(
+          (pendingLook.current?.y ?? point.current.y) +
+            ((e.clientY - previous.y) / innerHeight) * 2,
+        ),
+      };
+      if (!raf) raf = requestAnimationFrame(easeLook);
     };
     window.addEventListener("pointermove", move);
     return () => {
       window.removeEventListener("pointermove", move);
+      cancelAnimationFrame(raf);
+      pendingLook.current = null;
       for (const axis of ["x", "y", "z"]) el.style.removeProperty("--look-" + axis);
     };
   }, [stage, mode]);

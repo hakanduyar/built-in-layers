@@ -27,5 +27,14 @@ for (const width of [390, 1440]) {
     await page.keyboard.press("Escape");
     await expect(viewer).not.toBeVisible();
     await expect(enlarge).toBeFocused();
+    await expect(page.getByRole("link", { name: /Open Professional Systems/ })).toHaveAttribute(
+      "href",
+      "/work/professional-systems",
+    );
+    await enlarge.click();
+    await expect(viewer.getByRole("link", { name: /Open case/ })).toHaveAttribute(
+      "href",
+      "/work/professional-systems",
+    );
   });
 }
