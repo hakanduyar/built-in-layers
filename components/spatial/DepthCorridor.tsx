@@ -5,6 +5,7 @@ import type { MotionValue } from "motion/react";
 import { ramp, signalPhase, type TourProject } from "@/lib/spatial/signalPhase";
 import type { SignalFrame } from "./SignalPassage";
 import styles from "./DepthCorridor.module.css";
+import { archiveFrames } from "@/lib/spatial/archiveFrames";
 
 type DepthCorridorProps = {
   progress: MotionValue<number>;
@@ -19,12 +20,8 @@ const DEPTH_COUNT = 12;
 
 // Twelve distances, with independent upright reels on either side of the
 // sightline. Reusing the far plane happens entirely behind the far fade.
-export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorridorProps) {
+export function DepthCorridor({ progress, mobile, from, to }: DepthCorridorProps) {
   const root = useRef<HTMLDivElement>(null);
-  const sources = useMemo(
-    () => Array.from(new Set(frames.flatMap((frame) => [frame.src, ...frame.details]))),
-    [frames],
-  );
   const rails = useMemo(
     () =>
       Array.from({ length: DEPTH_COUNT * (mobile ? 2 : 3) }, (_, index) => ({
@@ -53,7 +50,7 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
       const advance = (leg === 1 ? 7800 : 5900) * ramp(0.25, 0.82, t);
       const travel = retreat + advance;
       const crossing = ramp(0.11, 0.4, t);
-      const cameraX = (leg === 1 ? -1 : 1) * crossing * (mobile ? 150 : 410);
+      const cameraX = (leg === 1 ? -1 : 1) * crossing * (mobile ? 25 : 140);
       const cameraY =
         leg === 2
           ? -590 * ramp(0.17, 0.76, t)
@@ -68,13 +65,19 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
         const initialZ = -rail.band * (DEPTH_SPAN / DEPTH_COUNT) - rail.side * 115;
         // Positive modulus gives the same result when traveling backwards.
         const z = ((((initialZ + travel + 4750) % DEPTH_SPAN) + DEPTH_SPAN) % DEPTH_SPAN) - 4750;
-        const polarity = rail.side === 1 ? 1 : -1;
-        const spread =
-          (mobile ? 125 : 300) + ((rail.band * 173 + rail.side * 91) % (mobile ? 420 : 900));
-        const x = polarity * spread - cameraX;
+        const polarity = (rail.side + rail.band) % 2 ? 1 : -1;
+        const spread = mobile
+          ? 105 + ((rail.band * 67 + rail.side * 73) % 260)
+          : 285 + ((rail.band * 97 + rail.side * 173) % 1100);
+        const railWidth = mobile ? 150 : 200;
+        // The nearest rails leave through the sides before their wrap fade,
+        // so their surfaces remain opaque while they are in the reading field.
+        const exit = 1 + ramp(80, 500, z) * 0.8;
+        const x = (polarity * spread - (polarity < 0 ? railWidth : 0) - cameraX) * exit;
         const y = ((rail.band * 211 + rail.side * 271) % 780) - 390 - cameraY;
-        const fade = ramp(-4750, -4250, z) * (1 - ramp(220, 650, z));
+        const fade = ramp(-4750, -4250, z) * (1 - ramp(580, 650, z));
         column.style.opacity = String(fade);
+        column.style.setProperty("--wash", String(0.42 * (1 - ramp(-4200, -350, z))));
         // Clipping flattens this stage: explicitly keep the nearest reel on top.
         column.style.zIndex = String(Math.round(z + 4750));
         column.style.transform = `translate3d(${x}px,${y}px,${z}px)`;
@@ -85,7 +88,7 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
         const visible =
           fade >= 0.005 &&
           left < viewportWidth + 300 &&
-          left + (mobile ? 175 : 230) * scale > -300 &&
+          left + railWidth * scale > -300 &&
           top < viewportHeight + 300 &&
           top + (mobile ? 900 : 1100) * scale > -300;
         column.dataset.active = String(visible || (z > 0 && fade >= 0.005));
@@ -96,20 +99,22 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
     };
     paint();
     const stop = progress.on("change", schedule);
+    window.addEventListener("resize", schedule);
     return () => {
       stop();
       cancelAnimationFrame(pending);
+      window.removeEventListener("resize", schedule);
     };
   }, [progress, mobile, from, to, rails]);
 
-  if (!sources.length) return null;
+  if (archiveFrames.length < DEPTH_COUNT * 3 * 6) return null;
   const count = 6;
   return (
     <div ref={root} className={styles.corridor} data-depth-corridor="" aria-hidden="true" hidden>
       {rails.map(({ index, band, side }) => {
         const exposures = Array.from(
           { length: count },
-          (_, i) => sources[(index * 3 + i + band) % sources.length]!,
+          (_, i) => archiveFrames[index * count + i]!,
         );
         return (
           <div
@@ -128,13 +133,16 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
               <div className={styles.reel}>
                 {[0, 1].map((copy) => (
                   <div className={styles.sequence} key={copy}>
-                    {exposures.map((src, i) => (
-                      <div className={styles.exposure} key={i}>
+                    {exposures.map((frame) => (
+                      <div className={styles.exposure} key={frame.id} data-archive-frame={frame.id}>
                         <span
                           className={styles.frame}
-                          style={{ backgroundImage: `url("${src}")` }}
+                          style={{ backgroundImage: `url("${frame.src}")` }}
                         />
-                        <span className={styles.registration} />
+                        <span className={styles.registration}>
+                          <span>ARCHIVE / {frame.id.replace(/^archive-/, "")}</span>
+                          <span>{String(index + 1).padStart(2, "0")}</span>
+                        </span>
                       </div>
                     ))}
                   </div>
