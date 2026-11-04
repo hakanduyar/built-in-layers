@@ -18,7 +18,7 @@
   margin-top: -750px;
   border-left: 1px solid rgb(67 74 76 / 34%);
   translate: calc(var(--look-x, 0) * -70px) calc(var(--look-y, 0) * -60px)
-    calc(var(--look-z, 0) * 145px);
+    calc(var(--look-z, 0) * 60px);
   transform-style: preserve-3d;
 }
 .window {

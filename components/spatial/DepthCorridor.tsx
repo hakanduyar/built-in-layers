@@ -84,10 +84,10 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
         const top = viewportHeight * 0.46 + (y - 640) * scale;
         const visible =
           fade >= 0.005 &&
-          left < viewportWidth &&
-          left + (mobile ? 175 : 230) * scale > 0 &&
-          top < viewportHeight &&
-          top + (mobile ? 900 : 1100) * scale > 0;
+          left < viewportWidth + 300 &&
+          left + (mobile ? 175 : 230) * scale > -300 &&
+          top < viewportHeight + 300 &&
+          top + (mobile ? 900 : 1100) * scale > -300;
         column.dataset.active = String(visible);
       }
     }
