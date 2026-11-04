@@ -22,7 +22,34 @@ Bu paket, portfolyo projesinin yapay zekâ tarafından kafasına göre şekillen
 - `REVIEW_PROMPT.md`  
   Bir faz tamamlandıktan sonra kodu değiştirmeden denetim yaptırmak için prompt.
 
-## Başlangıç sırası
+## Mevcut uygulamayı yerelde çalıştırma
+
+Bu depoyu klonladıysan yeni bir repository oluşturman gerekmez. Aşağıdaki
+komutları `package.json` dosyasının bulunduğu depo kökünde çalıştır.
+Proje Node.js 22 veya üzerini ve pnpm 11.17.0 sürümünü kullanır.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Tarayıcıda terminalin gösterdiği yerel adresi aç. Varsayılan geliştirme portu
+3000'dir; başka bir uygulama bu portu kullanıyorsa ayrı bir port seçebilirsin:
+
+```sh
+pnpm dev --port 3248
+```
+
+Değişikliğin kapsamına uygun kontrolleri seç; aşağıdaki komutlar depoda tanımlıdır:
+
+```sh
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+```
+
+## Yeni başlangıç paketi için sıra
 
 1. Yeni ve boş bir Git repository oluştur.
 2. Bu paketteki `CLAUDE.md` ve `docs/` klasörünü repository köküne kopyala.
