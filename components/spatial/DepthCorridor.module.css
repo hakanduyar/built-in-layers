@@ -23,9 +23,9 @@
 }
 .window {
   position: absolute;
-  top: 270px;
+  top: 110px;
   width: 100%;
-  height: 720px;
+  height: 1100px;
   overflow: hidden;
   mask-image: linear-gradient(transparent, #000 5%, #000 95%, transparent);
 }
@@ -65,52 +65,39 @@
 .exposure:nth-child(3n) .frame {
   background-position: 30% 60%;
 }
-/* Four actual advances separated by readable holds. Two identical sequences
+/* Six actual advances separated by readable holds. Two identical sequences
    make the last-to-first boundary visually identical in both directions. */
 @keyframes reel-cycle {
   0%,
-  8% {
+  4% {
     transform: translateY(0);
   }
-  20%,
-  33% {
-    transform: translateY(-12.5%);
+  12%,
+  20% {
+    transform: translateY(-8.3333333%);
   }
-  45%,
-  58% {
-    transform: translateY(-25%);
-  }
-  70%,
-  83% {
-    transform: translateY(-37.5%);
-  }
-  95%,
-  100% {
-    transform: translateY(-50%);
-  }
-}
-@keyframes reel-cycle-mobile {
-  0%,
-  12% {
-    transform: translateY(0);
-  }
-  28%,
-  45% {
+  29%,
+  37% {
     transform: translateY(-16.6666667%);
   }
-  61%,
-  78% {
+  46%,
+  54% {
+    transform: translateY(-25%);
+  }
+  63%,
+  71% {
     transform: translateY(-33.3333333%);
   }
-  94%,
+  80%,
+  88% {
+    transform: translateY(-41.6666667%);
+  }
+  97%,
   100% {
     transform: translateY(-50%);
   }
 }
 @media (max-width: 1023px) {
-  .reel {
-    animation-name: reel-cycle-mobile;
-  }
   .corridor {
     perspective: 740px;
   }
@@ -124,7 +111,7 @@
     height: 126px;
   }
   .window {
-    height: 450px;
+    height: 900px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

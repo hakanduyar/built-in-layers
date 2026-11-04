@@ -66,11 +66,14 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
         // Positive modulus gives the same result when traveling backwards.
         const z = ((((initialZ + travel + 4750) % DEPTH_SPAN) + DEPTH_SPAN) % DEPTH_SPAN) - 4750;
         const polarity = rail.side === 1 ? 1 : -1;
-        const spread = (mobile ? 230 : 390) + ((rail.band * 173 + rail.side * 91) % 790);
+        const spread =
+          (mobile ? 125 : 300) + ((rail.band * 173 + rail.side * 91) % (mobile ? 420 : 900));
         const x = polarity * spread - cameraX;
         const y = ((rail.band * 211 + rail.side * 271) % 780) - 390 - cameraY;
         const fade = ramp(-4750, -4250, z) * (1 - ramp(220, 650, z));
-        column.style.opacity = String(fade * (0.42 + 0.58 * ramp(-4200, -400, z)));
+        column.style.opacity = String(fade);
+        // Clipping flattens this stage: explicitly keep the nearest reel on top.
+        column.style.zIndex = String(Math.round(z + 4750));
         column.style.transform = `translate3d(${x}px,${y}px,${z}px)`;
         column.style.visibility = fade < 0.005 ? "hidden" : "visible";
       }
@@ -87,7 +90,7 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
   }, [progress, mobile, from, to, rails]);
 
   if (!sources.length) return null;
-  const count = mobile ? 3 : 4;
+  const count = 6;
   return (
     <div ref={root} className={styles.corridor} data-depth-corridor="" aria-hidden="true" hidden>
       {rails.map(({ index, band, side }) => {
