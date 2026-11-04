@@ -59,6 +59,9 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
           ? -590 * ramp(0.17, 0.76, t)
           : Math.sin(t * Math.PI * 2) * (leg === 0 ? 130 : -170);
       field.style.opacity = String(ramp(0, 0.15, t) * (1 - ramp(0.68, 0.85, t)));
+      const viewportWidth = field.clientWidth;
+      const viewportHeight = field.clientHeight;
+      const perspective = mobile ? 740 : 920;
       for (const rail of rails) {
         const column = columns[rail.index];
         if (!column) continue;
@@ -76,6 +79,16 @@ export function DepthCorridor({ progress, mobile, from, to, frames }: DepthCorri
         column.style.zIndex = String(Math.round(z + 4750));
         column.style.transform = `translate3d(${x}px,${y}px,${z}px)`;
         column.style.visibility = fade < 0.005 ? "hidden" : "visible";
+        const scale = perspective / (perspective - z);
+        const left = viewportWidth / 2 + x * scale;
+        const top = viewportHeight * 0.46 + (y - 640) * scale;
+        const visible =
+          fade >= 0.005 &&
+          left < viewportWidth &&
+          left + (mobile ? 175 : 230) * scale > 0 &&
+          top < viewportHeight &&
+          top + (mobile ? 900 : 1100) * scale > 0;
+        column.dataset.active = String(visible);
       }
     }
     const schedule = () => {
