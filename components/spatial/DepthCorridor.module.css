@@ -1,0 +1,137 @@
+.corridor {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  perspective: 920px;
+  perspective-origin: calc(50% + var(--look-x, 0) * 13%) calc(46% + var(--look-y, 0) * 11%);
+  pointer-events: none;
+}
+.corridor[hidden] {
+  display: none;
+}
+.rail {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 230px;
+  height: 1500px;
+  margin-top: -750px;
+  border-left: 1px solid rgb(67 74 76 / 34%);
+  translate: calc(var(--look-x, 0) * -70px) calc(var(--look-y, 0) * -60px)
+    calc(var(--look-z, 0) * 145px);
+  transform-style: preserve-3d;
+}
+.window {
+  position: absolute;
+  top: 270px;
+  width: 100%;
+  height: 720px;
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, #000 5%, #000 95%, transparent);
+}
+.reel {
+  animation: reel-cycle var(--reel-time) cubic-bezier(0.25, 0.8, 0.28, 1) var(--reel-delay) infinite
+    var(--reel-direction);
+}
+.sequence {
+  display: grid;
+  gap: 0;
+}
+.exposure {
+  height: 194px;
+  padding: 0 0 16px 8px;
+}
+.frame {
+  display: block;
+  width: 100%;
+  height: 154px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #f4f4ef;
+  border: 1px solid rgb(75 84 87 / 35%);
+  filter: grayscale(0.94) contrast(1.04);
+}
+.registration {
+  display: block;
+  margin-top: 7px;
+  width: 38%;
+  height: 1px;
+  background: rgb(64 75 80 / 32%);
+}
+.exposure:nth-child(2n) .frame {
+  width: 82%;
+}
+.exposure:nth-child(3n) .frame {
+  background-position: 30% 60%;
+}
+/* Four actual advances separated by readable holds. Two identical sequences
+   make the last-to-first boundary visually identical in both directions. */
+@keyframes reel-cycle {
+  0%,
+  8% {
+    transform: translateY(0);
+  }
+  20%,
+  33% {
+    transform: translateY(-12.5%);
+  }
+  45%,
+  58% {
+    transform: translateY(-25%);
+  }
+  70%,
+  83% {
+    transform: translateY(-37.5%);
+  }
+  95%,
+  100% {
+    transform: translateY(-50%);
+  }
+}
+@keyframes reel-cycle-mobile {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  28%,
+  45% {
+    transform: translateY(-16.6666667%);
+  }
+  61%,
+  78% {
+    transform: translateY(-33.3333333%);
+  }
+  94%,
+  100% {
+    transform: translateY(-50%);
+  }
+}
+@media (max-width: 1023px) {
+  .reel {
+    animation-name: reel-cycle-mobile;
+  }
+  .corridor {
+    perspective: 740px;
+  }
+  .rail {
+    width: 175px;
+  }
+  .exposure {
+    height: 162px;
+  }
+  .frame {
+    height: 126px;
+  }
+  .window {
+    height: 450px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .corridor {
+    display: none;
+  }
+  .reel {
+    animation: none;
+  }
+}
