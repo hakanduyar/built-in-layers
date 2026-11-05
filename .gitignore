@@ -51,3 +51,4 @@ next-env.d.ts
 # already in history is deliberately untouched.
 docs/review/**/*.webm
 docs/review/**/recordings/
+/review-*.png
