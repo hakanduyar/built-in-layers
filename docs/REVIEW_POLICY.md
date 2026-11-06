@@ -32,13 +32,16 @@ what happens from V9 onward.
 
 `.gitignore` enforces the last two rather than relying on discipline.
 
-## Why metrics are the evidence and stills are the illustration
+## Use measurements and visual review together
 
-Every defect this project has actually fixed was found by a number, not by a picture: 145px of
-clipped scene, a 360px run at 0.2% content fill, a 9.0% frame-to-frame speed step, a travel-material
-fragment resolving to progress 0.137 against a scene focus of 0.141. The stills confirmed each one
-afterwards. So the numbers are what belongs in history, at a few KB each; the pictures are review
-material, and they belong on disk next to the person doing the reviewing.
+Measurements help locate clipping, empty scrolling and abrupt speed changes, but passing checks
+does not establish visual quality or comfortable interaction. Review the actual rendered page from
+opening to completion, including forward and reverse scrolling, focused screens and transitions.
+Record the observed defects alongside the measurements; distinguish screenshots from continuous
+motion inspection. If browser use could not be verified, leave that acceptance item open.
+
+Keep compact findings and reproducible metrics in Git. Store full image matrices and recordings
+outside the repository under the policy above; retain selected stills when a decision needs them.
 
 ## Producing a review bundle
 
